@@ -82,6 +82,15 @@ class AuthController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Request $request): JsonResponse
     {
         $request->user()->delete();

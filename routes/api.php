@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
+    Route::delete('logout', 'logout')->middleware('auth:sanctum');
     Route::get('profile', 'login')->middleware('auth:sanctum');
     Route::put('profile', 'update')->middleware('auth:sanctum');
     Route::delete('profile', 'destroy')->middleware('auth:sanctum');
