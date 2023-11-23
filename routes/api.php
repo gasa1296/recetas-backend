@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::delete('logout', 'logout')->middleware('auth:sanctum');
-    Route::get('profile', 'login')->middleware('auth:sanctum');
-    Route::put('profile', 'update')->middleware('auth:sanctum');
-    Route::delete('profile', 'destroy')->middleware('auth:sanctum');
+    Route::delete('logout', 'logout')->middleware(['auth:sanctum', 'verified']);
+    Route::get('profile', 'login')->middleware(['auth:sanctum', 'verified']);
+    Route::put('profile', 'update')->middleware(['auth:sanctum', 'verified']);
+    Route::delete('profile', 'destroy')->middleware(['auth:sanctum', 'verified']);
 });
 Route::controller(VerificationController::class)->prefix('email')->group(function () {
-    Route::get('verify/{id}/{hash}','verify')->middleware('verification.verify');
-    Route::get('verify/resend','resend')->middleware('verification.send');
+    Route::get('verify/{id}/{hash}','verify');
+    Route::post('verify/resend','resend');
 });
