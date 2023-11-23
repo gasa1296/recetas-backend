@@ -26,7 +26,6 @@ class AuthController extends Controller
     }
     /**
      * Store a newly created resource in storage.
-     * @todo add validations
      * @todo upload file
      */
     public function register(Request $request): JsonResponse
@@ -37,6 +36,14 @@ class AuthController extends Controller
             'last_name2' => 'required',
             'email' => 'required|email',
             'password' => 'required',
+            'identification' => 'required',
+            'especialization' => 'required',
+            'phone1' => 'required',
+            'phone2' => '',
+            'genry' => 'required',
+            'university' => 'required',
+            'fesa' => 'required',
+            'image' => 'required',
         ]);
         if ($validator->fails())
         {
@@ -45,7 +52,7 @@ class AuthController extends Controller
         $user = User::create($request->all());
         $user->sendEmailVerificationNotification();
         event(new Registered($user));
-        return response()->json();
+        return response()->json($user->id);
     }
 
     /**
@@ -58,7 +65,6 @@ class AuthController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo add validations
      * @todo upload file
      */
     public function update(Request $request): JsonResponse
@@ -68,14 +74,19 @@ class AuthController extends Controller
             'last_name1' => 'required',
             'last_name2' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
+            'identification' => 'required',
+            'especialization' => 'required',
+            'phone1' => 'required',
+            'phone2' => '',
+            'genry' => 'required',
+            'university' => 'required',
+            'fesa' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $user = $request->user();
-        $user->save();
-
+        $user->update($request->all());
         return response()->json($user);
     }
 
