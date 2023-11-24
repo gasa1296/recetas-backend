@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConsultingRoom;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class AuthController extends Controller
     /**
      * Store a newly created resource in storage.
      * @todo upload file
+     * @todo Add validations
      */
     public function register(Request $request): JsonResponse
     {
@@ -49,10 +51,14 @@ class AuthController extends Controller
         {
             return response()->json($validator->errors(), 400);
         }
-        $user = User::create($request->all());
+        $inputs = $request->all();
+        $user = User::create($inputs);
         $user->sendEmailVerificationNotification();
         event(new Registered($user));
-        return response()->json($user->id);
+        $inputs['user'] = $user->id;
+        ConsultingRoom::create($inputs);
+
+        return response()->json();
     }
 
     /**
