@@ -15,11 +15,11 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
+            $instance = Auth::user();
 
             return response()->json([
-                'token' => $user->createToken('MyApp')->plainTextToken,
-                'user' => $user,
+                'token' => $instance->createToken('MyApp')->plainTextToken,
+                'user' => $instance,
             ]);
         } else {
             return response()->json([], 404);
@@ -52,10 +52,10 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $request->all();
-        $user = User::create($inputs);
-        $user->sendEmailVerificationNotification();
-        event(new Registered($user));
-        $inputs['user'] = $user->id;
+        $instance = User::create($inputs);
+        $instance->sendEmailVerificationNotification();
+        event(new Registered($instance));
+        $inputs['user'] = $instance->id;
         ConsultingRoom::create($inputs);
 
         return response()->json();
@@ -91,9 +91,9 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $user = $request->user();
-        $user->update($request->all());
-        return response()->json($user);
+        $instance = $request->user();
+        $instance->update($request->all());
+        return response()->json($instance);
     }
 
     /**
