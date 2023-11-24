@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('logo')->nullable();
             $table->tinyInteger('desing');
-            
+            $table->fo('desing');
+
             $table->timestamps();
             $table->softDeletes();
         });
