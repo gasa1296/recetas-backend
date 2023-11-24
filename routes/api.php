@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
+use App\Models\Prescription;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,12 +32,13 @@ Route::controller(VerificationController::class)->prefix('email')->group(functio
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
-        Route::get('profile', 'login');
+        Route::get('profile', 'show');
         Route::put('profile', 'update');
         Route::delete('profile', 'destroy');
     });
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'patient' => PatientController::class,
+        'prescription' => Prescription::class,
     ]);
 });
