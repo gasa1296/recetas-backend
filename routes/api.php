@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\ConsultingRoomController;
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,11 +21,22 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', 'verified']);
-    Route::get('profile', 'login')->middleware(['auth:sanctum', 'verified']);
-    Route::put('profile', 'update')->middleware(['auth:sanctum', 'verified']);
-    Route::delete('profile', 'destroy')->middleware(['auth:sanctum', 'verified']);
 });
+
 Route::controller(VerificationController::class)->prefix('email')->group(function () {
     Route::get('verify/{id}/{hash}','verify');
     Route::post('verify/resend','resend');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
+    Route::controller(AuthController::class)->prefix('profile')->group(function () {
+        Route::get('profile', 'login');
+        Route::put('profile', 'update');
+        Route::delete('profile', 'destroy');
+    });
+    Route::apiResources([
+        'room'=> ConsultingRoomController::class,
+        'patient' => PatientController::class,
+    ]);
 });
