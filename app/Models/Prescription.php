@@ -17,6 +17,13 @@ class Prescription extends Model
         return $this->belongsTo(User::class, 'medic_id');
     }
     /**
+     * Get the room of the prescription.
+     */
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(ConsultingRoom::class, 'room_id');
+    }
+    /**
      * Get the patient of the prescription.
      */
     public function patient(): BelongsTo
