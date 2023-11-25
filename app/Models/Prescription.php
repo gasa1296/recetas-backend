@@ -30,6 +30,7 @@ class Prescription extends Model
         'user_id',
         'room_id',
         'patient_id',
+        'file',
     ];
     /**
      * Get the medic of the prescription.

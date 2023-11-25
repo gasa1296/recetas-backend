@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('room_id')->constrained('consulting_rooms');
             $table->foreignId('patient_id')->constrained('patients');
+            $table->string('file')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

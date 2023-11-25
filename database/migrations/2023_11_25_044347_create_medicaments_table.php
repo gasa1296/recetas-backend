@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('ingredient');
             $table->string('form');
             $table->string('way');
+            $table->string('image')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

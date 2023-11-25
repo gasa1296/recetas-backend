@@ -20,5 +20,6 @@ class Medicament extends Model
         'form',
         'ingredient',
         'way',
+        'image',
     ];
 }
