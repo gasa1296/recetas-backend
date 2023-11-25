@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('logo')->nullable();
             $table->tinyInteger('desing');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->constrained('users');
 
             $table->timestamps();
             $table->softDeletes();
