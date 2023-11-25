@@ -23,7 +23,9 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request)
     {
-        $instance = Prescription::create($request->all());
+        $inputs = $request->all();
+        $inputs['user_id'] = auth()->id();
+        $instance = Prescription::create($inputs);
         return response()->json($instance);
     }
 
@@ -32,6 +34,9 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription)
     {
+        if ($prescription->user_id != auth()->id()) {
+            return response()->json([],404);
+        }
         return response()->json($prescription);
     }
 
@@ -42,6 +47,9 @@ class PrescriptionController extends Controller
      */
     public function update(Request $request, Prescription $prescription)
     {
+        if ($prescription->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
         $prescription->update($request->all());
         return response()->json($prescription);
     }
@@ -51,6 +59,9 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
+        if ($prescription->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
         $prescription->delete();
         return response()->json();
     }
