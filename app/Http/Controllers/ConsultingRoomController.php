@@ -11,9 +11,9 @@ class ConsultingRoomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $instances = ConsultingRoom::where("user_id", $request->user()->id);
+        $instances = ConsultingRoom::where("user_id", auth()->id());
         return response()->json($instances->paginate(10));
     }
 
@@ -25,7 +25,7 @@ class ConsultingRoomController extends Controller
     public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
-        $inputs["user_id"] = $request->user()->id;
+        $inputs["user_id"] = auth()->id();
         $instance = ConsultingRoom::create($inputs);
         return response()->json($instance);
     }
@@ -33,13 +33,12 @@ class ConsultingRoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, int $id): JsonResponse
+    public function show(ConsultingRoom $room): JsonResponse
     {
-        $instance = ConsultingRoom::where([
-            "user_id" => $request->user()->id,
-            "id" => $id,
-        ])->firstOrFail();
-        return response()->json($instance);
+        if ($room->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
+        return response()->json($room);
     }
 
     /**
@@ -47,26 +46,24 @@ class ConsultingRoomController extends Controller
      * @todo upload file
      * @todo Add validations
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, ConsultingRoom $room): JsonResponse
     {
-        $instance = ConsultingRoom::where([
-            "user_id" => $request->user()->id,
-            "id" => $id,
-        ])->firstOrFail();
-        $instance->update($request->all());
-        return response()->json($instance);
+        if ($room->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
+        $room->update($request->all());
+        return response()->json($room);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, int $id): JsonResponse
+    public function destroy(ConsultingRoom $room): JsonResponse
     {
-        $instance = ConsultingRoom::where([
-            "user_id", $request->user()->id,
-            "id", $id,
-        ])->firstOrFail();
-        $instance->delete();
+        if ($room->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
+        $room->delete();
         return response()->json();
     }
 }
