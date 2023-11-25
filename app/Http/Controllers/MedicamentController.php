@@ -12,7 +12,8 @@ class MedicamentController extends Controller
      */
     public function index()
     {
-        //
+        $instances = Medicament::all();
+        return response()->json($instances->paginate(10));
     }
 
     /**
@@ -22,7 +23,8 @@ class MedicamentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $instance = Medicament::create($request->all());
+        return response()->json($instance);
     }
 
     /**
@@ -30,7 +32,7 @@ class MedicamentController extends Controller
      */
     public function show(Medicament $medicament)
     {
-        //
+        return response()->json($medicament);
     }
 
     /**
@@ -40,7 +42,8 @@ class MedicamentController extends Controller
      */
     public function update(Request $request, Medicament $medicament)
     {
-        //
+        $medicament->update($request->all());
+        return response()->json($medicament);
     }
 
     /**
@@ -48,6 +51,7 @@ class MedicamentController extends Controller
      */
     public function destroy(Medicament $medicament)
     {
-        //
+        $medicament->delete();
+        return response()->json();
     }
 }
