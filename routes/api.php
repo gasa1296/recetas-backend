@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
@@ -42,5 +43,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         'patient' => PatientController::class,
         'prescription' => Prescription::class,
         'medicament' => MedicamentController::class,
+        'prescription.medicament' => PrescriptionMedicamentController::class,
     ]);
 });
