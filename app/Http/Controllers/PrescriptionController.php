@@ -12,7 +12,8 @@ class PrescriptionController extends Controller
      */
     public function index()
     {
-        //
+        $instances = Prescription::all();
+        return response()->json($instances->paginate(10));
     }
 
     /**
@@ -22,7 +23,8 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $instance = Prescription::create($request->all());
+        return response()->json($instance);
     }
 
     /**
@@ -30,7 +32,7 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription)
     {
-        //
+        return response()->json($prescription);
     }
 
     /**
@@ -40,7 +42,8 @@ class PrescriptionController extends Controller
      */
     public function update(Request $request, Prescription $prescription)
     {
-        //
+        $prescription->update($request->all());
+        return response()->json($prescription);
     }
 
     /**
@@ -48,6 +51,7 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
-        //
+        $prescription->delete();
+        return response()->json();
     }
 }
