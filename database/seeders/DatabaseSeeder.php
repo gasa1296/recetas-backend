@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             //UserSeeder::class,
             PatientSeeder::class,
             ConsultingRoomSeeder::class,
+            MedicamentSeeder::class,
         ]);
     }
 }
