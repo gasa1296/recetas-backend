@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('medicaments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ingredient');
-            $table->string('form');
-            $table->string('way');
+            $table->string('ingredient')->nullable();
+            $table->string('form')->nullable();
+            $table->string('way')->nullable();
             $table->string('image')->nullable();
             
             $table->timestamps();
