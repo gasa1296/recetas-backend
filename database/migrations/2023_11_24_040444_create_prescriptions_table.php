@@ -14,6 +14,19 @@ return new class extends Migration
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->float('temp')->default(0);
+            $table->float('weight')->default(0);
+            $table->float('height')->default(0);
+            $table->string('pressure');
+            $table->string('saturation');
+            $table->string('ppm');
+            $table->text('allergy');
+            $table->text('diagnostic');
+            $table->text('diet');
+            $table->text('aditional');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('room_id')->constrained('consulting_rooms');
+            $table->foreignId('patient_id')->constrained('patients');
         });
     }
 
