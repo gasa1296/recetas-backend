@@ -30,29 +30,27 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(Patient $patient): JsonResponse
     {
-        $instance = Patient::findOrFail($id);
-        return response()->json($instance);
+        return response()->json($patient);
     }
 
     /**
      * Update the specified resource in storage.
      * @todo Add validations
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, Patient $patient): JsonResponse
     {
-        $instance = Patient::findOrFail($id);
-        $instance->update($request->all());
-        return response()->json($instance);
+        $patient->update($request->all());
+        return response()->json($patient);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Patient $patient): JsonResponse
     {
-        Patient::findOrFail($id)->delete();
+        $patient->delete();
         return response()->json();
     }
 }
