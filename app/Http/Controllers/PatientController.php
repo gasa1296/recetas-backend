@@ -19,6 +19,7 @@ class PatientController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
@@ -37,6 +38,7 @@ class PatientController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @todo Add validations
      */
     public function update(Request $request, int $id): JsonResponse
     {

@@ -17,6 +17,8 @@ class PrescriptionController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @todo upload file
+     * @todo Add validations
      */
     public function store(Request $request)
     {
@@ -33,6 +35,8 @@ class PrescriptionController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @todo upload file
+     * @todo Add validations
      */
     public function update(Request $request, Prescription $prescription)
     {
