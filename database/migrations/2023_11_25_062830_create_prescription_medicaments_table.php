@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('duration');
             $table->foreignId('medicament_id')->constrained();
             $table->foreignId('prescription_id')->constrained();
+            $table->primary(['medicament_id', 'prescription_id']);
             $table->timestamps();
         });
     }
