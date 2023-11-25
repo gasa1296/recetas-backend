@@ -5,10 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Prescription extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'temp',
+        'weight',
+        'height',
+        'pressure',
+        'saturation',
+        'ppm',
+        'allergy',
+        'diagnostic',
+        'diet',
+        'aditional',
+        'user_id',
+        'room_id',
+        'patient_id',
+    ];
     /**
      * Get the medic of the prescription.
      */
