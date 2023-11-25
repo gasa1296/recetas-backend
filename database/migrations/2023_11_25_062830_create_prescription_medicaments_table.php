@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('way');
             $table->string('frequency')->nullable();
             $table->string('duration');
-            $table->foreignId('medicament_id')->constrained();
-            $table->foreignId('prescription_id')->constrained();
-            $table->primary(['medicament_id', 'prescription_id']);
+            $table->foreignId('medicament_id')->constrained('medicaments');
+            $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
         });
     }
