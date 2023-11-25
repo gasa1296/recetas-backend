@@ -18,13 +18,13 @@ class ConsultingRoomFactory extends Factory
     {
         return [
             "name"=> fake()->name(),
-            "zip" => fake()->randomNumber(),
+            "zip" => fake()->postcode(),
             "street" => fake()->streetAddress(),
             "colony" => fake()->city(),
             "state" => fake()->city(),
             "delegation" => fake()->city(),
-            "n_exterior" => fake()->words(),
-            "n_interior" => fake()->words(),
+            "n_exterior" => fake()->randomNumber(),
+            "n_interior" => fake()->randomNumber(),
             "address" => fake()->address(),
             "phone" => fake()->phoneNumber(),
             "logo" => fake()->imageUrl(),
