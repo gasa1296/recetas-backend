@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('form')->nullable();
             $table->string('way')->nullable();
             $table->string('image')->nullable();
+            $table->boolean('digital')->default(true);
             
             $table->timestamps();
         });
