@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use Illuminate\Http\Request;
 
+/**
+ * @todo Add Resource with composed Data
+ */
 class PrescriptionController extends Controller
 {
     /**
