@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Medicament;
+use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
 use Illuminate\Http\Request;
 
+/**
+ * @todo verify querys
+ */
 class PrescriptionMedicamentController extends Controller
 {
     /**
@@ -12,38 +17,60 @@ class PrescriptionMedicamentController extends Controller
      */
     public function index()
     {
-        //
+        $instances = PrescriptionMedicament::whereRelation("prescription","user_id", auth()->id());
+        return response()->json($instances->paginate(10));
     }
 
     /**
      * Store a newly created resource in storage.
+     * @todo Add validations
      */
     public function store(Request $request)
     {
-        //
+        $instance = PrescriptionMedicament::create($request->all());
+        return response()->json($instance);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(PrescriptionMedicament $prescriptionMedicament)
+    public function show(Prescription $prescription, Medicament $medicament)
     {
-        //
+        $instance = PrescriptionMedicament
+            ::whereRelation("prescription", "user_id", auth()->id())
+            ->where('prescription_id', $prescription->id)
+            ->where('medicament_id', $medicament->id)
+            ->firstOrFail();
+        return response()->json($instance);
     }
 
     /**
      * Update the specified resource in storage.
+     * @todo Add validations
      */
-    public function update(Request $request, PrescriptionMedicament $prescriptionMedicament)
+    public function update(Request $request, Prescription $prescription, Medicament $medicament)
     {
-        //
+        $instance = PrescriptionMedicament
+            ::whereRelation("prescription", "user_id", auth()->id())
+            ->where('prescription_id', $prescription->id)
+            ->where('medicament_id', $medicament->id)
+            ->firstOrFail();
+        $instance->update($request->all());
+        return response()->json($prescription);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PrescriptionMedicament $prescriptionMedicament)
+    public function destroy(Prescription $prescription, Medicament $medicament)
     {
-        //
+        $instance = PrescriptionMedicament
+            ::whereRelation("prescription", "user_id", auth()->id())
+            ->where('prescription_id', $prescription->id)
+            ->where('medicament_id', $medicament->id)
+            ->firstOrFail();
+        $instance->delete();
+        return response()->json();
+
     }
 }
