@@ -19,7 +19,7 @@ class Equipment extends Model
         'name',
     ];
     /**
-     * Get the prescriptions of the medicaments.
+     * Get the prescriptions of the equipment.
      */
     public function prescriptions(): HasMany
     {
