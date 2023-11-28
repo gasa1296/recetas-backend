@@ -18,6 +18,7 @@ class EquipmentFactory extends Factory
     {
         return [
             "name" => fake()->word(),
+            "image" => fake()->imageUrl(),
         ];
     }
 }
