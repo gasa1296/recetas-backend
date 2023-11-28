@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('prescription_equipment', function (Blueprint $table) {
             $table->text('additional')->nullable();
-            $table->foreignId('equipment_id')->constrained('equipments');
+            $table->foreignId('equipment_id')->constrained('equipment');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
         });
