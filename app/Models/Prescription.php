@@ -27,7 +27,7 @@ class Prescription extends Model
         'allergy',
         'diagnostic',
         'diet',
-        'aditional',
+        'additional',
         'user_id',
         'room_id',
         'patient_id',
