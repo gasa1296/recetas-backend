@@ -17,6 +17,7 @@ class Equipment extends Model
      */
     protected $fillable = [
         'name',
+        'image',
     ];
     /**
      * Get the prescriptions of the equipment.
