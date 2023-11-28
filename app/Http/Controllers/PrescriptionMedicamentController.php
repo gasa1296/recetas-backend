@@ -71,6 +71,5 @@ class PrescriptionMedicamentController extends Controller
             ->firstOrFail();
         $instance->delete();
         return response()->json();
-
     }
 }
