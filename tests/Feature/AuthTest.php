@@ -20,7 +20,7 @@ class AuthTest extends TestCase
             'email'=> $user->email,
             'password'=> 'password',
         ]);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
     public function test_register(): void
     {
@@ -51,7 +51,7 @@ class AuthTest extends TestCase
             'logo' => fake()->imageUrl(),
             'design' => fake()->randomElement([1, 2, 3]),
         ]);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
     public function test_logout(): void
     {
@@ -65,6 +65,6 @@ class AuthTest extends TestCase
         $response = $this->delete('api/auth/logout',headers: [
             'Authorization'=> 'Bearer ' . $token,
         ]);
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 }
