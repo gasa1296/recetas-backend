@@ -12,7 +12,7 @@ class PrescriptionController extends Controller
     public function index(): JsonResponse
     {
         $instances = Prescription::all();
-        return PrescriptionResource::collection($instances)->response();
+        return PrescriptionResource::collection($instances->paginate(10))->response();
     }
 
     /**
