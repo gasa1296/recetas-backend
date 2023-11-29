@@ -9,21 +9,20 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $instance = Auth::user();
-
+        $instance = User::where('email', request()->email)->firstOrFail();
+        if (Hash::check(request()->password, $instance->password)) {
             return response()->json([
-                'token' => $instance->createToken('MyApp')->plainTextToken,
+                'token' => $instance->createToken('recipe')->plainTextToken,
                 'user' => $instance,
             ]);
-        } else {
-            return response()->json([], 404);
         }
+        return response()->json([], 404);
     }
     /**
      * Store a newly created resource in storage.
@@ -42,7 +41,7 @@ class AuthController extends Controller
             'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
-            'genry' => 'required',
+            'genre' => 'required',
             'university' => 'required',
             'fesa' => 'required',
             'image' => 'required',
@@ -53,9 +52,8 @@ class AuthController extends Controller
         }
         $inputs = $request->all();
         $instance = User::create($inputs);
-        $instance->sendEmailVerificationNotification();
         event(new Registered($instance));
-        $inputs['user'] = $instance->id;
+        $inputs['user_id'] = $instance->id;
         ConsultingRoom::create($inputs);
 
         return response()->json();
@@ -84,7 +82,7 @@ class AuthController extends Controller
             'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
-            'genry' => 'required',
+            'genre' => 'required',
             'university' => 'required',
             'fesa' => 'required',
         ]);
