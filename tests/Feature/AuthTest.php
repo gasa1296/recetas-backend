@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\Sanctum;
 
 class AuthTest extends TestCase
 {
@@ -56,15 +57,8 @@ class AuthTest extends TestCase
     public function test_logout(): void
     {
         $user = User::factory()->create();
-
-        $response = $this->post('api/auth/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-        $token = $response->json()['token'];
-        $response = $this->delete('api/auth/logout',headers: [
-            'Authorization'=> 'Bearer ' . $token,
-        ]);
+        Sanctum::actingAs($user, ['*']);
+        $response = $this->delete('api/auth/logout');
         $response->assertOk();
     }
 }

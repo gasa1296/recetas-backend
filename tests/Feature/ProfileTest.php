@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 
 class ProfileTest extends TestCase
 {
@@ -16,33 +17,23 @@ class ProfileTest extends TestCase
     {
         parent::setUp();
         $user = User::factory()->create();
-        $response = $this->post('api/auth/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-        $this->token = $response->json()['token'];
+        Sanctum::actingAs($user, ['*']);
         
     }
     
     public function test_show(): void
     {
-        $response = $this->get('api/profile', headers: [
-            'Authorization' => 'Bearer ' . $this->token,
-        ]);
+        $response = $this->get('api/profile');
         $response->assertOk();
     }
     public function test_not_update(): void
     {
-        $response = $this->put('api/profile', headers: [
-            'Authorization' => 'Bearer ' . $this->token,
-        ]);
+        $response = $this->put('api/profile');
         $response->assertBadRequest();
     }
     public function test_delete(): void
     {
-        $response = $this->delete('api/profile', headers: [
-            'Authorization' => 'Bearer ' . $this->token,
-        ]);
+        $response = $this->delete('api/profile');
         $response->assertOk();
     }
 }
