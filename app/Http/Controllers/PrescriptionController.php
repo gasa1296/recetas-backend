@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/**
- * @todo Add Resource with composed Data
- */
 class PrescriptionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
         $instances = Prescription::all();
-        return response()->json($instances->paginate(10));
+        return PrescriptionResource::collection($instances)->response();
     }
 
     /**
@@ -24,23 +20,24 @@ class PrescriptionController extends Controller
      * @todo upload file
      * @todo Add validations
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
         $inputs['user_id'] = auth()->id();
         $instance = Prescription::create($inputs);
-        return response()->json($instance);
+
+        return (new PrescriptionResource($instance))->response();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Prescription $prescription)
+    public function show(Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([],404);
         }
-        return response()->json($prescription);
+        return (new PrescriptionResource($prescription))->response();
     }
 
     /**
@@ -48,13 +45,13 @@ class PrescriptionController extends Controller
      * @todo upload file
      * @todo Add validations
      */
-    public function update(Request $request, Prescription $prescription)
+    public function update(Request $request, Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
         }
         $prescription->update($request->all());
-        return response()->json($prescription);
+        return (new PrescriptionResource($prescription))->response();
     }
 
     /**
