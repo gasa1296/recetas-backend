@@ -29,7 +29,7 @@ class ConsultingRoom extends Model
         'address',
         'phone',
         'logo',
-        'desing',
+        'design',
         'user_id',
     ];
     /**
