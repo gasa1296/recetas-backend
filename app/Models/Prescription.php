@@ -32,20 +32,21 @@ class Prescription extends Model
         'room_id',
         'patient_id',
         'file',
+        'status',
     ];
     /**
      * Get the medic of the prescription.
      */
     public function medic(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'medic_id');
+        return $this->belongsTo(User::class);
     }
     /**
      * Get the room of the prescription.
      */
     public function room(): BelongsTo
     {
-        return $this->belongsTo(ConsultingRoom::class, 'room_id');
+        return $this->belongsTo(ConsultingRoom::class);
     }
     /**
      * Get the patient of the prescription.
@@ -59,6 +60,13 @@ class Prescription extends Model
      */
     public function medicaments(): HasMany
     {
-        return $this->hasMany(PrescriptionMedicament::class, 'prescription_id');
+        return $this->hasMany(PrescriptionMedicament::class);
+    }
+    /**
+     * Get the equipment of the prescription.
+     */
+    public function equipment(): HasMany
+    {
+        return $this->hasMany(PrescriptionEquipment::class);
     }
 }
