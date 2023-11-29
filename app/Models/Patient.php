@@ -25,6 +25,7 @@ class Patient extends Model
         'phone2',
         'email',
         'birth_date',
+        'gender',
     ];
     /**
      * Get the prescriptions of the patient.

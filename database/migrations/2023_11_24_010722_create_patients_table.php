@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('fist_name');
             $table->string('last_name1');
             $table->string('last_name2')->nullable();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('phone1');
             $table->string('phone2')->nullable();
+            $table->enum('genre', ['M', 'F']);
             $table->date('birth_date');
             
             $table->timestamps();
