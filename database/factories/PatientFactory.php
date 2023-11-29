@@ -24,6 +24,7 @@ class PatientFactory extends Factory
             "phone1" => fake()->phoneNumber(),
             "phone2" => fake()->phoneNumber(),
             "birth_date" => fake()->date(),
+            'genre' => fake()->randomElement(['M', 'F']),
         ];
     }
 }
