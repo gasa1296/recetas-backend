@@ -28,8 +28,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 });
 
 Route::controller(VerificationController::class)->prefix('email')->group(function () {
-    Route::get('verify/{id}/{hash}','verify');
-    Route::post('verify/resend','resend');
+    Route::get('verify/{id}/{hash}','verify')->name('verification.verify');
+    Route::post('verify/resend','resend')->name('verification.resend');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
