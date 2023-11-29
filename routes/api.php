@@ -35,9 +35,9 @@ Route::controller(VerificationController::class)->prefix('email')->group(functio
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
-        Route::get('profile', 'show');
-        Route::put('profile', 'update');
-        Route::delete('profile', 'destroy');
+        Route::get('', 'show');
+        Route::put('', 'update');
+        Route::delete('', 'destroy');
     });
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
