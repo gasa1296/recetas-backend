@@ -44,8 +44,7 @@ class PrescriptionTest extends TestCase
       'file' => fake()->imageUrl(),
       'status' => fake()->randomNumber(3),
     ]);
-    print_r($response->json());
-
+    
     $response->assertStatus(201);
   }
   public function test_update(): void
