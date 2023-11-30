@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ConsultingRoomController extends Controller
 {
@@ -19,12 +20,14 @@ class ConsultingRoomController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
+        if ($request->file('file')) {
+            $inputs['logo'] = $request->file('logo')->store('logos');
+        }
         $inputs["user_id"] = auth()->id();
         $instance = ConsultingRoom::create($inputs);
         return response()->json($instance);
@@ -43,7 +46,6 @@ class ConsultingRoomController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function update(Request $request, ConsultingRoom $room): JsonResponse
@@ -51,7 +53,15 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $room->update($request->all());
+        $inputs = $request->all();
+        if ($request->file('file')) {
+            Storage::delete($room->logo);
+            $inputs['logo'] = $request->file('logo')->store('logos');
+            if ($inputs['logo']) {
+                Storage::delete($room->image);
+            }
+        }
+        $room->update($inputs);
         return response()->json($room);
     }
 
@@ -63,6 +73,7 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
+        Storage::delete($room->logo);
         $room->delete();
         return response()->json();
     }
