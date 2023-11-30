@@ -21,6 +21,7 @@ class MedicamentFactory extends Factory
             "ingredient" => fake()->word(),
             "way" => fake()->word(),
             "form" => fake()->word(),
+            "image" => fake()->imageUrl(),
         ];
     }
 }
