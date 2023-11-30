@@ -16,7 +16,7 @@ class PrescriptionEquipment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'additional',
+        'add',
         'equipment_id',
         'prescription_id',
     ];

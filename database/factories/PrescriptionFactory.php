@@ -31,7 +31,7 @@ class PrescriptionFactory extends Factory
             'allergy' => fake()->words(10, true),
             'diagnostic' => fake()->words(10, true),
             'diet' => fake()->words(10, true),
-            'additional' => fake()->words(10, true),
+            'add' => fake()->words(10, true),
             'user_id' => $room->user_id,
             'room_id' => $room->id,
             'patient_id' => Patient::factory()->create()->id,

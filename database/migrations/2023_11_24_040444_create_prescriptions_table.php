@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('allergy')->nullable();
             $table->text('diagnostic');
             $table->text('diet')->nullable();
-            $table->text('additional')->nullable();
+            $table->text('add')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('room_id')->constrained('consulting_rooms');
             $table->foreignId('patient_id')->constrained('patients');
