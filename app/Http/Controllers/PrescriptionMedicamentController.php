@@ -20,7 +20,7 @@ class PrescriptionMedicamentController extends Controller
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $instances = $prescription->medicaments;
+        $instances = $prescription->medicaments();
         return response()->json($instances->paginate(10));
     }
 

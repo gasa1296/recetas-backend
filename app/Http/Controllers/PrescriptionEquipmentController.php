@@ -18,7 +18,7 @@ class PrescriptionEquipmentController extends Controller
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $instances = $prescription->equipment;
+        $instances = $prescription->equipment();
         return response()->json($instances->paginate(10));
     }
 
