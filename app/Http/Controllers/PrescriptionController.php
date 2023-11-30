@@ -11,8 +11,7 @@ class PrescriptionController extends Controller
 {
     public function index(): JsonResponse
     {
-        $instances = Prescription::all();
-        return PrescriptionResource::collection($instances->paginate(10))->response();
+        return PrescriptionResource::collection(Prescription::paginate(10))->response();
     }
 
     /**

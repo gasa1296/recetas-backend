@@ -39,7 +39,7 @@ class Prescription extends Model
      */
     public function medic(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     /**
      * Get the room of the prescription.

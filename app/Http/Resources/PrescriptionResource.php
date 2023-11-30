@@ -25,7 +25,7 @@ class PrescriptionResource extends JsonResource
             'allergy' => $this->allergy,
             'diagnostic' => $this->diagnostic,
             'diet' => $this->diet,
-            'aditional' => $this->additional,
+            'additional' => $this->additional,
             'medic' => $this->medic,
             'room' => $this->room,
             'patient' => $this->patient,
