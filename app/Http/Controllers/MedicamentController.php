@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Medicament;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MedicamentController extends Controller
 {
@@ -18,12 +19,15 @@ class MedicamentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function store(Request $request)
     {
-        $instance = Medicament::create($request->all());
+        $inputs = $request->all();
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('images');
+        }
+        $instance = Medicament::create($inputs);
         return response()->json($instance);
     }
 
@@ -37,12 +41,18 @@ class MedicamentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function update(Request $request, Medicament $medicament)
     {
-        $medicament->update($request->all());
+        $inputs = $request->all();
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('images');
+            if ($inputs['image']) {
+                Storage::delete($medicament->image);
+            }
+        }
+        $medicament->update($inputs);
         return response()->json($medicament);
     }
 
@@ -51,6 +61,7 @@ class MedicamentController extends Controller
      */
     public function destroy(Medicament $medicament)
     {
+        Storage::delete($medicament->image);
         $medicament->delete();
         return response()->json();
     }

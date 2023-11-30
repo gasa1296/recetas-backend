@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
 {
@@ -18,12 +19,15 @@ class EquipmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function store(Request $request)
     {
-        $instance = Equipment::create($request->all());
+        $inputs = $request->all();
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('images');
+        }
+        $instance = Equipment::create($inputs);
         return response()->json($instance);
     }
 
@@ -37,12 +41,18 @@ class EquipmentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function update(Request $request, Equipment $equipment)
     {
-        $equipment->update($request->all());
+        $inputs = $request->all();
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('images');
+            if ($inputs['image']) {
+                Storage::delete($equipment->image);
+            }
+        }
+        $equipment->update($inputs);
         return response()->json($equipment);
     }
 
@@ -51,6 +61,7 @@ class EquipmentController extends Controller
      */
     public function destroy(Equipment $equipment)
     {
+        Storage::delete($equipment->image);
         $equipment->delete();
         return response()->json();
     }
