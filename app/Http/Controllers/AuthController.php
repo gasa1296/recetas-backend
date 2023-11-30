@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,7 +26,6 @@ class AuthController extends Controller
     }
     /**
      * Store a newly created resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function register(Request $request): JsonResponse
@@ -51,6 +50,14 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $request->all();
+
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('avatars');
+        }
+        if ($request->file('file')) {
+            $inputs['logo'] = $request->file('logo')->store('logos');
+        }
+
         $instance = User::create($inputs);
         event(new Registered($instance));
         $inputs['user_id'] = $instance->id;
@@ -69,7 +76,7 @@ class AuthController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo upload file
+     * @todo Add validations
      */
     public function update(Request $request): JsonResponse
     {
@@ -89,8 +96,12 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $inputs = $request->all();
+        if ($request->file('image')) {
+            $inputs['image'] = $request->file('image')->store('avatars');
+        }
         $instance = $request->user();
-        $instance->update($request->all());
+        $instance->update($inputs);
         return response()->json($instance);
     }
 
@@ -106,9 +117,11 @@ class AuthController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(): JsonResponse
     {
-        $request->user()->delete();
+        $user = auth()->user();
+        Storage::delete($user->image);
+        $user->delete();
         return response()->json();
     }
 }
