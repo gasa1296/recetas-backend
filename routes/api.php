@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\VerificationController;
@@ -43,7 +44,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'patient' => PatientController::class,
-        'prescription' => Prescription::class,
+        'prescription' => PrescriptionController::class,
         'medicament' => MedicamentController::class,
         'equipment' => EquipmentController::class,
         'prescription.medicament' => PrescriptionMedicamentController::class,
