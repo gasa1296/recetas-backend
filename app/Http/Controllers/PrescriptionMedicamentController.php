@@ -30,9 +30,12 @@ class PrescriptionMedicamentController extends Controller
      */
     public function store(Request $request, Prescription $prescription)
     {
-        if ($request->query('bulk', 0) == 0) {
+        $inputs = $request->all();
+        $bulk = $request->query('bulk', 0);
+        if ($bulk == 0) {
             $instance = $prescription->medicaments()->create($request->all());
         } else {
+            unset($inputs['bulk']);
             $instance = $prescription->medicaments()->createMany($request->all());
         }
         return response()->json($instance);

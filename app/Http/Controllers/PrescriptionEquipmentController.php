@@ -28,10 +28,13 @@ class PrescriptionEquipmentController extends Controller
      */
     public function store(Request $request, Prescription $prescription): JsonResponse
     {
-        if ($request->query('bulk', 0) == 0) {
-            $instance = $prescription->equipment()->create($request->all());
+        $inputs = $request->all();
+        $bulk = $request->query('bulk', 0);
+        if ($bulk == 0) {
+            $instance = $prescription->equipment()->create($inputs);
         } else {
-            $instance = $prescription->equipment()->createMany($request->all());
+            unset($inputs['bulk']);
+            $instance = $prescription->equipment()->createMany($inputs);
         }
         return response()->json($instance);
     }
