@@ -13,8 +13,7 @@ class PatientController extends Controller
      */
     public function index(): JsonResponse
     {
-        $instances = Patient::all();
-        return response()->json($instances->paginate(10));
+        return response()->json(Patient::paginate(10));
     }
 
     /**
