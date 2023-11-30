@@ -21,8 +21,8 @@ class PrescriptionMedicamentFactory extends Factory
         return [
             'dose' => fake()->randomDigit(),
             'way' => fake()->words(10, true),
-            'frequency' => fake()->randomNumber(24),
-            'duration' => fake()->randomNumber(15),
+            'frequency' => fake()->randomNumber(),
+            'duration' => fake()->randomNumber(),
             'medicament_id' => Medicament::factory()->create()->id,
             'prescription_id' => Prescription::factory()->create()->id,
         ];
