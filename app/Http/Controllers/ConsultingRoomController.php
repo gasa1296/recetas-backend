@@ -55,7 +55,6 @@ class ConsultingRoomController extends Controller
         }
         $inputs = $request->all();
         if ($request->file('logo')) {
-            Storage::delete($room->logo);
             $inputs['logo'] = $request->file('logo')->store('logos');
             if ($inputs['logo']) {
                 Storage::delete($room->image);
