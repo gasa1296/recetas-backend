@@ -2,13 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\ConsultingRoom;
 use Laravel\Sanctum\Sanctum;
-use Illuminate\Support\Facades\Hash;
 
 class RoomTest extends TestCase
 {
