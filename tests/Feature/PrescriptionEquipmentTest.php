@@ -65,7 +65,6 @@ class PrescriptionEquipmentTest extends TestCase
         $response = $this->put("api/prescription/$prescription_id/equipment/$equipment_id", [
             "add"=> fake()->words(10, true),
         ]);
-        print_r($response->json());
         $response->assertOk();
     }
     public function test_show(): void
