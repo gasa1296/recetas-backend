@@ -12,8 +12,7 @@ class MedicamentController extends Controller
      */
     public function index()
     {
-        $instances = Medicament::all();
-        return response()->json($instances->paginate(10));
+        return response()->json(Medicament::paginate(10));
     }
 
     /**

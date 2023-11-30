@@ -12,8 +12,7 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        $instances = Equipment::all();
-        return response()->json($instances->paginate(10));
+        return response()->json(Equipment::paginate(10));
     }
 
     /**
