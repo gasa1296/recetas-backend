@@ -25,7 +25,7 @@ class ConsultingRoomController extends Controller
     public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
-        if ($request->file('file')) {
+        if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('logos');
         }
         $inputs["user_id"] = auth()->id();
@@ -54,7 +54,7 @@ class ConsultingRoomController extends Controller
             return response()->json([], 404);
         }
         $inputs = $request->all();
-        if ($request->file('file')) {
+        if ($request->file('logo')) {
             Storage::delete($room->logo);
             $inputs['logo'] = $request->file('logo')->store('logos');
             if ($inputs['logo']) {
