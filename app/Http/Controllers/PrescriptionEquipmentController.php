@@ -13,9 +13,12 @@ class PrescriptionEquipmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Prescription $prescription)
     {
-        $instances = PrescriptionEquipment::whereRelation("prescription", "user_id", auth()->id());
+        if ($prescription->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
+        $instances = $prescription->equipment;
         return response()->json($instances->paginate(10));
     }
 
@@ -23,18 +26,14 @@ class PrescriptionEquipmentController extends Controller
      * Store a newly created resource in storage.
      * @todo Add validations
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, Prescription $prescription): JsonResponse
     {
         if ($request->query('bulk', 0) == 0) {
-            $instance = PrescriptionEquipment::create($request->all());
-            return response()->json($instance);
+            $instance = $prescription->equipment()->create($request->all());
         } else {
-            /**
-             * @todo test it
-             */
-            $instance = PrescriptionEquipment::insert($request->all());
-            return response()->json($instance);
+            $instance = $prescription->equipment()->createMany($request->all());
         }
+        return response()->json($instance);
     }
 
     /**

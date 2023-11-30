@@ -15,9 +15,12 @@ class PrescriptionMedicamentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Prescription $prescription)
     {
-        $instances = PrescriptionMedicament::whereRelation("prescription","user_id", auth()->id());
+        if ($prescription->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
+        $instances = $prescription->medicaments;
         return response()->json($instances->paginate(10));
     }
 
@@ -25,18 +28,14 @@ class PrescriptionMedicamentController extends Controller
      * Store a newly created resource in storage.
      * @todo Add validations
      */
-    public function store(Request $request)
+    public function store(Request $request, Prescription $prescription)
     {
         if ($request->query('bulk', 0) == 0) {
-            $instance = PrescriptionMedicament::create($request->all());
-            return response()->json($instance);
+            $instance = $prescription->medicaments()->create($request->all());
         } else {
-            /**
-             * @todo test it
-             */
-            $instance = PrescriptionMedicament::insert($request->all());
-            return response()->json($instance);
+            $instance = $prescription->medicaments()->createMany($request->all());
         }
+        return response()->json($instance);
     }
 
     /**
