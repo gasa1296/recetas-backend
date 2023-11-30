@@ -9,6 +9,7 @@ class MedicamentController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @todo add search
      */
     public function index()
     {

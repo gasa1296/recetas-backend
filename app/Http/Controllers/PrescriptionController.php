@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class PrescriptionController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     * @todo add search
+     */
     public function index(): JsonResponse
     {
         return PrescriptionResource::collection(Prescription::paginate(10))->response();
