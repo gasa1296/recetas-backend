@@ -17,7 +17,7 @@ class PatientFactory extends Factory
     public function definition(): array
     {
         return [
-            "fist_name" => fake()->firstName(),
+            "first_name" => fake()->firstName(),
             "last_name1" => fake()->lastName(),
             "last_name2" => fake()->lastName(),
             "email" => fake()->email(),
