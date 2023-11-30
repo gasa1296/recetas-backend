@@ -16,7 +16,7 @@ class PrescriptionEquipmentResource extends JsonResource
     {
         return [
             "equipment"=> $this->equipment,
-            'additional' => $this->additional,
+            'add' => $this->add,
         ];
     }
 }
