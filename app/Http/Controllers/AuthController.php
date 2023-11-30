@@ -96,11 +96,14 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $instance = auth()->user();
         $inputs = $request->all();
         if ($request->file('image')) {
             $inputs['image'] = $request->file('image')->store('avatars');
+            if ($inputs['image']) {
+                Storage::delete($instance->image);
+            }
         }
-        $instance = $request->user();
         $instance->update($inputs);
         return response()->json($instance);
     }
