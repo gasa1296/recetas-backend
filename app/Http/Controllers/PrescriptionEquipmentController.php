@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipment;
 use App\Models\PrescriptionEquipment;
 use App\Models\Prescription;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PrescriptionEquipmentController extends Controller
@@ -22,10 +23,18 @@ class PrescriptionEquipmentController extends Controller
      * Store a newly created resource in storage.
      * @todo Add validations
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $instance = PrescriptionEquipment::create($request->all());
-        return response()->json($instance);
+        if ($request->query('bulk', 0) == 0) {
+            $instance = PrescriptionEquipment::create($request->all());
+            return response()->json($instance);
+        } else {
+            /**
+             * @todo test it
+             */
+            $instance = PrescriptionEquipment::insert($request->all());
+            return response()->json($instance);
+        }
     }
 
     /**

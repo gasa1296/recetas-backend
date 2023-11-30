@@ -27,8 +27,16 @@ class PrescriptionMedicamentController extends Controller
      */
     public function store(Request $request)
     {
-        $instance = PrescriptionMedicament::create($request->all());
-        return response()->json($instance);
+        if ($request->query('bulk', 0) == 0) {
+            $instance = PrescriptionMedicament::create($request->all());
+            return response()->json($instance);
+        } else {
+            /**
+             * @todo test it
+             */
+            $instance = PrescriptionMedicament::insert($request->all());
+            return response()->json($instance);
+        }
     }
 
     /**
