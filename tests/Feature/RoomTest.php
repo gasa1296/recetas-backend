@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\ConsultingRoom;
@@ -10,7 +11,7 @@ use Laravel\Sanctum\Sanctum;
 
 class RoomTest extends TestCase
 {
-    use WithFaker;
+    use WithFaker, RefreshDatabase;
 
     private $user;
 

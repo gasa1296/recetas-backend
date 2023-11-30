@@ -9,11 +9,12 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
-use App\Models\Patient;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
 class PrescriptionEquipmentTest extends TestCase
 {
+    use WithFaker, RefreshDatabase;
     private $user;
     private $room;
     private $prescription;

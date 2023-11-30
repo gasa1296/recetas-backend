@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Medicament;
@@ -10,7 +11,7 @@ use Laravel\Sanctum\Sanctum;
 
 class MedicamentTest extends TestCase
 {
-  use WithFaker;
+  use WithFaker, RefreshDatabase;
 
   private $user;
 

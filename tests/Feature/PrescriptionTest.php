@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\ConsultingRoom;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
@@ -12,7 +13,7 @@ use Laravel\Sanctum\Sanctum;
 
 class PrescriptionTest extends TestCase
 {
-  use WithFaker;
+  use WithFaker, RefreshDatabase;
 
   private $user;
   private $room;
