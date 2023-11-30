@@ -62,9 +62,8 @@ class PrescriptionEquipmentController extends Controller
             ::whereRelation("prescription", "user_id", auth()->id())
             ->where('prescription_id', $prescription->id)
             ->where('equipment_id', $equipment->id)
-            ->firstOrFail();
-        $instance->update($request->all());
-        return response()->json($prescription);
+            ->update($request->all());
+        return response()->json($instance);
     }
 
     /**
@@ -76,8 +75,7 @@ class PrescriptionEquipmentController extends Controller
             ::whereRelation("prescription", "user_id", auth()->id())
             ->where('prescription_id', $prescription->id)
             ->where('equipment_id', $equipment->id)
-            ->firstOrFail();
-        $instance->delete();
+            ->delete();
         return response()->json();
     }
 }
