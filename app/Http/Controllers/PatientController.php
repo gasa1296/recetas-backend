@@ -12,9 +12,20 @@ class PatientController extends Controller
      * Display a listing of the resource.
      * @todo add search
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(Patient::paginate(10));
+        if( $request->search ){
+            $instances = Patient::where('first_name', 'LIKE', "%$request->search%")
+                ->orWhere(\DB::raw('CONCAT(first_name, " ", last_name1)'), 'LIKE', "%$request->search%")
+                ->orWhere(\DB::raw('CONCAT(first_name, " ", last_name1, " ", last_name2)'), 'LIKE', "%$request->search%")
+                ->orWhere('email', 'LIKE', "%$request->search%")
+                ->orWhere('phone1', 'LIKE', "%$request->search%")
+                ->orWhere('phone2', 'LIKE', "%$request->search%");
+            $instances = $instances->paginate(10);
+        } else {
+            $instances = Patient::paginate(10);
+        }
+        return response()->json($instances);
     }
 
     /**
