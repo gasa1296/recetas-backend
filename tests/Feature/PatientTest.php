@@ -25,7 +25,7 @@ class PatientTest extends TestCase
     public function test_insert(): void
     {
         $response = $this->post('api/patient', [
-            "fist_name" => fake()->firstName(),
+            "first_name" => fake()->firstName(),
             "last_name1" => fake()->lastName(),
             "last_name2" => fake()->lastName(),
             "email" => fake()->email(),
@@ -41,7 +41,7 @@ class PatientTest extends TestCase
     {
         $patient = Patient::factory()->create();
         $response = $this->put('api/patient/' . $patient->id, [
-            "fist_name" => fake()->firstName(),
+            "first_name" => fake()->firstName(),
             "last_name1" => fake()->lastName(),
             "last_name2" => fake()->lastName(),
             "email" => fake()->email(),
@@ -64,8 +64,14 @@ class PatientTest extends TestCase
     {
         Patient::factory(10)->create();
         $response = $this->get('api/patient');
-
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
+    }
+    public function test_search(): void
+    {
+        Patient::factory(10)->create();
+        $response = $this->get('api/patient?search=F');
+        $response->assertOk();
+        $this->assertGreaterThan(1, $response->json()['data']);
     }
 }
