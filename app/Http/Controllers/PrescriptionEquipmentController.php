@@ -13,7 +13,7 @@ class PrescriptionEquipmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Prescription $prescription)
+    public function index(Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
@@ -42,7 +42,7 @@ class PrescriptionEquipmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Prescription $prescription, Equipment $equipment)
+    public function show(Prescription $prescription, Equipment $equipment): JsonResponse
     {
         $instance = PrescriptionEquipment
             ::whereRelation("prescription", "user_id", auth()->id())
@@ -56,7 +56,7 @@ class PrescriptionEquipmentController extends Controller
      * Update the specified resource in storage.
      * @todo Add validations
      */
-    public function update(Request $request, Prescription $prescription, Equipment $equipment)
+    public function update(Request $request, Prescription $prescription, Equipment $equipment): JsonResponse
     {
         $instance = PrescriptionEquipment
             ::whereRelation("prescription", "user_id", auth()->id())
@@ -69,7 +69,7 @@ class PrescriptionEquipmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prescription $prescription, Equipment $equipment)
+    public function destroy(Prescription $prescription, Equipment $equipment): JsonResponse
     {
         $instance = PrescriptionEquipment
             ::whereRelation("prescription", "user_id", auth()->id())

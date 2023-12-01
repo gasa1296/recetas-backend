@@ -12,7 +12,7 @@ class EquipmentController extends Controller
      * Display a listing of the resource.
      * @todo add search
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         if( $request->search ){
             $instances = Equipment::where('name', 'LIKE', "%$request->search%");
@@ -25,7 +25,7 @@ class EquipmentController extends Controller
      * Store a newly created resource in storage.
      * @todo Add validations
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
         if ($request->file('image')) {
@@ -38,7 +38,7 @@ class EquipmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Equipment $equipment)
+    public function show(Equipment $equipment): JsonResponse
     {
         return response()->json($equipment);
     }
@@ -47,7 +47,7 @@ class EquipmentController extends Controller
      * Update the specified resource in storage.
      * @todo Add validations
      */
-    public function update(Request $request, Equipment $equipment)
+    public function update(Request $request, Equipment $equipment): JsonResponse
     {
         $inputs = $request->all();
         if ($request->file('image')) {
@@ -63,7 +63,7 @@ class EquipmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Equipment $equipment)
+    public function destroy(Equipment $equipment): JsonResponse
     {
         Storage::delete($equipment->image);
         $equipment->delete();

@@ -60,7 +60,7 @@ class PrescriptionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prescription $prescription)
+    public function destroy(Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);

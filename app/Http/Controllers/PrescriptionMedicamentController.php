@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Medicament;
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -15,7 +16,7 @@ class PrescriptionMedicamentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Prescription $prescription)
+    public function index(Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
@@ -28,7 +29,7 @@ class PrescriptionMedicamentController extends Controller
      * Store a newly created resource in storage.
      * @todo Add validations
      */
-    public function store(Request $request, Prescription $prescription)
+    public function store(Request $request, Prescription $prescription): JsonResponse
     {
         $inputs = $request->all();
         $bulk = $request->query('bulk', 0);
@@ -44,7 +45,7 @@ class PrescriptionMedicamentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Prescription $prescription, Medicament $medicament)
+    public function show(Prescription $prescription, Medicament $medicament): JsonResponse
     {
         $instance = PrescriptionMedicament
             ::whereRelation("prescription", "user_id", auth()->id())
@@ -58,7 +59,7 @@ class PrescriptionMedicamentController extends Controller
      * Update the specified resource in storage.
      * @todo Add validations
      */
-    public function update(Request $request, Prescription $prescription, Medicament $medicament)
+    public function update(Request $request, Prescription $prescription, Medicament $medicament): JsonResponse
     {
         $instance = PrescriptionMedicament
             ::whereRelation("prescription", "user_id", auth()->id())
@@ -71,7 +72,7 @@ class PrescriptionMedicamentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prescription $prescription, Medicament $medicament)
+    public function destroy(Prescription $prescription, Medicament $medicament): JsonResponse
     {
         $instance = PrescriptionMedicament
             ::whereRelation("prescription", "user_id", auth()->id())
