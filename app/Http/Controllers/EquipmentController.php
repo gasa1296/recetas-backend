@@ -12,8 +12,12 @@ class EquipmentController extends Controller
      * Display a listing of the resource.
      * @todo add search
      */
-    public function index()
+    public function index(Request $request)
     {
+        if( $request->search ){
+            $instances = Equipment::where('name', 'LIKE', "%$request->search%");
+            return response()->json($instances->paginate(10));
+        }
         return response()->json(Equipment::paginate(10));
     }
 

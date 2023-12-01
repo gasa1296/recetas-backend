@@ -21,11 +21,10 @@ class PatientController extends Controller
                 ->orWhere('email', 'LIKE', "%$request->search%")
                 ->orWhere('phone1', 'LIKE', "%$request->search%")
                 ->orWhere('phone2', 'LIKE', "%$request->search%");
-            $instances = $instances->paginate(10);
+            return response()->json($instances->paginate(10));
         } else {
-            $instances = Patient::paginate(10);
+            return response()->json(Patient::paginate(10));
         }
-        return response()->json($instances);
     }
 
     /**

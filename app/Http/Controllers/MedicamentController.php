@@ -12,8 +12,12 @@ class MedicamentController extends Controller
      * Display a listing of the resource.
      * @todo add search
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $instances = Medicament::where('name', 'LIKE', "%$request->search%");
+            return response()->json($instances->paginate(10));
+        }
         return response()->json(Medicament::paginate(10));
     }
 
