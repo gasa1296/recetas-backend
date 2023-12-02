@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
     {
         User::create([
             'first_name' => 'admin',
+            'name' => 'admin',
             'last_name1' => 'admin',
             'last_name2' => 'admin',
             'identification' => fake()->randomNumber(),
@@ -27,6 +28,7 @@ class UserSeeder extends Seeder
             'fesa' => fake()->randomNumber(),
             'image' => fake()->imageUrl(),
             'email' => 'admin@admin.com',
+            'is_admin' => true,
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
         ]);
