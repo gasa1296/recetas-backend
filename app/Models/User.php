@@ -69,6 +69,14 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     /**
      * Get the consulting rooms of the medics.
      */
+    public function fullName(): string
+    {
+        return "$this->first_name $this->last_name1 $this->last_name2";
+    }
+
+    /**
+     * Get the consulting rooms of the medics.
+     */
     public function rooms(): HasMany
     {
         return $this->hasMany(ConsultingRoom::class);

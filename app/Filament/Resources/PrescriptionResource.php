@@ -23,9 +23,9 @@ class PrescriptionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('medic', 'email')
+                    ->required(),
                 Forms\Components\Select::make('room_id')
                     ->relationship('room', 'name')
                     ->required(),
