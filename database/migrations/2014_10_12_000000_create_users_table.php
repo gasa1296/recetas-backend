@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('especialization')->nullable();
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
-            $table->string('genre')->nullable();
+            $table->string('gender')->nullable();
             $table->string('university')->nullable();
             $table->string('fesa')->nullable();
             $table->string('email')->unique();

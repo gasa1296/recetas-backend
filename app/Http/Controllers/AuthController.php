@@ -40,7 +40,7 @@ class AuthController extends Controller
             'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
-            'genre' => 'required',
+            'gender' => 'required',
             'university' => 'required',
             'fesa' => 'required',
             'image' => 'required',
@@ -89,7 +89,7 @@ class AuthController extends Controller
             'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
-            'genre' => 'required',
+            'gender' => 'required',
             'university' => 'required',
             'fesa' => 'required',
         ]);

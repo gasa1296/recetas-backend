@@ -29,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'especialization',
         'phone1',
         'phone2',
-        'genre',
+        'gender',
         'university',
         'fesa',
         'email',
