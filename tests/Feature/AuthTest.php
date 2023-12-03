@@ -29,29 +29,30 @@ class AuthTest extends TestCase
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
-            'identification' => fake()->randomNumber(),
-            'especialization' => fake()->jobTitle(),
             'phone1' => fake()->phoneNumber(),
             'phone2' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['M','F']),
-            'university' => fake()->name(),
             'fesa' => fake()->randomNumber(),
-            'image' => fake()->imageUrl(),
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
-            'name' => fake()->name(),
-            'zip' => fake()->postcode(),
-            'street' => fake()->streetAddress(),
-            'colony' => fake()->city(),
-            'state' => fake()->city(),
-            'delegation' => fake()->city(),
-            'n_exterior' => fake()->randomNumber(),
-            'n_interior' => fake()->randomNumber(),
-            'address' => fake()->address(),
-            'phone' => fake()->phoneNumber(),
-            'logo' => fake()->imageUrl(),
-            'design' => fake()->randomElement([1, 2, 3]),
+            'rooms' => [
+                [
+                    'name' => fake()->name(),
+                    'zip' => fake()->postcode(),
+                    'street' => fake()->streetAddress(),
+                    'colony' => fake()->city(),
+                    'state' => fake()->city(),
+                    'delegation' => fake()->city(),
+                    'n_exterior' => fake()->randomNumber(),
+                    'n_interior' => fake()->randomNumber(),
+                    'address' => fake()->address(),
+                    'phone' => fake()->phoneNumber(),
+                    'logo' => fake()->imageUrl(),
+                    'design' => fake()->randomElement([1, 2, 3]),
+                ]
+            ],
         ]);
+        print_r($response->json());
         $response->assertOk();
     }
     public function test_logout(): void
