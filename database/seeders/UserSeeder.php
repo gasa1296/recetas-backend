@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'especialization' => fake()->jobTitle(),
             'phone1' => fake()->phoneNumber(),
             'phone2' => fake()->phoneNumber(),
-            'genre' => fake()->randomElement(['M', 'F']),
+            'gender' => fake()->randomElement(['M', 'F']),
             'university' => fake()->name(),
             'fesa' => fake()->randomNumber(),
             'image' => fake()->imageUrl(),
