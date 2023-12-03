@@ -62,7 +62,7 @@ class AuthController extends Controller
             ConsultingRoom::create($room);
         }
 
-        return response()->json($instance);
+        return response()->json();
     }
 
     /**
