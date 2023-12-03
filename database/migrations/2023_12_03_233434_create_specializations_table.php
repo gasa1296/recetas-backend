@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('identification')->unique();
             $table->string('university');
             $table->string('logo');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
