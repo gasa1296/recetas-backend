@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrescriptionResource\Pages;
-use App\Filament\Resources\PrescriptionResource\RelationManagers;
 use App\Filament\Resources\PrescriptionResource\RelationManagers\EquipmentRelationManager;
+use App\Filament\Resources\PrescriptionResource\RelationManagers\MedicamentsRelationManager;
 use App\Models\Prescription;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -134,6 +134,7 @@ class PrescriptionResource extends Resource
     {
         return [
             EquipmentRelationManager::class,
+            MedicamentsRelationManager::class,
         ];
     }
     
