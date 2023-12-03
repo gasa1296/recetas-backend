@@ -17,22 +17,24 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name1')->nullable();
             $table->string('last_name2')->nullable();
-            $table->string('identification')->nullable();
-            $table->string('especialization')->nullable();
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->string('gender')->nullable();
-            $table->string('university')->nullable();
             $table->string('fesa')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('image')->nullable();
             $table->boolean('is_admin')->default(false);
             
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+
+
+            //$table->string('name');
+            //$table->string('identification')->unique();
+            //$table->string('university');
+            //$table->string('image');
         });
     }
 

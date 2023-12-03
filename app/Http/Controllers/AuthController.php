@@ -36,14 +36,10 @@ class AuthController extends Controller
             'last_name2' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'identification' => 'required',
-            'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
             'gender' => 'required',
-            'university' => 'required',
             'fesa' => 'required',
-            'image' => 'required',
         ]);
         if ($validator->fails())
         {
@@ -60,10 +56,13 @@ class AuthController extends Controller
 
         $instance = User::create($inputs);
         event(new Registered($instance));
-        $inputs['user_id'] = $instance->id;
-        ConsultingRoom::create($inputs);
+        foreach ($inputs['rooms'] as $room)
+        {
+            $room['user_id'] = $instance->id;
+            ConsultingRoom::create($room);
+        }
 
-        return response()->json();
+        return response()->json($instance);
     }
 
     /**
@@ -85,12 +84,9 @@ class AuthController extends Controller
             'last_name1' => 'required',
             'last_name2' => 'required',
             'email' => 'required|email',
-            'identification' => 'required',
-            'especialization' => 'required',
             'phone1' => 'required',
             'phone2' => '',
             'gender' => 'required',
-            'university' => 'required',
             'fesa' => 'required',
         ]);
         if ($validator->fails()) {
@@ -122,9 +118,7 @@ class AuthController extends Controller
      */
     public function destroy(): JsonResponse
     {
-        $user = auth()->user();
-        Storage::delete($user->image);
-        $user->delete();
+        auth()->user()->delete();
         return response()->json();
     }
 }
