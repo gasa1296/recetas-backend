@@ -82,6 +82,13 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return $this->hasMany(ConsultingRoom::class);
     }
     /**
+     * Get the consulting rooms of the medics.
+     */
+    public function specializations(): HasMany
+    {
+        return $this->hasMany(Specialization::class);
+    }
+    /**
      * Get the prescriptions of the medics.
      */
     public function prescriptions(): HasMany
