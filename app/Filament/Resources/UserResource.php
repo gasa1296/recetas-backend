@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -41,8 +41,11 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('phone2')
                     ->tel()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('genre')
-                    ->maxLength(255),
+                Forms\Components\Select::make('gender')
+                    ->options([
+                        'M' => 'Male',
+                        'F' => 'Famale',
+                    ]),
                 Forms\Components\TextInput::make('university')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('fesa')
@@ -54,11 +57,11 @@ class UserResource extends Resource
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
+                    ->dehydrated(fn($state) => filled($state))
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
                     ->image(),
-                Forms\Components\Toggle::make('is_admin')
-                    ->required(),
             ]);
     }
 
