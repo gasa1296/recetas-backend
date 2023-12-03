@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ConsultingRoom;
+use App\Models\Specialization;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,5 +29,9 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
         ]);
+        User::factory(10)
+            ->has(ConsultingRoom::factory()->count(3), 'rooms')
+            ->has(Specialization::factory()->count(3), 'rooms')
+            ->create();
     }
 }
