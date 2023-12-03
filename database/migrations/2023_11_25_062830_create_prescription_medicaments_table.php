@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prescription_medicaments', function (Blueprint $table) {
+            $table->id();
             $table->string('dose')->nullable();
             $table->string('way');
             $table->string('frequency')->nullable();
