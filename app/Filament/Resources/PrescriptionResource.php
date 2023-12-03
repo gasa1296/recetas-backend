@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrescriptionResource\Pages;
 use App\Filament\Resources\PrescriptionResource\RelationManagers;
+use App\Filament\Resources\PrescriptionResource\RelationManagers\EquipmentRelationManager;
 use App\Models\Prescription;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -132,7 +133,7 @@ class PrescriptionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EquipmentRelationManager::class,
         ];
     }
     
