@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\{Select, FileUpload, TextInput, DateTimePicker};
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -23,44 +23,44 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('first_name')
+                TextInput::make('first_name')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('last_name1')
+                TextInput::make('last_name1')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('last_name2')
+                TextInput::make('last_name2')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('identification')
+                TextInput::make('identification')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('especialization')
+                TextInput::make('especialization')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone1')
+                TextInput::make('phone1')
                     ->tel()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone2')
+                TextInput::make('phone2')
                     ->tel()
                     ->maxLength(255),
-                Forms\Components\Select::make('gender')
+                Select::make('gender')
                     ->options([
                         'M' => 'Male',
                         'F' => 'Famale',
                     ]),
-                Forms\Components\TextInput::make('university')
+                TextInput::make('university')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('fesa')
+                TextInput::make('fesa')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
+                DateTimePicker::make('email_verified_at'),
+                TextInput::make('password')
                     ->password()
                     ->dehydrated(fn($state) => filled($state))
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('image')
+                FileUpload::make('image')
                     ->image(),
             ]);
     }
