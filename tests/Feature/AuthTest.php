@@ -51,8 +51,15 @@ class AuthTest extends TestCase
                     'design' => fake()->randomElement([1, 2, 3]),
                 ]
             ],
+            'specializations' => [
+                [
+                    "name" => fake()->words(3, true),
+                    "identification" => fake()->unique()->words(3, true),
+                    "university" => fake()->words(3, true),
+                    "logo" => fake()->imageUrl(),
+                ]
+            ],
         ]);
-        print_r($response->json());
         $response->assertOk();
     }
     public function test_logout(): void
