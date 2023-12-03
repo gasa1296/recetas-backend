@@ -39,8 +39,8 @@ class PatientTest extends TestCase
     }
     public function test_update(): void
     {
-        $patient = Patient::factory()->create();
-        $response = $this->put('api/patient/' . $patient->id, [
+        $instance = Patient::factory()->create();
+        $response = $this->put('api/patient/' . $instance->id, [
             "first_name" => fake()->firstName(),
             "last_name1" => fake()->lastName(),
             "last_name2" => fake()->lastName(),
@@ -55,8 +55,8 @@ class PatientTest extends TestCase
     }
     public function test_show(): void
     {
-        $patient = Patient::factory()->create();
-        $response = $this->get('api/patient/' . $patient->id);
+        $instance = Patient::factory()->create();
+        $response = $this->get('api/patient/' . $instance->id);
 
         $response->assertOk();
     }

@@ -33,8 +33,8 @@ class EquipmentTest extends TestCase
   }
   public function test_update(): void
   {
-    $equipment = Equipment::factory()->create();
-    $response = $this->put('api/equipment/' . $equipment->id, [
+    $instance = Equipment::factory()->create();
+    $response = $this->put('api/equipment/' . $instance->id, [
       "name" => fake()->word(),
       "image" => fake()->imageUrl(),
     ]);
@@ -43,8 +43,8 @@ class EquipmentTest extends TestCase
   }
   public function test_show(): void
   {
-    $equipment = Equipment::factory()->create();
-    $response = $this->get('api/equipment/' . $equipment->id);
+    $instance = Equipment::factory()->create();
+    $response = $this->get('api/equipment/' . $instance->id);
 
     $response->assertOk();
   }

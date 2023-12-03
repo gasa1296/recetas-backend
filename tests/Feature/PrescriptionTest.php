@@ -50,11 +50,11 @@ class PrescriptionTest extends TestCase
   }
   public function test_update(): void
   {
-    $prescription = Prescription::factory()->create([
+    $instance = Prescription::factory()->create([
       "user_id" => $this->user,
       'room_id' => $this->room->id,
     ]);
-    $response = $this->put('api/prescription/' . $prescription->id, [
+    $response = $this->put('api/prescription/' . $instance->id, [
       'temp' => fake()->randomFloat(2, 20, 40),
       'weight' => fake()->randomFloat(2, 30, 300),
       'height' => fake()->randomFloat(2, 30, 300),
@@ -76,11 +76,11 @@ class PrescriptionTest extends TestCase
   }
   public function test_show(): void
   {
-    $prescription = Prescription::factory()->create([
+    $instance = Prescription::factory()->create([
       "user_id" => $this->user,
       'room_id' => $this->room->id,
     ]);
-    $response = $this->get('api/prescription/' . $prescription->id);
+    $response = $this->get('api/prescription/' . $instance->id);
 
     $response->assertOk();
   }

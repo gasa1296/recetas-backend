@@ -43,8 +43,8 @@ class RoomTest extends TestCase
     }
     public function test_update(): void
     {
-        $room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
-        $response = $this->put('api/room/' . $room->id, [
+        $instance = ConsultingRoom::factory()->create(["user_id" => $this->user]);
+        $response = $this->put('api/room/' . $instance->id, [
             "name" => fake()->name(),
             "zip" => fake()->postcode(),
             "street" => fake()->streetAddress(),
@@ -63,8 +63,8 @@ class RoomTest extends TestCase
     }
     public function test_show(): void
     {
-        $room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
-        $response = $this->get('api/room/' . $room->id);
+        $instance = ConsultingRoom::factory()->create(["user_id" => $this->user]);
+        $response = $this->get('api/room/' . $instance->id);
 
         $response->assertOk();
     }

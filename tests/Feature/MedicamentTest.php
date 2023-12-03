@@ -35,8 +35,8 @@ class MedicamentTest extends TestCase
   }
   public function test_update(): void
   {
-    $medicament = Medicament::factory()->create();
-    $response = $this->put('api/medicament/' . $medicament->id, [
+    $instance = Medicament::factory()->create();
+    $response = $this->put('api/medicament/' . $instance->id, [
       "name" => fake()->name(),
       "ingredient" => fake()->word(),
       "way" => fake()->word(),
@@ -47,8 +47,8 @@ class MedicamentTest extends TestCase
   }
   public function test_show(): void
   {
-    $medicament = Medicament::factory()->create();
-    $response = $this->get('api/medicament/' . $medicament->id);
+    $instance = Medicament::factory()->create();
+    $response = $this->get('api/medicament/' . $instance->id);
 
     $response->assertOk();
   }
