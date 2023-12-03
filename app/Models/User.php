@@ -9,8 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Filament\Panel;
+use Filament\Models\Contracts\FilamentUser;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -58,6 +60,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->is_admin;
+    }
+
+    /**
+     * Get the consulting rooms of the medics.
+     */
+    public function fullName(): string
+    {
+        return "$this->first_name $this->last_name1 $this->last_name2";
+    }
 
     /**
      * Get the consulting rooms of the medics.
