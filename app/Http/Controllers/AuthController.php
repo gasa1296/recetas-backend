@@ -47,29 +47,19 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $request->all();
-
-        /*if ($request->file('logo_room')) {
-            $inputs['logo_room'] = $request->file('image')->store('avatars');
-        }
-        if ($request->file('logo_spec')) {
-            $inputs['logo_spec'] = $request->file('logo')->store('logos');
-        }*/
-
         $instance = User::create($inputs);
         event(new Registered($instance));
-        $instances = [];
         foreach ($inputs['rooms'] as $key=>$el) {
             if ($request->file('logo_room') && $request->file('logo_room')[$key]) {
-                $file = $request->file('logo_room')[$key]->store($instance->id . '/images');
+                $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id . '/images');
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
-            $instances[] = ConsultingRoom::create($el);
+            ConsultingRoom::create($el);
         }
-        return response()->json($instances);
         foreach ($inputs['specializations'] as $key=>$el) {
             if ($request->file('logo_spec') && $request->file('logo_spec')[$key]) {
-                $file = $request->file('logo_spec')[$key]->store($instance->id . '/images');
+                $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id . '/images');
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
@@ -107,14 +97,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $instance = auth()->user();
-        $inputs = $request->all();
-        if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('avatars');
-            if ($inputs['image']) {
-                Storage::delete($instance->image);
-            }
-        }
-        $instance->update($inputs);
+        $instance->update($request->all());
         return response()->json($instance);
     }
 
