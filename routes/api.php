@@ -35,7 +35,7 @@ Route::controller(VerificationController::class)->prefix('email')->group(functio
     Route::post('verify/resend','resend')->name('verification.resend');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
 
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show');
