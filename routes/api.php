@@ -30,9 +30,9 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', 'verified']);
 });
 
-Route::controller(VerificationController::class)->prefix('email')->group(function () {
-    Route::get('verify/{id}/{hash}','verify')->name('verification.verify');
-    Route::post('verify/resend','resend')->name('verification.resend');
+Route::controller(VerificationController::class)->prefix('verify')->group(function () {
+    Route::get('{id}/{hash}','verify')->name('verification.verify');
+    Route::post('resend','resend')->name('verification.resend');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
