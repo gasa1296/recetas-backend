@@ -5,17 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms\Form;
-use Filament\Forms\Components\{Select, FileUpload, TextInput, DateTimePicker};
+use Filament\Forms\Components\{Select, TextInput, DateTimePicker};
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Tables\Columns\{TextColumn, ImageColumn, IconColumn};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
+    public User $user;
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -32,10 +32,6 @@ class UserResource extends Resource
                     ->maxLength(255),
                 TextInput::make('last_name2')
                     ->maxLength(255),
-                TextInput::make('identification')
-                    ->maxLength(255),
-                TextInput::make('especialization')
-                    ->maxLength(255),
                 TextInput::make('phone1')
                     ->tel()
                     ->maxLength(255),
@@ -47,8 +43,6 @@ class UserResource extends Resource
                         'M' => 'Male',
                         'F' => 'Famale',
                     ]),
-                TextInput::make('university')
-                    ->maxLength(255),
                 TextInput::make('fesa')
                     ->maxLength(255),
                 TextInput::make('email')
@@ -61,8 +55,7 @@ class UserResource extends Resource
                     ->dehydrated(fn($state) => filled($state))
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->maxLength(255),
-                FileUpload::make('image')
-                    ->image(),
+
             ]);
     }
 
@@ -76,17 +69,11 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('identification')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('especialization')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('phone1')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('genre')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('university')
+                Tables\Columns\TextColumn::make('gender')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('fesa')
                     ->searchable(),
@@ -95,7 +82,6 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\IconColumn::make('is_admin')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
