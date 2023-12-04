@@ -62,7 +62,6 @@ class AuthTest extends TestCase
             'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
             'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
         ]);
-        print_r($response->content());
         $response->assertOk();
     }
     public function test_logout(): void
