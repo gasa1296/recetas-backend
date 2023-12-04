@@ -48,22 +48,24 @@ class AuthController extends Controller
         }
         $inputs = $request->all();
 
-        if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('avatars');
+        /*if ($request->file('logo_room')) {
+            $inputs['logo_room'] = $request->file('image')->store('avatars');
         }
-        if ($request->file('file')) {
-            $inputs['logo'] = $request->file('logo')->store('logos');
-        }
+        if ($request->file('logo_spec')) {
+            $inputs['logo_spec'] = $request->file('logo')->store('logos');
+        }*/
 
         $instance = User::create($inputs);
         event(new Registered($instance));
-        foreach ($inputs['rooms'] as $room) {
-            $room['user_id'] = $instance->id;
-            ConsultingRoom::create($room);
+        foreach ($inputs['rooms'] as $el) {
+            $el['logo'] = $el['logo']->store($instance->id . '/images');
+            $el['user_id'] = $instance->id;
+            ConsultingRoom::create($el);
         }
-        foreach ($inputs['specializations'] as $spec) {
-            $spec['user_id'] = $instance->id;
-            Specialization::create($spec);
+        foreach ($inputs['specializations'] as $el) {
+            $el['logo'] = $el['logo']->store($instance->id . '/images');
+            $el['user_id'] = $instance->id;
+            Specialization::create($el);
         }
 
         return response()->json();
