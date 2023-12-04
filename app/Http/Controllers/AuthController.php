@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
+use App\Models\Specialization;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 use App\Models\User;
@@ -56,10 +57,13 @@ class AuthController extends Controller
 
         $instance = User::create($inputs);
         event(new Registered($instance));
-        foreach ($inputs['rooms'] as $room)
-        {
+        foreach ($inputs['rooms'] as $room) {
             $room['user_id'] = $instance->id;
             ConsultingRoom::create($room);
+        }
+        foreach ($inputs['specializations'] as $spec) {
+            $spec['user_id'] = $instance->id;
+            Specialization::create($spec);
         }
 
         return response()->json();
