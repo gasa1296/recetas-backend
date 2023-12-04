@@ -8,6 +8,8 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class AuthTest extends TestCase
 {
@@ -47,19 +49,20 @@ class AuthTest extends TestCase
                     'n_interior' => fake()->randomNumber(),
                     'address' => fake()->address(),
                     'phone' => fake()->phoneNumber(),
-                    'logo' => fake()->imageUrl(),
                     'design' => fake()->randomElement([1, 2, 3]),
                 ]
             ],
             'specializations' => [
                 [
-                    "name" => fake()->words(3, true),
-                    "identification" => fake()->unique()->words(3, true),
-                    "university" => fake()->words(3, true),
-                    "logo" => fake()->imageUrl(),
+                    'name' => fake()->words(3, true),
+                    'identification' => fake()->unique()->words(3, true),
+                    'university' => fake()->words(3, true),
                 ]
             ],
+            'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
+            'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
         ]);
+        print_r($response->content());
         $response->assertOk();
     }
     public function test_logout(): void
