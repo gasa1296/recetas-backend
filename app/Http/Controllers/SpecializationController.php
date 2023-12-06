@@ -26,7 +26,7 @@ class SpecializationController extends Controller
     {
         $inputs = $request->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('logos');
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
         }
         $inputs["user_id"] = auth()->id();
         $instance = Specialization::create($inputs);
@@ -55,7 +55,7 @@ class SpecializationController extends Controller
         }
         $inputs = $request->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('logos');
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
             if ($inputs['logo']) {
                 Storage::delete($specialization->image);
             }

@@ -51,7 +51,7 @@ class AuthController extends Controller
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key=>$el) {
             if ($request->file('logo_room') && $request->file('logo_room')[$key]) {
-                $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id . '/images');
+                $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id);
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
@@ -59,7 +59,7 @@ class AuthController extends Controller
         }
         foreach ($inputs['specializations'] as $key=>$el) {
             if ($request->file('logo_spec') && $request->file('logo_spec')[$key]) {
-                $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id . '/images');
+                $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id);
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
