@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::post('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
+    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
 
 Route::controller(VerificationController::class)->prefix('verify')->group(function () {
