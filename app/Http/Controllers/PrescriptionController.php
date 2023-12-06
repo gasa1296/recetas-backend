@@ -15,7 +15,7 @@ class PrescriptionController extends Controller
      */
     public function index(): JsonResponse
     {
-        return PrescriptionResource::collection(Prescription::paginate(10))->response();
+        return PrescriptionResource::collection(Prescription::where('user_id', auth()->id())->paginate(10))->response();
     }
 
     /**
