@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show');
         Route::put('', 'update');
+        Route::delete('', 'destroy');
     });
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
