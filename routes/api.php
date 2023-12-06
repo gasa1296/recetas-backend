@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
+    Route::post('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
 
 Route::controller(VerificationController::class)->prefix('verify')->group(function () {
@@ -45,7 +45,6 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show');
         Route::put('', 'update');
-        Route::delete('', 'destroy');
     });
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
