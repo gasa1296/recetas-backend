@@ -27,8 +27,6 @@ class MedicamentTest extends TestCase
     $response = $this->post('api/medicament', [
       "name" => fake()->name(),
       "ingredient" => fake()->word(),
-      "way" => fake()->word(),
-      "form" => fake()->word(),
     ]);
 
     $response->assertOk();
@@ -39,8 +37,6 @@ class MedicamentTest extends TestCase
     $response = $this->put('api/medicament/' . $instance->id, [
       "name" => fake()->name(),
       "ingredient" => fake()->word(),
-      "way" => fake()->word(),
-      "form" => fake()->word(),
     ]);
 
     $response->assertOk();

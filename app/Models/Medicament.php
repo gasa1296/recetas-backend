@@ -18,9 +18,7 @@ class Medicament extends Model
      */
     protected $fillable = [
         'name',
-        'form',
         'ingredient',
-        'way',
         'image',
     ];
     /**

@@ -19,8 +19,6 @@ class MedicamentFactory extends Factory
         return [
             "name" => fake()->name(),
             "ingredient" => fake()->word(),
-            "way" => fake()->word(),
-            "form" => fake()->word(),
             "image" => fake()->imageUrl(),
         ];
     }
