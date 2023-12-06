@@ -18,9 +18,10 @@ class ResetController extends Controller
         $status = Password::sendResetLink(
             $request->only('email')
         );
-        return $status === Password::RESET_LINK_SENT
-            ? response()->json(['status' => __($status)])
-            : response()->json()->withErrors(['email' => __($status)]);
+        if ($status !== Password::RESET_LINK_SENT) {
+            response()->json()->withErrors(['email' => __($status)]);
+        }
+        return response()->json();
     }
     public function reset (Request $request) {
         $request->validate([
@@ -41,8 +42,8 @@ class ResetController extends Controller
                 event(new PasswordReset($user));
             }
         );
-        return $status === Password::PASSWORD_RESET
-            ? response()->json(['status' => __($status)])
-            : response()->json()->withErrors(['email' => __($status)]);
+        if($status !== Password::PASSWORD_RESET) {
+            response()->json()->withErrors(['email' => __($status)]);
+        }
     }
 }

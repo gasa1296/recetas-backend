@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
+use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
@@ -27,12 +28,16 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::delete('logout', 'logout')->middleware(['auth:sanctum', 'verified']);
+    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
 
 Route::controller(VerificationController::class)->prefix('verify')->group(function () {
     Route::get('{id}/{hash}','verify')->name('verification.verify');
     Route::post('resend','resend')->name('verification.resend');
+});
+Route::controller(ResetController::class)->prefix('reset')->group(function () {
+    Route::post('request', 'request')->name('reset.request');
+    Route::post('reset', 'reset')->name('reset.reset');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
