@@ -28,4 +28,8 @@ class VerificationController extends Controller
         $user->sendEmailVerificationNotification();
         return response()->json();
     }
+    public function notice(): JsonResponse
+    {
+        return response()->json(['user' => __('usuario no verificado')]);
+    }
 }
