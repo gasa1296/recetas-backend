@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\RoomsRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\SpecializationsRelationManager;
 use App\Models\User;
 use Filament\Forms\Form;
 use Filament\Forms\Components\{Select, TextInput, DateTimePicker};
@@ -118,7 +120,8 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RoomsRelationManager::class,
+            SpecializationsRelationManager::class,
         ];
     }
     
