@@ -35,7 +35,7 @@ class PatientTest extends TestCase
             'gender' => fake()->randomElement(['M', 'F']),
         ]);
 
-        $response->assertOk();
+        $response->assertStatus(201);
     }
     public function test_update(): void
     {
