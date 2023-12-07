@@ -37,9 +37,6 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription): JsonResponse
     {
-        if ($prescription->user_id != auth()->id()) {
-            return response()->json([],404);
-        }
         return (new PrescriptionResource($prescription))->response();
     }
 
