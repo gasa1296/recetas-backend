@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -20,11 +21,18 @@ class SpecializationController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'identification' => 'required',
+            'logo' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
         }
@@ -46,14 +54,21 @@ class SpecializationController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Specialization $specialization): JsonResponse
     {
         if ($specialization->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'identification' => 'required',
+            'logo' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
             if ($inputs['logo']) {
