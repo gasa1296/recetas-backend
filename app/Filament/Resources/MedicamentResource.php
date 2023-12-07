@@ -28,10 +28,6 @@ class MedicamentResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('ingredient')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('form')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('way')
-                    ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
                     ->image(),
                 Forms\Components\Toggle::make('digital')
@@ -46,10 +42,6 @@ class MedicamentResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ingredient')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('form')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('way')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\IconColumn::make('digital')
