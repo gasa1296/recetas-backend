@@ -42,7 +42,7 @@ class PatientResource extends Resource
                 Forms\Components\TextInput::make('phone2')
                     ->tel()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('genre')
+                Forms\Components\TextInput::make('gender')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('birth_date')
@@ -66,7 +66,7 @@ class PatientResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('genre')
+                Tables\Columns\TextColumn::make('gender')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birth_date')
                     ->date()
