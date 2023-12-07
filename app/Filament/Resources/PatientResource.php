@@ -3,13 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PatientResource\Pages;
-use App\Filament\Resources\PatientResource\RelationManagers;
 use App\Models\Patient;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\{Select, TextInput, DatePicker};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -23,29 +23,32 @@ class PatientResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')
+                TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('last_name1')
+                TextInput::make('last_name1')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('last_name2')
+                TextInput::make('last_name2')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone1')
+                TextInput::make('phone1')
                     ->tel()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone2')
+                TextInput::make('phone2')
                     ->tel()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('gender')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('birth_date')
+                Select::make('gender')
+                    ->options([
+                        'M' => 'Male',
+                        'F' => 'Famale',
+                    ])
+                    ->required(),
+                DatePicker::make('birth_date')
                     ->required(),
             ]);
     }

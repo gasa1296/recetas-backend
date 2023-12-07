@@ -42,7 +42,8 @@ class UserResource extends Resource
                     ->options([
                         'M' => 'Male',
                         'F' => 'Famale',
-                    ]),
+                    ])
+                    ->required(),
                 TextInput::make('fesa')
                     ->maxLength(255),
                 TextInput::make('email')
