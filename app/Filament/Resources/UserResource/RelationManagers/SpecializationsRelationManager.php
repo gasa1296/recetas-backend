@@ -27,8 +27,7 @@ class SpecializationsRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 FileUpload::make('logo')
-                    ->required()
-                    ->maxLength(255),
+                    ->required(),
             ]);
     }
 
