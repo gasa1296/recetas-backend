@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
 use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +25,20 @@ class ConsultingRoomController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'zip' => 'required',
+            'street' => 'required',
+            'colony' => 'required',
+            'state' => 'required',
+            'delegation' => 'required',
+            'n_exterior' => 'required',
+            'design' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $request->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
         }
@@ -53,7 +67,20 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'zip' => 'required',
+            'street' => 'required',
+            'colony' => 'required',
+            'state' => 'required',
+            'delegation' => 'required',
+            'n_exterior' => 'required',
+            'design' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $request->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
             if ($inputs['logo']) {
