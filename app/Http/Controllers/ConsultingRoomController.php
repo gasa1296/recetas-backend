@@ -37,7 +37,7 @@ class ConsultingRoomController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $inputs = $request->safe()->all();
+        $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
         }
