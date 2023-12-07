@@ -38,23 +38,22 @@ class AuthController extends Controller
             'first_name' => 'required',
             'last_name1' => 'required',
             'last_name2' => 'required',
-            'email' => 'required|email',
+            'email' => ['required', 'email', 'unique:users'],
             'password' => 'required',
             'phone1' => 'required',
             'phone2' => '',
             'gender' => 'required',
             'fesa' => 'required',
-            'rooms' => 'required',
-            'specializations' => 'required',
+            'rooms' => ['required', 'array'],
+            'specializations' => ['required', 'array'],
         ]);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $inputs = $request->all();
+        $inputs = $validator->safe()->all();
         $instance = User::create($inputs);
         event(new Registered($instance));
-        foreach ($inputs['rooms'] as $key=>$el) {
+        foreach ($inputs['rooms'] as $key => $el) {
             if ($request->file('logo_room') && $request->file('logo_room')[$key]) {
                 $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id);
                 $el['logo'] = $file;
@@ -62,7 +61,7 @@ class AuthController extends Controller
             $el['user_id'] = $instance->id;
             ConsultingRoom::create($el);
         }
-        foreach ($inputs['specializations'] as $key=>$el) {
+        foreach ($inputs['specializations'] as $key => $el) {
             if ($request->file('logo_spec') && $request->file('logo_spec')[$key]) {
                 $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id);
                 $el['logo'] = $file;
@@ -92,7 +91,7 @@ class AuthController extends Controller
             'first_name' => 'required',
             'last_name1' => 'required',
             'last_name2' => 'required',
-            'email' => 'required|email',
+            'email' => ['required', 'email'],
             'phone1' => 'required',
             'phone2' => '',
             'gender' => 'required',
@@ -102,7 +101,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $instance = auth()->user();
-        $instance->update($request->all());
+        $instance->update($validator->safe()->all());
         return response()->json($instance);
     }
 
