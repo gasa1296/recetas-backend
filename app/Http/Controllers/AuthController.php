@@ -30,7 +30,6 @@ class AuthController extends Controller
     }
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function register(Request $request): JsonResponse
     {
@@ -82,7 +81,6 @@ class AuthController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request): JsonResponse
     {
