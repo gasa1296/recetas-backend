@@ -33,6 +33,7 @@ class ConsultingRoomController extends Controller
             'delegation' => 'required',
             'n_exterior' => 'required',
             'design' => 'required',
+            'logo' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -74,6 +75,7 @@ class ConsultingRoomController extends Controller
             'delegation' => 'required',
             'n_exterior' => 'required',
             'design' => 'required',
+            'logo' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
