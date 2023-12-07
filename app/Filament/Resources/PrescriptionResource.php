@@ -71,7 +71,7 @@ class PrescriptionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('medic.email')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('room.name')
@@ -94,8 +94,6 @@ class PrescriptionResource extends Resource
                 Tables\Columns\TextColumn::make('saturation')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ppm')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('file')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->numeric()
