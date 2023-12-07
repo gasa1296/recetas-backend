@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PatientResource;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
@@ -20,9 +21,9 @@ class PatientController extends Controller
                 ->orWhere('email', 'LIKE', "%$request->search%")
                 ->orWhere('phone1', 'LIKE', "%$request->search%")
                 ->orWhere('phone2', 'LIKE', "%$request->search%");
-            return response()->json($instances->paginate(10));
+            return PatientResource::collection($instances->paginate(10))->response();
         } else {
-            return response()->json(Patient::paginate(10));
+            return PatientResource::collection(Patient::paginate(10))->response();
         }
     }
 
@@ -33,7 +34,7 @@ class PatientController extends Controller
     public function store(Request $request): JsonResponse
     {
         $instance = Patient::create($request->all());
-        return response()->json($instance);
+        return (new PatientResource($instance))->response();
     }
 
     /**
@@ -41,7 +42,7 @@ class PatientController extends Controller
      */
     public function show(Patient $patient): JsonResponse
     {
-        return response()->json($patient);
+        return (new PatientResource($patient))->response();
     }
 
     /**
@@ -51,7 +52,7 @@ class PatientController extends Controller
     public function update(Request $request, Patient $patient): JsonResponse
     {
         $patient->update($request->all());
-        return response()->json($patient);
+        return (new PatientResource($patient))->response();
     }
 
     /**
