@@ -15,7 +15,8 @@ class MedicamentController extends Controller
     public function index(Request $request): JsonResponse
     {
         if ($request->search) {
-            $instances = Medicament::where('name', 'LIKE', "%$request->search%");
+            $instances = Medicament::where('name', 'LIKE', "%$request->search%")
+                ->orWhere('ingredient', 'LIKE', "%$request->search%");
             return response()->json($instances->paginate(10));
         }
         return response()->json(Medicament::paginate(10));
