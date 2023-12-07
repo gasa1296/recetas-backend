@@ -16,14 +16,17 @@ class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        $instance = User::where('email', request()->email)->firstOrFail();
+        $instance = User::where('email', request()->email)->first();
+        if (empty($instance)) {
+            return response()->json([['email' => __('email incorrecto')]], 404);
+        }
         if (Hash::check(request()->password, $instance->password)) {
             return response()->json([
                 'token' => $instance->createToken('recipe')->plainTextToken,
                 'user' => $instance,
             ]);
         }
-        return response()->json([], 404);
+        return response()->json([['password' => __('contraseña incorrecta')]], 404);
     }
     /**
      * Store a newly created resource in storage.
@@ -41,6 +44,8 @@ class AuthController extends Controller
             'phone2' => '',
             'gender' => 'required',
             'fesa' => 'required',
+            'rooms' => 'required',
+            'specializations' => 'required',
         ]);
         if ($validator->fails())
         {
