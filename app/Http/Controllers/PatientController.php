@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Http\Resources\PatientResource;
 use Illuminate\Http\Request;
 use App\Models\Patient;
@@ -29,11 +30,22 @@ class PatientController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
-        $instance = Patient::create($request->all());
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name1' => 'required',
+            'email' => ['required', 'email'],
+            'phone1' => 'required',
+            'gender' => 'required',
+            'birth_date' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
+        $instance = Patient::create($inputs);
         return (new PatientResource($instance))->response();
     }
 
@@ -47,11 +59,22 @@ class PatientController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Patient $patient): JsonResponse
     {
-        $patient->update($request->all());
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name1' => 'required',
+            'email' => ['required', 'email'],
+            'phone1' => 'required',
+            'gender' => 'required',
+            'birth_date' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
+        $patient->update($inputs);
         return (new PatientResource($patient))->response();
     }
 
