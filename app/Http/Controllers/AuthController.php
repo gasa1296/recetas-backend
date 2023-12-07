@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
 use App\Models\Specialization;
-use Illuminate\Support\Facades\Storage;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
