@@ -32,7 +32,7 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 });
 
 Route::controller(VerificationController::class)->prefix('verify')->group(function () {
-    Route::get('{id}/{hash}','verify')->name('verification.verify');
+    Route::get('verify/{id}','verify')->name('verification.verify');
     Route::post('resend','resend')->name('verification.resend');
     Route::get('notice', 'notice')->name('verification.notice');
 });

@@ -10,23 +10,29 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class VerificationController extends Controller
 {
-    public function verify(EmailVerificationRequest  $request): JsonResponse
+    public function verify($user_id, Request $request)
     {
-        $request->fulfill();
+        if (!$request->hasValidSignature()) {
+            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+        }
+
+        $user = User::findOrFail($user_id);
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
         return response()->json();
     }
-    public function resend(Request $request): JsonResponse
+    public function resend()
     {
-
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        if (auth()->user()->hasVerifiedEmail()) {
+            return response()->json(["msg" => "Email already verified."], 400);
         }
-        $user = User::where('email', $request->email)->firstOrFail();
-        $user->sendEmailVerificationNotification();
-        return response()->json();
+
+        auth()->user()->sendEmailVerificationNotification();
+
+        return response()->json(["msg" => "Email verification link sent on your email id"]);
     }
     public function notice(): JsonResponse
     {
