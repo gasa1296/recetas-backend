@@ -96,7 +96,11 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $instance = auth()->user();
-        $instance->update($validator->safe()->all());
+        $inputs = $validator->safe()->all();
+        if(!empty($inputs['password'])) {
+            $inputs['password'] = Hash::make($inputs['password']);
+        }
+        $instance->update();
         return response()->json($instance);
     }
 
