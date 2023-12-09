@@ -100,7 +100,7 @@ class AuthController extends Controller
         if(!empty($inputs['password'])) {
             $inputs['password'] = Hash::make($inputs['password']);
         }
-        $instance->update();
+        $instance->update($inputs);
         return response()->json($instance);
     }
 
