@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 
 class SpecializationTest extends TestCase
 {
@@ -22,13 +23,26 @@ class SpecializationTest extends TestCase
         Sanctum::actingAs($this->user, ['*']);
 
     }
-    public function test_insert(): void
+    public function test_upsert(): void
     {
         $response = $this->post('api/specialization', [
-            "name" => fake()->words(3, true),
-            "identification" => fake()->unique()->words(3, true),
-            "university" => fake()->words(3, true),
-            "logo" => fake()->imageUrl(),
+            'specializations' =>[
+                [
+                    "name" => fake()->words(3, true),
+                    "identification" => fake()->unique()->words(3, true),
+                    "university" => fake()->words(3, true),
+                ],
+                [   
+                    "id" => 1,
+                    "name" => fake()->words(3, true),
+                    "identification" => fake()->unique()->words(3, true),
+                    "university" => fake()->words(3, true),
+                ],
+            ],
+            'logo' => [
+                UploadedFile::fake()->image('photo.jpg'),
+                UploadedFile::fake()->image('photo.jpg'),
+            ],
         ]);
 
         $response->assertOk();

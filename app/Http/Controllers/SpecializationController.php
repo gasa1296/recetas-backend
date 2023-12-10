@@ -24,21 +24,31 @@ class SpecializationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'identification' => 'required',
-            'logo' => 'required',
+            'specializations' => ['required', 'array'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
+
+        $instances = [];
+        foreach ($inputs['specializations'] as $key => $el) {
+            $el['user_id'] = $user;
+
+            if (!empty($request->file('logo')[$key])) {
+                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user);
+            }
+            if(empty($el['id'])) {
+                $instance = Specialization::create($el);
+            } else {
+                $instance = Specialization::findOrFail($el['id']);
+                $instance->update($el);
+            }
+            array_push($instances, $instance);
         }
-        $inputs["user_id"] = auth()->id();
-        $instance = Specialization::create($inputs);
-        return response()->json($instance);
+        return response()->json($instances);
     }
 
     /**
@@ -70,7 +80,7 @@ class SpecializationController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
+            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id());
             if ($inputs['logo']) {
                 Storage::delete($specialization->image);
             }
