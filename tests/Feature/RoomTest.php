@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\ConsultingRoom;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 
 class RoomTest extends TestCase
 {
@@ -22,21 +23,43 @@ class RoomTest extends TestCase
         Sanctum::actingAs($this->user, ['*']);
 
     }
-    public function test_insert(): void
+    public function test_upsert(): void
     {
+        ConsultingRoom::factory()->create(["user_id" => $this->user]);
         $response = $this->post('api/room', [
-            "name"=> fake()->name(),
-            "zip" => fake()->postcode(),
-            "street" => fake()->streetAddress(),
-            "colony" => fake()->city(),
-            "state" => fake()->city(),
-            "delegation" => fake()->city(),
-            "n_exterior" => fake()->randomNumber(),
-            "n_interior" => fake()->randomNumber(),
-            "address" => fake()->address(),
-            "phone" => fake()->phoneNumber(),
-            "logo" => fake()->imageUrl(),
-            "design" => fake()->randomElement([1,2,3]),
+            'data' => [
+                [
+                    "name" => fake()->name(),
+                    "zip" => fake()->postcode(),
+                    "street" => fake()->streetAddress(),
+                    "colony" => fake()->city(),
+                    "state" => fake()->city(),
+                    "delegation" => fake()->city(),
+                    "n_exterior" => fake()->randomNumber(),
+                    "n_interior" => fake()->randomNumber(),
+                    "address" => fake()->address(),
+                    "phone" => fake()->phoneNumber(),
+                    "design" => fake()->randomElement([1, 2, 3]),
+                ],
+                [
+                    "id" => 2,
+                    "name" => fake()->name(),
+                    "zip" => fake()->postcode(),
+                    "street" => fake()->streetAddress(),
+                    "colony" => fake()->city(),
+                    "state" => fake()->city(),
+                    "delegation" => fake()->city(),
+                    "n_exterior" => fake()->randomNumber(),
+                    "n_interior" => fake()->randomNumber(),
+                    "address" => fake()->address(),
+                    "phone" => fake()->phoneNumber(),
+                    "design" => fake()->randomElement([1, 2, 3]),
+                ],
+            ],
+            'logo' => [
+                UploadedFile::fake()->image('photo.jpg'),
+                UploadedFile::fake()->image('photo.jpg'),
+            ],
         ]);
 
         $response->assertOk();
