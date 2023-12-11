@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Equipment;
 use App\Models\PrescriptionEquipment;
 use App\Models\Prescription;
@@ -24,18 +25,19 @@ class PrescriptionEquipmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request, Prescription $prescription): JsonResponse
     {
-        $inputs = $request->all();
-        $bulk = $request->query('bulk', 0);
-        if ($bulk == 0) {
-            $instance = $prescription->equipment()->create($inputs);
-        } else {
-            unset($inputs['bulk']);
-            $instance = $prescription->equipment()->createMany($inputs);
+        $validator = Validator::make($request->all(), [
+            'data' => ['required', 'array'],
+            'data.*.add' => ['nullable', 'string'],
+            'data.*.equipment_id' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
         }
+        $inputs = $validator->safe()->all();
+        $instance = $prescription->equipment()->createMany($inputs['data']);
         return response()->json($instance);
     }
 
@@ -54,15 +56,21 @@ class PrescriptionEquipmentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Prescription $prescription, Equipment $equipment): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'add' => ['nullable', 'string'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         $instance = PrescriptionEquipment
             ::whereRelation("prescription", "user_id", auth()->id())
             ->where('prescription_id', $prescription->id)
             ->where('equipment_id', $equipment->id)
-            ->update($request->all());
+            ->update($inputs);
         return response()->json($instance);
     }
 
