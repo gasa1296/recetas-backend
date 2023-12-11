@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('ingredient');
             $table->string('dose');
             $table->string('quantity');
-            $table->string('image')->nullable();
+            $table->string('image');
             
             $table->timestamps();
         });
