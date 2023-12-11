@@ -26,7 +26,6 @@ class PrescriptionController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
@@ -70,7 +69,6 @@ class PrescriptionController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Prescription $prescription): JsonResponse
     {
