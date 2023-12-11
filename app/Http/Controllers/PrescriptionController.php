@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,12 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'file' => ['required', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         $inputs = $request->all();
         $inputs['user_id'] = auth()->id();
         if ($request->file('file')) {
