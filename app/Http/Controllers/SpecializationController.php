@@ -41,9 +41,9 @@ class SpecializationController extends Controller
                 $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user);
             }
             if(empty($el['id'])) {
+                $el['user_id'] = $user;
                 $instance = Specialization::create($el);
             } else {
-                $el['user_id'] = $user;
                 $instance = Specialization::where('id', $el['id'])
                     ->where('user_id', auth()->id())
                     ->fistOrFail();
