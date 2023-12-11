@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('diagnostic');
             $table->text('diet')->nullable();
             $table->text('add')->nullable();
+            $table->json('add_med')->nullable();
             $table->string('client')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('room_id')->constrained('consulting_rooms');
