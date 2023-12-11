@@ -29,6 +29,7 @@ class MedicamentTest extends TestCase
       'ingredient' => fake()->word(),
       'dose' => fake()->randomDigit(),
       'quantity' => fake()->randomDigit(),
+      'image' => fake()->imageUrl(),
     ]);
 
     $response->assertOk();
@@ -41,6 +42,7 @@ class MedicamentTest extends TestCase
       'ingredient' => fake()->word(),
       'dose' => fake()->randomDigit(),
       'quantity' => fake()->randomDigit(),
+      'image' => fake()->imageUrl(),
     ]);
 
     $response->assertOk();
