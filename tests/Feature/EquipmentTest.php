@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Equipment;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 
 class EquipmentTest extends TestCase
 {
@@ -26,7 +27,7 @@ class EquipmentTest extends TestCase
   {
     $response = $this->post('api/equipment', [
       "name" => fake()->word(),
-      "image" => fake()->imageUrl(),
+      'image' => UploadedFile::fake()->image('photo.jpg'),
     ]);
 
     $response->assertOk();
@@ -36,7 +37,7 @@ class EquipmentTest extends TestCase
     $instance = Equipment::factory()->create();
     $response = $this->put('api/equipment/' . $instance->id, [
       "name" => fake()->word(),
-      "image" => fake()->imageUrl(),
+      'image' => UploadedFile::fake()->image('photo.jpg'),
     ]);
 
     $response->assertOk();
