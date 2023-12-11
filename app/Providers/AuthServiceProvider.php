@@ -25,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
+                ->subject('Verificar cuenta')
                 ->markdown('mail.email', [
                     'message' => 'Para comenzar, es importante que verifiques tu cuenta haciendo clic en el boton a continuacion',
                     'title' => 'Verificacion de usuario',
