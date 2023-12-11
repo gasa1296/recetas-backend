@@ -20,6 +20,8 @@ class MedicamentFactory extends Factory
             "name" => fake()->name(),
             "ingredient" => fake()->word(),
             "image" => fake()->imageUrl(),
+            "dose" => fake()->randomDigit(),
+            "quantity" => fake()->randomDigit(),
         ];
     }
 }
