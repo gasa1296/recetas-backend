@@ -26,14 +26,19 @@ class ConsultingRoomController extends Controller
     {
         $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'data.*.name' => 'required',
-            'data.*.zip' => 'required',
-            'data.*.street' => 'required',
-            'data.*.colony' => 'required',
-            'data.*.state' => 'required',
-            'data.*.delegation' => 'required',
-            'data.*.n_exterior' => 'required',
-            'data.*.design' => 'required',
+            'data' => ['required', 'array'],
+            'data.*.name' => ['required', 'string'],
+            'data.*.zip' => ['required', 'string'],
+            'data.*.street' => ['required', 'string'],
+            'data.*.colony' => ['required', 'string'],
+            'data.*.state' => ['required', 'string'],
+            'data.*.delegation' => ['required', 'string'],
+            'data.*.n_exterior' => ['required',],
+            'data.*.n_interior' => ['nullable',],
+            'data.*.address' => ['nullable', 'string'],
+            'data.*.phone' => ['nullable', 'string'],
+            'data.*.design' => ['nullable', 'numeric'],
+            'logo' => ['required', 'array'],
             'logo.*' => ['required', 'file'],
         ]);
         if ($validator->fails()) {
@@ -80,15 +85,18 @@ class ConsultingRoomController extends Controller
             return response()->json([], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'zip' => 'required',
-            'street' => 'required',
-            'colony' => 'required',
-            'state' => 'required',
-            'delegation' => 'required',
-            'n_exterior' => 'required',
-            'design' => 'required',
-            'logo' => 'file',
+            'name' => ['required', 'string'],
+            'zip' => ['required', 'string'],
+            'street' => ['required', 'string'],
+            'colony' => ['required', 'string'],
+            'state' => ['required', 'string'],
+            'delegation' => ['required', 'string'],
+            'n_exterior' => ['required',],
+            'n_interior' => ['nullable',],
+            'address' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string'],
+            'design' => ['nullable', 'numeric'],
+            'logo' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

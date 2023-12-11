@@ -26,10 +26,13 @@ class SpecializationController extends Controller
     {
         $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'data.*.name' => 'required',
+            'data' => ['required', 'array'],
+            'data.*.name' => ['required', 'string'],
             'data.*.identification' => 'required',
-            'data.*.university' => 'required',
+            'data.*.university' => ['nullable', 'string'],
+            'logo' => ['required', 'array'],
             'logo.*' => ['required', 'file'],
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -75,9 +78,10 @@ class SpecializationController extends Controller
             return response()->json([], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => ['required', 'string'],
             'identification' => 'required',
-            'logo' => 'file',
+            'university' => ['nullable', 'string'],
+            'logo' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
