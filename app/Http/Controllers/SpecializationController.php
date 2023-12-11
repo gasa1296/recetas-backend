@@ -28,7 +28,6 @@ class SpecializationController extends Controller
         $validator = Validator::make($request->all(), [
             'data.*.name' => 'required',
             'data.*.identification' => 'required',
-            'data.*.logo' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
