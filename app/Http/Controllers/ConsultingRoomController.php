@@ -42,15 +42,16 @@ class ConsultingRoomController extends Controller
 
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
-            $el['user_id'] = $user;
-
             if (!empty($request->file('logo')[$key])) {
                 $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user);
             }
             if (empty($el['id'])) {
+                $el['user_id'] = $user;
                 $instance = ConsultingRoom::create($el);
             } else {
-                $instance = ConsultingRoom::findOrFail($el['id']);
+                $instance = ConsultingRoom::where('id', $el['id'])
+                    ->where('user_id', auth()->id())
+                    ->fistOrFail();
                 $instance->update($el);
             }
             array_push($instances, $instance);
