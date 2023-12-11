@@ -43,6 +43,8 @@ class AuthController extends Controller
             'fesa' => 'required',
             'rooms' => ['required', 'array'],
             'specializations' => ['required', 'array'],
+            'logo_room.*' => ['required', 'file'],
+            'logo_spec.*' => ['required', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
