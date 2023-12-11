@@ -48,7 +48,7 @@ class PrescriptionController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $inputs = $request->all();
+        $inputs = $validator->safe()->all();
         $inputs['user_id'] = auth()->id();
         if ($request->file('file')) {
             $file = $request->file('file')->store('prescriptions');
@@ -94,6 +94,7 @@ class PrescriptionController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $inputs = $validator->safe()->all();
         if ($request->file('file')) {
             $file = $request->file('file')->store('prescriptions');
             $inputs['file'] = $file;
@@ -101,7 +102,7 @@ class PrescriptionController extends Controller
                 Storage::delete($prescription->file);
             }
         }
-        $prescription->update($request->all());
+        $prescription->update($inputs);
         return (new PrescriptionResource($prescription))->response();
     }
 
