@@ -86,7 +86,7 @@ class SpecializationController extends Controller
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id());
             if ($inputs['logo']) {
-                Storage::delete($specialization->image);
+                Storage::delete($specialization->logo);
             }
         }
         $specialization->update($inputs);

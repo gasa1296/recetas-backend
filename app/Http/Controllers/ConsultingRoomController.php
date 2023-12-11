@@ -97,7 +97,7 @@ class ConsultingRoomController extends Controller
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
             if ($inputs['logo']) {
-                Storage::delete($room->image);
+                Storage::delete($room->logo);
             }
         }
         $room->update($inputs);
