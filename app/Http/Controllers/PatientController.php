@@ -34,12 +34,14 @@ class PatientController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name1' => 'required',
+            'first_name' => ['required', 'string'],
+            'last_name1' => ['required', 'string'],
+            'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
-            'phone1' => 'required',
-            'gender' => 'required',
-            'birth_date' => 'required',
+            'phone1' => ['required', 'string'],
+            'phone2' => ['nullable', 'string'],
+            'gender' => ['required', 'string'],
+            'birth_date' => ['required', 'date'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -63,12 +65,14 @@ class PatientController extends Controller
     public function update(Request $request, Patient $patient): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name1' => 'required',
+            'first_name' => ['required', 'string'],
+            'last_name1' => ['required', 'string'],
+            'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
-            'phone1' => 'required',
-            'gender' => 'required',
-            'birth_date' => 'required',
+            'phone1' => ['required', 'string'],
+            'phone2' => ['nullable', 'string'],
+            'gender' => ['required', 'string'],
+            'birth_date' => ['required', 'date'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
