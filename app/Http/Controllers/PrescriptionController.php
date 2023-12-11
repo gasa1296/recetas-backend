@@ -7,6 +7,10 @@ use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @todo Add update status endpoint
+ * @todo Add public get endpoint
+ */
 class PrescriptionController extends Controller
 {
     /**
