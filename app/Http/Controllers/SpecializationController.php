@@ -26,7 +26,7 @@ class SpecializationController extends Controller
     {
         $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'specializations' => ['required', 'array'],
+            'data' => ['required', 'array'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -34,7 +34,7 @@ class SpecializationController extends Controller
         $inputs = $validator->safe()->all();
 
         $instances = [];
-        foreach ($inputs['specializations'] as $key => $el) {
+        foreach ($inputs['data'] as $key => $el) {
             $el['user_id'] = $user;
 
             if (!empty($request->file('logo')[$key])) {

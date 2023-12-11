@@ -24,26 +24,30 @@ class ConsultingRoomController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'zip' => 'required',
-            'street' => 'required',
-            'colony' => 'required',
-            'state' => 'required',
-            'delegation' => 'required',
-            'n_exterior' => 'required',
-            'design' => 'required',
-            'logo' => 'required',
+            'data' => ['required', 'array'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
+
+        $instances = [];
+        foreach ($inputs['data'] as $key => $el) {
+            $el['user_id'] = $user;
+
+            if (!empty($request->file('logo')[$key])) {
+                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user);
+            }
+            if (empty($el['id'])) {
+                $instance = ConsultingRoom::create($el);
+            } else {
+                $instance = ConsultingRoom::findOrFail($el['id']);
+                $instance->update($el);
+            }
+            array_push($instances, $instance);
         }
-        $inputs["user_id"] = auth()->id();
-        $instance = ConsultingRoom::create($inputs);
         return response()->json($instance);
     }
 
