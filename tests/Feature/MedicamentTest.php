@@ -25,8 +25,10 @@ class MedicamentTest extends TestCase
   public function test_insert(): void
   {
     $response = $this->post('api/medicament', [
-      "name" => fake()->name(),
-      "ingredient" => fake()->word(),
+      'name' => fake()->name(),
+      'ingredient' => fake()->word(),
+      'dose' => fake()->randomDigit(),
+      'quantity' => fake()->randomDigit(),
     ]);
 
     $response->assertOk();
@@ -35,8 +37,10 @@ class MedicamentTest extends TestCase
   {
     $instance = Medicament::factory()->create();
     $response = $this->put('api/medicament/' . $instance->id, [
-      "name" => fake()->name(),
-      "ingredient" => fake()->word(),
+      'name' => fake()->name(),
+      'ingredient' => fake()->word(),
+      'dose' => fake()->randomDigit(),
+      'quantity' => fake()->randomDigit(),
     ]);
 
     $response->assertOk();
