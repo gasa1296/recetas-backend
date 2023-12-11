@@ -8,9 +8,6 @@ use App\Models\PrescriptionMedicament;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/**
- * @todo verify querys
- */
 class PrescriptionMedicamentController extends Controller
 {
     /**
