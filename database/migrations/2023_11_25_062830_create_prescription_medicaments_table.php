@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('prescription_medicaments', function (Blueprint $table) {
             $table->id();
-            $table->string('dose')->nullable();
+            $table->string('add')->nullable();
+            $table->string('dose');
             $table->string('way');
-            $table->string('frequency')->nullable();
+            $table->string('frequency');
             $table->string('duration');
+            $table->string('quantity');
             $table->foreignId('medicament_id')->constrained('medicaments');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();

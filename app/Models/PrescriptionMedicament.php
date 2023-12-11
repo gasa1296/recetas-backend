@@ -16,10 +16,12 @@ class PrescriptionMedicament extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'add',
         'dose',
         'way',
         'frequency',
         'duration',
+        'quantity',
         'medicament_id',
         'prescription_id',
     ];

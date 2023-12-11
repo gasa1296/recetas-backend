@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('medicaments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ingredient')->nullable();
+            $table->string('ingredient');
+            $table->string('dose');
+            $table->string('quantity');
             $table->string('image')->nullable();
             $table->boolean('digital')->default(true);
             
