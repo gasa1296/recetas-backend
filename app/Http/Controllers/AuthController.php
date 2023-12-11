@@ -33,16 +33,33 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name1' => 'required',
+            'first_name' => ['required', 'string'],
+            'last_name1' => ['required', 'string'],
+            'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email', 'unique:users'],
-            'password' => 'required',
-            'phone1' => 'required',
-            'phone2' => '',
-            'gender' => 'required',
-            'fesa' => 'required',
+            'password' => ['required', 'string'],
+            'phone1' => ['required', 'string'],
+            'phone2' => ['nullable', 'string'],
+            'gender' => ['required', 'string'],
+            'fesa' => ['required',],
             'rooms' => ['required', 'array'],
             'specializations' => ['required', 'array'],
+            'rooms.*.name' => ['required', 'string'],
+            'rooms.*.zip' => ['required', 'string'],
+            'rooms.*.street' => ['required', 'string'],
+            'rooms.*.colony' => ['required', 'string'],
+            'rooms.*.state' => ['required', 'string'],
+            'rooms.*.delegation' => ['required', 'string'],
+            'rooms.*.n_exterior' => ['required',],
+            'rooms.*.n_interior' => ['nullable',],
+            'rooms.*.address' => ['nullable', 'string'],
+            'rooms.*.phone' => ['nullable', 'string'],
+            'rooms.*.design' => ['nullable', 'numeric'],
+            'specializations.*.name' => ['required', 'string'],
+            'specializations.*.identification' => 'required',
+            'specializations.*.university' => ['nullable', 'string'],
+            'logo_room' => ['required', 'array'],
+            'logo_spec' => ['required', 'array'],
             'logo_room.*' => ['required', 'file'],
             'logo_spec.*' => ['required', 'file'],
         ]);
@@ -86,13 +103,15 @@ class AuthController extends Controller
     public function update(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name1' => 'required',
-            'email' => ['required', 'email'],
-            'phone1' => 'required',
-            'phone2' => '',
-            'gender' => 'required',
-            'fesa' => 'required',
+            'first_name' => ['required', 'string'],
+            'last_name1' => ['required', 'string'],
+            'last_name2' => ['nullable', 'string'],
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'string'],
+            'phone1' => ['required', 'string'],
+            'phone2' => ['nullable', 'string'],
+            'gender' => ['required', 'string'],
+            'fesa' => ['required',],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
