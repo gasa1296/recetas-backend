@@ -43,7 +43,7 @@ class PrescriptionController extends Controller
             'add_med' => ['nullable ', 'json'],
             'room_id' => ['required ', 'numeric'],
             'patient_id' => ['required ', 'numeric'],
-            'file' => 'file',
+            'file' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -89,7 +89,7 @@ class PrescriptionController extends Controller
             'add_med' => ['nullable ', 'json'],
             'room_id' => ['required ', 'numeric'],
             'patient_id' => ['required ', 'numeric'],
-            'file' => 'file',
+            'file' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
