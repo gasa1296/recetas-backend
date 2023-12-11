@@ -28,6 +28,7 @@ class Prescription extends Model
         'diagnostic',
         'diet',
         'add',
+        'client',
         'user_id',
         'room_id',
         'patient_id',
