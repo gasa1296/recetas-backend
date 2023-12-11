@@ -26,7 +26,14 @@ class ConsultingRoomController extends Controller
     {
         $user = auth()->id();
         $validator = Validator::make($request->all(), [
-            'data' => ['required', 'array'],
+            'data.*.name' => 'required',
+            'data.*.zip' => 'required',
+            'data.*.street' => 'required',
+            'data.*.colony' => 'required',
+            'data.*.state' => 'required',
+            'data.*.delegation' => 'required',
+            'data.*.n_exterior' => 'required',
+            'data.*.design' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
