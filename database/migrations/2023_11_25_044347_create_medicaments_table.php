@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('dose');
             $table->string('quantity');
             $table->string('image')->nullable();
-            $table->boolean('digital')->default(true);
             
             $table->timestamps();
         });
