@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,7 @@ class EquipmentController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        if( $request->search ){
+        if ($request->search) {
             $instances = Equipment::where('name', 'LIKE', "%$request->search%");
             return response()->json($instances->paginate(10));
         }
@@ -23,11 +24,17 @@ class EquipmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string'],
+            'image' => ['required', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('image')) {
             $inputs['image'] = $request->file('image')->store('images');
         }
@@ -45,11 +52,17 @@ class EquipmentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Equipment $equipment): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string'],
+            'image' => ['nullable', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('image')) {
             $inputs['image'] = $request->file('image')->store('images');
             if ($inputs['image']) {
