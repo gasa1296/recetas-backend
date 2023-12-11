@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Medicament;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 
 class MedicamentTest extends TestCase
 {
@@ -25,11 +26,12 @@ class MedicamentTest extends TestCase
   public function test_insert(): void
   {
     $response = $this->post('api/medicament', [
+      'id' => fake()->randomDigit(),
       'name' => fake()->name(),
       'ingredient' => fake()->word(),
-      'dose' => fake()->randomDigit(),
-      'quantity' => fake()->randomDigit(),
-      'image' => fake()->imageUrl(),
+      'dose' => fake()->randomDigit().fake()->word(),
+      'quantity' => fake()->randomDigit().fake()->word(),
+      'image' => UploadedFile::fake()->image('photo.jpg'),
     ]);
 
     $response->assertOk();
@@ -40,10 +42,11 @@ class MedicamentTest extends TestCase
     $response = $this->put('api/medicament/' . $instance->id, [
       'name' => fake()->name(),
       'ingredient' => fake()->word(),
-      'dose' => fake()->randomDigit(),
-      'quantity' => fake()->randomDigit(),
-      'image' => fake()->imageUrl(),
+      'dose' => fake()->randomDigit() . fake()->word(),
+      'quantity' => fake()->randomDigit() . fake()->word(),
+      'image' => UploadedFile::fake()->image('photo.jpg'),
     ]);
+    print_r($response->json());
 
     $response->assertOk();
   }
