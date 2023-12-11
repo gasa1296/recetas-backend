@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Medicament;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -24,11 +25,21 @@ class MedicamentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric'],
+            'name' => ['required', 'string'],
+            'ingredient' => ['required', 'string'],
+            'dose' => ['required', 'string'],
+            'quantity' => ['required', 'string'],
+            'image' => ['required', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('image')) {
             $inputs['image'] = $request->file('image')->store('images');
         }
@@ -46,11 +57,20 @@ class MedicamentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Medicament $medicament): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string'],
+            'ingredient' => ['required', 'string'],
+            'dose' => ['required', 'string'],
+            'quantity' => ['required', 'string'],
+            'image' => ['nullable', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         if ($request->file('image')) {
             $inputs['image'] = $request->file('image')->store('images');
             if ($inputs['image']) {
