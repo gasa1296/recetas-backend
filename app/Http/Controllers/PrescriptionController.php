@@ -6,6 +6,7 @@ use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @todo Add update status endpoint
@@ -24,13 +25,16 @@ class PrescriptionController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function store(Request $request): JsonResponse
     {
         $inputs = $request->all();
         $inputs['user_id'] = auth()->id();
+        if ($request->file('file')) {
+            $file = $request->file('file')->store('prescriptions');
+            $inputs['file'] = $file;
+        }
         $instance = Prescription::create($inputs);
 
         return (new PrescriptionResource($instance))->response();
@@ -46,13 +50,19 @@ class PrescriptionController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo upload file
      * @todo Add validations
      */
     public function update(Request $request, Prescription $prescription): JsonResponse
     {
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
+        }
+        if ($request->file('file')) {
+            $file = $request->file('file')->store('prescriptions');
+            $inputs['file'] = $file;
+            if ($inputs['logo']) {
+                Storage::delete($prescription->file);
+            }
         }
         $prescription->update($request->all());
         return (new PrescriptionResource($prescription))->response();
