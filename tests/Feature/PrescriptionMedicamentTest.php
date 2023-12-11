@@ -23,7 +23,7 @@ class PrescriptionMedicamentTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
+        $this->room = ConsultingRoom::factory()->create(['user_id' => $this->user]);
         $this->prescription = Prescription::factory()->create([
             'user_id' => $this->user->id,
             'room_id' => $this->room->id,
@@ -42,6 +42,7 @@ class PrescriptionMedicamentTest extends TestCase
             'way' => fake()->words(10, true),
             'frequency' => fake()->randomNumber(),
             'duration' => fake()->randomNumber(),
+            'quantity' => fake()->randomDigit(),
             'medicament_id' => Medicament::factory()->create()->id,
         ]);
         $response->assertOk();
@@ -51,6 +52,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'way' => fake()->words(10, true),
                 'frequency' => fake()->randomNumber(),
                 'duration' => fake()->randomNumber(),
+                'quantity' => fake()->randomDigit(),
                 'medicament_id' => Medicament::factory()->create()->id,
             ],
             [
@@ -58,6 +60,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'way' => fake()->words(10, true),
                 'frequency' => fake()->randomNumber(),
                 'duration' => fake()->randomNumber(),
+                'quantity' => fake()->randomDigit(),
                 'medicament_id' => Medicament::factory()->create()->id,
             ],
         ]);
@@ -75,6 +78,7 @@ class PrescriptionMedicamentTest extends TestCase
             'way' => fake()->words(10, true),
             'frequency' => fake()->randomNumber(),
             'duration' => fake()->randomNumber(),
+            'quantity' => fake()->randomDigit(),
         ]);
         $response->assertOk();
     }
