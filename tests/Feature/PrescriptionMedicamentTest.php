@@ -38,15 +38,6 @@ class PrescriptionMedicamentTest extends TestCase
             'room_id' => $this->room->id,
         ]);
         $response = $this->post("api/prescription/$instance->id/medicament", [
-            'dose' => fake()->randomDigit(),
-            'way' => fake()->words(10, true),
-            'frequency' => fake()->randomNumber(),
-            'duration' => fake()->randomNumber(),
-            'quantity' => fake()->randomDigit(),
-            'medicament_id' => Medicament::factory()->create()->id,
-        ]);
-        $response->assertOk();
-        $response = $this->post("api/prescription/$instance->id/medicament?bulk=1", [
             [
                 'dose' => fake()->randomDigit(),
                 'way' => fake()->words(10, true),

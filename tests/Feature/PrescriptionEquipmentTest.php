@@ -38,16 +38,14 @@ class PrescriptionEquipmentTest extends TestCase
             'room_id' => $this->room->id,
         ]);
         $response = $this->post("api/prescription/$prescription->id/equipment", [
-            'data' => [
-                [
-                    'add' => fake()->words(10, true),
-                    'equipment_id' => Equipment::factory()->create()->id,
-                ],
-                [
-                    'add' => fake()->words(10, true),
-                    'equipment_id' => Equipment::factory()->create()->id,
-                ],
-            ]
+            [
+                'add' => fake()->words(10, true),
+                'equipment_id' => Equipment::factory()->create()->id,
+            ],
+            [
+                'add' => fake()->words(10, true),
+                'equipment_id' => Equipment::factory()->create()->id,
+            ],
         ]);
         $response->assertOk();
         $this->assertCount(2, $response->json());

@@ -46,7 +46,7 @@ class MedicamentTest extends TestCase
       'quantity' => fake()->randomDigit() . fake()->word(),
       'image' => UploadedFile::fake()->image('photo.jpg'),
     ]);
-    print_r($response->json());
+   //print_r($response->json());
 
     $response->assertOk();
   }
