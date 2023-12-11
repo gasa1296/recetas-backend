@@ -9,6 +9,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
 use App\Models\Patient;
+use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
 class PrescriptionTest extends TestCase
@@ -42,7 +43,7 @@ class PrescriptionTest extends TestCase
       'user_id' => $this->user->id,
       'room_id' => $this->room->id,
       'patient_id' => Patient::factory()->create()->id,
-      'file' => fake()->imageUrl(),
+      'file' => UploadedFile::fake()->image('photo.jpg'),
       'status' => fake()->randomNumber(3),
     ]);
     
