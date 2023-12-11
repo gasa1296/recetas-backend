@@ -29,6 +29,7 @@ class SpecializationController extends Controller
             'data.*.name' => 'required',
             'data.*.identification' => 'required',
             'data.*.university' => 'required',
+            'logo.*' => ['required', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -76,7 +77,7 @@ class SpecializationController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'identification' => 'required',
-            'logo' => 'required',
+            'logo' => 'file',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

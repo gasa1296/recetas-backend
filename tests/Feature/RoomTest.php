@@ -78,7 +78,7 @@ class RoomTest extends TestCase
             "n_interior" => fake()->randomNumber(),
             "address" => fake()->address(),
             "phone" => fake()->phoneNumber(),
-            "logo" => fake()->imageUrl(),
+            "logo" => UploadedFile::fake()->image('photo.jpg'),
             "design" => fake()->randomElement([1, 2, 3]),
         ]);
 
