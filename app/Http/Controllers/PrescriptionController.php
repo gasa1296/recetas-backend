@@ -31,7 +31,20 @@ class PrescriptionController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'file' => ['required', 'file'],
+            'temp' => ['nullable', 'numeric'],
+            'weight' => ['nullable ', 'numeric'],
+            'height' => ['nullable ', 'numeric'],
+            'pressure' => ['nullable ', 'string'],
+            'saturation' => ['nullable ', 'numeric'],
+            'ppm' => ['nullable ', 'numeric'],
+            'allergy' => ['nullable ', 'string'],
+            'diagnostic' => ['required', 'string'],
+            'diet' => ['nullable ', 'string'],
+            'add' => ['nullable ', 'string'],
+            'add_med' => ['nullable ', 'json'],
+            'room_id' => ['required ', 'numeric'],
+            'patient_id' => ['required ', 'numeric'],
+            'file' => 'file',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -64,10 +77,29 @@ class PrescriptionController extends Controller
         if ($prescription->user_id != auth()->id()) {
             return response()->json([], 404);
         }
+        $validator = Validator::make($request->all(), [
+            'temp' => ['nullable', 'numeric'],
+            'weight' => ['nullable ', 'numeric'],
+            'height' => ['nullable ', 'numeric'],
+            'pressure' => ['nullable ', 'string'],
+            'saturation' => ['nullable ', 'numeric'],
+            'ppm' => ['nullable ', 'numeric'],
+            'allergy' => ['nullable ', 'string'],
+            'diagnostic' => ['required', 'string'],
+            'diet' => ['nullable ', 'string'],
+            'add' => ['nullable ', 'string'],
+            'add_med' => ['nullable ', 'json'],
+            'room_id' => ['required ', 'numeric'],
+            'patient_id' => ['required ', 'numeric'],
+            'file' => 'file',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         if ($request->file('file')) {
             $file = $request->file('file')->store('prescriptions');
             $inputs['file'] = $file;
-            if ($inputs['logo']) {
+            if ($inputs['file']) {
                 Storage::delete($prescription->file);
             }
         }
