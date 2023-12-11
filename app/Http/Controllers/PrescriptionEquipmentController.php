@@ -29,15 +29,14 @@ class PrescriptionEquipmentController extends Controller
     public function store(Request $request, Prescription $prescription): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'data' => ['required', 'array'],
-            'data.*.add' => ['nullable', 'string'],
-            'data.*.equipment_id' => ['required', 'numeric'],
+            '*.add' => ['nullable', 'string'],
+            '*.equipment_id' => ['required', 'numeric'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        $instance = $prescription->equipment()->createMany($inputs['data']);
+        $instance = $prescription->equipment()->createMany($inputs);
         return response()->json($instance);
     }
 
