@@ -15,6 +15,7 @@ class PrescriptionEquipmentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             "equipment"=> $this->equipment,
             'add' => $this->add,
         ];
