@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Medicament;
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
@@ -24,11 +25,22 @@ class PrescriptionMedicamentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @todo Add validations
      */
     public function store(Request $request, Prescription $prescription): JsonResponse
     {
-        $inputs = $request->all();
+        $validator = Validator::make($request->all(), [
+            '*.add' => ['nullable', 'string'],
+            '*.dose' => ['required', 'string'],
+            '*.way' => ['required', 'string'],
+            '*.frequency' => ['required', 'string'],
+            '*.duration' => ['required', 'string'],
+            '*.quantity' => ['required', 'numeric'],
+            '*.medicament_id' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         $instance = $prescription->medicaments()->createMany($inputs);
         return response()->json($instance);
     }
@@ -48,15 +60,26 @@ class PrescriptionMedicamentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @todo Add validations
      */
     public function update(Request $request, Prescription $prescription, Medicament $medicament): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'add' => ['nullable', 'string'],
+            'dose' => ['required', 'string'],
+            'way' => ['required', 'string'],
+            'frequency' => ['required', 'string'],
+            'duration' => ['required', 'string'],
+            'quantity' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         $instance = PrescriptionMedicament
             ::whereRelation("prescription", "user_id", auth()->id())
             ->where('prescription_id', $prescription->id)
-            ->where('medicament_id', $medicament->id)
-            ->update($request->all());
+            ->where('medicament_id', $medicament->id);
+        $instance->update($inputs);
         return response()->json($instance);
     }
 
