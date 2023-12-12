@@ -39,23 +39,22 @@ class PrescriptionMedicamentTest extends TestCase
         ]);
         $response = $this->post("api/prescription/$instance->id/medicament", [
             [
-                'dose' => fake()->randomDigit(),
+                'dose' => fake()->randomDigit() . fake()->word(),
                 'way' => fake()->words(10, true),
-                'frequency' => fake()->randomNumber(),
-                'duration' => fake()->randomNumber(),
+                'frequency' => fake()->randomNumber() . fake()->word(),
+                'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
                 'medicament_id' => Medicament::factory()->create()->id,
             ],
             [
-                'dose' => fake()->randomDigit(),
+                'dose' => fake()->randomDigit() . fake()->word(),
                 'way' => fake()->words(10, true),
-                'frequency' => fake()->randomNumber(),
-                'duration' => fake()->randomNumber(),
+                'frequency' => fake()->randomNumber() . fake()->word(),
+                'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
                 'medicament_id' => Medicament::factory()->create()->id,
             ],
         ]);
-        //print_r($response->json());
         $response->assertOk();
         $this->assertCount(2, $response->json());
     }
@@ -65,10 +64,10 @@ class PrescriptionMedicamentTest extends TestCase
             'prescription_id' => $this->prescription->id,
         ]);
         $response = $this->put("api/prescription/$instance->prescription_id/medicament/$instance->medicament_id", [
-            'dose' => fake()->randomDigit(),
+            'dose' => fake()->randomDigit() . fake()->word(),
             'way' => fake()->words(10, true),
-            'frequency' => fake()->randomNumber(),
-            'duration' => fake()->randomNumber(),
+            'frequency' => fake()->randomNumber() . fake()->word(),
+            'duration' => fake()->randomNumber() . fake()->word(),
             'quantity' => fake()->randomDigit(),
         ]);
         $response->assertOk();
