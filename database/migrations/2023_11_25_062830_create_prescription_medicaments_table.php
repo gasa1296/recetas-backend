@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('way');
             $table->string('frequency');
             $table->string('duration');
-            $table->string('quantity');
+            $table->unsignedInteger('quantity');
             $table->foreignId('medicament_id')->constrained('medicaments');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
