@@ -117,4 +117,55 @@ class PrescriptionController extends Controller
         $prescription->delete();
         return response()->json();
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function addClient(Request $request, Prescription $prescription)
+    {
+        //return $request->bearerToken();
+        $validator = Validator::make($request->all(), [
+            'client' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->only('client');
+        $prescription->update($inputs);
+        return (new PrescriptionResource($prescription))->response();
+    }
+    /**
+     * Display a listing of the resource by client.
+     */
+    public function getClientByClient(Request $request)
+    {
+        //return $request->bearerToken();
+        $validator = Validator::make($request->all(), [
+            'client' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->only('client');
+        return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
+    }
+    /**
+     * Display a listing of the resource by client.
+     */
+    public function updateStatus(Request $request, Prescription $prescription)
+    {
+        //return $request->bearerToken();
+        $validator = Validator::make($request->all(), [
+            'status' => ['required', 'numeric'],
+            'medicaments' => ['required', 'array'],
+            'medicaments.*.quantity' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
+        $prescription->update($inputs);
+
+        return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
+    }
 }
