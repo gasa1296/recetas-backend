@@ -68,8 +68,8 @@ class PrescriptionEquipmentController extends Controller
         $instance = PrescriptionEquipment
             ::whereRelation("prescription", "user_id", auth()->id())
             ->where('prescription_id', $prescription->id)
-            ->where('equipment_id', $equipment->id)
-            ->update($inputs);
+            ->where('equipment_id', $equipment->id);
+        $instance->update($inputs);
         return response()->json($instance);
     }
 
