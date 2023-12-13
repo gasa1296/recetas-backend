@@ -89,7 +89,7 @@ class SpecializationController extends Controller
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id());
-            if ($inputs['logo']) {
+            if ($inputs['logo'] && !empty($specialization->logo)) {
                 Storage::delete($specialization->logo);
             }
         }
@@ -105,7 +105,9 @@ class SpecializationController extends Controller
         if ($specialization->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        Storage::delete($specialization->logo);
+        if (!empty($specialization->logo)) {
+            Storage::delete($specialization->logo);
+        }
         $specialization->delete();
         return response()->json();
     }

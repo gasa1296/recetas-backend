@@ -104,7 +104,7 @@ class ConsultingRoomController extends Controller
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id());
-            if ($inputs['logo']) {
+            if ($inputs['logo'] && !empty($room->logo)) {
                 Storage::delete($room->logo);
             }
         }
@@ -120,7 +120,9 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        Storage::delete($room->logo);
+        if (!empty($room->logo)){
+            Storage::delete($room->logo);
+        }
         $room->delete();
         return response()->json();
     }
