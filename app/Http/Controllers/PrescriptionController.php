@@ -156,15 +156,31 @@ class PrescriptionController extends Controller
     {
         //return $request->bearerToken();
         $validator = Validator::make($request->all(), [
-            'status' => ['required', 'numeric'],
-            'medicaments' => ['required', 'array'],
-            'medicaments.*.quantity' => ['required', 'numeric'],
+            '*.total_exp' => ['required', 'numeric'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $completed = true;
         $inputs = $validator->safe()->all();
-        $prescription->update($inputs);
+        $meds = $inputs['$medicaments'];
+        foreach ($prescription->medicaments as $medicament) {
+            $med_id = $medicament->medicament_id;
+            if (!empty($meds[$med_id])) {
+                $medicament->quantity_exp = $meds[$med_id]['total_exp'];
+            }
+            if ($medicament->quantity_exp != $medicament->quantity) {
+                $completed = false;
+            }
+            $medicament->save();
+        }
+        if ($completed) {
+            $prescription->status = 2;
+        } else {
+            $prescription->status = 1;
+        }
+        $prescription->push();
+        //$prescription->update($inputs);
 
         return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
     }
