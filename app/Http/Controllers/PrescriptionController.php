@@ -137,7 +137,7 @@ class PrescriptionController extends Controller
     /**
      * Display a listing of the resource by client.
      */
-    public function getClientByClient(Request $request)
+    public function getByClient(Request $request)
     {
         //return $request->bearerToken();
         $validator = Validator::make($request->all(), [
