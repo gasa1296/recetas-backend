@@ -42,7 +42,7 @@ class SpecializationController extends Controller
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
             if (!empty($request->file('logo')[$key])) {
-                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user);
+                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user, 'public');
             }
             if(empty($el['id'])) {
                 $el['user_id'] = $user;
@@ -88,7 +88,7 @@ class SpecializationController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id());
+            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
             if ($inputs['logo'] && !empty($specialization->logo)) {
                 Storage::delete($specialization->logo);
             }

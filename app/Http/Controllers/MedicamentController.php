@@ -41,7 +41,7 @@ class MedicamentController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('images');
+            $inputs['image'] = $request->file('image')->store('images', 'public');
         }
         $instance = Medicament::create($inputs);
         return response()->json($instance);
@@ -72,7 +72,7 @@ class MedicamentController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('images');
+            $inputs['image'] = $request->file('image')->store('images', 'public');
             if ($inputs['image']) {
                 Storage::delete($medicament->image);
             }

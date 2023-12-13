@@ -36,7 +36,7 @@ class EquipmentController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('images');
+            $inputs['image'] = $request->file('image')->store('images', 'public');
         }
         $instance = Equipment::create($inputs);
         return response()->json($instance);
@@ -64,7 +64,7 @@ class EquipmentController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('image')) {
-            $inputs['image'] = $request->file('image')->store('images');
+            $inputs['image'] = $request->file('image')->store('images', 'public');
             if ($inputs['image']) {
                 Storage::delete($equipment->image);
             }

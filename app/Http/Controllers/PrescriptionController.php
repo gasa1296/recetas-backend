@@ -51,7 +51,7 @@ class PrescriptionController extends Controller
         $inputs = $validator->safe()->all();
         $inputs['user_id'] = auth()->id();
         if ($request->file('file')) {
-            $file = $request->file('file')->store('prescriptions');
+            $file = $request->file('file')->store('prescriptions', 'public');
             $inputs['file'] = $file;
         }
         $instance = Prescription::create($inputs);
@@ -96,7 +96,7 @@ class PrescriptionController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('file')) {
-            $file = $request->file('file')->store('prescriptions');
+            $file = $request->file('file')->store('prescriptions', 'public');
             $inputs['file'] = $file;
             if ($inputs['file']) {
                 Storage::delete($prescription->file);
