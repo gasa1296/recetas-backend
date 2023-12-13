@@ -42,6 +42,13 @@ Route::controller(ResetController::class)->prefix('reset')->group(function () {
     Route::post('reset', 'reset')->name('reset.reset');
 });
 
+Route::controller(PrescriptionController::class)->prefix('receta')->group(function () {
+    Route::get('', 'getByClient');
+    Route::get('{receta}', 'show');
+    Route::post('{receta}', 'addClient');
+    Route::put('{receta}', 'updateStatus');
+});
+
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
 
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
