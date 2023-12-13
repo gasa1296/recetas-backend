@@ -22,6 +22,7 @@ class PrescriptionMedicament extends Model
         'frequency',
         'duration',
         'quantity',
+        'quantity_exp',
         'medicament_id',
         'prescription_id',
     ];

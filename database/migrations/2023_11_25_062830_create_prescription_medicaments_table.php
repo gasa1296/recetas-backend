@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('frequency');
             $table->string('duration');
             $table->unsignedInteger('quantity');
+            $table->unsignedInteger('quantity_exp')->default(0);
             $table->foreignId('medicament_id')->constrained('medicaments');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
