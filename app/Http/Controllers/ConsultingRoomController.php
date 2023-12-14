@@ -38,7 +38,7 @@ class ConsultingRoomController extends Controller
             'data.*.address' => ['nullable', 'string'],
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'numeric'],
-            'logo' => ['required', 'array'],
+            'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
@@ -65,7 +65,7 @@ class ConsultingRoomController extends Controller
             }
             array_push($instances, $instance);
         }
-        return response()->json($instance);
+        return response()->json($instances);
     }
 
     /**
