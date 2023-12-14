@@ -27,11 +27,12 @@ class SpecializationController extends Controller
         $user = auth()->id();
         $validator = Validator::make($request->all(), [
             'data' => ['required', 'array'],
+            'data.*.id' => ['nullable', 'numeric'],
             'data.*.name' => ['required', 'string'],
             'data.*.identification' => 'required',
             'data.*.university' => ['nullable', 'string'],
-            'logo' => ['required', 'array'],
-            'logo.*' => ['required', 'file'],
+            'logo' => ['nullable', 'array'],
+            'logo.*' => ['nullable', 'file'],
 
         ]);
         if ($validator->fails()) {
@@ -53,7 +54,7 @@ class SpecializationController extends Controller
             } else {
                 $instance = Specialization::where('id', $el['id'])
                     ->where('user_id', auth()->id())
-                    ->fistOrFail();
+                    ->firstOrFail();
                 $instance->update($el);
             }
             array_push($instances, $instance);
