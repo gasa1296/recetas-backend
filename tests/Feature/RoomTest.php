@@ -25,7 +25,7 @@ class RoomTest extends TestCase
     }
     public function test_upsert(): void
     {
-        ConsultingRoom::factory()->create(["user_id" => $this->user]);
+        $instance = ConsultingRoom::factory()->create(["user_id" => $this->user]);
         $response = $this->post('api/room', [
             'data' => [
                 [
@@ -42,7 +42,7 @@ class RoomTest extends TestCase
                     "design" => fake()->randomElement([1, 2, 3]),
                 ],
                 [
-                    "id" => 2,
+                    "id" => $instance->id,
                     "name" => fake()->name(),
                     "zip" => fake()->postcode(),
                     "street" => fake()->streetAddress(),

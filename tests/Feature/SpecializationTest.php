@@ -25,7 +25,7 @@ class SpecializationTest extends TestCase
     }
     public function test_upsert(): void
     {
-        Specialization::factory()->create(["user_id" => $this->user]);
+        $instance = Specialization::factory()->create(["user_id" => $this->user]);
         $response = $this->post('api/specialization', [
             'data' =>[
                 [
@@ -34,10 +34,10 @@ class SpecializationTest extends TestCase
                     "university" => fake()->words(3, true),
                 ],
                 [   
-                    "id" => 1,
-                    "name" => fake()->words(3, true),
-                    "identification" => fake()->unique()->words(3, true),
-                    "university" => fake()->words(3, true),
+                    "id" => $instance->id,
+                    "name" => $instance->name,
+                    "identification" => $instance->identification,
+                    "university" => $instance->university,
                 ],
             ],
             'logo' => [
