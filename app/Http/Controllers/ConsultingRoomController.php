@@ -39,7 +39,7 @@ class ConsultingRoomController extends Controller
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'numeric'],
             'logo' => ['required', 'array'],
-            'logo.*' => ['required', 'file'],
+            'logo.*' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -53,6 +53,9 @@ class ConsultingRoomController extends Controller
             }
             if (empty($el['id'])) {
                 $el['user_id'] = $user;
+                if (empty($el['logo'])) {
+                    return response()->json(['logo' => [$key => "El campo logo es obligatorio."]], 400);
+                }
                 $instance = ConsultingRoom::create($el);
             } else {
                 $instance = ConsultingRoom::where('id', $el['id'])
