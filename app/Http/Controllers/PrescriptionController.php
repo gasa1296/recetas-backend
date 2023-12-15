@@ -20,8 +20,8 @@ class PrescriptionController extends Controller
      * @todo add search
      */
     public function index(): JsonResponse
-    {
-        return PrescriptionResource::collection(Prescription::where('user_id', auth()->id())->paginate(10))->response();
+    {   $qs = Prescription::where('user_id', auth()->id());
+        return PrescriptionResource::collection($qs->paginate(10))->response();
     }
 
     /**
@@ -183,5 +183,20 @@ class PrescriptionController extends Controller
         //$prescription->update($inputs);
 
         return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
+    }
+    /**
+     * Display a listing of the resource by client.
+     */
+    public function addFile(Request $request, Prescription $prescription)
+    {
+        //return $request->bearerToken();
+        $validator = Validator::make($request->all(), [
+            'file' => ['required', 'file'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $prescription->file = $request->file('file')->store('prescriptions', 'public');
+        return (new PrescriptionResource($prescription))->response();
     }
 }

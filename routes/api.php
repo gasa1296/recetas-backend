@@ -47,6 +47,7 @@ Route::controller(PrescriptionController::class)->prefix('receta')->group(functi
     Route::get('{receta}', 'show');
     Route::post('{receta}', 'addClient');
     Route::put('{receta}', 'updateStatus');
+    Route::post('{receta}/file', 'addFile');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
