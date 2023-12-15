@@ -44,10 +44,10 @@ Route::controller(ResetController::class)->prefix('reset')->group(function () {
 
 Route::controller(PrescriptionController::class)->prefix('receta')->group(function () {
     Route::get('', 'getByClient');
-    Route::get('{receta}', 'show');
-    Route::post('{receta}', 'addClient');
-    Route::put('{receta}', 'updateStatus');
-    Route::post('{receta}/file', 'addFile');
+    Route::get('{prescription}', 'show');
+    Route::post('{prescription}', 'addClient');
+    Route::put('{prescription}', 'updateStatus');
+    Route::post('{prescription}/file', 'addFile');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
