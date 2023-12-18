@@ -162,17 +162,25 @@ class PrescriptionController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $completed = true;
+        $errors = [];
         $inputs = $validator->safe()->all();
-        $meds = $inputs['$medicaments'];
+        //return response()->json($inputs);
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
-            if (!empty($meds[$med_id])) {
-                $medicament->quantity_exp = $meds[$med_id]['total_exp'];
+            if (!empty($inputs[$med_id])) {
+                if ($inputs[$med_id]['total_exp'] > $medicament->quantity) {
+                    $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado' ;
+                    continue;
+                }
+                
+                $medicament->quantity_exp = $inputs[$med_id]['total_exp'];
             }
             if ($medicament->quantity_exp != $medicament->quantity) {
                 $completed = false;
             }
-            $medicament->save();
+        }
+        if(!empty($errors)){
+            return response()->json($errors, 400);
         }
         if ($completed) {
             $prescription->status = 2;
@@ -182,7 +190,7 @@ class PrescriptionController extends Controller
         $prescription->push();
         //$prescription->update($inputs);
 
-        return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
+        return (new PrescriptionResource($prescription))->response();
     }
     /**
      * Display a listing of the resource by client.
