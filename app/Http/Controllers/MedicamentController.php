@@ -34,7 +34,7 @@ class MedicamentController extends Controller
             'ingredient' => ['required', 'string'],
             'dose' => ['required', 'string'],
             'quantity' => ['required', 'string'],
-            'image' => ['required', 'file'],
+            'image' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -65,7 +65,7 @@ class MedicamentController extends Controller
             'ingredient' => ['required', 'string'],
             'dose' => ['required', 'string'],
             'quantity' => ['required', 'string'],
-            'image' => ['nullable', 'file'],
+            'image' => ['nullable', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
