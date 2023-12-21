@@ -27,13 +27,6 @@ class PrescriptionMedicament extends Model
         'prescription_id',
     ];
     /**
-     * Get the medicament of the prescription.
-     */
-    public function medicament(): BelongsTo
-    {
-        return $this->belongsTo(Medicament::class);
-    }
-    /**
      * Get the prescription of the medicament.
      */
     public function prescription(): BelongsTo

@@ -44,7 +44,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'frequency' => fake()->randomNumber() . fake()->word(),
                 'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
-                'medicament_id' => Medicament::factory()->create()->id,
+                'medicament_id' => fake()->randomNumber(),
             ],
             [
                 'dose' => fake()->randomDigit() . fake()->word(),
@@ -52,7 +52,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'frequency' => fake()->randomNumber() . fake()->word(),
                 'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
-                'medicament_id' => Medicament::factory()->create()->id,
+                'medicament_id' => fake()->randomNumber(),
             ],
         ]);
         $response->assertOk();

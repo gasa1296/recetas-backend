@@ -10,8 +10,6 @@ use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
-use App\Http\Controllers\MedicamentController;
-use App\Models\Prescription;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,7 +60,6 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'specialization' => SpecializationController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
-        'medicament' => MedicamentController::class,
         'equipment' => EquipmentController::class,
         'prescription.medicament' => PrescriptionMedicamentController::class,
         'prescription.equipment' => PrescriptionEquipmentController::class,
