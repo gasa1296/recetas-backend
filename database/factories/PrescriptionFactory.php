@@ -36,7 +36,7 @@ class PrescriptionFactory extends Factory
             'room_id' => $room->id,
             'patient_id' => Patient::factory()->create()->id,
             'file' => fake()->imageUrl(),
-            'status' => fake()->randomNumber(3),
+            'status' => fake()->randomElement([0,1,2]),
         ];
     }
 }
