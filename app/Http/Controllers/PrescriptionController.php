@@ -125,7 +125,7 @@ class PrescriptionController extends Controller
     {
         //return $request->bearerToken();
         $validator = Validator::make($request->all(), [
-            'client' => ['required', 'numeric'],
+            'client' => ['required'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -141,7 +141,7 @@ class PrescriptionController extends Controller
     {
         //return $request->bearerToken();
         $validator = Validator::make($request->all(), [
-            'client' => ['required', 'numeric'],
+            'client' => ['required'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
