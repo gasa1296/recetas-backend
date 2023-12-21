@@ -15,10 +15,14 @@ class PatientController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $operator = '||';
+        if (env('DB_CONNECTION') == 'sqlsrv') {
+            $operator = '+';
+        }
         if( $request->search ){
             $instances = Patient::where('first_name', 'LIKE', "%$request->search%")
-                ->orWhere(\DB::raw('CONCAT(first_name, " ", last_name1)'), 'LIKE', "%$request->search%")
-                ->orWhere(\DB::raw('CONCAT(first_name, " ", last_name1, " ", last_name2)'), 'LIKE', "%$request->search%")
+                ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$request->search%")
+                ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$request->search%")
                 ->orWhere('email', 'LIKE', "%$request->search%")
                 ->orWhere('phone1', 'LIKE', "%$request->search%")
                 ->orWhere('phone2', 'LIKE', "%$request->search%");
