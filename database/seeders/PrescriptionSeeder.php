@@ -14,8 +14,10 @@ class PrescriptionSeeder extends Seeder
      */
     public function run(): void
     {
-        Prescription::factory(10)
-            ->has(PrescriptionMedicament::factory()->count(10), 'medicaments')
-            ->create();
+        for ($i = 0; $i < 10; $i++) {
+            Prescription::factory()
+                ->has(PrescriptionMedicament::factory()->count(10), 'medicaments')
+                ->create();
+        }
     }
 }
