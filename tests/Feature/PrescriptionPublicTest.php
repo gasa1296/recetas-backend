@@ -60,10 +60,17 @@ class PrescriptionPublicTest extends TestCase
         $response->assertStatus(200);
 
         foreach ($elements as $el) {
-            $request[$el->medicament_id] = ['total_exp' => 5];
+            $request[$el->medicament_id] = ['total_exp' => 4];
         }
         $response = $this->put('api/receta/' . $this->prescription->id, $request);
+
         $this->assertEquals(2, $response->json()['data']['status']);
         $response->assertStatus(200);
+
+        foreach ($elements as $el) {
+            $request[$el->medicament_id] = ['total_exp' => 1];
+        }
+        $response = $this->put('api/receta/' . $this->prescription->id, $request);
+        $response->assertStatus(400);
     }
 }
