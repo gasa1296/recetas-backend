@@ -43,17 +43,12 @@ class PrescriptionController extends Controller
             'add_med' => ['nullable ', 'json'],
             'room_id' => ['required ', 'numeric'],
             'patient_id' => ['required ', 'numeric'],
-            'file' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
         $inputs['user_id'] = auth()->id();
-        if ($request->file('file')) {
-            $file = $request->file('file')->store('prescriptions', 'public');
-            $inputs['file'] = $file;
-        }
         $instance = Prescription::create($inputs);
 
         return (new PrescriptionResource($instance))->response();
@@ -89,19 +84,11 @@ class PrescriptionController extends Controller
             'add_med' => ['nullable ', 'json'],
             'room_id' => ['required ', 'numeric'],
             'patient_id' => ['required ', 'numeric'],
-            'file' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        if ($request->file('file')) {
-            $file = $request->file('file')->store('prescriptions', 'public');
-            $inputs['file'] = $file;
-            if ($inputs['file']) {
-                Storage::delete($prescription->file);
-            }
-        }
         $prescription->update($inputs);
         return (new PrescriptionResource($prescription))->response();
     }
@@ -164,16 +151,14 @@ class PrescriptionController extends Controller
         $completed = true;
         $errors = [];
         $inputs = $validator->safe()->all();
-        //return response()->json($inputs);
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
             if (!empty($inputs[$med_id])) {
-                if ($inputs[$med_id]['total_exp'] > $medicament->quantity) {
+                $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
+                if ($medicament->quantity_exp > $medicament->quantity) {
                     $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado' ;
                     continue;
                 }
-                
-                $medicament->quantity_exp = $inputs[$med_id]['total_exp'];
             }
             if ($medicament->quantity_exp != $medicament->quantity) {
                 $completed = false;
@@ -188,7 +173,6 @@ class PrescriptionController extends Controller
             $prescription->status = 1;
         }
         $prescription->push();
-        //$prescription->update($inputs);
 
         return (new PrescriptionResource($prescription))->response();
     }
