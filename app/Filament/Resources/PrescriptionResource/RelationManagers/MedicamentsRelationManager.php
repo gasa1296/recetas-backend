@@ -39,9 +39,9 @@ class MedicamentsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('medicament.name')
+            ->recordTitleAttribute('medicament_id')
             ->columns([
-                Tables\Columns\TextColumn::make('medicament.name'),
+                Tables\Columns\TextColumn::make('medicament_id'),
             ])
             ->filters([
                 //
