@@ -4,7 +4,7 @@ namespace App\Filament\Resources\PrescriptionResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\{Select, Textarea, TextInput};
+use Filament\Forms\Components\{Textarea, TextInput};
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,14 +19,19 @@ class MedicamentsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Select::make('medicament_id')
-                    ->relationship('medicament', 'name')
+                TextInput::make('medicament_id')
+                    ->numeric()
                     ->required(),
+                Textarea::make('add'),
                 TextInput::make('dose'),
                 TextInput::make('way'),
                 TextInput::make('frequency')
                     ->numeric(),
                 TextInput::make('duration')
+                    ->numeric(),
+                TextInput::make('quantity')
+                    ->numeric(),
+                TextInput::make('quantity_exp')
                     ->numeric(),
             ]);
     }
