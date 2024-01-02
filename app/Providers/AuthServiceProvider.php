@@ -35,13 +35,12 @@ class AuthServiceProvider extends ServiceProvider
                 ]);
         });
         ResetPassword::toMailUsing(function ($notifiable, $token) {
-            $url = route('password.reset', $token) . '?email=' . $notifiable->getEmailForPasswordReset();
             return (new MailMessage())
                 ->subject('Restablecer contraseña')
                 ->markdown('mail.email', [
                     'message' => 'Recibimos una solicitud para restablecer la contraseña de su cuenta. Si realizó esta solicitud, haga clic en el siguiente enlace para cambiar su contraseña:',
                     'title' => 'Restablecer contraseña',
-                    'url' => $url,
+                    'url' => route('password.reset', $token) . '?email=' . $notifiable->getEmailForPasswordReset(),
                     'button' => 'Restablecer contraseña'
                 ]);
         });
