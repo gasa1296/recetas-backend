@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\PrescriptionSigned;
 use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * @todo Add update status endpoint
@@ -190,5 +192,12 @@ class PrescriptionController extends Controller
         }
         $prescription->file = $request->file('file')->store('prescriptions', 'public');
         return (new PrescriptionResource($prescription))->response();
+    }
+    private function sendNotification(Prescription $prescription)
+    {
+        foreach($prescription->medicaments as $medicament) {
+            //verify medicament group
+        }
+        $prescription->patient->notify(new PrescriptionSigned($prescription));
     }
 }
