@@ -8,7 +8,7 @@ import { Api } from ".";
 import axios from "axios";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const registerUser = (registerPayload: IRegisterPayload) => {
+export const registerUser = (registerPayload: any) => {
     const formData = new FormData();
 
     Object.keys(registerPayload).forEach((key) => {
@@ -25,33 +25,38 @@ export const registerUser = (registerPayload: IRegisterPayload) => {
         registerPayload.specializations &&
         Array.isArray(registerPayload.specializations)
     ) {
-        registerPayload.specializations.forEach((specialization, index) => {
-            Object.keys(specialization).forEach((key) => {
-                if (key !== "file") {
-                    const value = specialization[key];
-                    if (value !== null) {
-                        formData.append(
-                            `specializations[${index}][${key}]`,
-                            value
-                        );
+        registerPayload.specializations.forEach(
+            (specialization: any, index: number) => {
+                Object.keys(specialization).forEach((key) => {
+                    if (key !== "file") {
+                        const value = specialization[key];
+                        if (value !== null) {
+                            formData.append(
+                                `specializations[${index}][${key}]`,
+                                value
+                            );
+                        }
                     }
-                }
-            });
+                });
 
-            // Añadir archivo si no es null
-            if (specialization.file.length && specialization.file[0] !== null) {
-                formData.append(
-                    `logo_spec[${index}]`,
-                    specialization.file[0],
-                    specialization.file[0].name
-                );
+                // Añadir archivo si no es null
+                if (
+                    specialization.file.length &&
+                    specialization.file[0] !== null
+                ) {
+                    formData.append(
+                        `logo_spec[${index}]`,
+                        specialization.file[0],
+                        specialization.file[0].name
+                    );
+                }
             }
-        });
+        );
     }
 
     // Añadir archivos de habitaciones si existen
     if (registerPayload.rooms && Array.isArray(registerPayload.rooms)) {
-        registerPayload.rooms.forEach((room, index) => {
+        registerPayload.rooms.forEach((room: any, index: number) => {
             Object.keys(room).forEach((key) => {
                 if (key !== "files") {
                     const value = room[key];
@@ -118,16 +123,19 @@ export const verifyUser = (id: string, hash: string) => {
 
 export const forgotPassword = (forgotPayload: IForgotPayload) => {
     return Api({
-        endpoint: `/auth/forgot-password`,
+        endpoint: `/password/request`,
         method: "POST",
         _data: forgotPayload,
     });
 };
 
-export const recoverPassword = (recoverPayload: IRecoverPayload) => {
-    return Api({
-        endpoint: `/auth/recover-password`,
-        method: "POST",
-        _data: recoverPayload,
+export const recoverPassword = (
+    recoverPayload: IRecoverPayload,
+    token: string
+) => {
+    return axios.post(baseUrl + "/api/password/reset", recoverPayload, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
 };

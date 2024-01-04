@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FieldComponents, getDefaultValues } from "./helper";
 import { Field } from "@/types/Generals/FormGenerator";
+import { yupResolver } from "@hookform/resolvers/yup";
 interface Props {
     fields: Field[];
     submitData: (data: any) => void;
@@ -12,6 +13,8 @@ interface Props {
     isSubform?: number;
     reload?: boolean;
     setReload?: (reload: boolean) => void;
+    schema?: any;
+    externalError?: any;
 }
 
 export default function FormGenerator({
@@ -24,6 +27,8 @@ export default function FormGenerator({
     isSubform,
     reload,
     setReload,
+    schema,
+    externalError = [],
 }: Props) {
     const {
         handleSubmit,
@@ -31,7 +36,9 @@ export default function FormGenerator({
         formState: { errors },
         setValue,
         watch,
+        setError,
     } = useForm({
+        resolver: schema ? yupResolver(schema) : undefined,
         defaultValues: getDefaultValues(fields, isSubform),
     });
 
@@ -58,6 +65,8 @@ export default function FormGenerator({
         }
     }, [allFields]);
 
+    const customErrors = { ...errors, ...externalError };
+
     return (
         <form
             className="flex flex-wrap justify-between w-full"
@@ -69,10 +78,12 @@ export default function FormGenerator({
                 return (
                     <FieldComponent
                         key={index}
-                        error={errors[field.name]}
+                        externalError={customErrors[field.name]}
+                        error={customErrors[field.name]}
                         register={register}
                         setValue={setValue}
                         watch={watch}
+                        setError={setError}
                         {...field}
                     />
                 );

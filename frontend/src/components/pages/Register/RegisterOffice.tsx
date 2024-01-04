@@ -2,11 +2,13 @@ import FormGenerator from "@/components/FormGenerator";
 import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm3 } from "@/types/Store/Register";
+import * as yup from "yup";
 import { validateSameObject } from "@/utils/isSameObject";
 import Receta1 from "@/assets/images/recetas/Receta1.png";
 import Receta2 from "@/assets/images/recetas/Receta2.png";
 import Receta3 from "@/assets/images/recetas/Receta3.png";
 import React from "react";
+import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
 
 export default function RegisterOffice({ nextStep, backStep }: any) {
     const setForm3 = useRegisterStore((state) => state.setForm3);
@@ -15,7 +17,14 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
         nextStep();
     };
 
-    console.log("first", form3);
+    const schema = yup.object().shape({
+        rooms: yup
+            .array()
+            .of(RoomSchema)
+            .min(1, "Debe tener al menos un consultorio")
+            .required("Debe tener al menos un consuiltorio"),
+    });
+
     const fields: Field[] = [
         {
             label: "Dirección del consultorio principal",
@@ -148,9 +157,9 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
                 },
 
                 {
-                    label: "Agrega el logotipo de su consultorio (opcional)",
+                    label: "Agrega el logotipo de su consultorio",
                     name: "files",
-                    required: false,
+                    required: true,
                     type: "file",
                     width: 100,
                     subFormKey: "files",
@@ -196,6 +205,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
                         submitData={submitData}
                         fields={fields}
                         loading={false}
+                        schema={schema}
                         onFormChange={(form) => {
                             if (validateSameObject(form3 as object, form)) {
                                 setForm3(form as IForm3);

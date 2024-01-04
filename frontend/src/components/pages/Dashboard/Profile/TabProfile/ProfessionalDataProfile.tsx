@@ -2,11 +2,12 @@ import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 import { ISpecialization } from "@/types/Store/Register";
 import { FaSave } from "react-icons/fa";
-
+import * as yup from "yup";
 import React from "react";
 import { useSpecializationsStore } from "@/store/specializations";
 import useCustomEffect from "@/hooks/useCustomEffect";
 import Loading from "@/components/Loading";
+import { SpecializationProfileSchema } from "@/utils/ValidationSchema/SpecializationSchema";
 
 export default function ProfessionalDataProfile() {
     const {
@@ -29,6 +30,14 @@ export default function ProfessionalDataProfile() {
     };
 
     useCustomEffect({ requestGet: GetSpecializations });
+
+    const schema = yup.object().shape({
+        specializations: yup
+            .array()
+            .of(SpecializationProfileSchema)
+            .min(1, "Debe tener al menos una especialización")
+            .required("Debe tener al menos una especialización"),
+    });
 
     const fields: Field[] = [
         {
@@ -119,6 +128,7 @@ export default function ProfessionalDataProfile() {
                 submitData={submitData}
                 fields={fields}
                 loading={false}
+                schema={schema}
                 buttonText="Continuar"
                 renderButton={(handleSubmit) => (
                     <div className="flex justify-center w-full  ">

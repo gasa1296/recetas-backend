@@ -24,6 +24,8 @@ export interface Field {
     disabled?: boolean;
     visible?: string;
     validate?: (value: string, payload: any) => void;
+    handleChange?: (value: any) => void;
+    setError?: any;
     register?: any;
     error?: any;
     setValue?: any;
@@ -34,6 +36,7 @@ export interface Field {
     buttonAddText?: string;
     notFirstTitle?: boolean;
     recetasOptions?: { image: StaticImageData; value: string }[];
+    externalError?: any;
 }
 
 export interface FieldType {
@@ -52,6 +55,9 @@ export interface FieldType {
     selecDesing: any;
     recetas: any;
     invisible: any;
+    subtitle: any;
+    separation: any;
+    medicaments: any;
 }
 export type FieldTypeString =
     | "text"
@@ -68,7 +74,10 @@ export type FieldTypeString =
     | "date"
     | "selecDesing"
     | "invisible"
-    | "recetas";
+    | "recetas"
+    | "subtitle"
+    | "separation"
+    | "medicaments";
 
 export interface SelectedItems {
     type: "cause" | "prize";

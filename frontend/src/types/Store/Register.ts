@@ -56,5 +56,7 @@ export interface IForgotPayload {
 }
 export interface IRecoverPayload {
     password: string | null;
-    confirmPassword: string | null;
+    password_confirmation: string | null;
+    email?: string | null;
+    token?: string | null;
 }

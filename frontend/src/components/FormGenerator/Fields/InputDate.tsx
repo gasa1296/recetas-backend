@@ -7,12 +7,12 @@ export default function InputDate({
     name,
     required,
     error,
+    disabled,
     minDate = "",
     maxDate = "",
     watch,
     limitDays,
     width = 100,
-
 }: Field) {
     const values: any = watch();
 
@@ -33,26 +33,27 @@ export default function InputDate({
     return (
         <div style={{ width: `${width}%` }} className="px-2 full-width">
             <label
-                className={`${error && "text-red-600"
-                    } title-form-generator my-1 flex relative text-[#1A1A1A] text-[16px]`}
+                className={`${
+                    error && "text-red-600"
+                } title-form-generator my-1 flex relative text-[#1A1A1A] text-[16px]`}
                 htmlFor={name}
             >
                 {label}
             </label>
 
-            <div className="flex ">
-                <div className=" flex ">
-                    <input
-                        type="datetime-local"
-                        min={new Date(values[minDate] || null)
-                            .toISOString()
-                            .slice(0, 16)}
-                        max={getMaxDate().toISOString().slice(0, 16)}
-                        className={`w-full form-controltext-[16px] m-0 p-3 rounded-md border-[#DBE2EA] border-2 focus:outline-none ${error && "border-red-600 "
-                            }`}
-                        {...register(name, { required })}
-                    />
-                </div>
+            <div className="flex  ">
+                <input
+                    disabled={disabled}
+                    type="datetime-local"
+                    min={new Date(values[minDate] || null)
+                        .toISOString()
+                        .slice(0, 16)}
+                    max={getMaxDate().toISOString().slice(0, 16)}
+                    className={`w-full form-controltext-[16px] m-0 p-3 rounded-md border-[#DBE2EA] border-2 focus:outline-none ${
+                        error && "border-red-600 "
+                    }`}
+                    {...register(name, { required })}
+                />
             </div>
         </div>
     );

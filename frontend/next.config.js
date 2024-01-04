@@ -2,7 +2,10 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ["receta.farmaciasespecializadas.com"],
+        domains: [
+            "receta.farmaciasespecializadas.com",
+            "s3-repositorio-cloudseus.s3.amazonaws.com",
+        ],
     },
 };
 

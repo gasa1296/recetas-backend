@@ -2,11 +2,13 @@ import FormGenerator from "@/components/FormGenerator";
 import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import React from "react";
-
+import * as yup from "yup";
 import Receta1 from "@/assets/images/recetas/Receta1.png";
 import Receta2 from "@/assets/images/recetas/Receta2.png";
 import Receta3 from "@/assets/images/recetas/Receta3.png";
 import { IForm3, IRegisterPayload } from "@/types/Store/Register";
+import { SpecializationSchema } from "@/utils/ValidationSchema/SpecializationSchema";
+import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
 
 export default function ConfirmAccount({ nextStep, backStep }: any) {
     const { form3, form2, form1, handleSubmit, loading } = useRegisterStore(
@@ -24,6 +26,20 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
 
         if (result) nextStep();
     };
+
+    const schema = yup.object().shape({
+        specializations: yup
+            .array()
+            .of(SpecializationSchema)
+            .min(1, "Debe tener al menos una especialización")
+            .required("Debe tener al menos una especialización"),
+        rooms: yup
+            .array()
+            .of(RoomSchema)
+            .min(1, "Debe tener al menos un consultorio")
+            .required("Debe tener al menos un consuiltorio"),
+    });
+
     const fields: Field[] = [
         {
             label: "Nombre(s) *",
@@ -313,9 +329,9 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
                 },
 
                 {
-                    label: "Agrega el logotipo de su consultorio (opcional)",
+                    label: "Agrega el logotipo de su consultorio",
                     name: "files",
-                    required: false,
+                    required: true,
                     type: "file",
                     width: 100,
                     subFormKey: "files",
@@ -363,6 +379,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
                         submitData={submitData}
                         fields={fields}
                         loading={false}
+                        schema={schema}
                         renderButton={(handleSubmit) => (
                             <div className="flex justify-center w-full ">
                                 <button
