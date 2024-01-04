@@ -15,6 +15,7 @@ import {
     IRecoverPayload,
     IRegisterPayload,
 } from "@/types/Store/Register";
+import { getResetPasswordParams } from "@/utils/getResetPasswordParams";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -158,12 +159,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     RecoverPassword: async (recoverPayload: IRecoverPayload) => {
         set({ loading: true, error: null });
         try {
-            const response = await recoverPassword(recoverPayload);
+            const { token, email } = getResetPasswordParams();
+            const response = await recoverPassword(
+                { ...recoverPayload, email, token },
+                token || ""
+            );
             set({ isAuth: false, user: null });
             toast.success("Contraseña actualizada correctamente");
-            return response.data;
+            return response;
         } catch (error: any) {
-            toast.error(error.message);
+            console.log(error);
+            toast.error(error.response.data.message || error.message);
             set({ error: error.message });
         } finally {
             set({ loading: false });

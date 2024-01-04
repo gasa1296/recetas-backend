@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
-import SideBar from "./SideBar";
+import SideBar from "./Sidebar";
 interface Props {
     children: React.ReactNode;
 }

@@ -43,7 +43,13 @@ width: 400px;
   background: #000000 0% 0% no-repeat padding-box;
 opacity: 1;
 color:#EBF4F8; 
-border-radius: 6px;
+
+}
+.button-BlacK2{
+  background: #000000 0% 0% no-repeat padding-box;
+opacity: 1;
+color:#EBF4F8; 
+border-radius: 20px !important;
 
 }
 .button-white{
@@ -54,7 +60,6 @@ color: #1A1A1A;
 opacity: 1;
 font-size: 20px;
 border-radius: 6px;
-margin: A;
 
 }
 
@@ -86,6 +91,7 @@ box-shadow: 2px 0px 3px #00000008;
   border-left: 4px solid #FC6600;
 opacity: 1;
 background: #E8E8E8 0% 0% no-repeat padding-box;
+border-radius: 0px !important;
 }
 
 .sidebar {
@@ -95,7 +101,7 @@ background: #E8E8E8 0% 0% no-repeat padding-box;
   height: 100%;
   position: fixed;
   left: 0;
-  top: 95px;
+  top: 0px;
   z-index: 2;
   z-index: 1029;
   background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -107,7 +113,7 @@ opacity: 1;
 .sidebar.show {
   transform: translateX(0);
 }
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 568px) {
   .sidebar {
     -webkit-transform: translateX(-100%);
     -ms-transform: translateX(-100%);
@@ -141,7 +147,7 @@ opacity: 1;
 
 
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 568px) {
   .sidebar .sidebar-body {
     padding-top: 11px;
   }
@@ -174,7 +180,7 @@ border: 1px solid #dbe2ea;
 .sidebarDestok.show {
   transform: translateX(0);
 }
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 568px) {
   .sidebarDestok {
     -webkit-transform: translateX(-100%);
     -ms-transform: translateX(-100%);
@@ -190,7 +196,7 @@ border: 1px solid #dbe2ea;
   display: inline-block;
   margin-left: -5px;
 }
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 568px) {
   .sidebarDestock .sidebar-bodyDestok {
     padding-top: 11px;
   }
@@ -232,14 +238,14 @@ font-size: 26px;
 }
 .input-search{
   background: #FFFFFF 0% 0% no-repeat padding-box;
-border: 1px solid #DBE2EA;
+border: 1px solid #DBE2EA !important;
 letter-spacing: 0px;
 border-radius: 4px;
 color: #A0A0A0;
 opacity: 1;
 font-size: 16px;
-width: 80%;
 cursor: pointer;
+outline: none;
 }
 .bar-search{
 height: 0px;
@@ -252,7 +258,7 @@ margin-top: 30px;
 border: 1px solid #DBE2EA;
 border-radius: 8px;
 opacity: 1;
-width: 80%;
+width: 100%;
 padding: 50px;
 
 }
@@ -284,7 +290,6 @@ font-weight: medium;
 border: 1px solid #DBE2EA;
 opacity: 1;
 border-radius: 10px;
-width: 40%;
 }
 .title-card{
   font-size: 18px;
@@ -299,6 +304,14 @@ color: #1A1A1A;
 opacity: 1;
 font-size: 16px;
 font-weight: normal;
+}
+
+.container-sing{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+border: 1px solid #DBE2EA;
+opacity: 1;
+width: 444px;
+height: 206px;
 }
 
 /*style profile*/
@@ -324,4 +337,138 @@ font-weight: normal;
   background: #FFFFFF 0% 0% no-repeat padding-box;
 box-shadow: 0px 3px 6px #00000029;
 opacity: 1;
+}
+.text-newPatiens{
+  color: #FC6700;
+  border-bottom: 1px solid #FC6700;
+  letter-spacing: 0px;
+  
+}
+.title-RecetasGeneradas{
+  letter-spacing: 0px;
+  color: #1A1A1A;
+  opacity: 1;
+font-weight: bold;
+font-size: 18px;
+}
+
+th {
+  display: table-cell;
+  vertical-align: inherit;
+  font-weight: bold;
+  text-align: start !important;
+}
+
+/*style cards medicine*/
+
+.card-medicine{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 1px 3px #42424229;
+opacity: 1;
+width: 259px;
+min-height: 421px;
+padding-bottom: 80px;
+margin-top: 20px;
+}
+
+.image-medicament {
+  width: 200px;
+  margin: 0 auto;
+
+}
+*, ::before, ::after {
+  box-sizing: border-box;
+  border-style: solid;
+border-radius: 5px !important;
+
+  border-color: #e5e7eb;
+}
+.border {
+ /*  border-width: 0px;  */
+}
+
+/*STYLE ADD MEDICINE*/
+.container-AddMdicine{
+background: #F7F8FA 0% 0% no-repeat padding-box;
+border: 1px solid #DBE2EA;
+border-radius: 8px;
+opacity: 1;
+}
+/*style cARD RECIPES MEDICINE*/
+.cardRecipesMedicine{
+  background: #F7F8FA 0% 0% no-repeat padding-box;
+  border: 1px solid #DBE2EA;
+  border-radius: 8px;
+  opacity: 1;
+  margin-bottom: 10px;
+}
+
+.button-delete{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #F23D4D;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+align-items: center;
+letter-spacing: 0px;
+opacity: 1;
+font-size: 16px;
+color: #F23D4F;
+font-weight: 500;
+}
+.button-print{
+  background: #EA5133 0% 0% no-repeat padding-box;
+border-radius: 6px;
+opacity: 1;
+letter-spacing: 0px;
+color: #FFFFFF;
+opacity: 1;
+
+}
+
+.button-edit{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #000000;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+align-items: center;
+font-size: 16px;
+letter-spacing: 0px;
+color: #000000;
+opacity: 1;
+font-weight: 500;
+}
+.button-add{
+  background: #EDEDED 0% 0% no-repeat padding-box;
+border: 1px solid #000000;
+border-radius: 8px;
+opacity: 1;
+letter-spacing: 0px;
+color: #000000;
+opacity: 1;
+font-weight: 600;
+font-size: 18px;
+}
+.button-green{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+border: 1px solid #00C851;
+opacity: 1;
+letter-spacing: 0px;
+color: #00C851;
+opacity: 1;
+font-size: 16px;
+}
+
+/*style mdal edit*/
+.bar-lateral{
+  border: 1px solid #A5A5A5;
+opacity: 0.27;
+width: 100%;
+height: 2px;
+background: #A5A5A5;
+}
+
+.content-card{
+  border-radius: 50% !important;
 }

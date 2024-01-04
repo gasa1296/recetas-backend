@@ -15,15 +15,19 @@ import InputSelectDesing from "./Fields/InputSelectDesing";
 import InputSubform from "./Fields/InputSubform";
 import InputRecetas from "./Fields/InputRecetas";
 import InputInvisite from "./Fields/InputInvisite";
+import InputSubTitle from "./Fields/InputSubtitle";
+import InputSeparation from "./Fields/InputSeparation";
+import InputMedicaments from "./Fields/InputMedicaments";
 
 export const getDefaultValues = (fields: Field[], isSubform?: number) => {
     const defaultValues: any = {};
 
     fields.map((field) => {
-        if (field.type !== "title") {
+        if (field.type !== "title" && field.type !== "separation") {
             defaultValues[field.name] = field.default || "";
         }
     });
+    12;
 
     return defaultValues;
 };
@@ -44,6 +48,9 @@ export const FieldComponents: FieldType = {
     selecDesing: InputSelectDesing,
     recetas: InputRecetas,
     invisible: InputInvisite,
+    subtitle: InputSubTitle,
+    separation: InputSeparation,
+    medicaments: InputMedicaments,
 };
 
 export function isHttp(url: String) {

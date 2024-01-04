@@ -2,8 +2,10 @@ import FormGenerator from "@/components/FormGenerator";
 import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm2 } from "@/types/Store/Register";
+import { SpecializationSchema } from "@/utils/ValidationSchema/SpecializationSchema";
 import { validateSameObject } from "@/utils/isSameObject";
 import React from "react";
+import * as yup from "yup";
 
 export default function ProfesionalData({ nextStep, backStep }: any) {
     const setForm2 = useRegisterStore((state) => state.setForm2);
@@ -12,6 +14,13 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
         nextStep();
     };
 
+    const schema = yup.object().shape({
+        specializations: yup
+            .array()
+            .of(SpecializationSchema)
+            .min(1, "Debe tener al menos una especialización")
+            .required("Debe tener al menos una especialización"),
+    });
     const fields: Field[] = [
         {
             label: "Datos profesionales",
@@ -93,6 +102,7 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
                 submitData={submitData}
                 fields={fields}
                 loading={false}
+                schema={schema}
                 onFormChange={(form) => {
                     if (validateSameObject(form2 as object, form)) {
                         setForm2(form as IForm2);

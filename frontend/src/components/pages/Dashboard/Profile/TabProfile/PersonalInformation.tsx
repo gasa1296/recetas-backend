@@ -46,6 +46,7 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
             label: "Correo electrónico *",
             name: "email",
             required: true,
+            disabled: true,
             type: "email",
             width: 50,
             default: user?.email || "",

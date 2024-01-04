@@ -1,0 +1,16 @@
+import React from "react";
+import { FaRegUser, FaUser, FaPills } from "react-icons/fa";
+
+export default function FindMedicine() {
+    return (
+        <div className="mt-8 flex flex-col lg:flex-row justify-center items-center  container-box mx-auto cursor-pointer">
+            <FaPills size={60} color="#000" />
+            <div className="">
+                <p className=" pl-4 text-[16px] md:text-[28px] font-normal text-[#1A1A1A]  ms-4 md:w-[530px] ">
+                    Antes de generar la receta, busque los medicamentos que
+                    requiera su paciente.
+                </p>
+            </div>
+        </div>
+    );
+}
