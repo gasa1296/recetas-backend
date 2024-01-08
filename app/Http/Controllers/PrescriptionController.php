@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
+use GuzzleHttp\Client;
 
 /**
  * @todo Add update status endpoint
@@ -22,7 +23,8 @@ class PrescriptionController extends Controller
      * @todo add search
      */
     public function index(): JsonResponse
-    {   $qs = Prescription::where('user_id', auth()->id());
+    {
+        $qs = Prescription::where('user_id', auth()->id());
         return PrescriptionResource::collection($qs->paginate(10))->response();
     }
 
@@ -158,7 +160,7 @@ class PrescriptionController extends Controller
             if (!empty($inputs[$med_id])) {
                 $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
                 if ($medicament->quantity_exp > $medicament->quantity) {
-                    $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado' ;
+                    $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
                     continue;
                 }
             }
@@ -166,7 +168,7 @@ class PrescriptionController extends Controller
                 $completed = false;
             }
         }
-        if(!empty($errors)){
+        if (!empty($errors)) {
             return response()->json($errors, 400);
         }
         if ($completed) {
@@ -195,9 +197,40 @@ class PrescriptionController extends Controller
     }
     private function sendNotification(Prescription $prescription)
     {
-        foreach($prescription->medicaments as $medicament) {
+        $client = new Client();
+        foreach ($prescription->medicaments as $medicament) {
             //verify medicament group
+            $reponse = $client->post(
+                'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
+                [
+                    'json' => [
+                        "hash" => "initial",
+                        "descripcion" => $medicament->medicament_id,
+                    ]
+                ]
+            );
+            $body = json_decode($reponse->getBody(), true);
+            if(empty($body['Respuesta'])){
+                return;
+            } elseif (in_array($body['Respuesta'][0]['clasificacionsa'], ['Grupo II', 'Grupo III', 'Grupo IV'])) {
+                return;
+            }
         }
         $prescription->patient->notify(new PrescriptionSigned($prescription));
+    }
+    public function getMedicament(int $desc)
+    {
+        $client = new Client();
+        $reponse = $client->post(
+            'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
+            [
+                'json' => [
+                    "hash" => "initial",
+                    "descripcion" => (string) $desc,
+                ]
+            ]
+        );
+        $body = json_decode($reponse->getBody(), true);
+        return response()->json($body['Respuesta'][0]);
     }
 }
