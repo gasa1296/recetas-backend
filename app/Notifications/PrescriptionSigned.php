@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notification;
 class PrescriptionSigned extends Notification
 {
     use Queueable;
+    private Prescription $prescription;
 
     /**
      * Create a new notification instance.
@@ -35,7 +36,9 @@ class PrescriptionSigned extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)->markdown('mail.prescription');
+        return (new MailMessage)->markdown('mail.prescription', [
+            'prescription' => $this->prescription,
+        ])->attach($this->prescription->file);
     }
     public function toWhatsApp(object $notifiable)
     {
