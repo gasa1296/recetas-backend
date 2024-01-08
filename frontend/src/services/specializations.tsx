@@ -13,7 +13,7 @@ export const getSpecializations = () => {
 export const updateSpecializations = (data: ISpecialization[]) => {
     const formData = new FormData();
     if (data && Array.isArray(data)) {
-        data.forEach((specialization, index) => {
+        data.forEach((specialization: any, index) => {
             if (!specialization.id) delete specialization.id;
             Object.keys(specialization).forEach((key) => {
                 if (key !== "logo") {
@@ -57,7 +57,7 @@ export const removeSpecializations = (data: ISpecialization) => {
 export const postSpecializations = (data: ISpecialization[]) => {
     const formData = new FormData();
     if (data && Array.isArray(data)) {
-        data.forEach((specialization, index) => {
+        data.forEach((specialization: any, index) => {
             Object.keys(specialization).forEach((key) => {
                 if (key !== "logo") {
                     const value = specialization[key];

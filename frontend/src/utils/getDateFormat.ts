@@ -26,3 +26,15 @@ export const getDateFormat = (date: string) => {
 
     return { formattedTime, correctedDate };
 };
+
+export const getRecipeDate = () => {
+    const fecha = new Date();
+
+    const opcionesFecha = { day: "numeric", month: "long", year: "numeric" };
+    const formatoFecha = fecha.toLocaleDateString(
+        "es-ES",
+        opcionesFecha as any
+    );
+
+    return formatoFecha;
+};

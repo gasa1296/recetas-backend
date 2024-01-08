@@ -6,10 +6,11 @@ import Receta1 from "@/assets/images/recetas/Receta1.png";
 import Receta2 from "@/assets/images/recetas/Receta2.png";
 import Receta3 from "@/assets/images/recetas/Receta3.png";
 import React from "react";
+import * as yup from "yup";
 import { useRoomsStore } from "@/store/rooms";
 import useCustomEffect from "@/hooks/useCustomEffect";
 import Loading from "@/components/Loading";
-
+import { RoomProfileSchema } from "@/utils/ValidationSchema/RoomsSchema";
 export default function Offices() {
     const { rooms, GetRooms, loading, loadingUpdate, UpdateRooms } =
         useRoomsStore((state) => ({
@@ -26,6 +27,14 @@ export default function Offices() {
     };
 
     useCustomEffect({ requestGet: GetRooms });
+
+    const schema = yup.object().shape({
+        rooms: yup
+            .array()
+            .of(RoomProfileSchema)
+            .min(1, "Debe tener al menos un consultorio")
+            .required("Debe tener al menos un consuiltorio"),
+    });
 
     const fields: Field[] = [
         {
@@ -166,9 +175,9 @@ export default function Offices() {
                 },
 
                 {
-                    label: "Agrega el logotipo de su consultorio (opcional)",
+                    label: "Agrega el logotipo de su consultorio",
                     name: "logo",
-                    required: false,
+                    required: true,
                     type: "file",
                     width: 100,
                     subFormKey: "logo",
@@ -214,6 +223,7 @@ export default function Offices() {
                         submitData={submitData}
                         fields={fields}
                         loading={false}
+                        schema={schema}
                         renderButton={(handleSubmit) => (
                             <div className="flex justify-center w-full  ">
                                 <button

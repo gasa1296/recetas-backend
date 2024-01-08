@@ -14,6 +14,7 @@ export default function InputSubform({
     setValue,
     buttonAddText = "Agregar",
     maxFile = 0,
+    externalError,
 }: Field) {
     const values = watch();
     const [reload, setReload] = React.useState(false);
@@ -78,6 +79,9 @@ export default function InputSubform({
 
                         <FormGenerator
                             submitData={() => {}}
+                            externalError={
+                                externalError ? externalError[index] : {}
+                            }
                             fields={form.map((field: Field) => ({
                                 ...field,
                                 default: subform[field.name],

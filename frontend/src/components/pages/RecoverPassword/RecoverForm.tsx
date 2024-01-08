@@ -13,11 +13,12 @@ export default function RecoverForm({ setSuccess }: { setSuccess: any }) {
     }));
 
     const submitData = async (data: IRecoverPayload) => {
-        if (data.password !== data.confirmPassword) {
+        if (data.password !== data.password_confirmation) {
             return toast.error("Las contraseñas no coinciden");
         }
 
         const result = await RecoverPassword(data);
+        console.log("first", result);
         if (result) router.push("/");
     };
     const {
@@ -26,7 +27,7 @@ export default function RecoverForm({ setSuccess }: { setSuccess: any }) {
         formState: { errors },
     } = useForm({
         defaultValues: {
-            confirmPassword: "",
+            password_confirmation: "",
             password: "",
         },
     });
@@ -39,16 +40,18 @@ export default function RecoverForm({ setSuccess }: { setSuccess: any }) {
                 type="Password"
                 {...register("password", { required: true })}
                 placeholder="Nuevo contraseña*"
+                minLength={8}
                 className={`${
                     errors["password"] && "border-red-400"
                 } w-full max-w-[380px] p-1 border border-[ #DBE2EA] shadow-xl shadow-[#2C27380A] h-[52px] text-[#141414] focus:outline-none rounded-lg pl-2`}
             />
             <input
                 type="Password"
-                {...register("confirmPassword", { required: true })}
+                {...register("password_confirmation", { required: true })}
                 placeholder="Confirmar contraseña*"
+                minLength={8}
                 className={`${
-                    errors["confirmPassword"] && "border-red-400"
+                    errors["password_confirmation"] && "border-red-400"
                 } my-4 w-full  max-w-[380px] p-1 border border-[ #DBE2EA] shadow-xl shadow-[#2C27380A] h-[52px] text-[#141414] focus:outline-none rounded-lg pl-2`}
             />
 

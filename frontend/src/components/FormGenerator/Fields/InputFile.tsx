@@ -101,7 +101,7 @@ export default function InputFile({
         <div style={{ width: `${width}%` }} className="px-2 full-width">
             <label
                 className={`${
-                    error && "text-danger"
+                    error && "text-red-400"
                 } title-form-generator  mt-2`}
                 htmlFor={name}
             >
@@ -143,7 +143,9 @@ export default function InputFile({
 
                 {previews.length < maxFile && (
                     <button
-                        className=" bg-white mx-auto  border-separate border-2"
+                        className={` bg-white mx-auto  ${
+                            error && "border-red-400"
+                        } border-separate border-2`}
                         style={{
                             width: "150px",
                             height: "150px",

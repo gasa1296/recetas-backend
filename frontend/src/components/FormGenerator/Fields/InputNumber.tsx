@@ -7,6 +7,7 @@ export default function InputNumber({
     name,
     required,
     setValue,
+    disabled,
     error,
     watch,
     visible,
@@ -27,19 +28,11 @@ export default function InputNumber({
                 id={name}
                 name={name}
                 type="number"
+                disabled={disabled}
                 {...register(name, { required })}
                 className={`w-full form-control my-2 text-[16px] m-0 p-3 rounded-md border-[#DBE2EA] border-2 focus:outline-none ${
                     error && "border-red-400 "
                 }`}
-                /* onChange={(e) => {
-                    setValue(name, e.target.value);
-                    customChange &&
-                        customChange({
-                            setValue,
-                            newValue: e.target.value,
-                            values,
-                        });
-                }} */
             />
         </div>
     );

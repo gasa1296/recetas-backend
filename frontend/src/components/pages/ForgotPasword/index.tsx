@@ -77,7 +77,7 @@ export default function ForgortPassword({ nextStep }: any) {
 
                     <button
                         className="bg-black text-[#EBF4F8] max-w-[166px] w-full p-3 my-4 rounded-lg block mx-auto"
-                        onClick={() => router.push(`/recoverPassword`)}
+                        onClick={() => router.push(`/`)}
                     >
                         Volver al inicio
                     </button>

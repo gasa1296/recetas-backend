@@ -14,7 +14,7 @@ export const postRooms = (data: IRoom[]) => {
     const formData = new FormData();
     // Añadir archivos de habitaciones si existen
     if (data && Array.isArray(data)) {
-        data.forEach((room, index) => {
+        data.forEach((room: any, index) => {
             Object.keys(room).forEach((key) => {
                 if (key !== "logo") {
                     const value = room[key];
@@ -54,7 +54,7 @@ export const updateRooms = (rooms: IRoom[]) => {
     const formData = new FormData();
 
     if (rooms && Array.isArray(rooms)) {
-        rooms.forEach((room, index) => {
+        rooms.forEach((room: any, index) => {
             if (!room.id) delete room.id;
             Object.keys(room).forEach((key) => {
                 if (key !== "logo") {
