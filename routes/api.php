@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
@@ -46,6 +45,7 @@ Route::controller(PrescriptionController::class)->prefix('receta')->group(functi
     Route::post('{prescription}', 'addClient');
     Route::put('{prescription}', 'updateStatus');
     Route::post('{prescription}/file', 'addFile');
+    Route::get('medicament/{desc}', 'getMedicament');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
