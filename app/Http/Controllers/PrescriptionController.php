@@ -212,7 +212,7 @@ class PrescriptionController extends Controller
             $body = json_decode($reponse->getBody(), true);
             if(empty($body['Respuesta'])){
                 return;
-            } elseif (in_array($body['Respuesta'][0]['clasificacionsa'], ['Grupo II', 'Grupo III', 'Grupo IV'])) {
+            } elseif (in_array($body['Respuesta'][0]['clasificacionsa'], ['Grupo II', 'Grupo III'])) {
                 return;
             }
         }
