@@ -1,6 +1,6 @@
 
 <x-mail::message>
-  ![A cute cat](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg)
+  ![A cute cat]({{ asset('Logo.png') }})
   <h1 class="center h1">{{$title}}</h1>
   <p class="center p">{{$message}}</p>
   <p class="center"><a href="{{$url}}"><button class="btn">{{$button}}</button></a></p>
