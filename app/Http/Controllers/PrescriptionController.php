@@ -18,6 +18,11 @@ use GuzzleHttp\Client;
  */
 class PrescriptionController extends Controller
 {
+    private Client $client;
+    public function __construct()
+    {
+        $this->client = new Client();        
+    }
     /**
      * Display a listing of the resource.
      * @todo add search
@@ -27,7 +32,6 @@ class PrescriptionController extends Controller
         $qs = Prescription::where('user_id', auth()->id());
         return PrescriptionResource::collection($qs->paginate(10))->response();
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -57,7 +61,6 @@ class PrescriptionController extends Controller
 
         return (new PrescriptionResource($instance))->response();
     }
-
     /**
      * Display the specified resource.
      */
@@ -65,7 +68,6 @@ class PrescriptionController extends Controller
     {
         return (new PrescriptionResource($prescription))->response();
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -96,7 +98,6 @@ class PrescriptionController extends Controller
         $prescription->update($inputs);
         return (new PrescriptionResource($prescription))->response();
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -108,7 +109,6 @@ class PrescriptionController extends Controller
         $prescription->delete();
         return response()->json();
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -197,10 +197,8 @@ class PrescriptionController extends Controller
     }
     private function sendNotification(Prescription $prescription)
     {
-        $client = new Client();
         foreach ($prescription->medicaments as $medicament) {
-            //verify medicament group
-            $reponse = $client->post(
+            $response = $this->client->post(
                 'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
                 [
                     'json' => [
@@ -209,7 +207,7 @@ class PrescriptionController extends Controller
                     ]
                 ]
             );
-            $body = json_decode($reponse->getBody(), true);
+            $body = json_decode($response->getBody(), true);
             if(empty($body['Respuesta'])){
                 return;
             } elseif (in_array($body['Respuesta'][0]['clasificacionsa'], ['Grupo II', 'Grupo III'])) {
@@ -220,8 +218,7 @@ class PrescriptionController extends Controller
     }
     public function getMedicament(int $desc)
     {
-        $client = new Client();
-        $reponse = $client->post(
+        $reponse = $this->client->post(
             'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
             [
                 'json' => [
