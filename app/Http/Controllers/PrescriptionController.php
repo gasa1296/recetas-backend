@@ -230,4 +230,41 @@ class PrescriptionController extends Controller
         }
         $prescription->patient->notify(new PrescriptionSigned($prescription));
     }
+    private function legalarioLogin(): array
+    {
+        $client = new Client();
+        $response = $client->post('https://api.legalario.com/auth/login', [
+            'form_params' => [
+                'client_id' => 'SOMEID',
+                'client_secret' => '9999jjjj67Y0LBLq8CbftgfdreehYEI=',
+                'grant_type' => 'client_credentials',
+                'scope' => '[documents, signers]'
+            ]
+        ]);
+        $body = json_decode($response->getBody(), true);
+        if (!$body['success']) {
+            return [];
+        }
+        return $body['data'];
+    }
+    private function legalarioToken(): string
+    {
+        $loginData = $this->legalarioLogin();
+        if (empty($loginData)) {
+            return '';
+        }
+        $response = $this->client->post('https://api.legalario.com/auth/token', [
+            'form_params' => [
+                'client_id' => $loginData['client_id'],
+                'client_secret' => $loginData['client_secret'],
+                'grant_type' => $loginData['grant_type'],
+                'scope' => $loginData['scope'],
+            ]
+        ]);
+        $body = json_decode($response->getBody(), true);
+        if (!$body['success']) {
+            return '';
+        }
+        return $body['data']['access_token'];
+    }
 }
