@@ -195,6 +195,20 @@ class PrescriptionController extends Controller
         $prescription->file = $request->file('file')->store('prescriptions', 'public');
         return (new PrescriptionResource($prescription))->response();
     }
+    public function getMedicament(int $desc)
+    {
+        $reponse = $this->client->post(
+            'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
+            [
+                'json' => [
+                    "hash" => "initial",
+                    "descripcion" => (string) $desc,
+                ]
+            ]
+        );
+        $body = json_decode($reponse->getBody(), true);
+        return response()->json($body['Respuesta'][0]);
+    }
     private function sendNotification(Prescription $prescription)
     {
         foreach ($prescription->medicaments as $medicament) {
@@ -215,19 +229,5 @@ class PrescriptionController extends Controller
             }
         }
         $prescription->patient->notify(new PrescriptionSigned($prescription));
-    }
-    public function getMedicament(int $desc)
-    {
-        $reponse = $this->client->post(
-            'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
-            [
-                'json' => [
-                    "hash" => "initial",
-                    "descripcion" => (string) $desc,
-                ]
-            ]
-        );
-        $body = json_decode($reponse->getBody(), true);
-        return response()->json($body['Respuesta'][0]);
     }
 }
