@@ -21,8 +21,8 @@ class VerificationController extends Controller
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
-
-        return response()->json();
+        //temporal url
+        return redirect()->to('https://recetas-orpin.vercel.app');
     }
     public function resend()
     {
