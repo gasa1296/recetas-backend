@@ -13,7 +13,8 @@ class VerificationController extends Controller
     public function verify($user_id, Request $request)
     {
         if (!$request->hasValidSignature()) {
-            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+            //temporal url
+            return redirect()->to('https://recetas-orpin.vercel.app?msg=Invalid/Expired url provided.');
         }
 
         $user = User::findOrFail($user_id);
