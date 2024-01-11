@@ -56,7 +56,7 @@ class AuthController extends Controller
             'rooms.*.phone' => ['nullable', 'string'],
             'rooms.*.design' => ['nullable', 'numeric'],
             'specializations.*.name' => ['required', 'string'],
-            'specializations.*.identification' => 'required',
+            'specializations.*.identification' => ['required', 'unique:specializations'],
             'specializations.*.university' => ['nullable', 'string'],
             'logo_room' => ['required', 'array'],
             'logo_spec' => ['required', 'array'],
