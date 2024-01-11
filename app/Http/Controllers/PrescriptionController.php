@@ -274,4 +274,59 @@ class PrescriptionController extends Controller
         }
         return $body['data']['access_token'];
     }
+    private function createDocument(): string
+    {
+        if (empty($this->token)) {
+            return '';
+        }
+        $response = $this->client->post('https://api.legalario.com/v2/documents', [
+            'headers' => [
+                'Authorization' => "Basic $this->token",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
+            'form_params' => [
+                'name' => '',
+                'type' => '',
+                'template_id' => '',
+                'sequence' => [],
+            ]
+        ]);
+        $body = json_decode($response->getBody(), true);
+        if (!$body['success']) {
+            return '';
+        }
+        return $body['data']['id'];
+    }
+    private function createSigner(Prescription $prescription): array
+    {
+        $this->token = $this->legalarioToken();
+        if (empty($this->token)) {
+            return [];
+        }
+        $response = $this->client->post('https://api.legalario.com/v2/signers', [
+            'headers' => [
+                'Authorization' => "Basic $this->token",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
+            'form_params' => [
+                'document_id' => $this->createDocument(),
+                'workflow' => true,
+                'use_whatsapp' => true,
+                'signers' => [
+                    'fullname' => '',
+                    'email' => '',
+                    'phone' => '',
+                    'type' => '',
+                    'role' => ''
+                ],
+            ]
+        ]);
+        $body = json_decode($response->getBody(), true);
+        if (!$body['success']) {
+            return [];
+        }
+        return $body['signers'];
+    }
 }
