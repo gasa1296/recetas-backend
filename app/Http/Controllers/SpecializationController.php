@@ -29,7 +29,7 @@ class SpecializationController extends Controller
             'data' => ['required', 'array'],
             'data.*.id' => ['nullable', 'numeric'],
             'data.*.name' => ['required', 'string'],
-            'data.*.identification' => 'required',
+            'data.*.identification' => ['required', 'unique:specializations'],
             'data.*.university' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file'],
