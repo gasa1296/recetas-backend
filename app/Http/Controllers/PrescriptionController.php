@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 class PrescriptionController extends Controller
 {
     private Client $client;
+    private string $token;
     public function __construct()
     {
         $this->client = new Client();        
@@ -234,11 +235,13 @@ class PrescriptionController extends Controller
     {
         $client = new Client();
         $response = $client->post('https://api.legalario.com/auth/login', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
             'form_params' => [
-                'client_id' => 'SOMEID',
-                'client_secret' => '9999jjjj67Y0LBLq8CbftgfdreehYEI=',
-                'grant_type' => 'client_credentials',
-                'scope' => '[documents, signers]'
+                'email' => 'SOMEID',
+                'password' => '9999jjjj67Y0LBLq8CbftgfdreehYEI=',
             ]
         ]);
         $body = json_decode($response->getBody(), true);
@@ -254,6 +257,10 @@ class PrescriptionController extends Controller
             return '';
         }
         $response = $this->client->post('https://api.legalario.com/auth/token', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
             'form_params' => [
                 'client_id' => $loginData['client_id'],
                 'client_secret' => $loginData['client_secret'],
