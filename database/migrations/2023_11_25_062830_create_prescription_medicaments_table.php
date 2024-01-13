@@ -21,6 +21,10 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->unsignedInteger('quantity_exp')->default(0);
             $table->string('medicament_id');
+            $table->string('name');
+            $table->string('type');
+            $table->string('family');
+            $table->string('group');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
 
