@@ -19,12 +19,16 @@ class PrescriptionMedicamentFactory extends Factory
     public function definition(): array
     {
         return [
-            'dose' => fake()->randomDigit(),
+            'dose' => fake()->word(),
             'way' => fake()->words(10, true),
-            'frequency' => fake()->randomNumber(),
-            'duration' => fake()->randomNumber(),
+            'frequency' => fake()->word(),
+            'duration' => fake()->word(),
             "quantity" => fake()->randomDigit(),
             'medicament_id' => fake()->randomNumber(),
+            'name' => fake()->word(),
+            'type' => fake()->word(),
+            'family' => fake()->word(),
+            'group' => fake()->word(),
             'prescription_id' => Prescription::factory()->create()->id,
         ];
     }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,7 +30,7 @@ class ConsultingRoomFactory extends Factory
             "address" => fake()->address(),
             "phone" => fake()->phoneNumber(),
             "logo" => fake()->imageUrl(),
-            "design" => fake()->randomElement([1,2,3]),
+            "design" => Hash::make(fake()->randomNumber()),
             'user_id' => User::factory()->create()->id,
 
         ];
