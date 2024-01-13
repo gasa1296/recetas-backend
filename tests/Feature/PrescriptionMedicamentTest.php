@@ -44,6 +44,10 @@ class PrescriptionMedicamentTest extends TestCase
                 'frequency' => fake()->randomNumber() . fake()->word(),
                 'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
+                'name' => fake()->word(),
+                'type' => fake()->word(),
+                'family' => fake()->word(),
+                'group' => fake()->word(),
                 'medicament_id' => fake()->randomNumber(),
             ],
             [
@@ -52,6 +56,10 @@ class PrescriptionMedicamentTest extends TestCase
                 'frequency' => fake()->randomNumber() . fake()->word(),
                 'duration' => fake()->randomNumber() . fake()->word(),
                 'quantity' => fake()->randomDigit(),
+                'name' => fake()->word(),
+                'type' => fake()->word(),
+                'family' => fake()->word(),
+                'group' => fake()->word(),
                 'medicament_id' => fake()->randomNumber(),
             ],
         ]);
@@ -69,6 +77,10 @@ class PrescriptionMedicamentTest extends TestCase
             'frequency' => fake()->randomNumber() . fake()->word(),
             'duration' => fake()->randomNumber() . fake()->word(),
             'quantity' => fake()->randomDigit(),
+            'name' => fake()->word(),
+            'type' => fake()->word(),
+            'family' => fake()->word(),
+            'group' => fake()->word(),
         ]);
         $response->assertOk();
     }
