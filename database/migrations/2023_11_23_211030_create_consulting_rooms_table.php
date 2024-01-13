@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('logo');
-            $table->tinyInteger('design');
+            $table->string('design');
             $table->foreignId('user_id')->constrained('users');
 
             $table->timestamps();
