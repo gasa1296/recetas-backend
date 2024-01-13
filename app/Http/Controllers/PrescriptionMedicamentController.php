@@ -39,6 +39,10 @@ class PrescriptionMedicamentController extends Controller
             '*.duration' => ['required', 'string'],
             '*.quantity' => ['required', 'numeric'],
             '*.medicament_id' => ['required', 'numeric'],
+            '*.name' => ['required', 'string'],
+            '*.type' => ['required', 'string'],
+            '*.group' => ['required', 'string'],
+            '*.family' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -73,6 +77,10 @@ class PrescriptionMedicamentController extends Controller
             'frequency' => ['required', 'string'],
             'duration' => ['required', 'string'],
             'quantity' => ['required', 'numeric'],
+            'name' => ['required', 'string'],
+            'type' => ['required', 'string'],
+            'group' => ['required', 'string'],
+            'family' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
