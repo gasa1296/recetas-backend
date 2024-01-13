@@ -234,7 +234,7 @@ class PrescriptionController extends Controller
     private function legalarioLogin(): array
     {
         $client = new Client();
-        $response = $client->post('https://api.legalario.com/auth/login', [
+        $response = $client->post(env('LEGALARIO_URL') . '/auth/login', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
@@ -256,7 +256,7 @@ class PrescriptionController extends Controller
         if (empty($loginData)) {
             return '';
         }
-        $response = $this->client->post('https://api.legalario.com/auth/token', [
+        $response = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
@@ -274,21 +274,21 @@ class PrescriptionController extends Controller
         }
         return $body['data']['access_token'];
     }
-    private function createDocument(): string
+    private function createDocument(Prescription $prescription): string
     {
         if (empty($this->token)) {
             return '';
         }
-        $response = $this->client->post('https://api.legalario.com/v2/documents', [
+        $response = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
             'headers' => [
                 'Authorization' => "Basic $this->token",
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ],
             'form_params' => [
-                'name' => '',
-                'type' => '',
-                'template_id' => '',
+                'name' => 'Receta',
+                'type' => 'template',
+                'template_id' => $prescription->room->design,
                 'sequence' => [],
             ]
         ]);
@@ -304,7 +304,8 @@ class PrescriptionController extends Controller
         if (empty($this->token)) {
             return [];
         }
-        $response = $this->client->post('https://api.legalario.com/v2/signers', [
+        $medic = $prescription->medic;
+        $response = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
             'headers' => [
                 'Authorization' => "Basic $this->token",
                 'Content-Type' => 'application/json',
@@ -315,9 +316,9 @@ class PrescriptionController extends Controller
                 'workflow' => true,
                 'use_whatsapp' => true,
                 'signers' => [
-                    'fullname' => '',
-                    'email' => '',
-                    'phone' => '',
+                    'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                    'email' => $medic->email,
+                    'phone' => $medic->phone1,
                     'type' => '',
                     'role' => ''
                 ],
