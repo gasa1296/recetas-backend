@@ -24,6 +24,10 @@ class PrescriptionMedicament extends Model
         'quantity',
         'quantity_exp',
         'medicament_id',
+        'name',
+        'type',
+        'family',
+        'group',
         'prescription_id',
     ];
     /**
