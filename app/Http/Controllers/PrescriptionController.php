@@ -236,12 +236,12 @@ class PrescriptionController extends Controller
         $client = new Client();
         $response = $client->post(env('LEGALARIO_URL') . '/auth/login', [
             'headers' => [
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded',
                 'Accept' => 'application/json'
             ],
             'form_params' => [
-                'email' => 'SOMEID',
-                'password' => '9999jjjj67Y0LBLq8CbftgfdreehYEI=',
+                'email' => env('LEGALARIO_USER', ''),
+                'password' => env('LEGALARIO_PASSWORD', ''),
             ]
         ]);
         $body = json_decode($response->getBody(), true);
@@ -258,7 +258,7 @@ class PrescriptionController extends Controller
         }
         $response = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
             'headers' => [
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded',
                 'Accept' => 'application/json'
             ],
             'form_params' => [
@@ -285,11 +285,17 @@ class PrescriptionController extends Controller
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ],
-            'form_params' => [
+            'json' => [
                 'name' => 'Receta',
                 'type' => 'template',
                 'template_id' => $prescription->room->design,
-                'sequence' => [],
+                'sequence' => array_map(function($medicament) {
+                    return [[
+                        'key' => $medicament->medicament_id,
+                        'name' => $medicament->name,
+                        'value' => "$medicament->way, $medicament->dose, $medicament->frequency, $medicament->duration, $medicament->quantity"
+                    ]];
+                }, $prescription->medicaments),
             ]
         ]);
         $body = json_decode($response->getBody(), true);
@@ -311,8 +317,8 @@ class PrescriptionController extends Controller
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ],
-            'form_params' => [
-                'document_id' => $this->createDocument(),
+            'json' => [
+                'document_id' => $this->createDocument($prescription),
                 'workflow' => true,
                 'use_whatsapp' => true,
                 'signers' => [
