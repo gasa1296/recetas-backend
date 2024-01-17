@@ -14,7 +14,7 @@ class VerificationController extends Controller
     {
         if (!$request->hasValidSignature()) {
             //temporal url
-            return redirect()->to('https://recetas-orpin.vercel.app?msg=Invalid/Expired url provided.');
+            return redirect()->to(env('FRONT_URL', 'http://localhost') . '?msg=Invalid/Expired url provided.');
         }
 
         $user = User::findOrFail($user_id);
@@ -23,7 +23,7 @@ class VerificationController extends Controller
             $user->markEmailAsVerified();
         }
         //temporal url
-        return redirect()->to('https://recetas-orpin.vercel.app');
+        return redirect()->to(env('FRONT_URL', 'http://localhost'));
     }
     public function resend()
     {

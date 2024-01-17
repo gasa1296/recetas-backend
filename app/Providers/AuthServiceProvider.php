@@ -40,7 +40,7 @@ class AuthServiceProvider extends ServiceProvider
                 ->markdown('mail.email', [
                     'message' => 'Recibimos una solicitud para restablecer la contraseña de su cuenta. Si realizó esta solicitud, haga clic en el siguiente enlace para cambiar su contraseña:',
                     'title' => 'Restablecer contraseña',
-                    'url' => 'https://receta.farmaciasespecializadas.com?token='. $token . '&email=' . $notifiable->getEmailForPasswordReset(),
+                    'url' => env('FRONT_URL', 'http://localhost') . '/recoverPassword?token='. $token . '&email=' . $notifiable->getEmailForPasswordReset(),
                     'button' => 'Restablecer contraseña'
                 ]);
         });
