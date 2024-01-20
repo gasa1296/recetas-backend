@@ -19,7 +19,7 @@ class ResetController extends Controller
             $request->only('email')
         );
         if ($status !== Password::RESET_LINK_SENT) {
-            response()->json()->withErrors(['email' => __($status)]);
+            response()->json(['email' => __($status)], 400);
         }
         return response()->json();
     }
@@ -43,7 +43,7 @@ class ResetController extends Controller
             }
         );
         if($status !== Password::PASSWORD_RESET) {
-            response()->json()->withErrors(['email' => __($status)]);
+            response()->json(['email' => __($status)], 400);
         }
     }
 }
