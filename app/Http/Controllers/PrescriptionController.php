@@ -210,26 +210,19 @@ class PrescriptionController extends Controller
         $body = json_decode($reponse->getBody(), true);
         return response()->json($body['Respuesta'][0]);
     }
-    private function sendNotification(Prescription $prescription)
+    public function sendEmailNotification(Prescription $prescription)
     {
+        $errors = [];
         foreach ($prescription->medicaments as $medicament) {
-            $response = $this->client->post(
-                'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
-                [
-                    'json' => [
-                        "hash" => "initial",
-                        "descripcion" => $medicament->medicament_id,
-                    ]
-                ]
-            );
-            $body = json_decode($response->getBody(), true);
-            if(empty($body['Respuesta'])){
-                return;
-            } elseif (in_array($body['Respuesta'][0]['clasificacionsa'], ['Grupo II', 'Grupo III'])) {
-                return;
+            if (in_array($medicament->group, ['Grupo II', 'Grupo III'])) {
+                $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
             }
         }
+        if(!empty($errors)) {
+            return response()->json($errors, 400);
+        }
         $prescription->patient->notify(new PrescriptionSigned($prescription));
+        return response()->json();
     }
     private function legalarioLogin(): array
     {
@@ -288,12 +281,12 @@ class PrescriptionController extends Controller
             'json' => [
                 'name' => 'Receta',
                 'type' => 'template',
-                'template_id' => $prescription->room->design,
+                'template_id' => /*$prescription->room->design*/ "659c7a5d3ce79e0f44521cb9",
                 'sequence' => array_map(function($medicament) {
                     return [[
                         'key' => $medicament->medicament_id,
                         'name' => $medicament->name,
-                        'value' => "$medicament->way, $medicament->dose, $medicament->frequency, $medicament->duration, $medicament->quantity"
+                        'value' => "$medicament->name, $medicament->way, $medicament->dose, $medicament->frequency, $medicament->duration, $medicament->quantity"
                     ]];
                 }, $prescription->medicaments),
             ]
@@ -304,11 +297,11 @@ class PrescriptionController extends Controller
         }
         return $body['data']['id'];
     }
-    private function createSigner(Prescription $prescription): array
+    public function createSigner(Prescription $prescription): array
     {
         $this->token = $this->legalarioToken();
         if (empty($this->token)) {
-            return [];
+            return response()->json(['message' => 'token invalido'], 400);
         }
         $medic = $prescription->medic;
         $response = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
@@ -332,8 +325,8 @@ class PrescriptionController extends Controller
         ]);
         $body = json_decode($response->getBody(), true);
         if (!$body['success']) {
-            return [];
+            return response()->json(['message' => $body['message']], $response->getStatusCode());
         }
-        return $body['signers'];
+        return response()->json($body['data']);
     }
 }
