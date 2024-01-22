@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Notifications\PrescriptionSigned;
+use GuzzleHttp\Exception\ClientException;
 use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Notification;
 use GuzzleHttp\Client;
 
 /**
@@ -243,11 +242,11 @@ class PrescriptionController extends Controller
         }
         return $body['data'];
     }
-    private function legalarioToken(): string
+    private function legalarioToken(): void
     {
         $loginData = $this->legalarioLogin();
         if (empty($loginData)) {
-            return '';
+            return;
         }
         $response = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
             'headers' => [
@@ -258,75 +257,82 @@ class PrescriptionController extends Controller
                 'client_id' => $loginData['client_id'],
                 'client_secret' => $loginData['client_secret'],
                 'grant_type' => $loginData['grant_type'],
-                'scope' => $loginData['scope'],
+                'scope' => $loginData['scopes'],
             ]
         ]);
         $body = json_decode($response->getBody(), true);
         if (!$body['success']) {
-            return '';
+            return;
         }
-        return $body['data']['access_token'];
+        $this->token = $body['data']['access_token'];
     }
-    private function createDocument(Prescription $prescription): string
+    private function createDocument(Prescription $prescription): array
     {
-        if (empty($this->token)) {
-            return '';
+        try {
+            $meds = $prescription->medicaments->toArray();
+            $response = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
+                'headers' => [
+                    'Authorization' => "Bearer $this->token",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json'
+                ],
+                'json' => [
+                    'name' => 'Receta',
+                    'type' => 'template',
+                    'template_id' => /*$prescription->room->design*/"659c7a5d3ce79e0f44521cb9",
+                    'sequence' => array_map(function ($key, $medicament) {
+                        return [
+                            [
+                                'key' => $key + 1,
+                                'name' => $medicament["name"] . ':',
+                                'value' => "$medicament[name], $medicament[way], $medicament[dose], $medicament[frequency], $medicament[duration], $medicament[quantity]"
+                            ]
+                        ];
+                    }, array_keys($meds), $meds),
+                ]
+            ]);
+            $body = json_decode($response->getBody(), true);
+            return $body;
+        } catch(ClientException $e) {
+            return json_decode($e->getResponse()->getBody(), true) + json_decode($e->getRequest()->getBody(), true);
         }
-        $response = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
-            'headers' => [
-                'Authorization' => "Basic $this->token",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ],
-            'json' => [
-                'name' => 'Receta',
-                'type' => 'template',
-                'template_id' => /*$prescription->room->design*/ "659c7a5d3ce79e0f44521cb9",
-                'sequence' => array_map(function($medicament) {
-                    return [[
-                        'key' => $medicament->medicament_id,
-                        'name' => $medicament->name,
-                        'value' => "$medicament->name, $medicament->way, $medicament->dose, $medicament->frequency, $medicament->duration, $medicament->quantity"
-                    ]];
-                }, $prescription->medicaments),
-            ]
-        ]);
-        $body = json_decode($response->getBody(), true);
-        if (!$body['success']) {
-            return '';
-        }
-        return $body['data']['id'];
     }
-    public function createSigner(Prescription $prescription): array
+    public function createSigner(Prescription $prescription): JsonResponse
     {
-        $this->token = $this->legalarioToken();
+        //return response()->json($this->legalarioLogin());
+        $this->legalarioToken();
         if (empty($this->token)) {
             return response()->json(['message' => 'token invalido'], 400);
         }
-        $medic = $prescription->medic;
-        $response = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
-            'headers' => [
-                'Authorization' => "Basic $this->token",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ],
-            'json' => [
-                'document_id' => $this->createDocument($prescription),
-                'workflow' => true,
-                'use_whatsapp' => true,
-                'signers' => [
-                    'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                    'email' => $medic->email,
-                    'phone' => $medic->phone1,
-                    'type' => '',
-                    'role' => ''
-                ],
-            ]
-        ]);
-        $body = json_decode($response->getBody(), true);
-        if (!$body['success']) {
-            return response()->json(['message' => $body['message']], $response->getStatusCode());
+        $document = $this->createDocument($prescription);
+        if (!$document['success']) {
+            return response()->json($document, 400);
         }
-        return response()->json($body['data']);
+        try {
+            $medic = $prescription->medic;
+            $response = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
+                'headers' => [
+                    'Authorization' => "Bearer $this->token",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json'
+                ],
+                'json' => [
+                    'document_id' => $document['data']['id'],
+                    'workflow' => true,
+                    'use_whatsapp' => true,
+                    'signers' => [
+                        [
+                            'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                            'email' => $medic->email,
+                            //'phone' => $medic->phone1,
+                            'type' => 'FIRMA'
+                        ]
+                    ],
+                ]
+            ]);
+            return response()->json(json_decode($response->getBody(), true));
+        } catch (ClientException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        }
     }
 }
