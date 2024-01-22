@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ConsultingRoom;
+use App\Models\PrescriptionMedicament;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -95,5 +96,14 @@ class PrescriptionTest extends TestCase
 
     $response->assertOk();
     $this->assertCount(10, $response->json()['data']);
+  }
+  public function test_signer(): void
+  {
+    $instance = Prescription::factory()->create();
+    PrescriptionMedicament::factory()->create(['prescription_id' => $instance->id]);
+    $response = $this->get("api/prescription/$instance->id/sign");
+    $response->assertStatus(400);
+    $message = $response->json()['message'];
+    $this->assertEquals("El valor del campo [email] del arreglo [signers] es inválido #1", $message);
   }
 }
