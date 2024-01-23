@@ -1,40 +1,50 @@
 export const getDateFormat = (date: string) => {
-    let now;
+  let now;
 
-    if (date) {
-        now = new Date(date);
-    } else {
-        now = new Date();
-    }
+  if (date) {
+    now = new Date(date);
+  } else {
+    now = new Date();
+  }
 
-    // Formatear la hora en un formato de 24 horas (HH:MM).
-    const formattedTime = now.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+  // Formatear la hora en un formato de 24 horas (HH:MM).
+  const formattedTime = now.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-    // Formatear la fecha para mostrar el día de la semana, el día del mes y el mes.
-    const formattedDate = now.toLocaleDateString("es-ES", {
-        weekday: "short", // nombre corto del día de la semana
-        day: "numeric", // día del mes
-        month: "short", // nombre corto del mes
-    });
+  // Formatear la fecha para mostrar el día de la semana, el día del mes y el mes.
+  const formattedDate = now.toLocaleDateString("es-ES", {
+    weekday: "short", // nombre corto del día de la semana
+    day: "numeric", // día del mes
+    month: "short", // nombre corto del mes
+  });
 
-    // Corregir el formato de la fecha para cumplir con el requerimiento 'Jue 16 de nov'.
-    const dateParts = formattedDate.split(" ");
-    const correctedDate = `${dateParts[0]} ${dateParts[1]} de ${dateParts[2]}`;
+  // Corregir el formato de la fecha para cumplir con el requerimiento 'Jue 16 de nov'.
+  const dateParts = formattedDate.split(" ");
+  const correctedDate = `${dateParts[0]} ${dateParts[1]} de ${dateParts[2]}`;
 
-    return { formattedTime, correctedDate };
+  return { formattedTime, correctedDate };
 };
 
-export const getRecipeDate = () => {
-    const fecha = new Date();
+export const getRecipeDate = (date = "") => {
+  const fecha = date ? new Date(date) : new Date();
 
-    const opcionesFecha = { day: "numeric", month: "long", year: "numeric" };
-    const formatoFecha = fecha.toLocaleDateString(
-        "es-ES",
-        opcionesFecha as any
-    );
+  const opcionesFecha = { day: "numeric", month: "long", year: "numeric" };
+  const formatoFecha = fecha.toLocaleDateString("es-ES", opcionesFecha as any);
 
-    return formatoFecha;
+  return formatoFecha;
+};
+
+export const getStatusName = (status: number) => {
+  switch (status) {
+    case 0:
+      return "Pendiente";
+    case 1:
+      return "En proceso";
+    case 2:
+      return "Finalizado";
+    default:
+      return "Pendiente";
+  }
 };

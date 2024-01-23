@@ -1,163 +1,178 @@
 // authStore.ts
 import {
-    createPatient,
-    getPatients,
-    getSearchPatients,
-    updatePatient,
+  createPatient,
+  getPatients,
+  getSearchPatients,
+  updatePatient,
 } from "@/services/pacients";
 import { IDefaultPacient, IPacient } from "@/types/Models/Pacient";
+import { IRecipes } from "@/types/Models/Recipes";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
 type IState = {
-    timeId: any;
-    step: number;
-    loading: boolean;
-    loadingAction: boolean;
-    pacients: IPacient[] | null;
-    selectedPacient: IPacient | null;
-    selectedPacientDefault: IDefaultPacient | null;
-    error: string | null;
-    GetPacients: () => any;
-    SearchPacients: (search: string) => any;
-    SetStep: (step: number) => any;
-    CreatePacient: (pacientPayload: IPacient) => any;
-    UpdatePacient: (pacientPayload: IPacient) => any;
-    SelectPacient: (pacientEmail: string) => any;
-    ResetPacients: () => any;
+  timeId: any;
+  step: number;
+  loading: boolean;
+  tabStep: number;
+  loadingAction: boolean;
+  pacients: IPacient[] | null;
+  selectedPacient: IPacient | null;
+  selectedPacientDefault: IDefaultPacient | null;
+  error: string | null;
+  selectedRecipe: IRecipes | null;
+  GetPacients: () => any;
+  SearchPacients: (search: string) => any;
+  SetStep: (step: number) => any;
+  SetTabStep: (step: number) => any;
+  CreatePacient: (pacientPayload: IPacient) => any;
+  UpdatePacient: (pacientPayload: IPacient) => any;
+  SelectPacient: (pacientEmail: string) => any;
+  ResetPacients: () => any;
+  SetSelectedRecipe: (recipe: IRecipes) => any;
 };
 
 export const usePacients = create<IState>((set, get) => ({
-    // Estado inicial
-    timeId: null,
-    step: 1,
-    pacients: null,
-    loading: false,
-    loadingAction: false,
-    error: null,
-    selectedPacient: null,
-    selectedPacientDefault: null,
+  // Estado inicial
+  timeId: null,
+  step: 1,
+  tabStep: 0,
+  pacients: null,
+  loading: false,
+  loadingAction: false,
+  error: null,
+  selectedPacient: null,
+  selectedPacientDefault: null,
+  selectedRecipe: null,
 
-    GetPacients: async () => {
-        set({ loading: true });
+  GetPacients: async () => {
+    set({ loading: true });
+    try {
+      const result = await getPatients();
+
+      set({
+        pacients: result.data.data,
+      });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  SetSelectedRecipe: (recipe: IRecipes) => {
+    set({ selectedRecipe: recipe });
+  },
+
+  SetStep: (step: number) => {
+    set({ step });
+  },
+
+  SetTabStep: (step: number) => {
+    set({ tabStep: step });
+  },
+
+  SearchPacients: async (search: string = "") => {
+    set({ loading: true });
+    try {
+      const timeIdState = get().timeId;
+      timeIdState && clearTimeout(timeIdState);
+
+      const timeId = setTimeout(async () => {
         try {
-            const result = await getPatients();
+          const result = await getSearchPatients(search);
 
-            set({
-                pacients: result.data.data,
-            });
+          set({
+            pacients: result.data.data,
+            loading: false,
+            timeId: null,
+          });
         } catch (error: any) {
-            toast.error(error.message);
-            set({ error: error.message });
-        } finally {
-            set({ loading: false });
+          toast.error(error.message);
+          set({ error: error.message, loading: false, timeId: null });
         }
-    },
+      }, 500);
 
-    SetStep: (step: number) => {
-        set({ step });
-    },
+      set({ timeId });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message, loading: false });
+    }
+  },
 
-    SearchPacients: async (search: string = "") => {
-        set({ loading: true });
-        try {
-            const timeIdState = get().timeId;
-            timeIdState && clearTimeout(timeIdState);
+  ResetPacients: () => {
+    set({ selectedPacient: null, selectedPacientDefault: null, step: 1 });
+  },
 
-            const timeId = setTimeout(async () => {
-                try {
-                    const result = await getSearchPatients(search);
+  SelectPacient: (pacientEmail: string) => {
+    set({ loadingAction: true });
+    try {
+      const pacients = get().pacients;
+      const findPacient = pacients?.find(
+        (pacient) => pacient.email === pacientEmail
+      );
 
-                    set({
-                        pacients: result.data.data,
-                        loading: false,
-                        timeId: null,
-                    });
-                } catch (error: any) {
-                    toast.error(error.message);
-                    set({ error: error.message, loading: false, timeId: null });
-                }
-            }, 500);
+      if (findPacient) {
+        set({
+          step: 2,
+          selectedPacient: findPacient,
+          selectedPacientDefault: {
+            value: findPacient.email,
+            label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
+          },
+        });
+      }
+      setTimeout(() => {
+        set({ loadingAction: false });
+      }, 200);
+    } catch (error: any) {
+      set({ error: error.message, loadingAction: false });
+    }
+  },
 
-            set({ timeId });
-        } catch (error: any) {
-            toast.error(error.message);
-            set({ error: error.message, loading: false });
-        }
-    },
+  // Accion de update
+  CreatePacient: async (pacientPayload: IPacient) => {
+    set({ loadingAction: true, error: null });
 
-    ResetPacients: () => {
-        set({ selectedPacient: null, selectedPacientDefault: null, step: 1 });
-    },
+    try {
+      const result = await createPatient(pacientPayload);
 
-    SelectPacient: (pacientEmail: string) => {
-        set({ loadingAction: true });
-        try {
-            const pacients = get().pacients;
-            const findPacient = pacients?.find(
-                (pacient) => pacient.email === pacientEmail
-            );
+      const findPacient = result.data.data;
 
-            if (findPacient) {
-                set({
-                    step: 2,
-                    selectedPacient: findPacient,
-                    selectedPacientDefault: {
-                        value: findPacient.email,
-                        label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
-                    },
-                });
-            }
-            setTimeout(() => {
-                set({ loadingAction: false });
-            }, 200);
-        } catch (error: any) {
-            set({ error: error.message, loadingAction: false });
-        }
-    },
+      set({
+        step: 2,
+        selectedPacient: findPacient,
+        selectedPacientDefault: {
+          value: findPacient.email,
+          label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
+        },
+      });
 
-    // Accion de update
-    CreatePacient: async (pacientPayload: IPacient) => {
-        set({ loadingAction: true, error: null });
+      toast.success("Paciente creado correctamente");
+      return result;
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    } finally {
+      set({ loadingAction: false });
+    }
+  },
 
-        try {
-            const result = await createPatient(pacientPayload);
+  // Accion de update
+  UpdatePacient: async (pacientPayload: IPacient) => {
+    set({ loadingAction: true, error: null });
 
-            const findPacient = result.data.data;
+    try {
+      const result = await updatePatient(pacientPayload);
 
-            set({
-                step: 2,
-                selectedPacient: findPacient,
-                selectedPacientDefault: {
-                    value: findPacient.email,
-                    label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
-                },
-            });
-
-            toast.success("Paciente creado correctamente");
-            return result;
-        } catch (error: any) {
-            toast.error(error.message);
-            set({ error: error.message });
-        } finally {
-            set({ loadingAction: false });
-        }
-    },
-
-    // Accion de update
-    UpdatePacient: async (pacientPayload: IPacient) => {
-        set({ loadingAction: true, error: null });
-
-        try {
-            const result = await updatePatient(pacientPayload);
-
-            toast.success("Paciente actualizado correctamente");
-            return result;
-        } catch (error: any) {
-            toast.error(error.message);
-            set({ error: error.message });
-        } finally {
-            set({ loadingAction: false });
-        }
-    },
+      toast.success("Paciente actualizado correctamente");
+      return result;
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    } finally {
+      set({ loadingAction: false });
+    }
+  },
 }));

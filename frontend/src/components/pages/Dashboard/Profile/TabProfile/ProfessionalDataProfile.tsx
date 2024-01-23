@@ -141,12 +141,14 @@ export default function ProfessionalDataProfile() {
                             className="button-BlacK disabled:opacity-40 font-bold md:flex justify-center items-center border-black border-2 p-3 text-black rounded-lg w-60 mx-3 block my-4"
                             type="submit"
                         >
-                            <FaSave
-                                color="#fbfbfb"
-                                className="me-3"
-                                size={20}
-                            />
-                            Guardar
+                            <div className="flex justify-center items-center">
+                                <FaSave
+                                    color="#fbfbfb"
+                                    className="me-3"
+                                    size={20}
+                                />
+                                Guardar
+                            </div>
                         </button>
                     </div>
                 )}

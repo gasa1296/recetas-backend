@@ -10,31 +10,26 @@ import Send from "./Send";
 import { useMedicamentStore } from "@/store/medicaments";
 
 export default function Patients() {
-    const ResetPacients = usePacients((state) => state.ResetPacients);
-    const ResetMedicaments = useMedicamentStore(
-        (state) => state.ResetMedicaments
-    );
+  const tabStep = usePacients((state) => state.tabStep);
+  const SetTabStep = usePacients((state) => state.SetTabStep);
+  const tabs = [
+    { label: "Datos personales", Component: InformationPatient },
+    { label: "Registrar consultorio", Component: SearchMedicine },
+    { label: "Registrar consultorio", Component: ConfirmRecipes },
+    { label: "Registrar consultorio", Component: Sign },
+    { label: "Registrar consultorio", Component: Send },
+  ];
 
-    const tabs = [
-        { label: "Datos personales", Component: InformationPatient },
-        { label: "Registrar consultorio", Component: SearchMedicine },
-        { label: "Registrar consultorio", Component: ConfirmRecipes },
-        { label: "Registrar consultorio", Component: Sign },
-        { label: "Registrar consultorio", Component: Send },
-    ];
-
-    useEffect(() => {
-        return () => {
-            ResetPacients();
-            ResetMedicaments();
-        };
-    }, []);
-
-    return (
-        <section className=" mx-2  md:mx-8 ">
-            <section className="flex  ">
-                <Tabs tabs={tabs} hasHeader={false} />
-            </section>
-        </section>
-    );
+  return (
+    <section className=" mx-2  md:mx-8 ">
+      <section className="flex  ">
+        <Tabs
+          customStep={tabStep}
+          setCustomStep={SetTabStep}
+          tabs={tabs}
+          hasHeader={false}
+        />
+      </section>
+    </section>
+  );
 }
