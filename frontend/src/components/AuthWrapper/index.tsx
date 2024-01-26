@@ -3,54 +3,60 @@ import React, { useEffect, useState } from "react";
 import { validateAuthPath } from "./helper";
 import { useAuthStore } from "@/store/auth";
 import AuthLayout from "../Layouts/AuthLayout";
+import Loading from "../Loading";
 
 interface Props {
-    children: JSX.Element;
+  children: JSX.Element;
 }
 export default function AuthWrapper({ children }: Props) {
-    const [active, setActive] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const isAuth = useAuthStore((state) => state.isAuth);
-    const RecoverUser = useAuthStore((state) => state.RecoverUser);
+  const [active, setActive] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const RecoverUser = useAuthStore((state) => state.RecoverUser);
 
-    const router = useRouter();
+  const router = useRouter();
 
-    const getAuthSession = async () => {
-        const token = await localStorage.getItem("sessionToken");
-        if (!token) {
-            setActive(true);
-            return setTimeout(() => setLoading(false), 1000);
-        }
+  const getAuthSession = async () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const externalToken = searchParams.get("externalToken");
 
-        await RecoverUser();
-        router.push("/dashboard");
+    let token;
+    if (externalToken) {
+      token = externalToken as string;
+    } else {
+      token = await localStorage.getItem("sessionToken");
+    }
 
-        setTimeout(() => setLoading(false), 1000);
-        setActive(true);
-    };
+    if (!token) {
+      setActive(true);
+      return setTimeout(() => setLoading(false), 1000);
+    }
 
-    useEffect(() => {
-        getAuthSession();
-    }, []);
+    await RecoverUser(token || "");
+    router.push("/dashboard");
 
-    useEffect(() => {
-        if (active) {
-            if (validateAuthPath(router.pathname, isAuth)) router.push("/");
-        }
+    setTimeout(() => setLoading(false), 1000);
+    setActive(true);
+  };
 
-        //eslint-disable-next-line
-    }, [router.pathname, isAuth, active]);
+  useEffect(() => {
+    getAuthSession();
+  }, []);
 
-    if (loading)
-        return (
-            <AuthLayout>
-                <div className="border flex justify-center items-center min-h-[500px] ">
-                    <h3 className="text-[#424242] font-bold text-[40px]">
-                        Cargando ...
-                    </h3>
-                </div>
-            </AuthLayout>
-        );
+  useEffect(() => {
+    if (active) {
+      if (validateAuthPath(router.pathname, isAuth)) router.push("/");
+    }
 
-    return <>{children}</>;
+    //eslint-disable-next-line
+  }, [router.pathname, isAuth, active]);
+
+  if (loading)
+    return (
+      <AuthLayout>
+        <Loading />
+      </AuthLayout>
+    );
+
+  return <>{children}</>;
 }

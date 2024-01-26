@@ -84,10 +84,16 @@ export const registerUser = (registerPayload: any) => {
     });
 };
 
-export const recoverUser = () => {
-    return Api({
+export const recoverUser = (token: string) => {
+    /*  return Api({
         endpoint: `/profile`,
         method: "GET",
+    }); */
+
+    return axios.get(baseUrl + "/api/profile", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
 };
 
