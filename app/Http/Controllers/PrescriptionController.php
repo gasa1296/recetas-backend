@@ -114,6 +114,10 @@ class PrescriptionController extends Controller
      */
     public function addClient(Request $request, Prescription $prescription)
     {
+        $token = $request->bearerToken();
+        if ($token != env('PUBLIC_KEY', '')) {
+            return response()->json(['token' => 'token invalido'], 403);
+        }
         //return $request->bearerToken();
         $validator = Validator::make($request->all(), [
             'client' => ['required'],
@@ -130,7 +134,10 @@ class PrescriptionController extends Controller
      */
     public function getByClient(Request $request)
     {
-        //return $request->bearerToken();
+        $token = $request->bearerToken();
+        if ($token != env('PUBLIC_KEY', '')) {
+            return response()->json(['token' => 'token invalido'], 403);
+        }
         $validator = Validator::make($request->all(), [
             'client' => ['required'],
         ]);
@@ -145,7 +152,10 @@ class PrescriptionController extends Controller
      */
     public function updateStatus(Request $request, Prescription $prescription)
     {
-        //return $request->bearerToken();
+        $token = $request->bearerToken();
+        if ($token != env('PUBLIC_KEY', '')) {
+            return response()->json(['token' => 'token invalido'], 403);
+        }
         $validator = Validator::make($request->all(), [
             '*.total_exp' => ['required', 'numeric'],
         ]);
@@ -185,7 +195,10 @@ class PrescriptionController extends Controller
      */
     public function addFile(Request $request, Prescription $prescription)
     {
-        //return $request->bearerToken();
+        $token = $request->bearerToken();
+        if ($token != env('PUBLIC_KEY', '')) {
+            return response()->json(['token' => 'token invalido'], 403);
+        }
         $validator = Validator::make($request->all(), [
             'file' => ['required', 'file'],
         ]);
