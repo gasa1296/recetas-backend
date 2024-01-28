@@ -1,6 +1,6 @@
 
 <x-mail::message>
-  ![A cute cat]({{ asset('Logo.png') }})
+  <img src="{{ asset('Logo.png') }}" alt="logo" class="img">
   <h1 class="center h1">{{$title}}</h1>
   <p class="center p">{{$message}}</p>
   <p class="center"><a href="{{$url}}"><button class="btn">{{$button}}</button></a></p>
@@ -26,5 +26,10 @@
   }
   .logo, .footer p {
     display: none;
+  }
+  .img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
   }
 </style>
