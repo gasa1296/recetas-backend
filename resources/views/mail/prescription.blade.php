@@ -1,7 +1,9 @@
 <x-mail::message>
-  ![A cute cat]({{ asset('Logo.png') }})
-  <h1 class="center h1">Nuevo recipe</h1>
-  <p class="center p">haz recibido un nuevo recipe</p>
+  <img src="{{ asset('Logo.png') }}" alt="logo" class="img">
+  <h1 class="center h1">{{$title}}</h1>
+  <p class="center p">{{$message}}</p>
+  <p class="center"><a href="{{$url}}"><button class="btn">{{$button}}</button></a></p>
+
 </x-mail::message>
 <style>
   .h1 {
@@ -28,5 +30,11 @@
   .logo,
   .footer p {
     display: none;
+  }
+
+  .img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
   }
 </style>
