@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Notifications\PrescriptionSigned;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @todo Add update status endpoint
@@ -168,6 +170,7 @@ class PrescriptionController extends Controller
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
             if (!empty($inputs[$med_id])) {
+                # TODO si no es antibiotico se puede vender mas de la cuenta ej:AUGMENTIN
                 $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
                 if ($medicament->quantity_exp > $medicament->quantity) {
                     $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
@@ -193,20 +196,20 @@ class PrescriptionController extends Controller
     /**
      * Display a listing of the resource by client.
      */
-    public function addFile(Request $request, Prescription $prescription)
+    public function addFile(Request $request)
     {
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        $validator = Validator::make($request->all(), [
-            'file' => ['required', 'file'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $prescription->file = $request->file('file')->store('prescriptions', 'public');
-        return (new PrescriptionResource($prescription))->response();
+        $inputs = $request->all();
+        $instance = Prescription::where('document_id', '=', $inputs['document']['id'])
+            ->whereNull('file')
+            ->firstOrFail();
+
+        $instance->file = Storage::disk('public')->put("medics/$instance->user_id/prescriptions/$instance->id.zip", $inputs['zip']);
+        $instance->save();
+        return (new PrescriptionResource($instance))->response();
     }
     public function getMedicament(int $desc)
     {
@@ -319,6 +322,8 @@ class PrescriptionController extends Controller
         if (!$res['success']) {
             return response()->json($res, 400);
         }
+        $prescription->document_id = $res['data']['id'];
+        $prescription->save();
         try {
             $medic = $prescription->medic;
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [

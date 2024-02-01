@@ -27,8 +27,6 @@ return new class extends Migration
             $table->string('group');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
-
-            $table->unique(['medicament_id','prescription_id']);
         });
     }
 

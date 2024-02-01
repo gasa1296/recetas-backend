@@ -30,6 +30,7 @@ class PrescriptionResource extends JsonResource
             'medic' => new UserResource($this->medic),
             'room' => $this->room,
             'patient' => $this->patient,
+            'document_id' => $this->document_id,
             'medicaments' => PrescriptionMedicamentResource::collection($this->medicaments),
             'equipment' => PrescriptionEquipmentResource::collection($this->equipment),
             'file' => $this->file,

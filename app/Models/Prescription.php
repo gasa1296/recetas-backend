@@ -33,6 +33,7 @@ class Prescription extends Model
         'user_id',
         'room_id',
         'patient_id',
+        'document_id',
         'file',
         'status',
     ];

@@ -6,7 +6,7 @@ use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
-
+use Illuminate\Support\Facades\Hash;
 class PrescriptionPublicTest extends TestCase
 {
     private $prescription;
@@ -39,13 +39,6 @@ class PrescriptionPublicTest extends TestCase
     {
         Prescription::factory(10)->create(['client' => 1]);
         $response = $this->get('api/receta/?client=1', ['Authorization' => 'Bearer ' . env('PUBLIC_KEY', '')]);
-        $response->assertStatus(200);
-    }
-    public function test_setFile(): void
-    {
-        $response = $this->post('api/receta/' . $this->prescription->id . '/file', [
-            'file' => UploadedFile::fake()->image('photo.jpg'),
-        ], ['Authorization' => 'Bearer ' . env('PUBLIC_KEY', '')]);
         $response->assertStatus(200);
     }
     public function test_updateStatus(): void
