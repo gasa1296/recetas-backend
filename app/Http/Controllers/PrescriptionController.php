@@ -23,7 +23,7 @@ class PrescriptionController extends Controller
     private string $token;
     public function __construct()
     {
-        $this->client = new Client();        
+        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);        
     }
     /**
      * Display a listing of the resource.
