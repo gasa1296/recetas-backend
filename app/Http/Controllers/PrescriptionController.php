@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * @todo Add update status endpoint
- * @todo Add public get endpoint
- */
 class PrescriptionController extends Controller
 {
     private Client $client;
