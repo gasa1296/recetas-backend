@@ -44,7 +44,7 @@ Route::controller(PrescriptionController::class)->prefix('receta')->group(functi
     Route::get('{prescription}', 'show');
     Route::post('{prescription}', 'addClient');
     Route::put('{prescription}', 'updateStatus');
-    Route::post('', 'addFile');
+    Route::post('file', 'addFile');
     Route::get('medicament/{desc}', 'getMedicament');
 });
 
