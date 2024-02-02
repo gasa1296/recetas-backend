@@ -166,9 +166,8 @@ class PrescriptionController extends Controller
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
             if (!empty($inputs[$med_id])) {
-                # TODO si no es antibiotico se puede vender mas de la cuenta ej:AUGMENTIN
                 $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
-                if ($medicament->quantity_exp > $medicament->quantity) {
+                if ($medicament->quantity_exp > $medicament->quantity && str_contains($medicament->group, 'ANTIBIOTICOS')) {
                     $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
                     continue;
                 }
