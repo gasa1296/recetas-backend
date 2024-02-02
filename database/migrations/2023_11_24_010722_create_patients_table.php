@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone2')->nullable();
             $table->string('gender');
             $table->date('birth_date');
+            $table->foreignId('user_id')->constrained('users');
             
             $table->timestamps();
             $table->softDeletes();

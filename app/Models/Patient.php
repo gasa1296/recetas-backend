@@ -27,6 +27,7 @@ class Patient extends Model
         'phone2',
         'email',
         'birth_date',
+        'user_id',
         'gender',
     ];
     /**

@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Patient>
  */
@@ -25,6 +25,7 @@ class PatientFactory extends Factory
             "phone2" => fake()->phoneNumber(),
             "birth_date" => fake()->date(),
             'gender' => fake()->randomElement(['M', 'F']),
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }
