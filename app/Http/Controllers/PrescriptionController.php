@@ -167,7 +167,7 @@ class PrescriptionController extends Controller
             $med_id = $medicament->medicament_id;
             if (!empty($inputs[$med_id])) {
                 $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
-                if ($medicament->quantity_exp > $medicament->quantity && str_contains($medicament->group, 'ANTIBIOTICOS')) {
+                if ($medicament->quantity_exp > $medicament->quantity && $medicament->group == 'RESTRICCION ANTIBIOTICOS') {
                     $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
                     continue;
                 }
@@ -224,7 +224,7 @@ class PrescriptionController extends Controller
     {
         $errors = [];
         foreach ($prescription->medicaments as $medicament) {
-            if (in_array($medicament->group, ['Grupo II', 'Grupo III'])) {
+            if (in_array($medicament->group, ['Grupo II', 'Grupo III', 'RESTRICCION ANTIBIOTICOS'])) {
                 $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
             }
         }
