@@ -4,11 +4,10 @@ namespace App\Notifications;
 
 use App\Models\Prescription;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PrescriptionSigned extends Notification
+class PrescriptionSignedEmail extends Notification
 {
     use Queueable;
     private Prescription $prescription;

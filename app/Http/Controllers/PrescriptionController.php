@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\PrescriptionSigned;
+use App\Notifications\PrescriptionSignedEmail;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Validator;
@@ -231,7 +231,7 @@ class PrescriptionController extends Controller
         if(!empty($errors)) {
             return response()->json($errors, 400);
         }
-        $prescription->patient->notify(new PrescriptionSigned($prescription));
+        $prescription->patient->notify(new PrescriptionSignedEmail($prescription));
         return response()->json();
     }
     private function legalarioLogin(): array
