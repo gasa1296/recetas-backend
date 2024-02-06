@@ -41,10 +41,10 @@ Route::controller(ResetController::class)->prefix('password')->name('password.')
 
 Route::controller(PrescriptionController::class)->prefix('receta')->group(function () {
     Route::get('', 'getByClient');
+    Route::post('file', 'addFile');
     Route::get('{prescription}', 'show');
     Route::post('{prescription}', 'addClient');
     Route::put('{prescription}', 'updateStatus');
-    Route::post('file', 'addFile');
     Route::get('medicament/{desc}', 'getMedicament');
 });
 
