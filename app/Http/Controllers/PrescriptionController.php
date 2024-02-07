@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PrescriptionMedicament;
 use App\Notifications\PrescriptionSignedEmail;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -227,12 +228,7 @@ class PrescriptionController extends Controller
     }
     public function sendEmailNotification(Prescription $prescription)
     {
-        $errors = [];
-        foreach ($prescription->medicaments as $medicament) {
-            if (in_array($medicament->group, ['Grupo II', 'Grupo III', 'RESTRICCION ANTIBIOTICOS'])) {
-                $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
-            }
-        }
+        $errors = $this->verifyPrescription($prescription->medicaments);
         if(!empty($errors)) {
             return response()->json($errors, 400);
         }
@@ -247,6 +243,15 @@ class PrescriptionController extends Controller
         }
         $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
+    }
+    private function verifyPrescription($medicaments) {
+        $errors = [];
+        foreach ($medicaments as $medicament) {
+            if (in_array($medicament->group, ['Grupo II', 'Grupo III', 'RESTRICCION ANTIBIOTICOS'])) {
+                $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
+            }
+        }
+        return $errors;
     }
     private function legalarioLogin(): array
     {
@@ -322,6 +327,10 @@ class PrescriptionController extends Controller
     }
     public function createSigner(Prescription $prescription): JsonResponse
     {
+        $errors = $this->verifyPrescription($prescription->medicaments);
+        if (!empty($errors)) {
+            return response()->json($errors, 400);
+        }
         $res = $this->legalarioToken();
         if (!$res['success']) {
             return response()->json($res, 400);
