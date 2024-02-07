@@ -1,8 +1,11 @@
 <x-mail::message>
   <img src="{{ asset('Logo.png') }}" alt="logo" class="img">
-  <h1 class="center h1">{{$title}}</h1>
-  <p class="center p">{{$message}}</p>
-  <p class="center"><a href="{{$url}}"><button class="btn">{{$button}}</button></a></p>
+  <h1 class="center h1">Receta medica electronica</h1>
+  <p class="center p">Estimado (a), {{$prescription->patient->first_name}} {{$prescription->patient->last_name1}}<br>Le compartimos su receta electrónica en formato pdf de su consulta</p>
+  <sub>Este correo electrónico ha sido generado automáticamente por el Sistema de Emisión de Recetas electrónicas por lo que le
+  solicitamos no responder a este mensaje, ya que las respuestas a este correo electrónico no serán leídas.
+  Está recibiendo este correo electrónico debido a que ha proporcionado la dirección de correo electrónico
+  ejemplo@gmail.com a Farmacias Especializadas para hacerle llegar su Receta Electrónica.</sub>
 
 </x-mail::message>
 <style>
