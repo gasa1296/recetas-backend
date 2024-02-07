@@ -130,4 +130,8 @@ class ConsultingRoomController extends Controller
         $room->delete();
         return response()->json();
     }
+    public function getFormats(): JsonResponse
+    {
+        return response()->json([0 => env('F1'), 1 => env('F2'), '2' => env('F3')]);
+    }
 }
