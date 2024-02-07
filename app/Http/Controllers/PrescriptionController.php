@@ -199,12 +199,10 @@ class PrescriptionController extends Controller
             return response()->json(['token' => 'token invalido'], 403);
         }
         $inputs = $request->all();
-        Log::debug('Webhook', $inputs);
-        $instance = Prescription::where('document_id', '=', $inputs['document']['id'])
-            ->whereNull('file')
+        $instance = Prescription::where('document_id', $inputs['document']['id'])
             ->firstOrFail();
 
-        $instance->file = Storage::disk('public')->put("medics/$instance->user_id/prescriptions/$instance->id.zip", $inputs['zip']);
+        $instance->file = Storage::disk('public')->put("medics/$instance->user_id/prescriptions/$instance->id.zip", base64_decode($inputs['zip']));
         $instance->save();
         return (new PrescriptionResource($instance))->response();
     }
