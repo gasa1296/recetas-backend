@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PrescriptionController extends Controller
 {
@@ -198,6 +199,7 @@ class PrescriptionController extends Controller
             return response()->json(['token' => 'token invalido'], 403);
         }
         $inputs = $request->all();
+        Log::debug('Webhook', $inputs);
         $instance = Prescription::where('document_id', '=', $inputs['document']['id'])
             ->whereNull('file')
             ->firstOrFail();
