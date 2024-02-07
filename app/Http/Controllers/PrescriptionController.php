@@ -120,7 +120,9 @@ class PrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        //return $request->bearerToken();
+        if(!empty($prescription->client)) {
+            return response()->json(['client' => 'Ya tiene cliente'], 400);
+        }
         $validator = Validator::make($request->all(), [
             'client' => ['required'],
         ]);
