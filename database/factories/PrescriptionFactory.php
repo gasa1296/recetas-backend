@@ -37,7 +37,6 @@ class PrescriptionFactory extends Factory
             'room_id' => $room->id,
             'document_id' => Hash::make('1232'),
             'patient_id' => Patient::factory()->create()->id,
-            'file' => fake()->imageUrl(),
             'status' => fake()->randomElement([0,1,2]),
         ];
     }
