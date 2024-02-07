@@ -29,8 +29,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 });
 
 Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
-    Route::get('verify/{id}','verify')->name('verify');
-    Route::post('resend','resend')->name('resend');
+    Route::get('verify/{id}', 'verify')->name('verify');
+    Route::post('resend', 'resend')->name('resend');
     Route::get('notice', 'notice')->name('notice');
 });
 
@@ -46,6 +46,9 @@ Route::controller(PrescriptionController::class)->prefix('receta')->group(functi
     Route::post('{prescription}', 'addClient');
     Route::put('{prescription}', 'updateStatus');
     Route::get('medicament/{desc}', 'getMedicament');
+});
+Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {
+    Route::get('designs', 'getFormats')->name('designs');
 });
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
