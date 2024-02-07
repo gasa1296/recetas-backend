@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use ZipArchive;
+
 
 class PrescriptionController extends Controller
 {
@@ -201,8 +203,11 @@ class PrescriptionController extends Controller
         $inputs = $request->all();
         $instance = Prescription::where('document_id', $inputs['document']['id'])
             ->firstOrFail();
-
-        $instance->file = Storage::disk('public')->put("medics/$instance->user_id/prescriptions/$instance->id.zip", base64_decode($inputs['zip']));
+        $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
+        if(!Storage::put($dir, base64_decode($inputs['zip']))) {
+            return response()->json('Error guardando archivo', 500);
+        }
+        $instance->file = $dir;
         $instance->save();
         return (new PrescriptionResource($instance))->response();
     }
@@ -231,7 +236,16 @@ class PrescriptionController extends Controller
         if(!empty($errors)) {
             return response()->json($errors, 400);
         }
-        $prescription->patient->notify(new PrescriptionSignedEmail($prescription));
+        $zip = new ZipArchive;
+        $status = $zip->open(base_path() . '/storage/app/' . $prescription->file);
+        if ($status !== true) {
+            return response()->json('error al obtener archivo 1', 500);
+        }
+        $fileData = $zip->getFromName('signed_Receta.pdf');
+        if($fileData === false) {
+            return response()->json('error al obtener archivo 2', 500);
+        }
+        $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
     private function legalarioLogin(): array
