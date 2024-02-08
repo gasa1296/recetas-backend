@@ -267,7 +267,7 @@ class PrescriptionController extends Controller
         if ($fileData === false) {
             return response()->json('error al obtener archivo 2', 500);
         }
-        return response()->download($fileData);
+        return response()->download($fileData, 'receta.pdf');
     }
     private function verifyPrescription($medicaments) {
         $errors = [];
