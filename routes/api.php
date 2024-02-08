@@ -38,6 +38,7 @@ Route::controller(PrescriptionController::class)->prefix('receta')->group(functi
     Route::post('{prescription}', 'addClient');
     Route::put('{prescription}', 'updateStatus');
     Route::get('medicament/{desc}', 'getMedicament');
+    Route::get('{prescription}/file', 'getFile')->name('getFile');
 });
 Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {
     Route::get('designs', 'getFormats')->name('designs');

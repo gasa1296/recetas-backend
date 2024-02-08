@@ -246,7 +246,13 @@ class PrescriptionController extends Controller
         $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
-    public function getFile(Prescription $prescription) {
+    public function getFile(Request $request, Prescription $prescription) {
+        if(empty(auth()->user())) {
+            $token = $request->bearerToken();
+            if ($token != env('PUBLIC_KEY', '')) {
+                return response()->json(['token' => 'token invalido'], 403);
+            }
+        }
         $errors = $this->verifyPrescription($prescription->medicaments);
         $zip = new ZipArchive;
         $status = $zip->open(base_path() . '/storage/app/' . $prescription->file);
@@ -254,7 +260,7 @@ class PrescriptionController extends Controller
             return response()->json('error al obtener archivo 1', 500);
         }
         if (!empty($errors)) {
-            $fileData = $zip->getFromName('signed_receta.pdf');
+            $fileData = $zip->getFromName('receta.pdf');
         } else {
             $fileData = $zip->getFromName('signed_receta.pdf');
         }
