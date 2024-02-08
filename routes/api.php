@@ -27,18 +27,10 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('login', 'login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
-
-Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
-    Route::get('verify/{id}', 'verify')->name('verify');
-    Route::post('resend', 'resend')->name('resend');
-    Route::get('notice', 'notice')->name('notice');
-});
-
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
 });
-
 Route::controller(PrescriptionController::class)->prefix('receta')->group(function () {
     Route::get('', 'getByClient');
     Route::post('file', 'addFile');
@@ -53,6 +45,11 @@ Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.'
 
 Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
 
+    Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
+        Route::get('verify/{id}', 'verify')->name('verify');
+        Route::post('resend', 'resend')->name('resend');
+        Route::get('notice', 'notice')->name('notice');
+    });
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show');
         Route::put('', 'update');
@@ -67,9 +64,9 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'prescription.medicament' => PrescriptionMedicamentController::class,
         'prescription.equipment' => PrescriptionEquipmentController::class,
     ]);
-
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
+        Route::get('{prescription}/file', 'getFile')->name('getFile');
     });
 });

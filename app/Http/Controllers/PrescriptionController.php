@@ -239,12 +239,29 @@ class PrescriptionController extends Controller
         if ($status !== true) {
             return response()->json('error al obtener archivo 1', 500);
         }
-        $fileData = $zip->getFromName('signed_Receta.pdf');
+        $fileData = $zip->getFromName('signed_receta.pdf');
         if($fileData === false) {
             return response()->json('error al obtener archivo 2', 500);
         }
         $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
+    }
+    public function getFile(Prescription $prescription) {
+        $errors = $this->verifyPrescription($prescription->medicaments);
+        $zip = new ZipArchive;
+        $status = $zip->open(base_path() . '/storage/app/' . $prescription->file);
+        if ($status !== true) {
+            return response()->json('error al obtener archivo 1', 500);
+        }
+        if (!empty($errors)) {
+            $fileData = $zip->getFromName('signed_receta.pdf');
+        } else {
+            $fileData = $zip->getFromName('signed_receta.pdf');
+        }
+        if ($fileData === false) {
+            return response()->json('error al obtener archivo 2', 500);
+        }
+        return response()->download($fileData);
     }
     private function verifyPrescription($medicaments) {
         $errors = [];
@@ -333,6 +350,9 @@ class PrescriptionController extends Controller
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
+        /*if(!empty($prescription->file)) {
+            return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
+        }*/
         $res = $this->legalarioToken();
         if (!$res['success']) {
             return response()->json($res, 400);
