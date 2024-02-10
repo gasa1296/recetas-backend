@@ -1,0 +1,86 @@
+{"questions": [
+    {
+      "id": 1,
+      "name": "INGRESA EL NOMBRE DEL MEDICO"
+    },
+    {
+      "id": 2,
+      "name": "INGRESA EL NUMERO DE CEDULA PROFESIONAL"
+    },
+    {
+      "id": 3,
+      "name": "INGRESA EL FOLIO DE LA RECETA"
+    },
+    {
+      "id": 4,
+      "name": "INGRESA LA FECHA"
+    },
+    {
+      "id": 5,
+      "name": "INGRESA LA HORA"
+    },
+    {
+      "id": 6,
+      "name": "INGRESA EL NOMBRE DEL PACIENTE"
+    },
+    {
+      "id": 7,
+      "name": "INGRESA LA EDAD DEL PACIENTE"
+    },
+    {
+      "id": 8,
+      "name": "INGRESA EL PESO DEL PACIENTE"
+    },
+    {
+      "id": 9,
+      "name": "INGRESA LA TALLA DEL PACIENTE"
+    },
+    {
+      "id": 10,
+      "name": "INGRESA LA TEMPERATURA DEL PACIENTE"
+    },
+    {
+      "id": 11,
+      "name": "INGRESA LA SATURACION DEL PACIENTE"
+    },
+    {
+      "id": 12,
+      "name": "INGRESA LA PRESION DEL PACIENTE"
+    },
+    {
+      "id": 13,
+      "name": "INGRESA LA FRECUENCIA CARDIACA DEL PACIENTE"
+    },
+    {
+      "id": 14,
+      "name": "INGRESA EL DIAGNOSTICO DEL MEDICO"
+    },
+    {
+      "id": 15,
+      "name": "INGRESA LOS MEDICAMENTOS INDICADOS POR EL MEDICO"
+    },
+    {
+      "id": 16,
+      "name": "INGRESA EL NOMBRE DEL HOSPITAL / CONSULTORIO"
+    },
+    {
+      "id": 17,
+      "name": "INGRESA LA DIRECCION DEL HOSPITAL / CONSULTORIO"
+    },
+    {
+      "id": 18,
+      "name": "INGRESA EL TELEFONO DEL MEDICO"
+    },
+    {
+      "id": 19,
+      "name": "INGRESA EL EMAIL DEL MEDICO"
+    },
+    {
+      "id": 20,
+      "name": "INGRESA LA ESPECIALIDAD DEL MEDICO"
+    },
+    {
+      "id": 21,
+      "name": "INGRESA EL CODIGO DE BARRAS DE LA RECETA"
+    }
+  ]}
