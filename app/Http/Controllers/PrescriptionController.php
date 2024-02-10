@@ -15,6 +15,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
+use Carbon\Carbon;
 
 
 class PrescriptionController extends Controller
@@ -325,7 +326,10 @@ class PrescriptionController extends Controller
     private function createDocument(Prescription $prescription, string $token): array
     {
         try {
-            $meds = $prescription->medicaments->toArray();
+            $medicaments = $prescription->medicaments->toArray();
+            $medic = $prescription->medic;
+            $patient = $prescription->patient;
+            $date = new Carbon($prescription->getCreatedAtColumn(), 'UTC-6');
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
@@ -335,16 +339,93 @@ class PrescriptionController extends Controller
                 'json' => [
                     'name' => 'Receta',
                     'type' => 'template',
-                    'template_id' => /*$prescription->room->design*/"659c7a5d3ce79e0f44521cb9",
-                    'sequence' => array_map(function ($key, $medicament) {
-                        return [
-                            [
-                                'key' => $key + 1,
-                                'name' => $medicament["name"] . ':',
-                                'value' => "$medicament[name], $medicament[way], $medicament[dose], $medicament[frequency], $medicament[duration], $medicament[quantity]"
-                            ]
-                        ];
-                    }, array_keys($meds), $meds),
+                    'template_id' => $prescription->room->design,
+                    'sequence' => [
+                        [[
+                            'key' => 1,
+                            'name' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                        ]],
+                        [[
+                            'key' => 2,
+                            'name' => $medic->fesa,
+                        ]],
+                        [[
+                            'key' => 3,
+                            'name' => $prescription->id,
+                        ]],
+                        [[
+                            'key' => 4,
+                            'name' => $date->isoFormat('dddd D de MMMM del Y'),
+                        ]],
+                        [[
+                            'key' => 5,
+                            'name' => $date->isoFormat('H:i'),
+                        ]],
+                        [[
+                            'key' => 6,
+                            'name' => "$patient->first_name $patient->last_name1 $patient->last_name2",
+                        ]],
+                        [[
+                            'key' => 7,
+                            'name' => (new Carbon($patient->birth_date))->age() . ' años',
+                        ]],
+                        [[
+                            'key' => 8,
+                            'name' => $prescription->weight?:0 . ' KG',
+                        ]],
+                        [[
+                            'key' => 9,
+                            'name' => $prescription->height?:0 . ' MTS',
+                        ]],
+                        [[
+                            'key' => 10,
+                            'name' => $prescription->temp?:0 . ' C',
+                        ]],
+                        [[
+                            'key' => 11,
+                            'name' => $prescription->saturation,
+                        ]],
+                        [[
+                            'key' => 12,
+                            'name' => $prescription->pressure,
+                        ]],
+                        [[
+                            'key' => 13,
+                            'name' => $prescription->ppm . ' ppm',
+                        ]],
+                        [[
+                            'key' => 14,
+                            'name' => $prescription->diagnostic,
+                        ]],
+                        [[
+                            'key' => 15,
+                            'name' => print_r($medicaments) . ' ' . print_r(json_decode($prescription->add_med, true)),
+                        ]],
+                        [[
+                            'key' => 16,
+                            'name' => $prescription->room->name,
+                        ]],
+                        [[
+                            'key' => 17,
+                            'name' => $prescription->room->address,
+                        ]],
+                        [[
+                            'key' => 18,
+                            'name' => $prescription->room->address,
+                        ]],
+                        [[
+                            'key' => 19,
+                            'name' => $medic->email,
+                        ]],
+                        [[
+                            'key' => 20,
+                            'name' => $medic->specializations->first()->name,
+                        ]],
+                        [[
+                            'key' => 21,
+                            'name' => base64_encode($prescription->id),
+                        ]],
+                    ]
                 ]
             ]);
             return json_decode($res->getBody(), true);
