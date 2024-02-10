@@ -454,6 +454,10 @@ class PrescriptionController extends Controller
                                     array_map(function ($medicament) {
                                         return implode(',', $medicament);
                                     }, $prescription->medicaments->toArray())
+                                ) . '/n' . implode(
+                                    array_map(function ($medicament) {
+                                        return implode(',', $medicament);
+                                    }, json_decode($prescription->add_med, true))
                                 ),
                             ]
                         ],
