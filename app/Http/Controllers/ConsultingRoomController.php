@@ -38,7 +38,7 @@ class ConsultingRoomController extends Controller
             'data.*.n_interior' => ['nullable',],
             'data.*.address' => ['nullable', 'string'],
             'data.*.phone' => ['nullable', 'string'],
-            'data.*.design' => ['nullable', 'numeric'],
+            'data.*.design' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file'],
         ]);
@@ -99,7 +99,7 @@ class ConsultingRoomController extends Controller
             'n_interior' => ['nullable',],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
-            'design' => ['nullable', 'numeric'],
+            'design' => ['nullable', 'string'],
             'logo' => ['nullable', 'file'],
         ]);
         if ($validator->fails()) {
