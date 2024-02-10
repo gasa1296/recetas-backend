@@ -200,19 +200,23 @@ class PrescriptionController extends Controller
      */
     public function addFile(Request $request)
     {
+        $inputs = $request->all();
+        Log::debug('document',['document' => $inputs['document']]);
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        $inputs = $request->all();
         $instance = Prescription::where('document_id', $inputs['document']['id'])
             ->firstOrFail();
+        $inputs = $request->all();
+        Log::debug('prescription', ['prescription' => $instance->id]);
         $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
         if(!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
         $instance->file = $dir;
         $instance->save();
+        Log::debug('prescription', ['file' => $instance->file]);
         return (new PrescriptionResource($instance))->response();
     }
     public function getMedicament(int $desc)
