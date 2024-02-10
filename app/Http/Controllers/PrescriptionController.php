@@ -351,148 +351,152 @@ class PrescriptionController extends Controller
                         [
                             [
                                 'key' => 1,
-                                'name' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                                'value' => '',
+                                'name' => 'name',
+                                'value' => "$medic->first_name $medic->last_name1 $medic->last_name2",
                             ]
                         ],
                         [
                             [
                                 'key' => 2,
-                                'name' => $medic->fesa,
-                                'value' => '',
+                                'name' => 'fesa',
+                                'value' => $medic->fesa,
                             ]
                         ],
                         [
                             [
                                 'key' => 3,
-                                'name' => $prescription->id,
-                                'value' => '',
+                                'name' => 'id',
+                                'value' => $prescription->id,
                             ]
                         ],
                         [
                             [
                                 'key' => 4,
-                                'name' => $date->isoFormat('dddd D de MMMM del Y'),
-                                'value' => '',
+                                'name' => 'date',
+                                'value' => $date->isoFormat('dddd D de MMMM del Y'),
                             ]
                         ],
                         [
                             [
                                 'key' => 5,
-                                'name' => $date->isoFormat('H:i'),
-                                'value' => '',
+                                'name' => 'time',
+                                'value' => $date->isoFormat('H:i'),
                             ]
                         ],
                         [
                             [
                                 'key' => 6,
-                                'name' => "$patient->first_name $patient->last_name1 $patient->last_name2",
-                                'value' => '',
+                                'name' => 'patient name',
+                                'value' => "$patient->first_name $patient->last_name1 $patient->last_name2",
                             ]
                         ],
                         [
                             [
                                 'key' => 7,
-                                'name' => $patient->birth_date,
-                                'value' => '',
+                                'name' => 'birth date',
+                                'value' => $patient->birth_date,
                             ]
                         ],
                         [
                             [
                                 'key' => 8,
-                                'name' => $prescription->weight ?: 0 . ' KG',
-                                'value' => '',
+                                'name' => 'weight',
+                                'value' => $prescription->weight ?: 0 . ' KG',
                             ]
                         ],
                         [
                             [
                                 'key' => 9,
-                                'name' => $prescription->height ?: 0 . ' MTS',
-                                'value' => '',
+                                'name' => 'height',
+                                'value' => $prescription->height ?: 0 . ' MTS',
                             ]
                         ],
                         [
                             [
                                 'key' => 10,
-                                'name' => $prescription->temp ?: 0 . ' C',
-                                'value' => '',
+                                'name' => 'temp',
+                                'value' => $prescription->temp ?: 0 . ' C',
                             ]
                         ],
                         [
                             [
                                 'key' => 11,
-                                'name' => $prescription->saturation,
-                                'value' => '',
+                                'name' => 'saturation',
+                                'value' => $prescription->saturation,
                             ]
                         ],
                         [
                             [
                                 'key' => 12,
-                                'name' => $prescription->pressure,
-                                'value' => '',
+                                'name' => 'pressure',
+                                'value' => $prescription->pressure,
                             ]
                         ],
                         [
                             [
                                 'key' => 13,
-                                'name' => $prescription->ppm . ' ppm',
-                                'value' => '',
+                                'name' => 'ppm',
+                                'value' => $prescription->ppm . ' ppm',
                             ]
                         ],
                         [
                             [
                                 'key' => 14,
-                                'name' => $prescription->diagnostic,
-                                'value' => '',
+                                'name' => 'diagnostic',
+                                'value' => $prescription->diagnostic,
                             ]
                         ],
                         [
                             [
                                 'key' => 15,
-                                'name' => '',
-                                'value' => '',
+                                'name' => 'medicaments',
+                                'value' => implode(
+                                    array_map(function ($medicament) {
+                                        return implode(',', $medicament);
+                                    }, $prescription->medicaments->toArray())
+                                ),
                             ]
                         ],
                         [
                             [
                                 'key' => 16,
-                                'name' => $prescription->room->name,
-                                'value' => '',
+                                'name' => 'room',
+                                'value' => $prescription->room->name,
                             ]
                         ],
                         [
                             [
                                 'key' => 17,
-                                'name' => $prescription->room->address,
-                                'value' => '',
+                                'name' => 'address',
+                                'value' => $prescription->room->address,
                             ]
                         ],
                         [
                             [
                                 'key' => 18,
-                                'name' => $prescription->room->address,
-                                'value' => '',
+                                'name' => 'phone',
+                                'value' => $medic->phone1,
                             ]
                         ],
                         [
                             [
                                 'key' => 19,
-                                'name' => $medic->email,
-                                'value' => '',
+                                'name' => 'email',
+                                'value' => $medic->email,
                             ]
                         ],
                         [
                             [
                                 'key' => 20,
-                                'name' => $medic->specializations->first()->name,
-                                'value' => '',
+                                'name' => 'specializations',
+                                'value' => $medic->specializations->first()->name,
                             ]
                         ],
                         [
                             [
                                 'key' => 21,
-                                'name' => base64_encode($prescription->id),
-                                'value' => '',
+                                'name' => 'bar',
+                                'value' => base64_encode($prescription->id),
                             ]
                         ],
                     ]
