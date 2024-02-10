@@ -24,7 +24,7 @@ class PrescriptionController extends Controller
     private string $token;
     public function __construct()
     {
-        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);        
+        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
     /**
      * Display a listing of the resource.
@@ -121,7 +121,7 @@ class PrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        if(!empty($prescription->client)) {
+        if (!empty($prescription->client)) {
             return response()->json(['client' => 'Ya tiene cliente'], 400);
         }
         $validator = Validator::make($request->all(), [
@@ -201,7 +201,7 @@ class PrescriptionController extends Controller
     public function addFile(Request $request)
     {
         $inputs = $request->all();
-        Log::debug('document',['document' => $inputs['document']]);
+        Log::debug('document', ['document' => $inputs['document']]);
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
@@ -211,7 +211,7 @@ class PrescriptionController extends Controller
         $inputs = $request->all();
         Log::debug('prescription', ['prescription' => $instance->id]);
         $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
-        if(!Storage::put($dir, base64_decode($inputs['zip']))) {
+        if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
         $instance->file = $dir;
@@ -236,7 +236,7 @@ class PrescriptionController extends Controller
     public function sendEmailNotification(Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        if(!empty($errors)) {
+        if (!empty($errors)) {
             return response()->json($errors, 400);
         }
         $zip = new ZipArchive;
@@ -245,14 +245,15 @@ class PrescriptionController extends Controller
             return response()->json('error al obtener archivo 1', 500);
         }
         $fileData = $zip->getFromName('signed_receta.pdf');
-        if($fileData === false) {
+        if ($fileData === false) {
             return response()->json('error al obtener archivo 2', 500);
         }
         $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
-    public function getFile(Request $request, Prescription $prescription) {
-        if(empty(auth()->user())) {
+    public function getFile(Request $request, Prescription $prescription)
+    {
+        if (empty(auth()->user())) {
             $token = $request->bearerToken();
             if ($token != env('PUBLIC_KEY', '')) {
                 return response()->json(['token' => 'token invalido'], 403);
@@ -276,7 +277,8 @@ class PrescriptionController extends Controller
             echo $fileData;
         }, 'receta.pdf');
     }
-    private function verifyPrescription($medicaments) {
+    private function verifyPrescription($medicaments)
+    {
         $errors = [];
         foreach ($medicaments as $medicament) {
             if (in_array($medicament->group, ['Grupo II', 'Grupo III', 'RESTRICCION ANTIBIOTICOS'])) {
@@ -333,7 +335,8 @@ class PrescriptionController extends Controller
             $medicaments = $prescription->medicaments->toArray();
             $medic = $prescription->medic;
             $patient = $prescription->patient;
-            $date = new Carbon($prescription->getCreatedAtColumn(), 'UTC-6');
+            Log::debug('timestamp', [$prescription->created_at]);
+            $date = new Carbon($prescription->created_at);
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
@@ -345,95 +348,158 @@ class PrescriptionController extends Controller
                     'type' => 'template',
                     'template_id' => $prescription->room->design,
                     'sequence' => [
-                        [[
-                            'key' => 1,
-                            'name' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                        ]],
-                        [[
-                            'key' => 2,
-                            'name' => $medic->fesa,
-                        ]],
-                        [[
-                            'key' => 3,
-                            'name' => $prescription->id,
-                        ]],
-                        [[
-                            'key' => 4,
-                            'name' => $date->isoFormat('dddd D de MMMM del Y'),
-                        ]],
-                        [[
-                            'key' => 5,
-                            'name' => $date->isoFormat('H:i'),
-                        ]],
-                        [[
-                            'key' => 6,
-                            'name' => "$patient->first_name $patient->last_name1 $patient->last_name2",
-                        ]],
-                        [[
-                            'key' => 7,
-                            'name' => (new Carbon($patient->birth_date))->age() . ' años',
-                        ]],
-                        [[
-                            'key' => 8,
-                            'name' => $prescription->weight?:0 . ' KG',
-                        ]],
-                        [[
-                            'key' => 9,
-                            'name' => $prescription->height?:0 . ' MTS',
-                        ]],
-                        [[
-                            'key' => 10,
-                            'name' => $prescription->temp?:0 . ' C',
-                        ]],
-                        [[
-                            'key' => 11,
-                            'name' => $prescription->saturation,
-                        ]],
-                        [[
-                            'key' => 12,
-                            'name' => $prescription->pressure,
-                        ]],
-                        [[
-                            'key' => 13,
-                            'name' => $prescription->ppm . ' ppm',
-                        ]],
-                        [[
-                            'key' => 14,
-                            'name' => $prescription->diagnostic,
-                        ]],
-                        [[
-                            'key' => 15,
-                            'name' => print_r($medicaments) . ' ' . print_r(json_decode($prescription->add_med, true)),
-                        ]],
-                        [[
-                            'key' => 16,
-                            'name' => $prescription->room->name,
-                        ]],
-                        [[
-                            'key' => 17,
-                            'name' => $prescription->room->address,
-                        ]],
-                        [[
-                            'key' => 18,
-                            'name' => $prescription->room->address,
-                        ]],
-                        [[
-                            'key' => 19,
-                            'name' => $medic->email,
-                        ]],
-                        [[
-                            'key' => 20,
-                            'name' => $medic->specializations->first()->name,
-                        ]],
-                        [[
-                            'key' => 21,
-                            'name' => base64_encode($prescription->id),
-                        ]],
+                        [
+                            [
+                                'key' => 1,
+                                'name' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 2,
+                                'name' => $medic->fesa,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 3,
+                                'name' => $prescription->id,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 4,
+                                'name' => $date->isoFormat('dddd D de MMMM del Y'),
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 5,
+                                'name' => $date->isoFormat('H:i'),
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 6,
+                                'name' => "$patient->first_name $patient->last_name1 $patient->last_name2",
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 7,
+                                'name' => $patient->birth_date,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 8,
+                                'name' => $prescription->weight ?: 0 . ' KG',
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 9,
+                                'name' => $prescription->height ?: 0 . ' MTS',
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 10,
+                                'name' => $prescription->temp ?: 0 . ' C',
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 11,
+                                'name' => $prescription->saturation,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 12,
+                                'name' => $prescription->pressure,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 13,
+                                'name' => $prescription->ppm . ' ppm',
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 14,
+                                'name' => $prescription->diagnostic,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 15,
+                                'name' => '',
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 16,
+                                'name' => $prescription->room->name,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 17,
+                                'name' => $prescription->room->address,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 18,
+                                'name' => $prescription->room->address,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 19,
+                                'name' => $medic->email,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 20,
+                                'name' => $medic->specializations->first()->name,
+                                'value' => '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 21,
+                                'name' => base64_encode($prescription->id),
+                                'value' => '',
+                            ]
+                        ],
                     ]
                 ]
             ]);
             return json_decode($res->getBody(), true);
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
