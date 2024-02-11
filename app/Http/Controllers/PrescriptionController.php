@@ -373,14 +373,14 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 4,
                                 'name' => 'date',
-                                'value' => $date->isoFormat('dddd D de MMMM del Y'),
+                                'value' => $date->format('d/m/Y'),
                             ]
                         ],
                         [
                             [
                                 'key' => 5,
                                 'name' => 'time',
-                                'value' => $date->isoFormat('H:i'),
+                                'value' => $date->format('%H:%i'),
                             ]
                         ],
                         [
@@ -394,7 +394,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 7,
                                 'name' => 'birth date',
-                                'value' => $patient->birth_date,
+                                'value' => $date->diffInYears(new Carbon($patient->birth_date)). ' años',
                             ]
                         ],
                         [
