@@ -394,28 +394,28 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 7,
                                 'name' => 'birth date',
-                                'value' => $date->diffInYears(new Carbon($patient->birth_date)). ' años',
+                                'value' => $date->diffInYears(new Carbon($patient->birth_date)),
                             ]
                         ],
                         [
                             [
                                 'key' => 8,
                                 'name' => 'weight',
-                                'value' => $prescription->weight ?: 0 . ' KG',
+                                'value' => $prescription->weight ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 9,
                                 'name' => 'height',
-                                'value' => $prescription->height ?: 0 . ' MTS',
+                                'value' => $prescription->height ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 10,
                                 'name' => 'temp',
-                                'value' => $prescription->temp ?: 0 . ' C',
+                                'value' => $prescription->temp ?: '',
                             ]
                         ],
                         [
@@ -436,7 +436,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 13,
                                 'name' => 'ppm',
-                                'value' => $prescription->ppm . ' ppm',
+                                'value' => $prescription->ppm?: '',
                             ]
                         ],
                         [
@@ -452,11 +452,11 @@ class PrescriptionController extends Controller
                                 'name' => 'medicaments',
                                 'value' => implode(
                                     array_map(function ($medicament) {
-                                        return implode(',', $medicament);
+                                        return "$medicament->name \n $medicament->dose | $medicament->frequency | $medicament->duration | $medicament->way}  | $medicament->quantity | $medicament->add \n";
                                     }, $prescription->medicaments->toArray())
-                                ) . '/n' . implode(
+                                ) . "\n" . implode(
                                     array_map(function ($medicament) {
-                                        return implode(',', $medicament);
+                                        return "$medicament->name \n $medicament->dose | $medicament->frequency | $medicament->duration | $medicament->way}  | $medicament->quantity | $medicament->add \n";
                                     }, json_decode($prescription->add_med, true))
                                 ),
                             ]
