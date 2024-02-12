@@ -422,14 +422,14 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 11,
                                 'name' => 'saturation',
-                                'value' => $prescription->saturation,
+                                'value' => $prescription->saturation ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 12,
                                 'name' => 'pressure',
-                                'value' => $prescription->pressure,
+                                'value' => $prescription->pressure ?: '',
                             ]
                         ],
                         [
@@ -443,7 +443,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 14,
                                 'name' => 'diagnostic',
-                                'value' => $prescription->diagnostic,
+                                'value' => $prescription->diagnostic ?: '',
                             ]
                         ],
                         [
@@ -465,7 +465,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 16,
                                 'name' => 'room',
-                                'value' => $prescription->room->name,
+                                'value' => $prescription->room->name ?: '',
                             ]
                         ],
                         [
@@ -479,28 +479,28 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 18,
                                 'name' => 'phone',
-                                'value' => $medic->phone1,
+                                'value' => $medic->phone1 ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 19,
                                 'name' => 'email',
-                                'value' => $medic->email,
+                                'value' => $medic->email ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 20,
                                 'name' => 'specializations',
-                                'value' => $medic->specializations->first()->name,
+                                'value' => $medic->specializations->first()->name ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 21,
                                 'name' => 'bar',
-                                'value' => base64_encode($prescription->id),
+                                'value' => base64_encode($prescription->id) ?: '',
                             ]
                         ],
                     ]
