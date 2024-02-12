@@ -61,6 +61,18 @@ class PrescriptionController extends Controller
         $inputs = $validator->safe()->all();
         $inputs['user_id'] = auth()->id();
         $instance = Prescription::create($inputs);
+        
+        $res = $this->legalarioToken();
+        if (!$res['success']) {
+            return response()->json($res, 400);
+        }
+        $token = $res['data']['access_token'];
+        $res = $this->createDocument($instance, $token);
+        if (!$res['success']) {
+            return response()->json($res, 400);
+        }
+        $instance->document_id = $res['data']['id'];
+        $instance->save();
 
         return (new PrescriptionResource($instance))->response();
     }
@@ -332,7 +344,6 @@ class PrescriptionController extends Controller
     private function createDocument(Prescription $prescription, string $token): array
     {
         try {
-            $medicaments = $prescription->medicaments->toArray();
             $medic = $prescription->medic;
             $patient = $prescription->patient;
             Log::debug('timestamp', [$prescription->created_at]);
@@ -525,12 +536,6 @@ class PrescriptionController extends Controller
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
-        $res = $this->createDocument($prescription, $token);
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $prescription->document_id = $res['data']['id'];
-        $prescription->save();
         try {
             $medic = $prescription->medic;
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
@@ -540,7 +545,7 @@ class PrescriptionController extends Controller
                     'Accept' => 'application/json'
                 ],
                 'json' => [
-                    'document_id' => $res['data']['id'],
+                    'document_id' => $prescription->document_id,
                     'workflow' => true,
                     'use_whatsapp' => false,
                     'signers' => [
