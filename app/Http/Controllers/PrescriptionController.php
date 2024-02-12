@@ -547,7 +547,7 @@ class PrescriptionController extends Controller
                         [
                             'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
                             'email' => $medic->email,
-                            'type' => 'FIRMA'
+                            'type' => 'MEDICO'
                         ]
                     ],
                 ]
