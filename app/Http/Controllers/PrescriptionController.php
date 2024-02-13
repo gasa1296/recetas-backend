@@ -457,7 +457,7 @@ class PrescriptionController extends Controller
                                     array_map(function ($medicament) {
                                         return "$medicament[name] \n $medicament[indications] \n";
                                     }, json_decode($prescription->add_med, true)?:[])
-                                ),
+                                ) . "\n" . $prescription->add,
                             ]
                         ],
                         [
