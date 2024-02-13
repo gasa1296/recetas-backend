@@ -20,15 +20,16 @@ class PatientController extends Controller
             $operator = '+';
         }
         if( $request->search ){
-            $instances = Patient::where('first_name', 'LIKE', "%$request->search%")
-                ->rWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$request->search%")
+            $instances = Patient::where('user_id', '=', auth()->id())
+                ->where('first_name', 'LIKE', "%$request->search%")
+                ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$request->search%")
                 ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$request->search%")
                 ->orWhere('email', 'LIKE', "%$request->search%")
                 ->orWhere('phone1', 'LIKE', "%$request->search%")
                 ->orWhere('phone2', 'LIKE', "%$request->search%");
             return PatientResource::collection($instances->paginate(10))->response();
         } else {
-            return PatientResource::collection(auth()->user()->patients->paginate(10))->response();
+            return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
         }
     }
 
