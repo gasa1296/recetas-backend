@@ -391,7 +391,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 5,
                                 'name' => 'time',
-                                'value' => $date->format('%H:%i'),
+                                'value' => $date->format('H:i'),
                             ]
                         ],
                         [
@@ -461,11 +461,11 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 15,
                                 'name' => 'medicaments',
-                                'value' => implode(
+                                'value' => implode("\n",
                                     array_map(function ($medicament) {
                                         return "$medicament->name \n $medicament->dose | $medicament->frequency | $medicament->duration | $medicament->way}  | $medicament->quantity | $medicament->add \n";
                                     }, $prescription->medicaments->toArray())
-                                ) . "\n" . implode(
+                                ) . "\n" . implode("\n",
                                     array_map(function ($medicament) {
                                         return "$medicament->name \n $medicament->indications \n";
                                     }, json_decode($prescription->add_med, true)?:[])
