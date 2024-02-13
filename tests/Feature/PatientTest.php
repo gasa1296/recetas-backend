@@ -61,7 +61,7 @@ class PatientTest extends TestCase
     }
     public function test_list(): void
     {
-        Patient::factory(10)->create();
+        Patient::factory(10)->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient');
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
