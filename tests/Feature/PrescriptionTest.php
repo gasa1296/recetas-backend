@@ -102,6 +102,7 @@ class PrescriptionTest extends TestCase
     $instance = Prescription::factory()->create();
     PrescriptionMedicament::factory()->create(['prescription_id' => $instance->id]);
     $response = $this->get("api/prescription/$instance->id/sign");
+    print_r($response->json());
     $response->assertStatus(400);
     $message = $response->json()['message'];
     $this->assertEquals("El valor del campo [email] del arreglo [signers] es inválido #1", $message);

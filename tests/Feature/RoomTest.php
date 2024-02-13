@@ -39,7 +39,7 @@ class RoomTest extends TestCase
                     "n_interior" => fake()->randomNumber(),
                     "address" => fake()->address(),
                     "phone" => fake()->phoneNumber(),
-                    "design" => fake()->randomElement([1, 2, 3]),
+                    'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
                 ],
                 [
                     "id" => $instance->id,
@@ -53,7 +53,7 @@ class RoomTest extends TestCase
                     "n_interior" => fake()->randomNumber(),
                     "address" => fake()->address(),
                     "phone" => fake()->phoneNumber(),
-                    "design" => fake()->randomElement([1, 2, 3]),
+                    'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
                 ],
             ],
             'logo' => [
@@ -79,7 +79,7 @@ class RoomTest extends TestCase
             "address" => fake()->address(),
             "phone" => fake()->phoneNumber(),
             "logo" => UploadedFile::fake()->image('photo.jpg'),
-            "design" => fake()->randomElement([1, 2, 3]),
+            'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
         ]);
 
         $response->assertOk();

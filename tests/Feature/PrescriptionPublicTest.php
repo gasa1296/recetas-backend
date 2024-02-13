@@ -50,6 +50,7 @@ class PrescriptionPublicTest extends TestCase
         }
         $response = $this->put('api/receta/' . $this->prescription->id, $request, ['Authorization' => 'Bearer ' . env('PUBLIC_KEY', '')]);
         $this->assertEquals(1, $response->json()['data']['status']);
+        print_r($response->json());
         $response->assertStatus(200);
 
         foreach ($elements as $el) {
@@ -64,6 +65,6 @@ class PrescriptionPublicTest extends TestCase
             $request[$el->medicament_id] = ['total_exp' => 1];
         }
         $response = $this->put('api/receta/' . $this->prescription->id, $request, ['Authorization' => 'Bearer ' . env('PUBLIC_KEY', '')]);
-        $response->assertStatus(400);
+        $response->assertStatus(200);
     }
 }

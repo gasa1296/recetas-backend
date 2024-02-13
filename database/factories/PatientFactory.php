@@ -25,7 +25,7 @@ class PatientFactory extends Factory
             "phone2" => fake()->phoneNumber(),
             "birth_date" => fake()->date(),
             'gender' => fake()->randomElement(['M', 'F']),
-            'user_id' => 1,
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

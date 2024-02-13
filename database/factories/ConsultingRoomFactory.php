@@ -31,7 +31,7 @@ class ConsultingRoomFactory extends Factory
             "phone" => fake()->phoneNumber(),
             "logo" => fake()->imageUrl(),
             "design" => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
-            'user_id' => 1,
+            'user_id' => User::factory()->create()->id,
 
         ];
     }
