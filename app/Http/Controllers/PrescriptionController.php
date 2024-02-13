@@ -61,18 +61,6 @@ class PrescriptionController extends Controller
         $inputs = $validator->safe()->all();
         $inputs['user_id'] = auth()->id();
         $instance = Prescription::create($inputs);
-        
-        $res = $this->legalarioToken();
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $token = $res['data']['access_token'];
-        $res = $this->createDocument($instance, $token);
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $instance->document_id = $res['data']['id'];
-        $instance->save();
 
         return (new PrescriptionResource($instance))->response();
     }
@@ -463,11 +451,11 @@ class PrescriptionController extends Controller
                                 'name' => 'medicaments',
                                 'value' => implode("\n",
                                     array_map(function ($medicament) {
-                                        return "$medicament->name \n $medicament->dose | $medicament->frequency | $medicament->duration | $medicament->way}  | $medicament->quantity | $medicament->add \n";
+                                        return "$medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] | $medicament[add] \n";
                                     }, $prescription->medicaments->toArray())
                                 ) . "\n" . implode("\n",
                                     array_map(function ($medicament) {
-                                        return "$medicament->name \n $medicament->indications \n";
+                                        return "$medicament[name] \n $medicament[indications] \n";
                                     }, json_decode($prescription->add_med, true)?:[])
                                 ),
                             ]
@@ -536,6 +524,13 @@ class PrescriptionController extends Controller
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
+        $res = $this->createDocument($prescription, $token);
+        if (!$res['success']) {
+            return response()->json($res, 400);
+        }
+        $prescription->document_id = $res['data']['id'];
+        $prescription->save();
+        
         try {
             $medic = $prescription->medic;
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
