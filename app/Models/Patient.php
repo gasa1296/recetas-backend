@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class Patient extends Model
@@ -36,5 +37,12 @@ class Patient extends Model
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
+    }
+    /**
+     * Get the medic of the prescription.
+     */
+    public function medic(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
