@@ -10,6 +10,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
 use App\Models\Patient;
+use App\Models\Specialization;
 use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
@@ -25,6 +26,7 @@ class PrescriptionTest extends TestCase
     parent::setUp();
     $this->user = User::factory()->create();
     $this->room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
+    Specialization::factory()->create(["user_id" => $this->user]);
     Sanctum::actingAs($this->user, ['*']);
 
   }
@@ -99,7 +101,7 @@ class PrescriptionTest extends TestCase
   }
   public function test_signer(): void
   {
-    $instance = Prescription::factory()->create();
+    $instance = Prescription::factory()->create(['user_id' => $this->user]);
     PrescriptionMedicament::factory()->create(['prescription_id' => $instance->id]);
     $response = $this->get("api/prescription/$instance->id/sign");
     print_r($response->json());
