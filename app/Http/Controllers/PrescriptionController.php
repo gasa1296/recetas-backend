@@ -357,8 +357,8 @@ class PrescriptionController extends Controller
                         [
                             [
                                 'key' => 2,
-                                'name' => 'fesa',
-                                'value' => $medic->fesa,
+                                'name' => 'identification',
+                                'value' => $medic->specializations->first()->identification ?: '',
                             ]
                         ],
                         [
