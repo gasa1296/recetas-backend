@@ -329,8 +329,13 @@ class PrescriptionController extends Controller
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
-    private function createDocument(Prescription $prescription, string $token): array
+    public function createDocument(Prescription $prescription): JsonResponse
     {
+        $res = $this->legalarioToken();
+        if (!$res['success']) {
+            return response()->json($res, 400);
+        }
+        $token = $res['data']['access_token'];
         try {
             $medic = $prescription->medic;
             $patient = $prescription->patient;
@@ -505,9 +510,9 @@ class PrescriptionController extends Controller
                     ]
                 ]
             ]);
-            return json_decode($res->getBody(), true);
+            return response()->json();
         } catch (ClientException $e) {
-            return json_decode($e->getResponse()->getBody(), true);
+            return response()->json(json_decode($e->getResponse()->getBody(), true));
         }
     }
     public function createSigner(Prescription $prescription): JsonResponse
@@ -524,12 +529,6 @@ class PrescriptionController extends Controller
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
-        $res = $this->createDocument($prescription, $token);
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $prescription->document_id = $res['data']['id'];
-        $prescription->save();
         
         try {
             $medic = $prescription->medic;
