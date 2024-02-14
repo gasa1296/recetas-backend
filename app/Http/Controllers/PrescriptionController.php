@@ -219,6 +219,9 @@ class PrescriptionController extends Controller
         Log::debug('prescription', ['file' => $instance->file]);
         return (new PrescriptionResource($instance))->response();
     }
+    /**
+     * Display a medicament of the prescription.
+     */
     public function getMedicament(int $desc)
     {
         $reponse = $this->client->post(
@@ -233,6 +236,9 @@ class PrescriptionController extends Controller
         $body = json_decode($reponse->getBody(), true);
         return response()->json($body['Respuesta'][0]);
     }
+    /**
+     * Send email notification to patient.
+     */
     public function sendEmailNotification(Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
@@ -251,6 +257,9 @@ class PrescriptionController extends Controller
         $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
+    /**
+     * Download precription file
+     */
     public function getFile(Request $request, Prescription $prescription)
     {
         if (empty(auth()->user())) {
@@ -277,6 +286,9 @@ class PrescriptionController extends Controller
             echo $fileData;
         }, 'receta.pdf');
     }
+    /**
+     * Verify if prescription can be sended or signed
+     */
     private function verifyPrescription($medicaments)
     {
         $errors = [];
@@ -287,6 +299,9 @@ class PrescriptionController extends Controller
         }
         return $errors;
     }
+    /**
+     * Login to legalario
+     */
     private function legalarioLogin(): array
     {
         try {
@@ -305,6 +320,9 @@ class PrescriptionController extends Controller
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
+    /**
+     * Get Legalario bearer token
+     */
     private function legalarioToken(): array
     {
         $res = $this->legalarioLogin();
@@ -329,6 +347,9 @@ class PrescriptionController extends Controller
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
+    /**
+     * Add document id to prescription
+     */
     public function createDocument(Prescription $prescription): JsonResponse
     {
         $res = $this->legalarioToken();
@@ -515,6 +536,9 @@ class PrescriptionController extends Controller
             return response()->json(json_decode($e->getResponse()->getBody(), true));
         }
     }
+    /**
+     * Create and return prescription signers
+     */
     public function createSigner(Prescription $prescription): JsonResponse
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
