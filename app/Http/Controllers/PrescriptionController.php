@@ -302,7 +302,11 @@ class PrescriptionController extends Controller
             }
         }
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $documentType = empty($errors) && empty($prescription->add_med)?'Documento con firmado':'Documento sin firmas';
+        if (!empty($errors) || !empty($prescription->add_med)) {
+            $documentType = 'Documento sin firmas';
+        } else {
+            $documentType = 'Documento con firmado';
+        }
         $res = $this->legalarioToken();
         if (!$res['success']) {
             return response()->json($res, 400);
@@ -603,7 +607,7 @@ class PrescriptionController extends Controller
             $prescription->save();
 
             $errors = $this->verifyPrescription($prescription->medicaments);
-            if (empty($errors) && empty($prescription->add_med)) {
+            if (!empty($errors) || !empty($prescription->add_med)) {
                 $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
                     'headers' => [
                         'Authorization' => "Bearer $token",
