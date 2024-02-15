@@ -538,7 +538,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 17,
                                 'name' => 'address',
-                                'value' => $prescription->room->address,
+                                'value' => $prescription->room->address . ', ' . $prescription->room->n_exterior . ', ' . $prescription->room->n_interior . ', ' . $prescription->room->colony . ', ' . $prescription->room->zip . ', ' . $prescription->room->delegation . ', ' . $prescription->room->state,
                             ]
                         ],
                         [
