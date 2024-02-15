@@ -418,7 +418,12 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 2,
                                 'name' => 'identification',
-                                'value' => $medic->specializations->first()->identification ?: '',
+                                'value' => implode(
+                                    ",",
+                                    array_map(function ($spec) {
+                                        return "$spec[name] Ced prof: $spec[identification]";
+                                    }, $medic->specializations->toArray())
+                                ),
                             ]
                         ],
                         [
@@ -453,7 +458,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 7,
                                 'name' => 'birth date',
-                                'value' => $date->diffInYears(new Carbon($patient->birth_date)),
+                                'value' => Carbon::createFromFormat('Y-m-d', $patient->birth_date)->format('d/m/Y'),
                             ]
                         ],
                         [
