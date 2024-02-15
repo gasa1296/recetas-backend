@@ -614,7 +614,7 @@ class PrescriptionController extends Controller
                 ]);
                 $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
                 $fileData = base64_decode(json_decode($res->getBody(), true)['data']['document']);
-                if (!Storage::put($dir, base64_decode($fileData))) {
+                if (!Storage::put($dir, $fileData)) {
                     return response()->json('Error guardando archivo', 500);
                 }
                 $prescription->file = '/api/receta/' . $prescription->id . '/file';
