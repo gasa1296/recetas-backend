@@ -64,7 +64,7 @@ class PrescriptionController extends Controller
 
         $instance = Prescription::create($inputs1);
 
-        if(empty($inputs1['medicaments'])) {
+        if (empty($inputs1['medicaments'])) {
             $document = $this->createDocument($instance);
             if ($document->getStatusCode() >= 300) {
                 return $document;
@@ -91,7 +91,7 @@ class PrescriptionController extends Controller
         $instance->medicaments()->createMany($inputs2);
 
         $document = $this->createDocument($instance);
-        if($document->getStatusCode() >= 300) {
+        if ($document->getStatusCode() >= 300) {
             return $document;
         }
 
@@ -303,8 +303,8 @@ class PrescriptionController extends Controller
         }
         $errors = $this->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || !empty($prescription->add_med)) {
-            $fileData = Storage::get(base_path() . $dir . "pdf");
+        if (!empty($errors) || $prescription->add_med != '[]') {
+            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
         } else {
             $zip = new ZipArchive;
             $status = $zip->open(base_path() . $dir . "zip");
@@ -315,10 +315,10 @@ class PrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
+            return response()->streamDownload(function () use ($fileData) {
+                echo $fileData;
+            }, 'receta.pdf');
         }
-        return response()->streamDownload(function () use ($fileData) {
-            echo $fileData;
-        }, 'receta.pdf');
     }
     /**
      * Verify if prescription can be sended or signed
@@ -495,7 +495,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 13,
                                 'name' => 'ppm',
-                                'value' => $prescription->ppm?: '',
+                                'value' => $prescription->ppm ?: '',
                             ]
                         ],
                         [
@@ -509,14 +509,16 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 15,
                                 'name' => 'medicaments',
-                                'value' => implode("\n",
+                                'value' => implode(
+                                    "\n",
                                     array_map(function ($medicament) {
                                         return "$medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] | $medicament[add] \n";
                                     }, $prescription->medicaments->toArray())
-                                ) . "\n" . implode("\n",
+                                ) . "\n" . implode(
+                                    "\n",
                                     array_map(function ($medicament) {
                                         return "$medicament[name] \n $medicament[indications] \n";
-                                    }, json_decode($prescription->add_med, true)?:[])
+                                    }, json_decode($prescription->add_med, true) ?: [])
                                 ) . "\n" . $prescription->add,
                             ]
                         ],
@@ -569,7 +571,7 @@ class PrescriptionController extends Controller
             $prescription->save();
 
             $errors = $this->verifyPrescription($prescription->medicaments);
-            if (!empty($errors) || !empty($prescription->add_med)) {
+            if (!empty($errors) || $prescription->add_med != '[]') {
                 $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
                     'headers' => [
                         'Authorization' => "Bearer $token",
@@ -612,7 +614,7 @@ class PrescriptionController extends Controller
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
-        
+
         try {
             $medic = $prescription->medic;
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
