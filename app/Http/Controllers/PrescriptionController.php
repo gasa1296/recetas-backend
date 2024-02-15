@@ -247,7 +247,7 @@ class PrescriptionController extends Controller
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
-        $instance->file = $dir;
+        $instance->file = '/api/receta/' . $instance->id . '/file';
         $instance->save();
         Log::debug('prescription', ['file' => $instance->file]);
         return (new PrescriptionResource($instance))->response();
@@ -577,6 +577,28 @@ class PrescriptionController extends Controller
             $prescription->document_id = json_decode($res->getBody(), true)['data']['id'];
             $prescription->save();
 
+            $errors = $this->verifyPrescription($prescription->medicaments);
+            if (empty($errors) && empty($prescription->add_med)) {
+                $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
+                    'headers' => [
+                        'Authorization' => "Bearer $token",
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json'
+                    ],
+                    'json' => [
+                        'document_id' => $prescription->document_id,
+                        "document_type" => 'Documento sin firmas',
+                        "format" => "Base64",
+                    ]
+                ]);
+                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
+                $fileData = base64_decode(json_decode($res->getBody(), true)['data']['document']);
+                if (!Storage::put($dir, base64_decode($fileData))) {
+                    return response()->json('Error guardando archivo', 500);
+                }
+                $prescription->file = '/api/receta/' . $prescription->id . '/file';
+                $prescription->save();
+            }
             return response()->json();
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true));
