@@ -328,6 +328,31 @@ class PrescriptionController extends Controller
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
+        /*
+        if (empty(auth()->user())) {
+            $token = $request->bearerToken();
+            if ($token != env('PUBLIC_KEY', '')) {
+                return response()->json(['token' => 'token invalido'], 403);
+            }
+        }
+        $errors = $this->verifyPrescription($prescription->medicaments);
+        $zip = new ZipArchive;
+        $status = $zip->open(base_path() . '/storage/app/' . $prescription->file);
+        if ($status !== true) {
+            return response()->json('error al obtener archivo 1', 500);
+        }
+        if (!empty($errors)) {
+            $fileData = $zip->getFromName('receta.pdf');
+        } else {
+            $fileData = $zip->getFromName('signed_receta.pdf');
+        }
+        if ($fileData === false) {
+            return response()->json('error al obtener archivo 2', 500);
+        }
+        return response()->streamDownload(function () use ($fileData) {
+            echo $fileData;
+        }, 'receta.pdf');
+        */
     }
     /**
      * Verify if prescription can be sended or signed
