@@ -52,15 +52,41 @@ class PrescriptionController extends Controller
             'diet' => ['nullable ', 'string'],
             'add' => ['nullable ', 'string'],
             'add_med' => ['nullable ', 'json'],
+            'medicaments' => ['nullable ', 'array'],
             'room_id' => ['required ', 'numeric'],
             'patient_id' => ['required ', 'numeric'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $inputs = $validator->safe()->all();
-        $inputs['user_id'] = auth()->id();
-        $instance = Prescription::create($inputs);
+        $inputs1 = $validator->safe()->all();
+        $inputs1['user_id'] = auth()->id();
+        
+        $validator = Validator::make($inputs1['medicaments'], [
+            '*.add' => ['nullable', 'string'],
+            '*.dose' => ['required', 'string'],
+            '*.way' => ['required', 'string'],
+            '*.frequency' => ['required', 'string'],
+            '*.duration' => ['required', 'string'],
+            '*.quantity' => ['required', 'numeric'],
+            '*.medicament_id' => ['required', 'numeric'],
+            '*.name' => ['required', 'string'],
+            '*.type' => ['required', 'string'],
+            '*.group' => ['required', 'string'],
+            '*.family' => ['required', 'string'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs2 = $validator->safe()->all();
+        
+        $instance = Prescription::create($inputs1);
+        $instance->medicaments()->createMany($inputs2);
+
+        $document = $this->createDocument($instance);
+        if($document->getStatusCode() >= 300) {
+            return $document;
+        }
 
         return (new PrescriptionResource($instance))->response();
     }

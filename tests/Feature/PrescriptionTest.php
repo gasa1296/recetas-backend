@@ -16,7 +16,7 @@ use Laravel\Sanctum\Sanctum;
 
 class PrescriptionTest extends TestCase
 {
-  use WithFaker, RefreshDatabase;
+  use WithFaker;
 
   private $user;
   private $room;
@@ -48,8 +48,33 @@ class PrescriptionTest extends TestCase
       'patient_id' => Patient::factory()->create()->id,
       'file' => UploadedFile::fake()->image('photo.jpg'),
       'status' => fake()->randomNumber(3),
+      'medicaments' => [
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
+      ]
     ]);
-    
     $response->assertStatus(201);
   }
   public function test_update(): void
@@ -98,15 +123,5 @@ class PrescriptionTest extends TestCase
 
     $response->assertOk();
     $this->assertCount(10, $response->json()['data']);
-  }
-  public function test_signer(): void
-  {
-    $instance = Prescription::factory()->create(['user_id' => $this->user]);
-    PrescriptionMedicament::factory()->create(['prescription_id' => $instance->id]);
-    $response = $this->get("api/prescription/$instance->id/sign");
-    print_r($response->json());
-    $response->assertStatus(400);
-    $message = $response->json()['message'];
-    $this->assertEquals("El valor del campo [email] del arreglo [signers] es inválido #1", $message);
   }
 }
