@@ -302,42 +302,12 @@ class PrescriptionController extends Controller
             }
         }
         $errors = $this->verifyPrescription($prescription->medicaments);
+        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         if (!empty($errors) || !empty($prescription->add_med)) {
-            $res = $this->legalarioToken();
-            if (!$res['success']) {
-                return response()->json($res, 400);
-            }
-            $token = $res['data']['access_token'];
-            try {
-                $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
-                    'headers' => [
-                        'Authorization' => "Bearer $token",
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json'
-                    ],
-                    'json' => [
-                        'document_id' => $prescription->document_id,
-                        "document_type" => 'Documento sin firmas',
-                        "format" => "Base64",
-                    ]
-                ]);
-                $fileData = base64_decode(json_decode($res->getBody(), true)['data']['document']);
-                return response()->streamDownload(function () use ($fileData) {
-                    echo $fileData;
-                }, 'receta.pdf');
-            } catch (ClientException $e) {
-                return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
-            }
+            $fileData = Storage::get(base_path() . $dir . "pdf");
         } else {
-            if (empty(auth()->user())) {
-                $token = $request->bearerToken();
-                if ($token != env('PUBLIC_KEY', '')) {
-                    return response()->json(['token' => 'token invalido'], 403);
-                }
-            }
-            $errors = $this->verifyPrescription($prescription->medicaments);
             $zip = new ZipArchive;
-            $status = $zip->open(base_path() . "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.zip");
+            $status = $zip->open(base_path() . $dir . "zip");
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -345,10 +315,10 @@ class PrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
-            return response()->streamDownload(function () use ($fileData) {
-                echo $fileData;
-            }, 'receta.pdf');
         }
+        return response()->streamDownload(function () use ($fileData) {
+            echo $fileData;
+        }, 'receta.pdf');
     }
     /**
      * Verify if prescription can be sended or signed
