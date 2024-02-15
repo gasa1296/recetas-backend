@@ -564,6 +564,9 @@ class PrescriptionController extends Controller
                     ]
                 ]
             ]);
+            $prescription->document_id = $res['data']['id'];
+            $prescription->save();
+            
             return response()->json();
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true));
