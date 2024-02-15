@@ -61,7 +61,16 @@ class PrescriptionController extends Controller
         }
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
-        
+
+        $instance = Prescription::create($inputs1);
+
+        if(empty($inputs1['medicaments'])) {
+            $document = $this->createDocument($instance);
+            if ($document->getStatusCode() >= 300) {
+                return $document;
+            }
+            return (new PrescriptionResource($instance))->response();
+        }
         $validator = Validator::make($inputs1['medicaments'], [
             '*.add' => ['nullable', 'string'],
             '*.dose' => ['required', 'string'],
@@ -79,8 +88,6 @@ class PrescriptionController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs2 = $validator->safe()->all();
-        
-        $instance = Prescription::create($inputs1);
         $instance->medicaments()->createMany($inputs2);
 
         $document = $this->createDocument($instance);
