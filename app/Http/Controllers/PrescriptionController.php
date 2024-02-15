@@ -341,11 +341,7 @@ class PrescriptionController extends Controller
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
-            if (!empty($errors)) {
-                $fileData = $zip->getFromName('receta.pdf');
-            } else {
-                $fileData = $zip->getFromName('signed_receta.pdf');
-            }
+            $fileData = $zip->getFromName('signed_receta.pdf');
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
