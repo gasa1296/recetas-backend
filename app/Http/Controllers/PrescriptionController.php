@@ -302,22 +302,32 @@ class PrescriptionController extends Controller
             }
         }
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $zip = new ZipArchive;
-        $status = $zip->open(base_path() . '/storage/app/' . $prescription->file);
-        if ($status !== true) {
-            return response()->json('error al obtener archivo 1', 500);
+        $documentType = empty($errors) && empty($prescription->add_med)?'Documento con firmado':'Documento sin firmas';
+        $res = $this->legalarioToken();
+        if (!$res['success']) {
+            return response()->json($res, 400);
         }
-        if (!empty($errors)) {
-            $fileData = $zip->getFromName('receta.pdf');
-        } else {
-            $fileData = $zip->getFromName('signed_receta.pdf');
+        $token = $res['data']['access_token'];
+        try {
+            $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json'
+                ],
+                'json' => [
+                    'document_id' => $prescription->document_id,
+                    "document_type" => $documentType,
+                    "format" => "Base64",
+                ]
+            ]);
+            $fileData = base64_decode(json_decode($res->getBody(), true)['data']['document']);
+            return response()->streamDownload(function () use ($fileData) {
+                echo $fileData;
+            }, 'receta.pdf');
+        } catch (ClientException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
-        if ($fileData === false) {
-            return response()->json('error al obtener archivo 2', 500);
-        }
-        return response()->streamDownload(function () use ($fileData) {
-            echo $fileData;
-        }, 'receta.pdf');
     }
     /**
      * Verify if prescription can be sended or signed
