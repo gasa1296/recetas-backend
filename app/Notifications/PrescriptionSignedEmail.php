@@ -41,7 +41,7 @@ class PrescriptionSignedEmail extends Notification
         return (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
             'base_url' => env('APP_URL', '') . '/storage/'
-        ])->attachData($this->fileData, 'receta.pdf');
+        ])->attachData($this->fileData, 'receta.pdf')->subject('Receta médica electrónica');
     }
     public function toWhatsApp(object $notifiable)
     {
