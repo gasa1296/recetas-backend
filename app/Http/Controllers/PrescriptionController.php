@@ -394,6 +394,7 @@ class PrescriptionController extends Controller
         try {
             $medic = $prescription->medic;
             $patient = $prescription->patient;
+            $room = $prescription->room;
             Log::debug('timestamp', [$prescription->created_at]);
             $date = new Carbon($prescription->created_at);
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
@@ -405,7 +406,7 @@ class PrescriptionController extends Controller
                 'json' => [
                     'name' => 'Receta',
                     'type' => 'template',
-                    'template_id' => $prescription->room->design,
+                    'template_id' => $room->design,
                     'sequence' => [
                         [
                             [
@@ -531,14 +532,14 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 16,
                                 'name' => 'room',
-                                'value' => $prescription->room->name ?: '',
+                                'value' => $room->name ?: '',
                             ]
                         ],
                         [
                             [
                                 'key' => 17,
                                 'name' => 'address',
-                                'value' => $prescription->room->address . ', ' . $prescription->room->n_exterior . ', ' . $prescription->room->n_interior . ', ' . $prescription->room->colony . ', ' . $prescription->room->zip . ', ' . $prescription->room->delegation . ', ' . $prescription->room->state,
+                                'value' => $room->address . ', ' . $room->n_exterior . ', ' . $room->n_interior . ', ' . $room->colony . ', ' . $room->zip . ', ' . $room->delegation . ', ' . $room->state,
                             ]
                         ],
                         [
