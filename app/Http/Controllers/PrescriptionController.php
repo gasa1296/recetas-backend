@@ -517,7 +517,7 @@ class PrescriptionController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($medicament) {
-                                        return "$medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] | $medicament[add] \n";
+                                        return "$medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
                                     }, $prescription->medicaments->toArray())
                                 ) . "\n" . implode(
                                     "\n",
