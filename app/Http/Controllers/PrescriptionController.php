@@ -595,6 +595,7 @@ class PrescriptionController extends Controller
                 if (!Storage::put($dir, $fileData)) {
                     return response()->json('Error guardando archivo', 500);
                 }
+                $prescription->status = 5;
                 $prescription->file = '/api/receta/' . $prescription->id . '/file';
                 $prescription->save();
             }
