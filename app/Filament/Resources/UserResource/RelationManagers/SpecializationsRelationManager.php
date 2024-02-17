@@ -22,6 +22,7 @@ class SpecializationsRelationManager extends RelationManager
                     ->maxLength(255),
                 TextInput::make('identification')
                     ->required()
+                    ->unique()
                     ->maxLength(255),
                 TextInput::make('university')
                     ->required()

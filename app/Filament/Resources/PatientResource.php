@@ -57,6 +57,8 @@ class PatientResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('first_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name1')
@@ -68,6 +70,7 @@ class PatientResource extends Resource
                 Tables\Columns\TextColumn::make('phone1')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone2')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gender')
                     ->searchable(),

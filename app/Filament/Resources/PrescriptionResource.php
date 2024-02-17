@@ -33,6 +33,8 @@ class PrescriptionResource extends Resource
                 Forms\Components\Select::make('patient_id')
                     ->relationship('patient', 'id')
                     ->required(),
+                Forms\Components\TextInput::make('document_id')
+                    ->required(),
                 Forms\Components\TextInput::make('temp')
                     ->numeric(),
                 Forms\Components\TextInput::make('weight')
@@ -58,11 +60,15 @@ class PrescriptionResource extends Resource
                 Forms\Components\Textarea::make('add')
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                #TODO add_med fields
+                Forms\Components\TextInput::make('client')
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('file')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('status')
                     ->required()
                     ->numeric()
+                    ->maxValue(5)
                     ->default(0),
             ]);
     }
@@ -71,30 +77,17 @@ class PrescriptionResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('medic.email')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('room.name')
-                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('patient.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('patient_full_name')
+                    ->formatStateUsing(function ($record) {
+                        return $record->first_name . ' ' . $record->last_name1;
+                    })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('temp')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('weight')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('height')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('pressure')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('saturation')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('ppm')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->numeric()
                     ->sortable(),
@@ -131,7 +124,6 @@ class PrescriptionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EquipmentRelationManager::class,
             MedicamentsRelationManager::class,
         ];
     }

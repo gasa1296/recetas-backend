@@ -46,7 +46,7 @@ class RoomsRelationManager extends RelationManager
                     ->tel()
                     ->maxLength(255),
                 FileUpload::make('logo'),
-                Toggle::make('design')
+                TextInput::make('design')
                     ->required(),
             ]);
     }
