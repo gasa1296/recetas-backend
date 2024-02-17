@@ -7,7 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\{TextInput, Toggle, FileUpload};
+use Filament\Forms\Components\{TextInput, Select, FileUpload};
 
 class RoomsRelationManager extends RelationManager
 {
@@ -46,7 +46,12 @@ class RoomsRelationManager extends RelationManager
                     ->tel()
                     ->maxLength(255),
                 FileUpload::make('logo'),
-                TextInput::make('design')
+                Select::make('design')
+                    ->options([
+                        'Diseno 1' => env('F1'),
+                        'Diseno 2' => env('F2'),
+                        'Diseno 3' => env('F3'),
+                    ])
                     ->required(),
             ]);
     }
