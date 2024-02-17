@@ -539,7 +539,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 17,
                                 'name' => 'address',
-                                'value' => $room->address . ', ' . $room->n_exterior . ', ' . $room->n_interior . ', ' . $room->colony . ', ' . $room->zip . ', ' . $room->delegation . ', ' . $room->state,
+                                'value' => $room->street . ', ' . $room->n_exterior . ', ' . $room->n_interior . ', ' . $room->colony . ', ' . $room->zip . ', ' . $room->delegation . ', ' . $room->state,
                             ]
                         ],
                         [
@@ -568,6 +568,20 @@ class PrescriptionController extends Controller
                                 'key' => 21,
                                 'name' => 'bar',
                                 'value' => base64_encode($prescription->id) ?: '',
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 22,
+                                'name' => 'specializations_logo',
+                                'value' => env('APP_URL') . '/storage/' . $prescription->specializations->first()->logo,
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => 23,
+                                'name' => 'room_logo',
+                                'value' => env('APP_URL') .'/storage/' . $room->logo,
                             ]
                         ],
                     ]
