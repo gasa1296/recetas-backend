@@ -48,6 +48,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'type' => fake()->word(),
                 'family' => fake()->word(),
                 'group' => fake()->word(),
+                'salt' => fake()->word(),
                 'medicament_id' => fake()->randomNumber(),
             ],
             [
@@ -60,6 +61,7 @@ class PrescriptionMedicamentTest extends TestCase
                 'type' => fake()->word(),
                 'family' => fake()->word(),
                 'group' => fake()->word(),
+                'salt' => fake()->word(),
                 'medicament_id' => fake()->randomNumber(),
             ],
         ]);
@@ -81,6 +83,7 @@ class PrescriptionMedicamentTest extends TestCase
             'type' => fake()->word(),
             'family' => fake()->word(),
             'group' => fake()->word(),
+            'salt' => fake()->word(),
         ]);
         $response->assertOk();
     }

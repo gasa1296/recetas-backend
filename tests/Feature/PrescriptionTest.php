@@ -59,6 +59,7 @@ class PrescriptionTest extends TestCase
           'type' => fake()->word(),
           'family' => fake()->word(),
           'group' => fake()->word(),
+          'salt' => fake()->word(),
           'medicament_id' => fake()->randomNumber(),
         ],
         [
@@ -71,6 +72,7 @@ class PrescriptionTest extends TestCase
           'type' => fake()->word(),
           'family' => fake()->word(),
           'group' => fake()->word(),
+          'salt' => fake()->word(),
           'medicament_id' => fake()->randomNumber(),
         ],
       ]
