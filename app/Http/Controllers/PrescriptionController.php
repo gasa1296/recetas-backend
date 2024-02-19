@@ -83,6 +83,7 @@ class PrescriptionController extends Controller
             '*.type' => ['required', 'string'],
             '*.group' => ['required', 'string'],
             '*.family' => ['required', 'string'],
+            '*.salt' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -539,7 +540,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 17,
                                 'name' => 'address',
-                                'value' => $room->street . ', ' . $room->n_exterior . ', ' . $room->n_interior . ', ' . $room->colony . ', ' . $room->zip . ', ' . $room->delegation . ', ' . $room->state,
+                                'value' => "$room->street, $room->n_exterior, $room->n_interior, $room->colony, $room->zip, $room->delegation, $room->state",
                             ]
                         ],
                         [

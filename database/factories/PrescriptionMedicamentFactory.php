@@ -29,6 +29,7 @@ class PrescriptionMedicamentFactory extends Factory
             'type' => fake()->word(),
             'family' => fake()->word(),
             'group' => fake()->word(),
+            'salt' => fake()->word(),
             'prescription_id' => Prescription::factory()->create()->id,
         ];
     }

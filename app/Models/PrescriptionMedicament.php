@@ -28,6 +28,7 @@ class PrescriptionMedicament extends Model
         'type',
         'family',
         'group',
+        'salt',
         'prescription_id',
     ];
     /**
