@@ -574,7 +574,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 22,
                                 'name' => 'specializations_logo',
-                                'value' => env('APP_URL') . '/storage/' . $prescription->specializations->first()->logo,
+                                'value' => env('APP_URL') . '/storage/' . $medic->specializations->first()->logo,
                             ]
                         ],
                         [
