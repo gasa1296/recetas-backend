@@ -32,7 +32,8 @@ class PrescriptionController extends Controller
      */
     public function index(): JsonResponse
     {
-        $qs = Prescription::where('user_id', auth()->id());
+        $qs = Prescription::where('user_id', auth()->id())
+            ->orderBy('id', 'desc');
         return PrescriptionResource::collection($qs->paginate(10))->response();
     }
     /**
