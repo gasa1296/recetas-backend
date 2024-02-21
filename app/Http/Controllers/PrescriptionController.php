@@ -297,12 +297,6 @@ class PrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
-        if (empty(auth()->user())) {
-            $token = $request->bearerToken();
-            if ($token != env('PUBLIC_KEY', '')) {
-                return response()->json(['token' => 'token invalido'], 403);
-            }
-        }
         $errors = $this->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         if (!empty($errors) || $prescription->add_med != '[]') {
@@ -329,7 +323,7 @@ class PrescriptionController extends Controller
     {
         $errors = [];
         foreach ($medicaments as $medicament) {
-            if (in_array($medicament->group, ['Grupo II', 'Grupo III', 'RESTRICCION ANTIBIOTICOS'])) {
+            if (in_array($medicament->group, ['Grupo II', 'Grupo III'])) {
                 $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
             }
         }
@@ -568,22 +562,29 @@ class PrescriptionController extends Controller
                         [
                             [
                                 'key' => 21,
-                                'name' => 'bar',
-                                'value' => base64_encode($prescription->id) ?: '',
+                                'name' => 'university',
+                                'value' => $medic->specializations->first()->university ?: '',
                             ]
                         ],
                         [
                             [
-                                'key' => 22,
+                                'key' => "IMAGEN_CLIENTE_UNIVERSIDAD",
                                 'name' => 'specializations_logo',
-                                'value' => env('APP_URL') . '/storage/' . $medic->specializations->first()->logo,
+                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $medic->specializations->first()->logo)),
                             ]
                         ],
                         [
                             [
-                                'key' => 23,
+                                'key' => "IMAGEN_CLIENTE_HOSPITAL",
                                 'name' => 'room_logo',
-                                'value' => env('APP_URL') .'/storage/' . $room->logo,
+                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
+                            ]
+                        ],
+                        [
+                            [
+                                'key' => "IMAGEN_CLIENTE_BARRAS",
+                                'name' => 'barcode',
+                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
                             ]
                         ],
                     ]
