@@ -214,7 +214,7 @@ class PrescriptionController extends Controller
                     continue;
                 }
             }
-            if ($medicament->quantity_exp != $medicament->quantity) {
+            if ($medicament->quantity_exp < $medicament->quantity) {
                 $completed = false;
             }
         }
