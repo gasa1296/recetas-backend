@@ -616,7 +616,7 @@ class PrescriptionController extends Controller
                     return response()->json('Error guardando archivo', 500);
                 }
                 $prescription->status = 5;
-                $prescription->file = '/api/receta/' . $prescription->id . '/file';
+                $prescription->file = env('APP_URL') . '/api/receta/' . $prescription->id . '/file';
                 $prescription->save();
             }
             return response()->json();
