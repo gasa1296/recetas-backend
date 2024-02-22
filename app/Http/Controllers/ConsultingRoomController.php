@@ -54,9 +54,6 @@ class ConsultingRoomController extends Controller
             }
             if (empty($el['id'])) {
                 $el['user_id'] = $user;
-                if (empty($el['logo'])) {
-                    return response()->json(['logo' => [$key => "El campo logo es obligatorio."]], 400);
-                }
                 $instance = ConsultingRoom::create($el);
             } else {
                 $instance = ConsultingRoom::where('id', $el['id'])
