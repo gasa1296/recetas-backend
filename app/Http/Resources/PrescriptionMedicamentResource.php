@@ -27,6 +27,7 @@ class PrescriptionMedicamentResource extends JsonResource
             'type' => $this->type,
             'family' => $this->family,
             'group' => $this->group,
+            'salt' => $this->salt,
             'medicament_id' => $this->medicament_id,
         ];
     }
