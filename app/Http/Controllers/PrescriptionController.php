@@ -226,6 +226,7 @@ class PrescriptionController extends Controller
         } else {
             $prescription->status = 1;
         }
+        $prescription->save();
         $prescription->push();
 
         return (new PrescriptionResource($prescription))->response();
