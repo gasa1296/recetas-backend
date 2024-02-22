@@ -202,30 +202,33 @@ class PrescriptionController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $completed = true;
+        $completeds = [];
         $errors = [];
         $inputs = $validator->safe()->all();
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
+            $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
             if (!empty($inputs[$med_id])) {
-                $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
-                if ($medicament->quantity_exp > $medicament->quantity && $medicament->group == 'RESTRICCION ANTIBIOTICOS') {
-                    $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
-                    continue;
+                if ($medicament->group == 'RESTRICCION ANTIBIOTICOS') {
+                    if ($medicament->quantity_exp > $medicament->quantity) {
+                        $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
+                        continue;
+                    }
+                    if ($medicament->quantity_exp == $medicament->quantity) {
+                        $completeds[$med_id] = true;
+                    }
                 }
-            }
-            if ($medicament->quantity_exp < $medicament->quantity) {
-                $completed = false;
             }
         }
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
-        if ($completed) {
+        if (!empty($completeds)) {
             $prescription->status = 2;
         } else {
             $prescription->status = 1;
         }
+        $prescription->save();
         $prescription->push();
 
         return (new PrescriptionResource($prescription))->response();
@@ -514,7 +517,7 @@ class PrescriptionController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($medicament) {
-                                        return "$medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
+                                        return "$medicament[salt] $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
                                     }, $prescription->medicaments->toArray())
                                 ) . "\n" . implode(
                                     "\n",
