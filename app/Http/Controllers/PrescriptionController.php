@@ -252,7 +252,7 @@ class PrescriptionController extends Controller
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
-        $instance->file = '/api/receta/' . $instance->id . '/file';
+        $instance->file = env('APP_URL') . '/api/receta/' . $instance->id . '/file';
         $instance->save();
         Log::debug('prescription', ['file' => $instance->file]);
         return (new PrescriptionResource($instance))->response();
