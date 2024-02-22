@@ -566,7 +566,7 @@ class PrescriptionController extends Controller
                                 'value' => $medic->specializations->first()->university ?: '',
                             ]
                         ],
-                        [
+                        /*[
                             [
                                 'key' => "IMAGEN_CLIENTE_UNIVERSIDAD",
                                 'name' => 'specializations_logo',
@@ -586,7 +586,7 @@ class PrescriptionController extends Controller
                                 'name' => 'barcode',
                                 'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
                             ]
-                        ],
+                        ],*/
                     ]
                 ]
             ]);
@@ -618,7 +618,7 @@ class PrescriptionController extends Controller
             }
             return response()->json();
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true));
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
     /**
