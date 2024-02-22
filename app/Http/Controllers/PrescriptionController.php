@@ -207,8 +207,8 @@ class PrescriptionController extends Controller
         $inputs = $validator->safe()->all();
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
-            $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
             if (!empty($inputs[$med_id])) {
+                $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
                 if ($medicament->group == 'RESTRICCION ANTIBIOTICOS') {
                     if ($medicament->quantity_exp > $medicament->quantity) {
                         $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
