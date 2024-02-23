@@ -40,7 +40,7 @@ class ConsultingRoomController extends Controller
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
-            'logo.*' => ['nullable', 'file'],
+            'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
