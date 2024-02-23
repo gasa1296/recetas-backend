@@ -573,14 +573,14 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 1001,
                                 'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
-                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $medic->specializations->first()->logo)),
+                                'value' => base64_encode(Storage::disk('public')->get($medic->specializations->first()->logo)),
                             ]
                         ],
                         [
                             [
                                 'key' => 1002,
                                 'name' => 'IMAGEN_CLIENTE_HOSPITAL',
-                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
+                                'value' => base64_encode(Storage::disk('public')->get($room->logo)),
                             ]
                         ],
                         /*[
