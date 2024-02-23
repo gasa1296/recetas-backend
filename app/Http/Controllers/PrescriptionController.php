@@ -223,7 +223,7 @@ class PrescriptionController extends Controller
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
-        if (!empty($completeds)) {
+        if (!empty($completeds) && $prescription->medicaments->count() == count($completeds)) {
             $prescription->status = 2;
         } else {
             $prescription->status = 1;
@@ -569,24 +569,24 @@ class PrescriptionController extends Controller
                                 'value' => $medic->specializations->first()->university ?: '',
                             ]
                         ],
-                        /*[
+                        [
                             [
-                                'key' => "IMAGEN_CLIENTE_UNIVERSIDAD",
-                                'name' => 'specializations_logo',
+                                'key' => 1001,
+                                'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
                                 'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $medic->specializations->first()->logo)),
                             ]
                         ],
                         [
                             [
-                                'key' => "IMAGEN_CLIENTE_HOSPITAL",
-                                'name' => 'room_logo',
+                                'key' => 1002,
+                                'name' => 'IMAGEN_CLIENTE_HOSPITAL',
                                 'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
                             ]
                         ],
-                        [
+                        /*[
                             [
-                                'key' => "IMAGEN_CLIENTE_BARRAS",
-                                'name' => 'barcode',
+                                'key' => 1003,
+                                'name' => 'IMAGEN_CLIENTE_BARRAS',
                                 'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
                             ]
                         ],*/
