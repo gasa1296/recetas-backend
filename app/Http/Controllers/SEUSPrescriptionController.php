@@ -21,8 +21,12 @@ class SEUSPrescriptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $folio)
+    public function show(Request $request, string $folio)
     {
+        $token = $request->bearerToken();
+        if ($token != env('PUBLIC_KEY', '')) {
+            return response()->json(['token' => 'token invalido'], 403);
+        }
         $prescription = $this->getPrescription($folio);
         return(new PrescriptionResource($prescription))->response();
     }
@@ -167,7 +171,8 @@ class SEUSPrescriptionController extends Controller
 
         return(new PrescriptionResource($prescription))->response();
     }
-    private function getPrescription(string $folio) {
+    private function getPrescription(string $folio) 
+    {
         $timestampUnix = hexdec($folio);
         $timestampCarbon = Carbon::createFromTimestamp($timestampUnix)->toDateTimeString('microsecond');
         return Prescription::where('created_at', '=', $timestampCarbon)->firstOrFail(); 
