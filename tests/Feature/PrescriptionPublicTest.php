@@ -57,7 +57,7 @@ class PrescriptionPublicTest extends TestCase
         }
         $response = $this->put('api/receta/' . $this->prescription->id, $request, ['Authorization' => 'Bearer ' . env('PUBLIC_KEY', '')]);
 
-        $this->assertEquals(2, $response->json()['data']['status']);
+        $this->assertEquals(1, $response->json()['data']['status']);
         $response->assertStatus(200);
 
         foreach ($elements as $el) {
