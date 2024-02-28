@@ -6,6 +6,7 @@ use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\ResetController;
+use App\Http\Controllers\SEUSPrescriptionController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
@@ -31,14 +32,14 @@ Route::controller(ResetController::class)->prefix('password')->name('password.')
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
 });
-Route::controller(PrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
+Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
     Route::get('', 'getByClient');
     Route::post('file', 'addFile');
-    Route::get('{prescription}', 'show');
-    Route::post('{prescription}', 'addClient');
-    Route::put('{prescription}', 'updateStatus');
+    Route::get('{folio}', 'show');
+    Route::post('{folio}', 'addClient');
+    Route::put('{folio}', 'updateStatus');
     Route::get('medicament/{desc}', 'getMedicament');
-    Route::get('{prescription}/file', 'getFile')->name('getFile');
+    Route::get('{folio}/file', 'getFile')->name('getFile');
 });
 Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {
     Route::get('designs', 'getFormats')->name('designs');
