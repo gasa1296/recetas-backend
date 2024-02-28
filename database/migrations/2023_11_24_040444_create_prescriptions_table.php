@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('document_id')->nullable();
             $table->integer('status')->default(0);
             
-            $table->timestamps();
+            $table->timestamps(6);
             $table->softDeletes();
         });
     }
