@@ -38,7 +38,6 @@ Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('pu
     Route::get('{folio}', 'show');
     Route::post('{folio}', 'addClient');
     Route::put('{folio}', 'updateStatus');
-    Route::get('medicament/{desc}', 'getMedicament');
     Route::get('{folio}/file', 'getFile')->name('getFile');
 });
 Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {

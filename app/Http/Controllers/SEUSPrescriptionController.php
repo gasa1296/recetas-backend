@@ -167,23 +167,6 @@ class SEUSPrescriptionController extends Controller
 
         return(new PrescriptionResource($prescription))->response();
     }
-    /**
-     * Display a medicament of the prescription.
-     */
-    public function getMedicament(int $desc)
-    {
-        $reponse = $this->client->post(
-            'https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos',
-            [
-                'json' => [
-                    "hash" => "initial",
-                    "descripcion" => (string) $desc,
-                ]
-            ]
-        );
-        $body = json_decode($reponse->getBody(), true);
-        return response()->json($body['Respuesta'][0]);
-    }
     private function getPrescription(string $folio) {
         $timestampUnix = hexdec($folio);
         $timestampCarbon = Carbon::createFromTimestamp($timestampUnix)->toDateTimeString('microsecond');
