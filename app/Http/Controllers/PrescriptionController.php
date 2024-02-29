@@ -62,6 +62,7 @@ class PrescriptionController extends Controller
         }
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
+        $inputs1['code'] = dechex(Carbon::now()->getPreciseTimestamp(6));
 
         $instance = Prescription::create($inputs1);
 

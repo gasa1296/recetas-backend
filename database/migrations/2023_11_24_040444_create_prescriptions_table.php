@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('file')->nullable();
             $table->string('document_id')->nullable();
             $table->integer('status')->default(0);
-            
+            $table->string('code');
             $table->timestamps(6);
             $table->softDeletes();
         });

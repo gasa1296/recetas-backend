@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Prescription>
@@ -37,6 +38,7 @@ class PrescriptionFactory extends Factory
             'room_id' => $room->id,
             'patient_id' => Patient::factory()->create()->id,
             'status' => fake()->randomElement([0,1,2]),
+            'code' => dechex(Carbon::now()->getPreciseTimestamp(6)),
         ];
     }
 }

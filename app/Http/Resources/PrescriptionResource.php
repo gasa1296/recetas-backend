@@ -35,6 +35,7 @@ class PrescriptionResource extends JsonResource
             'equipment' => PrescriptionEquipmentResource::collection($this->equipment),
             'file' => $this->file,
             'status' => $this->status,
+            'code' => $this->code,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

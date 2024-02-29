@@ -36,6 +36,7 @@ class Prescription extends Model
         'document_id',
         'file',
         'status',
+        'code',
     ];
     /**
      * Get the medic of the prescription.
