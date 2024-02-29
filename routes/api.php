@@ -35,10 +35,10 @@ Route::controller(ResetController::class)->prefix('password')->name('password.')
 Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
     Route::get('', 'getByClient');
     Route::post('file', 'addFile');
-    Route::get('{folio}', 'show');
-    Route::post('{folio}', 'addClient');
-    Route::put('{folio}', 'updateStatus');
-    Route::get('{folio}/file', 'getFile')->name('getFile');
+    Route::get('{prescription:code}', 'show');
+    Route::post('{prescription:code}', 'addClient');
+    Route::put('{prescription:code}', 'updateStatus');
+    Route::get('{prescription:code}/file', 'getFile')->name('getFile');
 });
 Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {
     Route::get('designs', 'getFormats')->name('designs');
