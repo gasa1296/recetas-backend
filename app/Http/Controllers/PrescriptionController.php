@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
+use Milon\Barcode\DNS1D;
 
 
 class PrescriptionController extends Controller
@@ -462,13 +463,13 @@ class PrescriptionController extends Controller
                                 'value' => base64_encode(Storage::disk('public')->get($room->logo)),
                             ]
                         ],
-                        /*[
+                        [
                             [
                                 'key' => 1003,
                                 'name' => 'IMAGEN_CLIENTE_BARRAS',
-                                'value' => base64_encode(Storage::get(base_path() . '/storage/app/public/' . $room->logo)),
+                                'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C39'),
                             ]
-                        ],*/
+                        ],
                     ]
                 ]
             ]);
