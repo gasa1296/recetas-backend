@@ -21,13 +21,12 @@ class SEUSPrescriptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string $folio)
+    public function show(Request $request, Prescription $prescription)
     {
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        $prescription = $this->getPrescription($folio);
         return(new PrescriptionResource($prescription))->response();
     }
     /**
@@ -61,7 +60,7 @@ class SEUSPrescriptionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function addClient(Request $request, string $folio)
+    public function addClient(Request $request, Prescription $prescription)
     {
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
@@ -77,16 +76,14 @@ class SEUSPrescriptionController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->only('client');
-        $prescription = $this->getPrescription($folio);
         $prescription->update($inputs);
         return(new PrescriptionResource($prescription))->response();
     }
     /**
      * Download precription file
      */
-    public function getFile(Request $request, string $folio)
+    public function getFile(Request $request, Prescription $prescription)
     {
-        $prescription = $this->getPrescription($folio);
         $errors = $this->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         if (!empty($errors) || $prescription->add_med != '[]') {
@@ -127,7 +124,7 @@ class SEUSPrescriptionController extends Controller
     /**
      * Display a listing of the resource by client.
      */
-    public function updateStatus(Request $request, string $folio)
+    public function updateStatus(Request $request, Prescription $prescription)
     {
         $token = $request->bearerToken();
         if ($token != env('PUBLIC_KEY', '')) {
@@ -142,7 +139,6 @@ class SEUSPrescriptionController extends Controller
         $completeds = [];
         $errors = [];
         $inputs = $validator->safe()->all();
-        $prescription = $this->getPrescription($folio);
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
             if (!empty($inputs[$med_id])) {
@@ -170,11 +166,5 @@ class SEUSPrescriptionController extends Controller
         $prescription->push();
 
         return(new PrescriptionResource($prescription))->response();
-    }
-    private function getPrescription(string $folio) 
-    {
-        $timestampUnix = hexdec($folio);
-        $timestampCarbon = Carbon::createFromTimestamp($timestampUnix)->toDateTimeString('microsecond');
-        return Prescription::where('created_at', '=', $timestampCarbon)->firstOrFail(); 
     }
 }
