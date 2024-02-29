@@ -59,6 +59,9 @@ class ConsultingRoomController extends Controller
                 $instance = ConsultingRoom::where('id', $el['id'])
                     ->where('user_id', auth()->id())
                     ->firstOrFail();
+                if (empty($request->file('logo')[$key]) && empty($el['file'])) {
+                    Storage::disk('public')->delete($instance->logo);
+                }
                 $instance->update($el);
             }
             array_push($instances, $instance);

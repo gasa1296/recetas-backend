@@ -32,6 +32,7 @@ class SpecializationController extends Controller
             'data.*.name' => ['required', 'string'],
             'data.*.identification' => ['required'],
             'data.*.university' => ['nullable', 'string'],
+            'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
 
@@ -54,6 +55,9 @@ class SpecializationController extends Controller
                     $instance = Specialization::where('id', $el['id'])
                         ->where('user_id', auth()->id())
                         ->firstOrFail();
+                    if (empty($request->file('logo')[$key]) && empty($el['file'])) {
+                        Storage::disk('public')->delete($instance->logo);
+                    }
                     $instance->update($el);
                 }
             } catch (QueryException $e) {
