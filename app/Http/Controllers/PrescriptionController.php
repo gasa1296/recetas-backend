@@ -309,7 +309,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 3,
                                 'name' => 'id',
-                                'value' => dechex((new Carbon($prescription->created_at))->timestamp),
+                                'value' => $prescription->code,
                             ]
                         ],
                         [
