@@ -62,6 +62,7 @@ class ConsultingRoomController extends Controller
                     ->firstOrFail();
                 if (empty($request->file('logo')[$key]) && empty($el['file'])) {
                     Storage::disk('public')->delete($instance->logo);
+                    $el['file'] = '';
                 }
                 $instance->update($el);
             }
