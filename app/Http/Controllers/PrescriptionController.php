@@ -463,13 +463,13 @@ class PrescriptionController extends Controller
                                 'value' => base64_encode(Storage::disk('public')->get($room->logo)),
                             ]
                         ],
-                        [
+                        /*[
                             [
                                 'key' => 1003,
                                 'name' => 'IMAGEN_CLIENTE_BARRAS',
                                 'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C39'),
                             ]
-                        ],
+                        ],*/
                     ]
                 ]
             ]);
