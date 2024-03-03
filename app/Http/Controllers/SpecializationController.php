@@ -55,8 +55,8 @@ class SpecializationController extends Controller
                     $instance = Specialization::where('id', $el['id'])
                         ->where('user_id', auth()->id())
                         ->firstOrFail();
-                    if (empty($request->file('logo')[$key]) && empty($el['file'])) {
-                        Storage::disk('public')->delete($instance->logo);
+                    if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
+                        Storage::disk('public')->delete($instance->logo ?: '');
                         $el['file'] = '';
                     }
                     $instance->update($el);

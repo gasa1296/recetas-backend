@@ -60,8 +60,8 @@ class ConsultingRoomController extends Controller
                 $instance = ConsultingRoom::where('id', $el['id'])
                     ->where('user_id', auth()->id())
                     ->firstOrFail();
-                if (empty($request->file('logo')[$key]) && empty($el['file'])) {
-                    Storage::disk('public')->delete($instance->logo);
+                if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
+                    Storage::disk('public')->delete($instance->logo ?: '');
                     $el['file'] = '';
                 }
                 $instance->update($el);
@@ -109,7 +109,7 @@ class ConsultingRoomController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
+            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
             if ($inputs['logo'] && !empty($room->logo)) {
                 Storage::delete($room->logo);
             }
@@ -126,7 +126,7 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        if (!empty($room->logo)){
+        if (!empty($room->logo)) {
             Storage::delete($room->logo);
         }
         $room->delete();
