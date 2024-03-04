@@ -102,7 +102,7 @@ class ConsultingRoomController extends Controller
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
             'design' => ['nullable', 'string'],
-            'logo' => ['nullable', 'file'],
+            'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

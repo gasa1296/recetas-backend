@@ -58,10 +58,10 @@ class AuthController extends Controller
             'specializations.*.name' => ['required', 'string'],
             'specializations.*.identification' => ['required', 'unique:specializations'],
             'specializations.*.university' => ['nullable', 'string'],
-            'logo_room' => ['required', 'array'],
-            'logo_spec' => ['required', 'array'],
-            'logo_room.*' => ['required', 'file'],
-            'logo_spec.*' => ['required', 'file'],
+            'logo_room' => ['nullable', 'array'],
+            'logo_spec' => ['nullable', 'array'],
+            'logo_room.*' => ['nullable', 'file', 'mimes:jpg,png'],
+            'logo_spec.*' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -70,7 +70,7 @@ class AuthController extends Controller
         $instance = User::create($inputs);
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
-            if ($request->file('logo_room') && $request->file('logo_room')[$key]) {
+            if (!empty($request->file('logo_room')[$key])) {
                 $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id, 'public');
                 $el['logo'] = $file;
             }
@@ -78,7 +78,7 @@ class AuthController extends Controller
             ConsultingRoom::create($el);
         }
         foreach ($inputs['specializations'] as $key => $el) {
-            if ($request->file('logo_spec') && $request->file('logo_spec')[$key]) {
+            if (empty($request->file('logo_spec')[$key])) {
                 $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id, 'public');
                 $el['logo'] = $file;
             }
