@@ -78,7 +78,7 @@ class AuthController extends Controller
             ConsultingRoom::create($el);
         }
         foreach ($inputs['specializations'] as $key => $el) {
-            if (empty($request->file('logo_spec')[$key])) {
+            if (!empty($request->file('logo_spec')[$key])) {
                 $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id, 'public');
                 $el['logo'] = $file;
             }
