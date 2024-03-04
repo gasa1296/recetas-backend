@@ -17,6 +17,23 @@ export const getRecipeSign = (recipeId: string) => {
   });
 };
 
+export const sendRecipeByWhatsapp = (recipeId: string) => {
+  return Api({
+    method: "GET",
+    endpoint: `/room`,
+  });
+  /*   return Api({
+    endpoint: `/prescription/${recipeId}/sign`,
+    method: "GET",
+  }); */
+};
+
+export const sendRecipeByEmail = (recipeId: string) => {
+  return Api({
+    endpoint: `/prescription/${recipeId}/email`,
+    method: "GET",
+  });
+};
 export const addRecipeMedicament = (
   recipeId: string,
   medicamentPayload: IMedicament[]

@@ -1,8 +1,7 @@
 import useCustomEffect from "@/hooks/useCustomEffect";
 import { useRoomsStore } from "@/store/rooms";
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "@/types/Generals/FormGenerator";
-import Tooltip from "../Components/Tooltip";
 
 export default function InputRoom({
   register,
@@ -13,11 +12,23 @@ export default function InputRoom({
   disabled,
   watch,
   tooltip,
+  setValue,
   width = 100,
 }: Field) {
   const GetRooms = useRoomsStore((state) => state.GetRooms);
   const rooms = useRoomsStore((state) => state.rooms);
   useCustomEffect({ requestGet: GetRooms });
+
+  const values: any = watch();
+
+  useEffect(() => {
+    if (rooms && rooms?.length === 1 && !values[name]) {
+      const firstRoomInput = document.getElementById("room-1");
+      if (firstRoomInput) {
+        firstRoomInput.click();
+      }
+    }
+  }, [rooms]);
 
   return (
     <div style={{ width: `${width}%` }} className="px-2 pt-6 full-width">

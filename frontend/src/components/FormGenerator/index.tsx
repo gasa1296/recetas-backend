@@ -16,6 +16,7 @@ interface Props {
   setReload?: (reload: boolean) => void;
   schema?: any;
   externalError?: any;
+  focus?: boolean;
 }
 
 export default function FormGenerator({
@@ -30,6 +31,7 @@ export default function FormGenerator({
   setReload,
   schema,
   externalError = [],
+  focus = false,
 }: Props) {
   const {
     handleSubmit,
@@ -38,6 +40,7 @@ export default function FormGenerator({
     setValue,
     watch,
     setError,
+    setFocus,
   } = useForm({
     resolver: schema ? yupResolver(schema) : undefined,
     defaultValues: getDefaultValues(fields, isSubform),
@@ -55,6 +58,19 @@ export default function FormGenerator({
       });
     }
   }, [reload]);
+
+  useEffect(() => {
+    if (focus && fields.length > 0) {
+      setFocus(fields[0].name);
+
+      const firstFieldName = fields[0].name;
+
+      const element = document.getElementById(firstFieldName);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [focus, fields, setFocus]);
 
   useEffect(() => {
     const hasNonEmptyValue = Object.values(allFields).some(
@@ -93,6 +109,11 @@ export default function FormGenerator({
             watch={watch}
             setError={setError}
             {...field}
+            label={
+              isSubform && isSubform > 0
+                ? field.secondLabel || field.label
+                : field.label
+            }
           />
         );
       })}

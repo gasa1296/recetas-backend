@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 import { getRecipeDate, getStatusName } from "@/utils/getDateFormat";
-import { useMedicamentStore } from "@/store/medicaments";
 import { usePacients } from "@/store/pacients";
 import { calculateAge } from "@/utils/getAge";
-import Image from "next/image";
-import medicineLogo from "@/assets/images/medicine.png";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+import { MdOutlineArrowBackIos, MdOutlineLocalPrintshop } from "react-icons/md";
+import toast from "react-hot-toast";
+import LoadingModal from "@/components/Loading/LoadingModal";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function RecipesData({ nextStep, backStep }: any) {
   const submitData = async (data: any) => {
@@ -18,6 +18,9 @@ export default function RecipesData({ nextStep, backStep }: any) {
     SetStep: state.SetStep,
   }));
 
+  const newMedicaments = JSON.parse(selectedRecipe?.add_med || "[]");
+
+  const [downloadLoading, setDownloadLoading] = useState(false);
   const fields: Field[] = [
     {
       label: "Fecha",
@@ -68,6 +71,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       width: 50,
       disabled: true,
       default: selectedRecipe?.patient?.phone1,
+      maxFile: 10,
     },
     {
       label: "Edad *",
@@ -100,7 +104,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       default: selectedRecipe?.weight,
     },
     {
-      label: "Talla (cm)",
+      label: "Altura (cm)",
       name: "height",
       type: "number",
       width: 33,
@@ -110,7 +114,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
     {
       label: "Presión arterial",
       name: "pressure",
-      type: "number",
+      type: "text",
       width: 33,
       disabled: true,
       default: selectedRecipe?.pressure,
@@ -165,7 +169,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       required: true,
       type: "medicaments",
       disabled: true,
-      default: selectedRecipe?.medicaments,
+      default: [...newMedicaments, ...(selectedRecipe?.medicaments || [])],
     },
     {
       label: "Separation",
@@ -174,15 +178,57 @@ export default function RecipesData({ nextStep, backStep }: any) {
     },
   ];
 
+  const handlePrint = async () => {
+    try {
+      setDownloadLoading(true);
+      const token: string | null = await localStorage.getItem("sessionToken");
+      const response = await fetch(
+        `${baseUrl}/api/prescription/${selectedRecipe?.id}/file`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+
+      const blob = new Blob([await response.blob()], {
+        type: "application/pdf",
+      });
+
+      const blobUrl = URL.createObjectURL(blob);
+
+      window.open(blobUrl, "_blank");
+
+      setDownloadLoading(false);
+    } catch (err) {
+      setDownloadLoading(false);
+      toast.error("Error al descargar la receta");
+      console.error("Error al obtener el PDF:", err);
+    }
+  };
+
   return (
     <section>
-      <div className="flex items-center  mb-4 p-2 ps-3 container-dashboard">
+      {downloadLoading && <LoadingModal />}
+      <div className="flex items-center justify-between  mb-4 p-2 ps-3 container-dashboard">
         <button
           onClick={() => SetStep(2)}
           className="button-BlacK flex justify-center items-center p-2 w-[120px] "
         >
           <MdOutlineArrowBackIos size={20} />
           <p className="ms-1"> Regresar</p>
+        </button>
+        <button
+          onClick={handlePrint}
+          className="flex  justify-center items-center border button-print  mw-[15%] mx-3 text-[20px]  p-1 px-10"
+        >
+          <MdOutlineLocalPrintshop size={18} />
+          <p className="mx-2 "> Imprimir</p>
         </button>
       </div>
       <div className="  mb-4 p-2 ps-3 container-dashboard">

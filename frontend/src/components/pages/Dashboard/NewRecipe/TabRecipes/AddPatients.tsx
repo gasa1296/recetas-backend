@@ -50,7 +50,7 @@ export default function AddPatients({ nextStep, backStep }: any) {
       label: "Correo electrónico *",
       name: "email",
       required: true,
-      type: "text",
+      type: "email",
       width: 50,
     },
     {
@@ -59,13 +59,15 @@ export default function AddPatients({ nextStep, backStep }: any) {
       required: true,
       type: "text",
       width: 50,
+      maxFile: 10,
     },
     {
       label: "Teléfono fijo",
       name: "Landline",
-      required: true,
+      required: false,
       type: "text",
       width: 50,
+      maxFile: 10,
     },
     {
       label: "Seleccionar Género *",

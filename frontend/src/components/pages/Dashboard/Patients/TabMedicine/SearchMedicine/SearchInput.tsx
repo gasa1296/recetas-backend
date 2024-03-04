@@ -9,11 +9,15 @@ export default function SearchInput() {
     selectedMedicamentDefault,
     SearchMedicaments,
     SelectMedicament,
+    search,
+    SetSearch,
   } = useMedicamentStore((state) => ({
     loading: state.loading,
     selectedMedicamentDefault: state.selectedMedicamentDefault,
     SearchMedicaments: state.SearchMedicaments,
     SelectMedicament: state.SelectMedicament,
+    search: state.search,
+    SetSearch: state.SetSearch,
   }));
 
   const medicineOptions: any = [];
@@ -25,12 +29,14 @@ export default function SearchInput() {
       value={selectedMedicamentDefault}
       isSearchable={true}
       name="color"
+      inputValue={search}
       options={medicineOptions || []}
       styles={colourStyles}
       isLoading={loading}
       noOptionsMessage={() => null}
-      onInputChange={(value) => {
+      onInputChange={(value, action) => {
         if (value) SearchMedicaments(value);
+        if (action.action === "input-change") SetSearch(value);
 
         return value;
       }}

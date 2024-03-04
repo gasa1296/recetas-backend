@@ -20,7 +20,7 @@ export default function Profile() {
     return () => setClearForms();
   }, []);
   return (
-    <section className="px-3 md:px-12  mt-8 ">
+    <section className="mx-2  md:mx-8 pt-4">
       {/* <div className=' container-dashboard'>
                 <button onClick={() => router.push(`/dashboard`)} className='button-BlacK flex justify-center items-center p-2 w-[150px] '><MdOutlineArrowBackIos size={20} /> <p className='ms-1'>  Volver al inicio</p>    </button>
             </div> */}

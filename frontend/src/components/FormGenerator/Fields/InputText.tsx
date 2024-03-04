@@ -13,6 +13,7 @@ export default function InputText({
   visible,
   watch,
   tooltip,
+  maxFile,
   width = 100,
 }: Field) {
   const values: any = watch();
@@ -44,6 +45,7 @@ export default function InputText({
         name={name}
         disabled={disabled}
         type="text"
+        maxLength={maxFile}
         {...register(name, { required })}
         className={`w-full form-control my-2 text-[16px] m-0 p-3 rounded-md border-[#DBE2EA] border-2 focus:outline-none ${
           error && "border-red-400 "

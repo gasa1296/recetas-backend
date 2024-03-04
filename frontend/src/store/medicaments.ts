@@ -23,8 +23,10 @@ type IState = {
   selectedMedicamentDefault: IMedicamentDefault | null;
   error: string | null;
   step: number;
+  search: string;
   confirmRecipForm: IConfirmRecipForm;
   SearchMedicaments: (search: string) => any;
+  SetSearch: (search: string) => any;
   ResetMedicaments: () => any;
   SelectMedicament: (medicamentId: string) => any;
   SetStep: (step: number) => any;
@@ -55,10 +57,15 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   cardMedicament: [],
   selectedMedicament: null,
   selectedMedicamentDefault: null,
+  search: "",
 
   SetStep: (step: number) => {
     set({ step });
   },
+  SetSearch: (search: string) => {
+    set({ search });
+  },
+
   SetConfirmForm: (confirmRecipForm: IConfirmRecipForm) => {
     set({ confirmRecipForm });
   },
@@ -68,7 +75,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   },
 
   SearchMedicaments: async (search: string = "") => {
-    set({ loading: true });
+    set({ loading: true, search });
     try {
       const timeIdState = get().timeId;
       timeIdState && clearTimeout(timeIdState);
@@ -79,7 +86,9 @@ export const useMedicamentStore = create<IState>((set, get) => ({
           const resultExternal = await getSearchExternalMedicament(search);
 
           set({
-            medicaments: resultExternal.data.Respuesta,
+            medicaments: resultExternal.data.Respuesta.filter(
+              (medicament: any) => medicament.clasificacionsa !== "Grupo I"
+            ),
             step: 2,
             loading: false,
             timeId: null,
@@ -88,7 +97,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
           toast.error(error.message);
           set({ error: error.message, loading: false, timeId: null });
         }
-      }, 500);
+      }, 1000);
 
       set({ timeId });
     } catch (error: any) {
@@ -149,6 +158,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
       set({
         cardMedicament: [...cardMedicament, medicamentPayload],
         step: 1,
+        search: "",
       });
 
       toast.success("Medicamento agregado correctamente");

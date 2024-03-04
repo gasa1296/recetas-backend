@@ -10,6 +10,7 @@ export interface IMedicament {
   via?: string;
   clasificacionsa?: string;
   tipoproducto?: string;
+  information?: string;
 }
 
 export interface IMedicamentDefault {

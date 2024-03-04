@@ -2,6 +2,7 @@ import { StaticImageData } from "next/image";
 
 export interface Field {
   label?: string;
+  secondLabel?: string;
   name: string;
   required?: boolean;
   type: FieldTypeString;
@@ -39,6 +40,8 @@ export interface Field {
   recetasOptions?: { image: StaticImageData; value: string }[];
   externalError?: any;
   minLength?: number;
+  max?: number;
+  min?: number;
 }
 
 export interface FieldType {
