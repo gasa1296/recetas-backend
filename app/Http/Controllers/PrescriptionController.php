@@ -63,7 +63,7 @@ class PrescriptionController extends Controller
         }
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
-        $inputs1['code'] = dechex(Carbon::now()->getPreciseTimestamp(6));
+        $inputs1['code'] = base_convert(Carbon::now()->getPreciseTimestamp(6), 10, 36);
 
         $instance = Prescription::create($inputs1);
 
@@ -463,13 +463,13 @@ class PrescriptionController extends Controller
                                 'value' => empty($room->logo)?'':base64_encode(Storage::disk('public')->get($room->logo)),
                             ]
                         ],
-                        /*[
+                        [
                             [
                                 'key' => 1003,
                                 'name' => 'IMAGEN_CLIENTE_BARRAS',
                                 'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C39'),
                             ]
-                        ],*/
+                        ],
                     ]
                 ]
             ]);
