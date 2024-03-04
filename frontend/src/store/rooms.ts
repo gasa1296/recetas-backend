@@ -1,8 +1,8 @@
 // authStore.ts
 
 import {
+  getRoomDesigns,
   getRooms,
-  postRooms,
   removeRooms,
   updateRooms,
 } from "@/services/rooms";
@@ -13,16 +13,21 @@ import { create } from "zustand";
 type AuthState = {
   loading: boolean;
   loadingUpdate: boolean;
+  loadingDesign: boolean;
   rooms: IRoom[] | null;
+  roomDesigns: any | null;
   error: string | null;
   GetRooms: () => any;
+  getRoomDesigns: () => any;
   UpdateRooms: (profilePayload: IRoom[]) => any;
 };
 
 export const useRoomsStore = create<AuthState>((set, get) => ({
   // Estado inicial
   rooms: null,
+  roomDesigns: null,
   loading: false,
+  loadingDesign: false,
   loadingUpdate: false,
   error: null,
 
@@ -43,6 +48,22 @@ export const useRoomsStore = create<AuthState>((set, get) => ({
       set({ error: error.message });
     } finally {
       set({ loading: false });
+    }
+  },
+
+  getRoomDesigns: async () => {
+    set({ loadingDesign: true });
+    try {
+      const result = await getRoomDesigns();
+
+      set({
+        roomDesigns: result.data,
+      });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    } finally {
+      set({ loadingDesign: false });
     }
   },
 

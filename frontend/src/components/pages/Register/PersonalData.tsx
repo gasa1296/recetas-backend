@@ -61,14 +61,16 @@ export default function PersonalData({ nextStep }: any) {
       type: "text",
       width: 50,
       default: form1?.phone1 || "",
+      maxFile: 10,
     },
     {
-      label: "Teléfono fijo *",
+      label: "Teléfono fijo",
       name: "phone2",
-      required: true,
+      required: false,
       type: "text",
       width: 50,
       default: form1?.phone2 || "",
+      maxFile: 10,
     },
     {
       label: "Seleccionar Género *",
@@ -78,6 +80,7 @@ export default function PersonalData({ nextStep }: any) {
       options: [
         { label: "Masculino", value: "0" },
         { label: "Femenino", value: "1" },
+        { label: "Indefinido", value: "2" },
       ],
       width: 50,
       default: form1?.gender || "",

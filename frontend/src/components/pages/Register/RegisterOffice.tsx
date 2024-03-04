@@ -10,6 +10,7 @@ import Receta3 from "@/assets/images/recetas/Receta3.png";
 import React from "react";
 import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
 import useScrollToTop from "@/hooks/useScrollToTop";
+import { useRoomsStore } from "@/store/rooms";
 
 export default function RegisterOffice({ nextStep, backStep }: any) {
   const setForm3 = useRegisterStore((state) => state.setForm3);
@@ -17,6 +18,8 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
   const submitData = async () => {
     nextStep();
   };
+
+  const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
   useScrollToTop();
 
@@ -44,7 +47,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
       buttonAddText: "Agregar otro consultorio",
       maxFile: 1,
       width: 100,
-      default: form3?.rooms || [
+      default: form3?.rooms ?? [
         {
           name: "",
           zip: "",
@@ -75,7 +78,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "name",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Codigo Postal *",
@@ -84,7 +87,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "zip",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Calle *",
@@ -93,7 +96,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "street",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Colonia *",
@@ -102,7 +105,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "colony",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Estado *",
@@ -111,7 +114,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "state",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Delegación o Municipio *",
@@ -120,7 +123,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "delegation",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Número exterior *",
@@ -129,7 +132,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "n_exterior",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Número interior (Opcional)",
@@ -138,7 +141,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "n_interior",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Piso / Nº de local / No. Consultorio (Opcional)",
@@ -147,7 +150,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "text",
           width: 50,
           subFormKey: "address",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
         {
           label: "Teléfono de consultorio (Opcional)",
@@ -155,18 +158,19 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           required: false,
           type: "text",
           width: 50,
+          maxFile: 10,
           subFormKey: "phone",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
         },
 
         {
-          label: "Agrega el logotipo de su consultorio",
+          label: "Agrega el logotipo de su consultorio *",
           name: "files",
-          required: true,
+          required: false,
           type: "file",
           width: 100,
           subFormKey: "files",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
           maxFile: 1,
         },
 
@@ -185,11 +189,11 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           type: "recetas",
           width: 100,
           subFormKey: "design",
-          default: form3?.rooms || "",
+          default: form3?.rooms ?? "",
           recetasOptions: [
-            { image: Receta1, value: "1" },
-            { image: Receta2, value: "2" },
-            { image: Receta3, value: "3" },
+            { image: Receta1, value: roomDesigns && roomDesigns[0] },
+            { image: Receta2, value: roomDesigns && roomDesigns[1] },
+            { image: Receta3, value: roomDesigns && roomDesigns[2] },
           ],
         },
       ],

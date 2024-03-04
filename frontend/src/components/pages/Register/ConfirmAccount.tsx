@@ -11,6 +11,7 @@ import { SpecializationSchema } from "@/utils/ValidationSchema/SpecializationSch
 import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import LoadingModal from "@/components/Loading/LoadingModal";
+import { useRoomsStore } from "@/store/rooms";
 
 export default function ConfirmAccount({ nextStep, backStep }: any) {
   const { form3, form2, form1, handleSubmit, loading } = useRegisterStore(
@@ -22,6 +23,8 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       loading: state.loading,
     })
   );
+
+  const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
   useScrollToTop();
 
@@ -86,14 +89,16 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       type: "text",
       width: 50,
       default: form1?.phone1 || "",
+      maxFile: 10,
     },
     {
-      label: "Teléfono fijo *",
+      label: "Teléfono fijo",
       name: "phone2",
-      required: true,
+      required: false,
       type: "text",
       width: 50,
       default: form1?.phone2 || "",
+      maxFile: 10,
     },
     {
       label: "Seleccionar Género *",
@@ -103,6 +108,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       options: [
         { label: "Masculino", value: "0" },
         { label: "Femenino", value: "1" },
+        { label: "Indefinido", value: "2" },
       ],
       width: 50,
       default: form1?.gender || "",
@@ -156,7 +162,8 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       ],
       form: [
         {
-          label: "Datos especialidad",
+          label: "Datos licenciatura",
+          secondLabel: "Datos especialidad",
           name: "title",
           required: true,
           type: "title",
@@ -164,6 +171,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
         },
         {
           label: "Licenciatura *",
+          secondLabel: "Especialidad *",
           name: "name",
           required: true,
           type: "text",
@@ -181,7 +189,8 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           default: form2?.specializations || "",
         },
         {
-          label: "Institución que otorga licenciatura *",
+          label: "Institución que otorga la licenciatura *",
+          secondLabel: "Institución que otorga la especialidad *",
           name: "university",
           required: true,
           type: "text",
@@ -193,7 +202,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           label: "Agrega el logotipo de tu Universidad *",
           name: "file",
           maxFile: 1,
-          required: true,
+          required: false,
           type: "file",
           width: 100,
           subFormKey: "file",
@@ -333,9 +342,9 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
         },
 
         {
-          label: "Agrega el logotipo de su consultorio",
+          label: "Agrega el logotipo de su consultorio *",
           name: "files",
-          required: true,
+          required: false,
           type: "file",
           width: 100,
           subFormKey: "files",
@@ -360,9 +369,9 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           subFormKey: "design",
           default: form3?.rooms || "",
           recetasOptions: [
-            { image: Receta1, value: "1" },
-            { image: Receta2, value: "2" },
-            { image: Receta3, value: "3" },
+            { image: Receta1, value: roomDesigns[0] },
+            { image: Receta2, value: roomDesigns[1] },
+            { image: Receta3, value: roomDesigns[2] },
           ],
         },
       ],

@@ -23,6 +23,51 @@ export default function InputFile({
   const MAX_SIZE_FILE = 10;
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Funciones para manejar el drag & drop
+  const onDragOver = (event: React.DragEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    // Aquí podrías cambiar el estado para mostrar que el drag está activo
+  };
+
+  const onDragLeave = (event: React.DragEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    // Aquí podrías cambiar el estado para mostrar que el drag ha terminado
+  };
+
+  const onDrop = (event: React.DragEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    const files = event.dataTransfer.files;
+    processFiles(files);
+  };
+
+  const processFiles = (inputFiles: FileList) => {
+    const fileArray = Array.from(inputFiles);
+
+    fileArray.forEach((file, index) => {
+      // Puedes aplicar filtros o validaciones adicionales aquí
+      if (
+        previews.length + index < MAX_UPLOAD_ITEMS &&
+        file.type.startsWith("image/")
+      ) {
+        const preview: string = URL.createObjectURL(file);
+        customChange &&
+          customChange({ setValue, newValue: [...files, file], values });
+        setValue(name, [...files, file]);
+        setFiles((prev) => [...prev, file]);
+        setPreviews((prev) => [...prev, preview]);
+      } else {
+        toast.error(
+          `Solo puedes subir ${MAX_UPLOAD_ITEMS} ${
+            MAX_UPLOAD_ITEMS > 1 ? "fotos" : "foto"
+          }`
+        );
+      }
+    });
+  };
+
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>): void => {
     const { files: inputFiles } = event.target;
 
@@ -131,37 +176,44 @@ export default function InputFile({
                 e.preventDefault();
                 onDelete(index);
               }}
-              className="absolute z-[100] top-0 right-0  mt-2 me-2 p-1 pt-0"
+              className="absolute z-[10] top-0 right-0  mt-2 me-2 p-1 pt-0"
             >
-              <AiFillCloseCircle size={20} color="white" />
+              <AiFillCloseCircle size={20} color="red" />
             </button>
           </div>
         ))}
 
         {previews.length < maxFile && (
-          <button
-            className={` bg-white mx-auto  ${
-              error && "border-red-400"
-            } border-separate border-2`}
-            style={{
-              width: "150px",
-              height: "150px",
-              borderStyle: "dashed",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              fileRef.current?.click();
-            }}
+          <div
+            className="drop-area" // Añade las clases de estilo necesarias
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
           >
-            <AiFillCamera
-              size={40}
-              color="#313131"
-              className=" mx-auto block"
-            />
-            <p className=" text-[14px] px-2 text-[#5C5C5C]">
-              Agrega o arrastra tus fotos aquí
-            </p>
-          </button>
+            <button
+              className={` bg-white mx-auto  ${
+                error && "border-red-400"
+              } border-separate border-2`}
+              style={{
+                width: "150px",
+                height: "150px",
+                borderStyle: "dashed",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                fileRef.current?.click();
+              }}
+            >
+              <AiFillCamera
+                size={40}
+                color="#313131"
+                className=" mx-auto block"
+              />
+              <p className=" text-[14px] px-2 text-[#5C5C5C]">
+                Agrega o arrastra tus fotos aquí
+              </p>
+            </button>
+          </div>
         )}
       </div>
     </div>

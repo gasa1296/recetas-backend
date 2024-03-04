@@ -4,12 +4,19 @@ import { Field } from "@/types/Generals/FormGenerator";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import { useMedicamentStore } from "@/store/medicaments";
 import { IMedicament } from "@/types/Models/Medicament";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 export default function AddNewMedicine({ nextStep, backStep }: any) {
-  const { CreateMedicament, SetStep } = useMedicamentStore((state) => ({
-    CreateMedicament: state.CreateMedicament,
-    SetStep: state.SetStep,
-  }));
+  const { CreateMedicament, SetStep, search, SetSearch } = useMedicamentStore(
+    (state) => ({
+      CreateMedicament: state.CreateMedicament,
+      SetStep: state.SetStep,
+      search: state.search,
+      SetSearch: state.SetSearch,
+    })
+  );
+
+  useScrollToTop();
 
   function generateUUID() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -31,6 +38,7 @@ export default function AddNewMedicine({ nextStep, backStep }: any) {
       name: "name",
       required: true,
       type: "text",
+      default: search || "",
     },
     {
       label: "Indicaciones adicionales*",
@@ -51,7 +59,10 @@ export default function AddNewMedicine({ nextStep, backStep }: any) {
             Llene los datos para su medicamento
           </p>
           <button
-            onClick={() => SetStep(1)}
+            onClick={() => {
+              SetStep(1);
+              SetSearch("");
+            }}
             className="button-BlacK flex justify-center items-center p-2 w-[120px] mt-4 "
           >
             <FaTrash size={20} /> <p className="ms-1"> Eliminar</p>{" "}

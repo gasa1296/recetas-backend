@@ -18,13 +18,16 @@ type IState = {
   loadingAction: boolean;
   pacients: IPacient[] | null;
   selectedPacient: IPacient | null;
+  editPacient: IPacient | null;
   selectedPacientDefault: IDefaultPacient | null;
   error: string | null;
   selectedRecipe: IRecipes | null;
+
   GetPacients: () => any;
   SearchPacients: (search: string) => any;
   SetStep: (step: number) => any;
   SetTabStep: (step: number) => any;
+  EditPacient: (pacientPayload: IPacient | null) => any;
   CreatePacient: (pacientPayload: IPacient) => any;
   UpdatePacient: (pacientPayload: IPacient) => any;
   SelectPacient: (pacientEmail: string) => any;
@@ -38,6 +41,7 @@ export const usePacients = create<IState>((set, get) => ({
   step: 1,
   tabStep: 0,
   pacients: null,
+  editPacient: null,
   loading: false,
   loadingAction: false,
   error: null,
@@ -69,6 +73,10 @@ export const usePacients = create<IState>((set, get) => ({
     set({ step });
   },
 
+  EditPacient: (pacient: IPacient | null) => {
+    set({ step: pacient ? 3 : 2, editPacient: pacient });
+  },
+
   SetTabStep: (step: number) => {
     set({ tabStep: step });
   },
@@ -92,7 +100,7 @@ export const usePacients = create<IState>((set, get) => ({
           toast.error(error.message);
           set({ error: error.message, loading: false, timeId: null });
         }
-      }, 500);
+      }, 1000);
 
       set({ timeId });
     } catch (error: any) {
@@ -167,6 +175,17 @@ export const usePacients = create<IState>((set, get) => ({
       const result = await updatePatient(pacientPayload);
 
       toast.success("Paciente actualizado correctamente");
+
+      const findPacient = result.data.data;
+
+      set({
+        step: 2,
+        selectedPacient: findPacient,
+        selectedPacientDefault: {
+          value: findPacient.email,
+          label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
+        },
+      });
       return result;
     } catch (error: any) {
       toast.error(error.message);

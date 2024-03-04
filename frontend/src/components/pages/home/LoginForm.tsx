@@ -1,4 +1,7 @@
 import { useAuthStore } from "@/store/auth";
+import { useMedicamentStore } from "@/store/medicaments";
+import { usePacients } from "@/store/pacients";
+import { useRecipeStore } from "@/store/recipes";
 import { ILoginPayload } from "@/types/Store/Register";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -11,9 +14,24 @@ export default function LoginForm() {
     loading: state.loading,
   }));
 
+  const ClearRecipe = useRecipeStore((state) => state.ClearRecipe);
+  const ResetPacients = usePacients((state) => state.ResetPacients);
+  const SetTabStep = usePacients((state) => state.SetTabStep);
+  const { ResetMedicaments } = useMedicamentStore((state) => ({
+    ResetMedicaments: state.ResetMedicaments,
+  }));
+
   const submitData = async (data: ILoginPayload) => {
     const result = await Login(data);
-    if (result) router.push("/dashboard");
+    if (result) {
+      router.push("/dashboard");
+
+      //Reset old data
+      ResetPacients();
+      ResetMedicaments();
+      SetTabStep(0);
+      ClearRecipe();
+    }
   };
   const {
     handleSubmit,

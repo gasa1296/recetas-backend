@@ -16,7 +16,6 @@ export const RoomSchema = yup.object().shape({
     .nullable(),
 
   design: yup.string().required("El diseno es requerido"),
-  files: yup.array().min(1).required("Los archivos son requeridos"),
 });
 
 export const RoomProfileSchema = yup.object().shape({
@@ -38,5 +37,4 @@ export const RoomProfileSchema = yup.object().shape({
     .nullable(),
 
   design: yup.string().required("El diseno es requerido"),
-  logo: yup.array().min(1).required("Los archivos son requeridos"),
 });

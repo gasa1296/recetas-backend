@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { FaFilePrescription } from "react-icons/fa";
 import { useMedicamentStore } from "@/store/medicaments";
 import { usePacients } from "@/store/pacients";
 import { useRecipeStore } from "@/store/recipes";
+import LoadingModal from "@/components/Loading/LoadingModal";
 
 export default function Nav({ setScreen }: any) {
   const { user } = useAuthStore((state) => ({
@@ -18,6 +19,9 @@ export default function Nav({ setScreen }: any) {
   }));
 
   const router = useRouter();
+  const loading = useRecipeStore((state) => state.loading);
+  const ClearRecipe = useRecipeStore((state) => state.ClearRecipe);
+  const [time, setTime] = useState<any>("");
 
   const ResetPacients = usePacients((state) => state.ResetPacients);
   const SetTabStep = usePacients((state) => state.SetTabStep);
@@ -28,14 +32,26 @@ export default function Nav({ setScreen }: any) {
     cardMedicament: state.cardMedicament,
   }));
   const { formattedTime, correctedDate } = getDateFormat("");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <nav className=" p-5 block md:flex justify-between  bg-[#FFFFFF] container-nav sticky top-0 z-[100]  ">
+      {loading && <LoadingModal />}
       <div className=" absolute flex items-center justify-center top-6 right-14 md:hidden">
         <button
           onClick={() => {
             ResetPacients();
             ResetMedicaments();
             SetTabStep(0);
+            ClearRecipe();
           }}
           disabled={cardMedicament.length ? false : true}
           className="flex justify-center items-center   py-1 disabled:opacity-50 relative top-[19px]"
@@ -91,6 +107,7 @@ export default function Nav({ setScreen }: any) {
             ResetPacients();
             ResetMedicaments();
             SetTabStep(0);
+            ClearRecipe();
           }}
           disabled={cardMedicament.length ? false : true}
           className="flex justify-center items-center border border-1 border-[#000] px-3 py-1 disabled:opacity-50"
