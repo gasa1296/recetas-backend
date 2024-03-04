@@ -4,6 +4,8 @@ import { validateAuthPath } from "./helper";
 import { useAuthStore } from "@/store/auth";
 import AuthLayout from "../Layouts/AuthLayout";
 import Loading from "../Loading";
+import { useRoomsStore } from "@/store/rooms";
+import useCustomEffect from "@/hooks/useCustomEffect";
 
 interface Props {
   children: JSX.Element;
@@ -13,6 +15,9 @@ export default function AuthWrapper({ children }: Props) {
   const [loading, setLoading] = useState(true);
   const isAuth = useAuthStore((state) => state.isAuth);
   const RecoverUser = useAuthStore((state) => state.RecoverUser);
+
+  const getRoomDesigns = useRoomsStore((state) => state.getRoomDesigns);
+  const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
   const router = useRouter();
 
@@ -38,6 +43,8 @@ export default function AuthWrapper({ children }: Props) {
     setTimeout(() => setLoading(false), 1000);
     setActive(true);
   };
+
+  useCustomEffect({ requestGet: getRoomDesigns });
 
   useEffect(() => {
     getAuthSession();

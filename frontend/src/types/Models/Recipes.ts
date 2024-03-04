@@ -19,5 +19,5 @@ export interface IRecipes {
   status?: number;
   created_at: string;
   room?: any;
-  add_med?: IMedicament[];
+  add_med?: string;
 }

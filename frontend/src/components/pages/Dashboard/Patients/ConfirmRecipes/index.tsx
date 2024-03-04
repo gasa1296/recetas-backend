@@ -12,9 +12,11 @@ import { validateSameObject } from "@/utils/isSameObject";
 import { IConfirmRecipForm } from "@/types/Models/Medicament";
 import { useRecipeStore } from "@/store/recipes";
 import { useAuthStore } from "@/store/auth";
+import LoadingModal from "@/components/Loading/LoadingModal";
 
 export default function ConfirmRecipes({ nextStep, backStep }: any) {
   const CreateRecipe = useRecipeStore((state) => state.CreateRecipe);
+  const loading = useRecipeStore((state) => state.loading);
   const user = useAuthStore((state) => state.user);
 
   const {
@@ -43,7 +45,10 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       cardMedicament
     );
 
-    nextStep();
+    if (result) {
+      if (result.missingSign) nextStep(4);
+      else nextStep();
+    }
   };
 
   const { selectedPacient } = usePacients((state) => ({
@@ -97,6 +102,7 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       width: 50,
       disabled: true,
       default: selectedPacient?.phone1,
+      maxFile: 10,
     },
     {
       label: "Edad *",
@@ -127,7 +133,7 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       default: confirmRecipForm?.weight,
     },
     {
-      label: "Talla (cm)",
+      label: "Altura (cm)",
       name: "height",
       type: "number",
       width: 33,
@@ -136,7 +142,7 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
     {
       label: "Presión arterial",
       name: "pressure",
-      type: "number",
+      type: "text",
       width: 33,
       default: confirmRecipForm?.pressure,
     },
@@ -206,6 +212,7 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       default: confirmRecipForm?.room_id,
     },
   ];
+
   return (
     <section className="">
       <div className="flex items-center  mb-4 p-2 ps-3 container-dashboard">
@@ -230,7 +237,7 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
           <FormGenerator
             submitData={submitData}
             fields={fields}
-            loading={false}
+            loading={loading}
             buttonText="Continuar"
             onFormChange={(form) => {
               if (validateSameObject(confirmRecipForm as object, form)) {
@@ -240,11 +247,12 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
             renderButton={(handleSubmit) => (
               <div className=" w-full px-2">
                 <button
+                  disabled={loading}
                   onClick={(e) => {
                     e.preventDefault();
                     handleSubmit(submitData);
                   }}
-                  className="button-BlacK  w-full px-3 p-3 text-center mt-5 "
+                  className="button-BlacK disabled:opacity-75  w-full px-3 p-3 text-center mt-5 "
                 >
                   Confirmar
                 </button>

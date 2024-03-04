@@ -21,6 +21,8 @@ export default function Offices() {
       UpdateRooms: state.UpdateRooms,
     }));
 
+  const roomDesigns = useRoomsStore((state) => state.roomDesigns);
+
   const submitData = async (data: { rooms: IRoom[] }) => {
     const result = await UpdateRooms(data.rooms);
     if (result) GetRooms();
@@ -171,13 +173,14 @@ export default function Offices() {
           type: "text",
           width: 50,
           subFormKey: "phone",
+          maxFile: 10,
           default: rooms || "",
         },
 
         {
-          label: "Agrega el logotipo de su consultorio",
+          label: "Agrega el logotipo de su consultorio *",
           name: "logo",
-          required: true,
+          required: false,
           type: "file",
           width: 100,
           subFormKey: "logo",
@@ -202,9 +205,9 @@ export default function Offices() {
           subFormKey: "design",
           default: rooms || "",
           recetasOptions: [
-            { image: Receta1, value: "1" },
-            { image: Receta2, value: "2" },
-            { image: Receta3, value: "3" },
+            { image: Receta1, value: roomDesigns[0] },
+            { image: Receta2, value: roomDesigns[1] },
+            { image: Receta3, value: roomDesigns[2] },
           ],
         },
       ],

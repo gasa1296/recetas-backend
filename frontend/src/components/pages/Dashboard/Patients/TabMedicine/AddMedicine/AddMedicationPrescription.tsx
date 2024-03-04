@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import medicineLogo from "@/assets/images/medicine.png";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 import { useMedicamentStore } from "@/store/medicaments";
 import { IMedicament } from "@/types/Models/Medicament";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 export default function AddMedicationPrescription({ setStep }: any) {
   const { CreateMedicament, selectedMedicament } = useMedicamentStore(
@@ -15,13 +15,34 @@ export default function AddMedicationPrescription({ setStep }: any) {
       selectedMedicament: state.selectedMedicament,
     })
   );
+  useScrollToTop();
 
   const submitData = async (data: IMedicament) => {
     CreateMedicament({ ...data, ...selectedMedicament });
   };
+
+  const getVigencia = (vigencia?: string) => {
+    switch (vigencia) {
+      case "Grupo II":
+        return "(Vigente por 30 dias)";
+      case "Grupo III":
+        return "(Vigente por 180 dias)";
+      case "RESTRICCION ANTIBIOTICOS":
+        return "(Vigente por duración del tratamiento)";
+      default:
+        return "";
+    }
+  };
+
+  const getMaxAmount = (group?: string) => {
+    if (group === "Grupo II" || group === "Group III") return true;
+
+    return false;
+  };
+
   const fields: Field[] = [
     {
-      label: "Dosis *",
+      label: "Dosis (Sin abreviaturas) *",
       name: "dose",
       required: true,
       type: "text",
@@ -29,7 +50,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
       default: "",
     },
     {
-      label: "Frecuencia *",
+      label: "Frecuencia (Sin abreviaturas) *",
       name: "frequency",
       required: true,
       type: "text",
@@ -37,7 +58,9 @@ export default function AddMedicationPrescription({ setStep }: any) {
       default: "",
     },
     {
-      label: "Duración *",
+      label: `Duración del tratamiento (Sin abreviaturas) ${getVigencia(
+        selectedMedicament?.clasificacionsa
+      )} *`,
       name: "duration",
       required: true,
       type: "text",
@@ -45,31 +68,30 @@ export default function AddMedicationPrescription({ setStep }: any) {
       default: "",
     },
     {
-      label: "Via de administración *",
+      label: "Via de administración (Sin abreviaturas) *",
       name: "way",
-      maxFile: 1,
       required: true,
       type: "text",
       width: 50,
       default: "",
     },
     {
-      label: "Indicaciones adicionales *",
+      label: "Indicaciones adicionales",
       name: "add",
-      maxFile: 1,
-      required: true,
+      required: false,
       type: "text",
       width: 50,
       default: "",
     },
     {
-      label: "Cantidad total de medicamento por tratamiento *",
+      label: "Cantidad de cajas para cubrir el tratamiento *",
       name: "quantity",
-      maxFile: 1,
       required: true,
       type: "number",
       width: 50,
       default: "",
+      max: getMaxAmount(selectedMedicament?.clasificacionsa) ? 2 : 0,
+      min: 1,
     },
   ];
 
@@ -126,6 +148,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
           submitData={submitData}
           fields={fields}
           loading={false}
+          focus
           buttonText="Continuar"
           renderButton={(handleSubmit) => (
             <div className="flex justify-center w-full  ">

@@ -49,7 +49,8 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
       ],
       form: [
         {
-          label: "Datos especialidad",
+          label: "Datos licenciatura",
+          secondLabel: "Datos especialidad",
           name: "title",
           required: true,
           type: "title",
@@ -57,6 +58,7 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
         },
         {
           label: "Licenciatura *",
+          secondLabel: "Especialidad *",
           name: "name",
           required: true,
           type: "text",
@@ -74,7 +76,8 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
           default: form2?.specializations || "",
         },
         {
-          label: "Institución que otorga licenciatura *",
+          label: "Institución que otorga la licenciatura *",
+          secondLabel: "Institución que otorga la especialidad *",
           name: "university",
           required: true,
           type: "text",
@@ -86,7 +89,7 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
           label: "Agrega el logotipo de tu Universidad *",
           name: "file",
           maxFile: 1,
-          required: true,
+          required: false,
           type: "file",
           width: 100,
           subFormKey: "file",

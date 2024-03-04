@@ -11,7 +11,7 @@ export default function PatiensPage() {
       <Head>
         <script
           type="module"
-          src="https://sdk.legalario.com/3.0/sdk-dist.js"
+          src="https://sdk.legalario.com/3.4/sdk-dev.js"
         ></script>
       </Head>
       <Patients />

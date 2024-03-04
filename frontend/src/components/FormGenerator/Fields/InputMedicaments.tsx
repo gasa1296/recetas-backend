@@ -104,10 +104,9 @@ export default function InputMedicaments({
                 <p className="text-[#141414] text-[16px] ">
                   {medicine.new
                     ? medicine.indications
-                    : `${medicine.dose} | ${medicine.frequency} | ${medicine.duration} | ${medicine.way} | ${medicine.add} | ${medicine.quantity}`}
+                    : `${medicine.dose} | ${medicine.frequency} | ${medicine.duration} | ${medicine.way}  | ${medicine.quantity} | ${medicine.add}`}
                 </p>
                 {(medicine.new ||
-                  medicine.clasificacionsa === "Grupo I" ||
                   medicine.clasificacionsa === "Grupo II" ||
                   medicine.clasificacionsa === "Grupo III") && (
                   <div className="bg-[#FFBB32] px-4 py-2 mr-4">

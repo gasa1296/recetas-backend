@@ -44,12 +44,11 @@ export default function InformationPatient({ nextStep }: any) {
     3: CreateUser,
     4: RecipesData,
   };
-
   const Component = screen[step];
 
   return (
     <section>
-      {step === 4 ? (
+      {step === 4 || step === 3 ? (
         <Component nextStep={nextStep} />
       ) : (
         <>
@@ -58,12 +57,12 @@ export default function InformationPatient({ nextStep }: any) {
             <p className="text-[#fff] text-[26px] ms-3">Paciente</p>
           </div>
           <section className="container-Patiens  py-5 flex justify-center  ">
-            <div className="w-[100%] px-8">
+            <div className="w-full px-8">
               <Select
                 placeholder="Buscar paciente por Nombre, Apellido, Correo, Teléfono, Folio de receta"
                 className=""
                 defaultValue={selectedPacientDefault}
-                value={selectedPacientDefault}
+                value={""}
                 isSearchable={true}
                 name="color"
                 options={userOptions || []}
@@ -74,7 +73,10 @@ export default function InformationPatient({ nextStep }: any) {
                   if (value) SearchPacients(value);
                   return value;
                 }}
-                onChange={(value: any) => SelectPacient(value.value)}
+                onChange={(value: any) => {
+                  SelectPacient(value.value);
+                  GetPacients();
+                }}
               />
 
               {loadingAction ? <Loading /> : <Component nextStep={nextStep} />}

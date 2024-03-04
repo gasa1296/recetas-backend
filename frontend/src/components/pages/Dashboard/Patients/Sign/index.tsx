@@ -1,9 +1,13 @@
 import useCustomEffect from "@/hooks/useCustomEffect";
+import { useRecipeStore } from "@/store/recipes";
 import { useRoomsStore } from "@/store/rooms";
 import React from "react";
 import { FaSignature } from "react-icons/fa";
 export default function Sign({ nextStep, backStep }: any) {
   const GetRooms = useRoomsStore((state) => state.GetRooms);
+  const recipe = useRecipeStore((state) => state.recipe);
+
+  const [activeFirma, setActiveFirme] = React.useState(false);
 
   const [error, setError] = React.useState<any>(false);
   const [accepted, setAccepted] = React.useState(false);
@@ -20,31 +24,32 @@ export default function Sign({ nextStep, backStep }: any) {
     /*  nextStep(); */
   };
 
-  // Funciones Callbak de prueba
-  function signatureInit(data: any) {
-    console.log("Proceso de firma iniciado !!!", data);
-  }
-
   function signatureFinish(data: any) {
-    console.log("Proceso de firma finalizado !!!", data);
+    if (
+      data.documents[0].status === "approved" &&
+      data.signer.status === "confirmed"
+    )
+      nextStep();
   }
-
-  const handleClickFirma = () => {
-    /* const legalario = new LegalarioSDK({
-      organizationId: "6584c7b41621f05565239a53",
-      apiKey:
-        "adaa85c70a08aa8a5b00bb5233a34b127be5188d2d419fbeb4950a5eba79540a",
-      env: "SANDBOX",
+  const handleClickFirma = async () => {
+    setActiveFirme(true);
+    const legalario = new (window as any).LegalarioSDK({
+      organizationId: process.env.NEXT_PUBLIC_LEGALARIO_ORGANIZATION_ID,
+      apiKey: process.env.NEXT_PUBLIC_LEGALARIO_KEY,
+      env: process.env.NEXT_PUBLIC_LEGALARIO_ENVIRONMENT,
     });
 
-    // Inicio del proceso de firma
-    legalario.signature({
-      signerId: "65abb643c37b226a26017a0d",
-      callbacks: {
-        onInit: signatureInit,
-        onFinish: signatureFinish,
+    const result = await legalario.signature(
+      {
+        signerId: recipe.signer,
+        modules: ["documents", "signature"],
+        authType: "NONE",
+        callbacks: {
+          onFinish: signatureFinish,
+        },
       },
-    }); */
+      1000
+    );
   };
 
   return (
@@ -53,6 +58,7 @@ export default function Sign({ nextStep, backStep }: any) {
         <FaSignature color="#Fff " size={28} />
         <p className="text-[#fff] text-[26px] ms-3">Firmar receta</p>
       </div>
+
       <section className="container-Patiens px-8 py-5">
         <div className="">
           <h6 className="text-[20px] text-[#1A1A1A] font-bold my-4 text-center mt-10">
@@ -89,15 +95,6 @@ export default function Sign({ nextStep, backStep }: any) {
           </div>
 
           {error && <p className="text-[12px] text-[#CB2E25] mt-2">{error}</p>}
-        </div>
-
-        <div className="block md:flex justify-center  py-6">
-          <button
-            disabled={true}
-            className="button-BlacK w-full p-2 font-bold max-w-[660px] disabled:opacity-75"
-          >
-            Crear receta
-          </button>
         </div>
       </section>
     </section>
