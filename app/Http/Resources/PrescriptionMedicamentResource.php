@@ -23,6 +23,11 @@ class PrescriptionMedicamentResource extends JsonResource
             'duration' => $this->duration,
             'quantity' => $this->quantity,
             'quantity_exp' => $this->quantity_exp,
+            'name' => $this->name,
+            'type' => $this->type,
+            'family' => $this->family,
+            'group' => $this->group,
+            'salt' => $this->salt,
             'medicament_id' => $this->medicament_id,
         ];
     }

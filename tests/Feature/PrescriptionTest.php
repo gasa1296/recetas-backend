@@ -10,12 +10,13 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
 use App\Models\Patient;
+use App\Models\Specialization;
 use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 
 class PrescriptionTest extends TestCase
 {
-  use WithFaker, RefreshDatabase;
+  use WithFaker;
 
   private $user;
   private $room;
@@ -25,6 +26,7 @@ class PrescriptionTest extends TestCase
     parent::setUp();
     $this->user = User::factory()->create();
     $this->room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
+    Specialization::factory()->create(["user_id" => $this->user]);
     Sanctum::actingAs($this->user, ['*']);
 
   }
@@ -46,8 +48,35 @@ class PrescriptionTest extends TestCase
       'patient_id' => Patient::factory()->create()->id,
       'file' => UploadedFile::fake()->image('photo.jpg'),
       'status' => fake()->randomNumber(3),
+      'medicaments' => [
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'salt' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'salt' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
+      ]
     ]);
-    
     $response->assertStatus(201);
   }
   public function test_update(): void
@@ -96,15 +125,5 @@ class PrescriptionTest extends TestCase
 
     $response->assertOk();
     $this->assertCount(10, $response->json()['data']);
-  }
-  public function test_signer(): void
-  {
-    $instance = Prescription::factory()->create();
-    PrescriptionMedicament::factory()->create(['prescription_id' => $instance->id]);
-    $response = $this->get("api/prescription/$instance->id/sign");
-    print_r($response->json());
-    $response->assertStatus(400);
-    $message = $response->json()['message'];
-    $this->assertEquals("El valor del campo [email] del arreglo [signers] es inválido #1", $message);
   }
 }

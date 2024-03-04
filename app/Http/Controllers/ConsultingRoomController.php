@@ -38,9 +38,10 @@ class ConsultingRoomController extends Controller
             'data.*.n_interior' => ['nullable',],
             'data.*.address' => ['nullable', 'string'],
             'data.*.phone' => ['nullable', 'string'],
-            'data.*.design' => ['nullable', 'numeric'],
+            'data.*.design' => ['nullable', 'string'],
+            'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
-            'logo.*' => ['nullable', 'file'],
+            'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -54,14 +55,15 @@ class ConsultingRoomController extends Controller
             }
             if (empty($el['id'])) {
                 $el['user_id'] = $user;
-                if (empty($el['logo'])) {
-                    return response()->json(['logo' => [$key => "El campo logo es obligatorio."]], 400);
-                }
                 $instance = ConsultingRoom::create($el);
             } else {
                 $instance = ConsultingRoom::where('id', $el['id'])
                     ->where('user_id', auth()->id())
                     ->firstOrFail();
+                if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
+                    Storage::disk('public')->delete($instance->logo ?: '');
+                    $el['file'] = '';
+                }
                 $instance->update($el);
             }
             array_push($instances, $instance);
@@ -99,15 +101,15 @@ class ConsultingRoomController extends Controller
             'n_interior' => ['nullable',],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
-            'design' => ['nullable', 'numeric'],
-            'logo' => ['nullable', 'file'],
+            'design' => ['nullable', 'string'],
+            'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
+            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
             if ($inputs['logo'] && !empty($room->logo)) {
                 Storage::delete($room->logo);
             }
@@ -124,10 +126,14 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        if (!empty($room->logo)){
+        if (!empty($room->logo)) {
             Storage::delete($room->logo);
         }
         $room->delete();
         return response()->json();
+    }
+    public function getFormats(): JsonResponse
+    {
+        return response()->json([0 => env('F1'), 1 => env('F2'), '2' => env('F3')]);
     }
 }

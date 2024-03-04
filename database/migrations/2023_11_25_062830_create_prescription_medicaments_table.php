@@ -25,10 +25,9 @@ return new class extends Migration
             $table->string('type');
             $table->string('family');
             $table->string('group');
+            $table->string('salt');
             $table->foreignId('prescription_id')->constrained('prescriptions');
             $table->timestamps();
-
-            $table->unique(['medicament_id','prescription_id']);
         });
     }
 

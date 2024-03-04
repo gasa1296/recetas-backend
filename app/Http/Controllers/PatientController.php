@@ -20,7 +20,8 @@ class PatientController extends Controller
             $operator = '+';
         }
         if( $request->search ){
-            $instances = Patient::where('first_name', 'LIKE', "%$request->search%")
+            $instances = Patient::where('user_id', '=', auth()->id())
+                ->where('first_name', 'LIKE', "%$request->search%")
                 ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$request->search%")
                 ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$request->search%")
                 ->orWhere('email', 'LIKE', "%$request->search%")
@@ -28,7 +29,7 @@ class PatientController extends Controller
                 ->orWhere('phone2', 'LIKE', "%$request->search%");
             return PatientResource::collection($instances->paginate(10))->response();
         } else {
-            return PatientResource::collection(Patient::paginate(10))->response();
+            return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
         }
     }
 
@@ -51,6 +52,7 @@ class PatientController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
+        $inputs['user_id'] = auth()->id();
         $instance = Patient::create($inputs);
         return (new PatientResource($instance))->response();
     }
@@ -60,6 +62,9 @@ class PatientController extends Controller
      */
     public function show(Patient $patient): JsonResponse
     {
+        if ($patient->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
         return (new PatientResource($patient))->response();
     }
 
@@ -68,6 +73,9 @@ class PatientController extends Controller
      */
     public function update(Request $request, Patient $patient): JsonResponse
     {
+        if ($patient->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
             'last_name1' => ['required', 'string'],
@@ -91,6 +99,9 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient): JsonResponse
     {
+        if ($patient->user_id != auth()->id()) {
+            return response()->json([], 404);
+        }
         $patient->delete();
         return response()->json();
     }

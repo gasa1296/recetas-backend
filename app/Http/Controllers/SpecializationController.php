@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Validator;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
@@ -29,10 +30,11 @@ class SpecializationController extends Controller
             'data' => ['required', 'array'],
             'data.*.id' => ['nullable', 'numeric'],
             'data.*.name' => ['required', 'string'],
-            'data.*.identification' => ['required', 'unique:specializations'],
+            'data.*.identification' => ['required'],
             'data.*.university' => ['nullable', 'string'],
+            'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
-            'logo.*' => ['nullable', 'file'],
+            'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
 
         ]);
         if ($validator->fails()) {
@@ -42,20 +44,25 @@ class SpecializationController extends Controller
 
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
-            if (!empty($request->file('logo')[$key])) {
-                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user, 'public');
-            }
-            if(empty($el['id'])) {
-                $el['user_id'] = $user;
-                if (empty($el['logo'])) {
-                    return response()->json(['logo' => [$key => "El campo logo es obligatorio."]], 400);
+            try {
+                if (!empty($request->file('logo')[$key])) {
+                    $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user, 'public');
                 }
-                $instance = Specialization::create($el);
-            } else {
-                $instance = Specialization::where('id', $el['id'])
-                    ->where('user_id', auth()->id())
-                    ->firstOrFail();
-                $instance->update($el);
+                if (empty($el['id'])) {
+                    $el['user_id'] = $user;
+                    $instance = Specialization::create($el);
+                } else {
+                    $instance = Specialization::where('id', $el['id'])
+                        ->where('user_id', auth()->id())
+                        ->firstOrFail();
+                    if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
+                        Storage::disk('public')->delete($instance->logo ?: '');
+                        $el['file'] = '';
+                    }
+                    $instance->update($el);
+                }
+            } catch (QueryException $e) {
+                return response()->json(['university.' . $key => 'Cedula profesional en uso'], 400);
             }
             array_push($instances, $instance);
         }

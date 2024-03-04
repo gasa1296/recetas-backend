@@ -29,9 +29,10 @@ return new class extends Migration
             $table->foreignId('room_id')->constrained('consulting_rooms');
             $table->foreignId('patient_id')->constrained('patients');
             $table->string('file')->nullable();
+            $table->string('document_id')->nullable();
             $table->integer('status')->default(0);
-            
-            $table->timestamps();
+            $table->string('code');
+            $table->timestamps(6);
             $table->softDeletes();
         });
     }

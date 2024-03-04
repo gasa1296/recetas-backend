@@ -4,21 +4,22 @@ namespace App\Notifications;
 
 use App\Models\Prescription;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PrescriptionSigned extends Notification
+class PrescriptionSignedEmail extends Notification
 {
     use Queueable;
     private Prescription $prescription;
+    private string $fileData;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Prescription $prescription)
+    public function __construct(Prescription $prescription, $fileData)
     {
         $this->prescription = $prescription;
+        $this->fileData = $fileData;
     }
 
     /**
@@ -36,9 +37,11 @@ class PrescriptionSigned extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
         return (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
-        ])->attach($this->prescription->file);
+            'base_url' => env('APP_URL', '') . '/storage/'
+        ])->attachData($this->fileData, 'receta.pdf')->subject('Receta médica electrónica');
     }
     public function toWhatsApp(object $notifiable)
     {

@@ -43,6 +43,7 @@ class PrescriptionMedicamentController extends Controller
             '*.type' => ['required', 'string'],
             '*.group' => ['required', 'string'],
             '*.family' => ['required', 'string'],
+            '*.salt' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -81,6 +82,7 @@ class PrescriptionMedicamentController extends Controller
             'type' => ['required', 'string'],
             'group' => ['required', 'string'],
             'family' => ['required', 'string'],
+            'salt' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

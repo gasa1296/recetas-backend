@@ -36,7 +36,7 @@ class SpecializationTest extends TestCase
                 [   
                     "id" => $instance->id,
                     "name" => $instance->name,
-                    "identification" => $instance->identification,
+                    "identification" => fake()->unique()->words(3, true),
                     "university" => $instance->university,
                 ],
             ],

@@ -33,6 +33,12 @@ class MedicamentsRelationManager extends RelationManager
                     ->numeric(),
                 TextInput::make('quantity_exp')
                     ->numeric(),
+                TextInput::make('medicament_id')
+                    ->numeric(),
+                TextInput::make('name'),
+                TextInput::make('type'),
+                TextInput::make('family'),
+                TextInput::make('group'),
             ]);
     }
 
