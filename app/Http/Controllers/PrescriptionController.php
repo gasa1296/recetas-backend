@@ -467,7 +467,7 @@ class PrescriptionController extends Controller
                             [
                                 'key' => 1003,
                                 'name' => 'IMAGEN_CLIENTE_BARRAS',
-                                'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C39'),
+                                'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C128'),
                             ]
                         ],
                     ]
