@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\PrescriptionResource;
+use App\Http\Resources\SEUSPrescriptionResource;
 use App\Models\Prescription;
 use GuzzleHttp\Client;
 use Validator;
@@ -27,7 +27,7 @@ class SEUSPrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        return(new PrescriptionResource($prescription))->response();
+        return(new SEUSPrescriptionResource($prescription))->response();
     }
     /**
      * Display a listing of the resource by client.
@@ -55,7 +55,7 @@ class SEUSPrescriptionController extends Controller
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
         Log::debug('prescription', ['file' => $instance->file]);
-        return(new PrescriptionResource($instance))->response();
+        return(new SEUSPrescriptionResource($instance))->response();
     }
     /**
      * Update the specified resource in storage.
@@ -77,7 +77,7 @@ class SEUSPrescriptionController extends Controller
         }
         $inputs = $validator->safe()->only('client');
         $prescription->update($inputs);
-        return(new PrescriptionResource($prescription))->response();
+        return(new SEUSPrescriptionResource($prescription))->response();
     }
     /**
      * Download precription file
@@ -120,7 +120,7 @@ class SEUSPrescriptionController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->only('client');
-        return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
+        return SEUSPrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
     }
     /**
      * Display a listing of the resource by client.
@@ -166,6 +166,6 @@ class SEUSPrescriptionController extends Controller
         $prescription->save();
         $prescription->push();
 
-        return(new PrescriptionResource($prescription))->response();
+        return(new SEUSPrescriptionResource($prescription))->response();
     }
 }
