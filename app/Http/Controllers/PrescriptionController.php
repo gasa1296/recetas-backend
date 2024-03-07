@@ -202,7 +202,7 @@ class PrescriptionController extends Controller
     /**
      * Verify if prescription can be sended or signed
      */
-    private function verifyPrescription($medicaments)
+    public function verifyPrescription($medicaments)
     {
         $errors = [];
         foreach ($medicaments as $medicament) {
@@ -550,12 +550,19 @@ class PrescriptionController extends Controller
     }
     public function getMedicaments(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'products' => ['required ', 'array'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
         try {
             $res = $this->client->post('https://tsoagobiernogrfe-pub-oci.opc.oracleoutsourcing.com/farmacos/subrogation/electronic-medical-prescription/v1/products/_detail', [
                 'headers' => [
                     'Authorization' => "Basic " . base64_encode("userTest:Vwq5MYEUtesVwYtK"),
                 ],
-                'json' => ['products' => $request->only('products')]
+                'json' => ['products' => $inputs['products']]
             ]);
             return response()->json(json_decode($res->getBody(), true));
         } catch (ClientException $e) {

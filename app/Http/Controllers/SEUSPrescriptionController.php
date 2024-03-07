@@ -84,7 +84,8 @@ class SEUSPrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
-        $errors = $this->verifyPrescription($prescription->medicaments);
+
+        $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         if (!empty($errors) || $prescription->add_med != '[]') {
             return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
