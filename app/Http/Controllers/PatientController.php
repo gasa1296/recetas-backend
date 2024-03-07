@@ -20,13 +20,16 @@ class PatientController extends Controller
             $operator = '+';
         }
         if( $request->search ){
+            $search = $request->search;
             $instances = Patient::where('user_id', '=', auth()->id())
-                ->where('first_name', 'LIKE', "%$request->search%")
-                ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$request->search%")
-                ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$request->search%")
-                ->orWhere('email', 'LIKE', "%$request->search%")
-                ->orWhere('phone1', 'LIKE', "%$request->search%")
-                ->orWhere('phone2', 'LIKE', "%$request->search%");
+                ->where(function($query) use ($operator, $search) {
+                    $query->where('first_name', 'LIKE', "%$search%")
+                        ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$search%")
+                        ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$search%")
+                        ->orWhere('email', 'LIKE', "%$search%")
+                        ->orWhere('phone1', 'LIKE', "%$search%")
+                        ->orWhere('phone2', 'LIKE', "%$search%");
+                });
             return PatientResource::collection($instances->paginate(10))->response();
         } else {
             return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
