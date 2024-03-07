@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'prescription.equipment' => PrescriptionEquipmentController::class,
     ]);
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
+        Route::post('medicaments', 'getMedicaments');
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
         Route::get('{prescription}/document', 'createDocument')->name('document');

@@ -548,4 +548,18 @@ class PrescriptionController extends Controller
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
+    public function getMedicaments(Request $request)
+    {
+        try {
+            $res = $this->client->post('https://tsoagobiernogrfe-pub-oci.opc.oracleoutsourcing.com/farmacos/subrogation/electronic-medical-prescription/v1/products/_detail', [
+                'headers' => [
+                    'Authorization' => "Basic " . base64_encode("userTest:Vwq5MYEUtesVwYtK"),
+                ],
+                'json' => ['products' => $request->only('products')]
+            ]);
+            return response()->json(json_decode($res->getBody(), true));
+        } catch (ClientException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        }
+    }
 }
