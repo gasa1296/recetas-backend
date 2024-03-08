@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class AuthController extends Controller
 {
@@ -67,6 +69,9 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
+        if(!$this->verifyFESA($inputs['fesa'])) {
+            return response()->json(['fesa' => 'Invalido']);
+        }
         $instance = User::create($inputs);
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
@@ -141,5 +146,24 @@ class AuthController extends Controller
     {
         auth()->user()->delete();
         return response()->json();
+    }
+    private function verifyFESA(String $fesa): bool
+    {
+        try {
+            $res = (new Client())->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
+                'headers' => [
+                    'Authorization' => "Basic " . base64_encode("rx_user_dev:Farmacos2020dev"),
+                ],
+                'json' => ['codigoMedico' => $fesa]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['codigo'] == 8001) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        }
     }
 }
