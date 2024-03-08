@@ -64,7 +64,12 @@ class PrescriptionController extends Controller
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
         $inputs1['code'] = base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36);
-
+        
+        $room = $request->user()->rooms;
+        $filteredRoom = $room->where('user_id', '=', $inputs1['user_id'])->where('id', '=', $inputs1['room_id'])->first();
+        if(empty($filteredRoom)) {
+            return response()->json(['room' => ['consultorio no pertenece a medico']], 400);
+        }
         $instance = Prescription::create($inputs1);
 
         if (empty($inputs1['medicaments'])) {
@@ -301,7 +306,7 @@ class PrescriptionController extends Controller
                                 'value' => implode(
                                     ",",
                                     array_map(function ($spec) {
-                                        return "$spec[name] Ced prof: $spec[identification]";
+                                        return "$spec[name] Céd prof: $spec[identification]";
                                     }, $medic->specializations->toArray())
                                 ),
                             ]
@@ -397,7 +402,7 @@ class PrescriptionController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($medicament) {
-                                        return "$medicament[salt] $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
+                                        return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
                                     }, $prescription->medicaments->toArray())
                                 ) . "\n" . implode(
                                     "\n",
