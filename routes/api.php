@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
+    Route::post('medic', 'getMedic');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {

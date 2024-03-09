@@ -70,7 +70,7 @@ class AuthController extends Controller
         }
         $inputs = $validator->safe()->all();
         if(!$this->verifyFESA($inputs['fesa'])) {
-            return response()->json(['fesa' => 'Invalido']);
+            return response()->json(['fesa' => 'Invalido'], 400);
         }
         $instance = User::create($inputs);
         event(new Registered($instance));
@@ -147,12 +147,37 @@ class AuthController extends Controller
         auth()->user()->delete();
         return response()->json();
     }
+    /**
+     * Display the medic data if exist.
+     */
+    public function getMedic(Request $request): JsonResponse
+    {
+        try {
+            $res = (new Client())->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
+                'auth' => [
+                    'rx_user_dev',
+                    'Farmacos2020dev'
+                ],
+                'query' => [
+                    'nombre' => $request->nombre,
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            return response()->json($decodedRes);
+        } catch (ClientException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        }
+    }
+    /**
+     * verify fesa code.
+     */
     private function verifyFESA(String $fesa): bool
     {
         try {
             $res = (new Client())->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
-                'headers' => [
-                    'Authorization' => "Basic " . base64_encode("rx_user_dev:Farmacos2020dev"),
+                'auth' => [
+                    'rx_user_dev', 
+                    'Farmacos2020dev'
                 ],
                 'json' => ['codigoMedico' => $fesa]
             ]);
