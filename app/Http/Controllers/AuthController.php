@@ -154,7 +154,7 @@ class AuthController extends Controller
     public function getMedic(Request $request): JsonResponse
     {
         try {
-            $res = (new Client())->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
+            $res = (new Client(['verify' => env('VERIFY_FILE', false)]))->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
                 'auth' => [
                     'rx_user_dev',
                     'Farmacos2020dev'
@@ -173,7 +173,7 @@ class AuthController extends Controller
     private function verifyFESA(String $fesa): bool
     {
         try {
-            $res = (new Client())->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
+            $res = (new Client(['verify' => env('VERIFY_FILE', false)]))->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
                 'auth' => [
                     'rx_user_dev', 
                     'Farmacos2020dev'
