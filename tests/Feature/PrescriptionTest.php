@@ -40,6 +40,10 @@ class PrescriptionTest extends TestCase
       'saturation' => fake()->randomFloat(2, 1, 100),
       'ppm' => fake()->randomFloat(2, 1, 100),
       'allergy' => fake()->words(10, true),
+      'add_med' => json_encode([[
+        'name' => fake()->words(10, true),
+        'indications' => fake()->words(10, true)
+      ]]),
       'diagnostic' => fake()->words(10, true),
       'diet' => fake()->words(10, true),
       'add' => fake()->words(10, true),
