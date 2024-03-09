@@ -34,7 +34,7 @@ class AuthTest extends TestCase
             'phone1' => fake()->phoneNumber(),
             'phone2' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['M','F']),
-            'fesa' => fake()->randomNumber(),
+            'fesa' => "MED00040",
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'rooms' => [
@@ -63,6 +63,45 @@ class AuthTest extends TestCase
             'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
         ]);
         $response->assertOk();
+    }
+    public function test_failRegisterByFesa(): void
+    {
+        $response = $this->post('api/auth/register', [
+            'first_name' => fake()->firstName(),
+            'last_name1' => fake()->lastName(),
+            'last_name2' => fake()->lastName(),
+            'phone1' => fake()->phoneNumber(),
+            'phone2' => fake()->phoneNumber(),
+            'gender' => fake()->randomElement(['M', 'F']),
+            'fesa' => fake()->randomNumber(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => Hash::make('password'),
+            'rooms' => [
+                [
+                    'name' => fake()->name(),
+                    'zip' => fake()->postcode(),
+                    'street' => fake()->streetAddress(),
+                    'colony' => fake()->city(),
+                    'state' => fake()->city(),
+                    'delegation' => fake()->city(),
+                    'n_exterior' => fake()->randomNumber(),
+                    'n_interior' => fake()->randomNumber(),
+                    'address' => fake()->address(),
+                    'phone' => fake()->phoneNumber(),
+                    'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
+                ]
+            ],
+            'specializations' => [
+                [
+                    'name' => fake()->words(3, true),
+                    'identification' => fake()->unique()->words(3, true),
+                    'university' => fake()->words(3, true),
+                ]
+            ],
+            'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
+            'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
+        ]);
+        $response->assertStatus(400);
     }
     public function test_logout(): void
     {
