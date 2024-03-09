@@ -161,9 +161,8 @@ class PrescriptionController extends Controller
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
-        } else {
+        $add_med = json_decode($prescription->add_med, true);
+        if (empty($errors) && empty($add_med)) {
             $zip = new ZipArchive;
             $status = $zip->open(base_path() . $dir . "zip");
             if ($status !== true) {
@@ -173,11 +172,10 @@ class PrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
-            return response()->streamDownload(function () use ($fileData) {
-                echo $fileData;
-            }, 'receta.pdf');
+            $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
+        } else {
+            return response()->json(['prescription' => 'receta no valida para enviar por correo']);
         }
-        $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
     /**
