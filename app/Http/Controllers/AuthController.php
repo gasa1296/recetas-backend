@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
 use App\Models\Specialization;
+use GuzzleHttp\Exception\ServerException;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -158,9 +159,7 @@ class AuthController extends Controller
                     'rx_user_dev',
                     'Farmacos2020dev'
                 ],
-                'query' => [
-                    'nombre' => $request->nombre,
-                ]
+                'query' => $request->only('email', 'cedula')
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
