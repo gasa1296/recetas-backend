@@ -71,7 +71,7 @@ class AuthController extends Controller
         }
         $inputs = $validator->safe()->all();
         if(!$this->verifyFESA($inputs['fesa'])) {
-            return response()->json(['fesa' => 'Invalido'], 400);
+            return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
         $instance = User::create($inputs);
         event(new Registered($instance));
