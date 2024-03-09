@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('saturation')->nullable();
             $table->string('ppm')->nullable();
             $table->text('allergy')->nullable();
-            $table->text('diagnostic');
+            $table->text('diagnostic')->nullable();
             $table->text('diet')->nullable();
             $table->text('add')->nullable();
             $table->json('add_med')->nullable();
