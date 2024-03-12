@@ -16,6 +16,11 @@ use GuzzleHttp\Exception\ClientException;
 
 class AuthController extends Controller
 {
+    private Client $client;
+    public function __construct()
+    {
+        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
+    }
     public function login(Request $request): JsonResponse
     {
         $instance = User::where('email', request()->email)->first();
@@ -94,7 +99,6 @@ class AuthController extends Controller
 
         return response()->json();
     }
-
     /**
      * Display the specified resource.
      */
@@ -102,7 +106,6 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -130,7 +133,6 @@ class AuthController extends Controller
         $instance->update($inputs);
         return response()->json($instance);
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -139,7 +141,6 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json();
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -154,7 +155,7 @@ class AuthController extends Controller
     public function getMedic(Request $request): JsonResponse
     {
         try {
-            $res = (new Client(['verify' => env('VERIFY_FILE', false)]))->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
+            $res = $this->client->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
                 'auth' => [
                     'rx_user_dev',
                     'Farmacos2020dev'
@@ -173,7 +174,7 @@ class AuthController extends Controller
     private function verifyFESA(String $fesa): bool
     {
         try {
-            $res = (new Client(['verify' => env('VERIFY_FILE', false)]))->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
+            $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
                 'auth' => [
                     'rx_user_dev', 
                     'Farmacos2020dev'
@@ -182,6 +183,101 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['codigo'] == 8001) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        }
+    }
+    private function registerMagento(array $inputs)
+    {
+        try {
+            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
+                'auth' => [
+                    'rx_user_dev',
+                    'Farmacos2020dev'
+                ],
+                'json' => [
+                    'email' => $inputs['email'],
+                    'firstname' => $inputs['first_name'],
+                    'lastname' => $inputs['last_name1'] . $inputs['last_name2'],
+                    'password' => $inputs['password'],
+                    'gender' => $inputs['gender'],
+                    'phone' => $inputs['phone1'],
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['success']) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        }
+    }
+    private function updateMagento(array $inputs)
+    {
+        try {
+            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
+                'auth' => [
+                    'rx_user_dev',
+                    'Farmacos2020dev'
+                ],
+                'json' => [
+                    'email' => $inputs['email'],
+                    'nombre' => $inputs['first_name'],
+                    'apellidoPaterno' => $inputs['last_name1'],
+                    'apellidoMaterno' => $inputs['last_name2'],
+                    'sexo' => $inputs['gender'],
+                    'TelefonoPrincipal' => $inputs['phone1'],
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['success']) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        }
+    }
+    private function generateMagentoToken(array $inputs)
+    {
+        try {
+            $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
+                'auth' => [
+                    'rx_user_dev',
+                    'Farmacos2020dev'
+                ],
+                'json' => [
+                    'username' => $inputs['email'],
+                    'password' => $inputs['password'],
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['success']) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        }
+    }
+    private function getUserByTokenMagento(string $token)
+    {
+        try {
+            $res = $this->client->get('https://mcstaging.farmaciasespecializadas.com/rest/V1/customers/me', [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                ],
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['success']) {
                 return true;
             } else {
                 return false;

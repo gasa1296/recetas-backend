@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class ResetController extends Controller
 {
+    private Client $client;
+    public function __construct()
+    {
+        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
+    }
     public function request(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -44,6 +51,28 @@ class ResetController extends Controller
         );
         if($status !== Password::PASSWORD_RESET) {
             response()->json(['email' => __($status)], 400);
+        }
+    }
+    private function resetPasswordMagento(string $email)
+    {
+        try {
+            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
+                'auth' => [
+                    'rx_user_dev',
+                    'Farmacos2020dev'
+                ],
+                'json' => [
+                    'login' => $email,
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if ($decodedRes['success']) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
         }
     }
 }
