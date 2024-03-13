@@ -29,6 +29,11 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     Route::post('login', 'login');
     Route::post('medic', 'getMedic');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
+
+    Route::post('registerMagento', 'registerMagento');
+    Route::post('updateMagento', 'updateMagento');
+    Route::post('generateMagentoToken', 'generateMagentoToken');
+    Route::post('getUserByTokenMagento', 'getUserByTokenMagento');
 });
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
