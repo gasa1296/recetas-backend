@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\LegalarioController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
@@ -67,10 +68,12 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'prescription.equipment' => PrescriptionEquipmentController::class,
     ]);
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
-        Route::post('medicaments', 'getMedicaments');
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
-        Route::get('{prescription}/sign', 'createSigner')->name('sign');
         Route::get('{prescription}/document', 'createDocument')->name('document');
         Route::get('{prescription}/file', 'getFile')->name('getFile');
+    });
+    Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
+        Route::post('medicaments', 'getMedicaments');
+        Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
 });
