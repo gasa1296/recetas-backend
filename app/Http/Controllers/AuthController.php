@@ -191,7 +191,7 @@ class AuthController extends Controller
             return false;
         }
     }
-    private function registerMagento(array $inputs)
+    public function registerMagento(array $inputs)
     {
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
@@ -210,15 +210,15 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return true;
+                return response()->json($decodedRes, 400);
             } else {
-                return false;
+                return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
-            return false;
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
-    private function updateMagento(array $inputs)
+    public function updateMagento(array $inputs)
     {
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
@@ -237,16 +237,17 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return true;
+                return response()->json($decodedRes, 400);
             } else {
-                return false;
+                return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
-            return false;
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
-    private function generateMagentoToken(array $inputs)
+    public function generateMagentoToken(Request $request)
     {
+        $inputs = $request->only('email', 'password');
         try {
             $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
                 'auth' => [
@@ -260,30 +261,26 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return true;
+                return response()->json($decodedRes, 400);
             } else {
-                return false;
+                return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
-            return false;
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
-    private function getUserByTokenMagento(string $token)
+    public function getUserByTokenMagento(Request $request)
     {
         try {
             $res = $this->client->get('https://mcstaging.farmaciasespecializadas.com/rest/V1/customers/me', [
                 'headers' => [
-                    'Authorization' => "Bearer $token",
+                    'Authorization' => "Bearer $request->token",
                 ],
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
-                return true;
-            } else {
-                return false;
-            }
+            return response()->json($decodedRes, 400);
         } catch (ClientException $e) {
-            return false;
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
 }
