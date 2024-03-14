@@ -25,6 +25,13 @@ class AuthController extends Controller
     {
         $instance = User::where('email', request()->email)->first();
         if (empty($instance)) {
+            $medicMagento = $this->getMedic($request)->getData(true);
+            if ($medicMagento['results'] > 0) {
+                return response()->json([
+                    'recetasUser' => false,
+                    'magentoEmail' => $request->email
+                ]);
+            }
             return response()->json([['email' => __('email incorrecto')]], 404);
         }
         if (Hash::check(request()->password, $instance->password)) {
@@ -87,6 +94,10 @@ class AuthController extends Controller
             }
             $el['user_id'] = $instance->id;
             ConsultingRoom::create($el);
+        }
+        $exist = $this->getMedic();
+        if(!$exist) {
+            $this->registerMagento();
         }
         foreach ($inputs['specializations'] as $key => $el) {
             if (!empty($request->file('logo_spec')[$key])) {
@@ -191,8 +202,9 @@ class AuthController extends Controller
             return false;
         }
     }
-    public function registerMagento(array $inputs)
+    public function registerMagento(Request $request)
     {
+        $inputs = $request->all();
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => [
@@ -202,24 +214,30 @@ class AuthController extends Controller
                 'json' => [
                     'email' => $inputs['email'],
                     'firstname' => $inputs['first_name'],
-                    'lastname' => $inputs['last_name1'] . $inputs['last_name2'],
+                    'lastname' => $inputs['last_name1'],
+                    'middleName' => $inputs['last_name2'],
                     'password' => $inputs['password'],
                     'gender' => $inputs['gender'],
                     'phone' => $inputs['phone1'],
+                    "typeUsage" => "Celular"
+
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return response()->json($decodedRes, 400);
+                return response()->json($decodedRes);
             } else {
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        } catch (ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
     }
-    public function updateMagento(array $inputs)
+    public function updateMagento(Request $request)
     {
+        $inputs = $request->all();
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
                 'auth' => [
@@ -237,12 +255,14 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return response()->json($decodedRes, 400);
+                return response()->json($decodedRes);
             } else {
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        } catch (ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), 500);
         }
     }
     public function generateMagentoToken(Request $request)
@@ -260,11 +280,7 @@ class AuthController extends Controller
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
-                return response()->json($decodedRes, 400);
-            } else {
-                return response()->json($decodedRes, 400);
-            }
+            return response()->json($decodedRes);
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
@@ -278,7 +294,18 @@ class AuthController extends Controller
                 ],
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            return response()->json($decodedRes, 400);
+            $instance = User::where('email', '=', $decodedRes['email'])->first();
+            if ($instance){
+                return response()->json([
+                    'token' => $instance->createToken('recipe')->plainTextToken,
+                    'user' => $instance,
+                ]);
+            } else {
+                return response()->json([
+                    'recetasUser' => false,
+                    'magentoEmail' => $decodedRes['email']
+                ]);
+            }
         } catch (ClientException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
