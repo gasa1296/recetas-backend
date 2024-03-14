@@ -25,7 +25,7 @@ class AuthController extends Controller
     {
         $instance = User::where('email', request()->email)->first();
         if (empty($instance)) {
-            $medicMagento = $this->getMedic($request)->getData(true);
+            $medicMagento = $this->getMedic($request)->getData(true); //cambiar por gettokenmagento
             if ($medicMagento['results'] > 0) {
                 return response()->json([
                     'recetasUser' => false,
@@ -168,15 +168,15 @@ class AuthController extends Controller
         try {
             $res = $this->client->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'query' => $request->only('email', 'cedula')
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
     /**
@@ -187,8 +187,8 @@ class AuthController extends Controller
         try {
             $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
                 'auth' => [
-                    'rx_user_dev', 
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => ['codigoMedico' => $fesa]
             ]);
@@ -208,8 +208,8 @@ class AuthController extends Controller
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => [
                     'email' => $inputs['email'],
@@ -225,14 +225,13 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
-                return response()->json($decodedRes);
             } else {
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         } catch (ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
     public function updateMagento(Request $request)
@@ -241,8 +240,8 @@ class AuthController extends Controller
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => [
                     'email' => $inputs['email'],
@@ -260,9 +259,9 @@ class AuthController extends Controller
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         } catch (ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 500);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
     public function generateMagentoToken(Request $request)
@@ -271,8 +270,8 @@ class AuthController extends Controller
         try {
             $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => [
                     'username' => $inputs['email'],
@@ -282,7 +281,7 @@ class AuthController extends Controller
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
     public function getUserByTokenMagento(Request $request)
@@ -307,7 +306,7 @@ class AuthController extends Controller
                 ]);
             }
         } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
 }
