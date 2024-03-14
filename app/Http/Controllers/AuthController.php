@@ -86,6 +86,10 @@ class AuthController extends Controller
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
         $instance = User::create($inputs);
+        $medicMagento = $this->getMedic($request)->getData(true);
+        if ($medicMagento['results'] == 0) {
+            return response()->json();
+        }
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
@@ -94,10 +98,6 @@ class AuthController extends Controller
             }
             $el['user_id'] = $instance->id;
             ConsultingRoom::create($el);
-        }
-        $exist = $this->getMedic();
-        if(!$exist) {
-            $this->registerMagento();
         }
         foreach ($inputs['specializations'] as $key => $el) {
             if (!empty($request->file('logo_spec')[$key])) {
