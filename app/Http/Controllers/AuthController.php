@@ -25,8 +25,8 @@ class AuthController extends Controller
     {
         $instance = User::where('email', request()->email)->first();
         if (empty($instance)) {
-            $medicMagento = $this->getMedic($request)->getData(true); //cambiar por gettokenmagento
-            if ($medicMagento['results'] > 0) {
+            $magentoToken = $this->generateMagentoToken($request);
+            if ($magentoToken->getStatusCode() < 300) {
                 return response()->json([
                     'recetasUser' => false,
                     'magentoEmail' => $request->email
@@ -35,6 +35,13 @@ class AuthController extends Controller
             return response()->json([['email' => __('email incorrecto')]], 404);
         }
         if (Hash::check(request()->password, $instance->password)) {
+            return response()->json([
+                'token' => $instance->createToken('recipe')->plainTextToken,
+                'user' => $instance,
+            ]);
+        }
+        $magentoToken = $this->generateMagentoToken($request);
+        if ($magentoToken->getStatusCode() < 300) {
             return response()->json([
                 'token' => $instance->createToken('recipe')->plainTextToken,
                 'user' => $instance,
