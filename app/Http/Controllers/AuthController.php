@@ -16,14 +16,25 @@ use GuzzleHttp\Exception\ClientException;
 
 class AuthController extends Controller
 {
+    private array $magentoAuth;
+    private string $magentoUrl;
     private Client $client;
     public function __construct()
     {
+        $this->magentoUrl = env('MAGENTO_URL');
+        $this->magentoAuth = [
+            env('MAGENTO_USER'),
+            env('MAGENTO_PASSWORD')
+        ];
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
     public function login(Request $request): JsonResponse
     {
         $instance = User::where('email', request()->email)->first();
+        $okResponse = [
+            'token' => $instance->createToken('recipe')->plainTextToken,
+            'user' => $instance,
+        ];
         if (empty($instance)) {
             $magentoToken = $this->generateMagentoToken($request);
             if ($magentoToken->getStatusCode() < 300) {
@@ -35,17 +46,11 @@ class AuthController extends Controller
             return response()->json([['email' => __('email incorrecto')]], 404);
         }
         if (Hash::check(request()->password, $instance->password)) {
-            return response()->json([
-                'token' => $instance->createToken('recipe')->plainTextToken,
-                'user' => $instance,
-            ]);
+            return response()->json($okResponse);
         }
         $magentoToken = $this->generateMagentoToken($request);
         if ($magentoToken->getStatusCode() < 300) {
-            return response()->json([
-                'token' => $instance->createToken('recipe')->plainTextToken,
-                'user' => $instance,
-            ]);
+            return response()->json($okResponse);
         }
         return response()->json([['password' => __('contraseña incorrecta')]], 404);
     }
@@ -93,10 +98,11 @@ class AuthController extends Controller
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
         $instance = User::create($inputs);
+        /*
         $medicMagento = $this->getMedic($request)->getData(true);
         if ($medicMagento['results'] == 0) {
-            return response()->json();
-        }
+            $res = $this->registerMagento($request);
+        }*/
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
@@ -174,10 +180,7 @@ class AuthController extends Controller
     {
         try {
             $res = $this->client->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
-                ],
+                'auth' => $this->magentoAuth,
                 'query' => $request->only('email', 'cedula')
             ]);
             $decodedRes = json_decode($res->getBody(), true);
@@ -193,10 +196,7 @@ class AuthController extends Controller
     {
         try {
             $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
-                ],
+                'auth' => $this->magentoAuth,
                 'json' => ['codigoMedico' => $fesa]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
@@ -213,11 +213,8 @@ class AuthController extends Controller
     {
         $inputs = $request->all();
         try {
-            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
-                ],
+            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
+                'auth' => $this->magentoAuth,
                 'json' => [
                     'email' => $inputs['email'],
                     'firstname' => $inputs['first_name'],
@@ -245,11 +242,8 @@ class AuthController extends Controller
     {
         $inputs = $request->all();
         try {
-            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
-                ],
+            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
+                'auth' => $this->magentoAuth,
                 'json' => [
                     'email' => $inputs['email'],
                     'nombre' => $inputs['first_name'],
@@ -276,10 +270,7 @@ class AuthController extends Controller
         $inputs = $request->only('email', 'password');
         try {
             $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
-                ],
+                'auth' => $this->magentoAuth,
                 'json' => [
                     'username' => $inputs['email'],
                     'password' => $inputs['password'],
