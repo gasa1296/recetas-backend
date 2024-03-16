@@ -185,7 +185,7 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
@@ -232,9 +232,7 @@ class AuthController extends Controller
             } else {
                 return response()->json($decodedRes, 400);
             }
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        } catch (ServerException $e) {
+        } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
@@ -259,9 +257,7 @@ class AuthController extends Controller
             } else {
                 return response()->json($decodedRes, 400);
             }
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        } catch (ServerException $e) {
+        } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
@@ -278,7 +274,7 @@ class AuthController extends Controller
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
@@ -303,7 +299,7 @@ class AuthController extends Controller
                     'magentoEmail' => $decodedRes['email']
                 ]);
             }
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
