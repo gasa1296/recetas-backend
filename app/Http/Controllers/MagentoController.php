@@ -41,7 +41,7 @@ class MagentoController extends Controller
     /**
      * verify fesa code.
      */
-    private function verifyFESA(string $fesa): bool
+    public function verifyFESA(string $fesa): bool
     {
         try {
             $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
