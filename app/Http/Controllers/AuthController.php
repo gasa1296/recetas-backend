@@ -4,30 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
 use App\Models\Specialization;
-use GuzzleHttp\Exception\ServerException;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 class AuthController extends Controller
 {
-    private array $magentoAuth;
-    private string $magentoUrl;
-    private Client $client;
-    public function __construct()
-    {
-        $this->magentoUrl = env('MAGENTO_URL');
-        $this->magentoAuth = [
-            env('MAGENTO_USER'),
-            env('MAGENTO_PASSWORD')
-        ];
-        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
-    }
     public function login(Request $request): JsonResponse
     {
         $instance = User::where('email', request()->email)->first();
@@ -36,7 +21,7 @@ class AuthController extends Controller
             'user' => $instance,
         ];
         if (empty($instance)) {
-            $magentoToken = $this->generateMagentoToken($request);
+            $magentoToken = (new MagentoController)->generateMagentoToken($request);
             if ($magentoToken->getStatusCode() < 300) {
                 return response()->json([
                     'recetasUser' => false,
@@ -48,7 +33,7 @@ class AuthController extends Controller
         if (Hash::check(request()->password, $instance->password)) {
             return response()->json($okResponse);
         }
-        $magentoToken = $this->generateMagentoToken($request);
+        $magentoToken = (new MagentoController)->generateMagentoToken($request);
         if ($magentoToken->getStatusCode() < 300) {
             return response()->json($okResponse);
         }
@@ -97,14 +82,15 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        if(!$this->verifyFESA($inputs['fesa'])) {
+        $magento = new MagentoController();
+        if(!$magento->verifyFESA($inputs['fesa'])) {
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
         if (!empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
-            $this->registerMagento($request);
+            $magento->registerMagento($request);
         } /*elseif (empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
             // registerCX
-            $this->registerMagento($request);
+            $magento->registerMagento($request);
         }*/
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
@@ -180,136 +166,5 @@ class AuthController extends Controller
     {
         auth()->user()->delete();
         return response()->json();
-    }
-    /**
-     * Display the medic data if exist.
-     */
-    public function getMedic(Request $request): JsonResponse
-    {
-        try {
-            $res = $this->client->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
-                'auth' => $this->magentoAuth,
-                'query' => $request->only('email', 'cedula')
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
-    }
-    /**
-     * verify fesa code.
-     */
-    private function verifyFESA(String $fesa): bool
-    {
-        try {
-            $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
-                'auth' => $this->magentoAuth,
-                'json' => ['codigoMedico' => $fesa]
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['codigo'] == 8001) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (ClientException $e) {
-            return false;
-        }
-    }
-    public function registerMagento(Request $request)
-    {
-        $inputs = $request->all();
-        try {
-            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
-                'auth' => $this->magentoAuth,
-                'json' => [
-                    'idContact' => $inputs['idCX'],
-                    'email' => $inputs['email'],
-                    'firstname' => $inputs['first_name'],
-                    'lastname' => $inputs['last_name1'],
-                    'middleName' => $inputs['last_name2'],
-                    'password' => $inputs['password'],
-                    'gender' => $inputs['gender'],
-                    'phone' => $inputs['phone1'],
-                    "typeUsage" => "Celular"
-
-                ]
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
-            } else {
-                return response()->json($decodedRes, 400);
-            }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
-    }
-    public function updateMagento(Request $request)
-    {
-        $inputs = $request->all();
-        try {
-            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
-                'auth' => $this->magentoAuth,
-                'json' => [
-                    'email' => $inputs['email'],
-                    'nombre' => $inputs['first_name'],
-                    'apellidoPaterno' => $inputs['last_name1'],
-                    'apellidoMaterno' => $inputs['last_name2'],
-                    'sexo' => $inputs['gender'],
-                    'TelefonoPrincipal' => $inputs['phone1'],
-                ]
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
-                return response()->json($decodedRes);
-            } else {
-                return response()->json($decodedRes, 400);
-            }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
-    }
-    public function generateMagentoToken(Request $request)
-    {
-        $inputs = $request->only('email', 'password');
-        try {
-            $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
-                'auth' => $this->magentoAuth,
-                'json' => [
-                    'username' => $inputs['email'],
-                    'password' => $inputs['password'],
-                ]
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
-    }
-    public function getUserByTokenMagento(Request $request)
-    {
-        try {
-            $res = $this->client->get('https://mcstaging.farmaciasespecializadas.com/rest/V1/customers/me', [
-                'headers' => [
-                    'Authorization' => "Bearer $request->token",
-                ],
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            $instance = User::where('email', '=', $decodedRes['email'])->first();
-            if ($instance){
-                return response()->json([
-                    'token' => $instance->createToken('recipe')->plainTextToken,
-                    'user' => $instance,
-                ]);
-            } else {
-                return response()->json([
-                    'recetasUser' => false,
-                    'magentoEmail' => $decodedRes['email']
-                ]);
-            }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
     }
 }

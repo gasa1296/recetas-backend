@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\LegalarioController;
+use App\Http\Controllers\MagentoController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
@@ -27,9 +28,10 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::post('medic', 'getMedic');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
-
+});
+Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
+    Route::post('medic', 'getMedic');
     Route::post('registerMagento', 'registerMagento');
     Route::post('updateMagento', 'updateMagento');
     Route::post('generateMagentoToken', 'generateMagentoToken');
