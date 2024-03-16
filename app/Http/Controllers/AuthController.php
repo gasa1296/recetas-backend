@@ -64,7 +64,7 @@ class AuthController extends Controller
             'last_name1' => ['required', 'string'],
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'string'],
+            'password' => ['nullable', 'string'],
             'phone1' => ['nullable', 'string'],
             'phone2' => ['nullable', 'string'],
             'gender' => ['required', 'string'],
@@ -89,6 +89,9 @@ class AuthController extends Controller
             'logo_spec' => ['nullable', 'array'],
             'logo_room.*' => ['nullable', 'file', 'mimes:jpg,png'],
             'logo_spec.*' => ['nullable', 'file', 'mimes:jpg,png'],
+
+            'idCX' => ['nullable'],
+            'clienteEcommerce' => ['nullable'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -97,12 +100,17 @@ class AuthController extends Controller
         if(!$this->verifyFESA($inputs['fesa'])) {
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
-        $instance = User::create($inputs);
-        /*
-        $medicMagento = $this->getMedic($request)->getData(true);
-        if ($medicMagento['results'] == 0) {
-            $res = $this->registerMagento($request);
+        if (!empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
+            $this->registerMagento($request);
+        } /*elseif (empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
+            // registerCX
+            $this->registerMagento($request);
         }*/
+        if (empty($inputs['password'])) {
+            $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
+        }
+        $instance = User::create($inputs);
+
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
@@ -216,6 +224,7 @@ class AuthController extends Controller
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => $this->magentoAuth,
                 'json' => [
+                    'idContact' => $inputs['idCX'],
                     'email' => $inputs['email'],
                     'firstname' => $inputs['first_name'],
                     'lastname' => $inputs['last_name1'],
