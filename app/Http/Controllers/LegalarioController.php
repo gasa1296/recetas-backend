@@ -317,7 +317,7 @@ class LegalarioController extends Controller
      */
     public function createSigner(Prescription $prescription): JsonResponse
     {
-        $errors = $this->verifyPrescription($prescription->medicaments);
+        $errors = (new PrescriptionController)->verifyPrescription($prescription->medicaments);
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
