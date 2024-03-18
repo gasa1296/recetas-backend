@@ -90,7 +90,7 @@ class AuthController extends Controller
             $magento->registerMagento($request);
         } /*elseif (empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
             // registerCX
-            $magento->registerMagento($request);
+            $magento->registerMagentoRepo($inputs);
         }*/
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));

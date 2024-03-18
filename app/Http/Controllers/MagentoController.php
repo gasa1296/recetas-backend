@@ -60,7 +60,10 @@ class MagentoController extends Controller
     }
     public function registerMagento(Request $request): JsonResponse
     {
-        $inputs = $request->all();
+        return $this->registerMagentoRepo($request->all());
+    }
+    public function registerMagentoRepo(array $inputs): JsonResponse
+    {
         try {
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => $this->magentoAuth,
