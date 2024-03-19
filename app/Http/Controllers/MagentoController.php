@@ -64,6 +64,13 @@ class MagentoController extends Controller
     }
     public function registerMagentoRepo(array $inputs): JsonResponse
     {
+        if (strtoupper($inputs['gender']) == 'M') {
+            $inputs['gender'] == 'Masculino';
+        } elseif (strtoupper($inputs['gender']) == 'F') {
+            $inputs['gender'] == 'Femenino';
+        } else {
+            $inputs['gender'] == 'Indefinido';
+        }
         try {
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => $this->magentoAuth,
@@ -93,6 +100,13 @@ class MagentoController extends Controller
     public function updateMagento(Request $request): JsonResponse
     {
         $inputs = $request->all();
+        if (strtoupper($inputs['gender']) == 'M') {
+            $inputs['gender'] == 'Masculino';
+        } elseif (strtoupper($inputs['gender']) == 'F') {
+            $inputs['gender'] == 'Femenino';
+        } else {
+            $inputs['gender'] == 'Indefinido';
+        }
         try {
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
                 'auth' => $this->magentoAuth,
