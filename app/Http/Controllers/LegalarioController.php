@@ -321,9 +321,9 @@ class LegalarioController extends Controller
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
-        /*if(!empty($prescription->file)) {
+        if(!empty($prescription->file)) {
             return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
-        }*/
+        }
         $res = $this->legalarioToken();
         if (!$res['success']) {
             return response()->json($res, 400);
