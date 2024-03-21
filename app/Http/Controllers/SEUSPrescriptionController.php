@@ -102,7 +102,7 @@ class SEUSPrescriptionController extends Controller
             }
             return response()->stream(function () use ($fileData) {
                 echo $fileData;
-            }, 'receta.pdf', ['Content-Disposition' => "inline; filename='receta.pdf'"]);
+            });
         }
     }
     /**
