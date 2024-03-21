@@ -88,7 +88,8 @@ class SEUSPrescriptionController extends Controller
         $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+            return Storage::response("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+            //return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
         } else {
             $zip = new ZipArchive;
             $status = $zip->open(base_path() . $dir . "zip");
@@ -99,7 +100,7 @@ class SEUSPrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
-            return response()->streamDownload(function () use ($fileData) {
+            return response()->stream(function () use ($fileData) {
                 echo $fileData;
             }, 'receta.pdf', ['Content-Disposition' => "inline; filename='receta.pdf'"]);
         }
