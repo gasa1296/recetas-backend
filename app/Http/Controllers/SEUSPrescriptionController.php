@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PrescriptionResource;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -84,11 +84,13 @@ class SEUSPrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
-
         $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
         $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::response("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+        if (!empty ($errors) || $prescription->add_med != '[]') {
+            return Storage::response("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf', [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="receta.pdf"'
+            ]);
             //return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
         } else {
             $zip = new ZipArchive;
@@ -102,7 +104,10 @@ class SEUSPrescriptionController extends Controller
             }
             return response()->stream(function () use ($fileData) {
                 echo $fileData;
-            });
+            }, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="receta.pdf"'
+            ]);
         }
     }
     /**
