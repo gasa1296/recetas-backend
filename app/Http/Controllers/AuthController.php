@@ -16,10 +16,6 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $instance = User::where('email', request()->email)->first();
-        $okResponse = [
-            'token' => $instance->createToken('recipe')->plainTextToken,
-            'user' => $instance,
-        ];
         if (empty($instance)) {
             $magentoToken = (new MagentoController)->generateMagentoToken($request);
             if ($magentoToken->getStatusCode() < 300) {
@@ -30,6 +26,10 @@ class AuthController extends Controller
             }
             return response()->json([['email' => __('email incorrecto')]], 404);
         }
+        $okResponse = [
+            'token' => $instance->createToken('recipe')->plainTextToken,
+            'user' => $instance,
+        ];
         if (Hash::check(request()->password, $instance->password)) {
             return response()->json($okResponse);
         }
