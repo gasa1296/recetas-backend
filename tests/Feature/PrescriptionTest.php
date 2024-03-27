@@ -40,10 +40,23 @@ class PrescriptionTest extends TestCase
       'saturation' => fake()->randomFloat(2, 1, 100),
       'ppm' => fake()->randomFloat(2, 1, 100),
       'allergy' => fake()->words(10, true),
-      'add_med' => json_encode([[
-        'name' => fake()->words(10, true),
-        'indications' => fake()->words(10, true)
-      ]]),
+      'add_med' => json_encode([
+        [
+          'name' => fake()->words(10, true),
+          'indications' => fake()->words(10, true)
+        ],
+        [
+          'name' => fake()->words(10, true),
+          'indications' => fake()->words(10, true)
+        ],
+        [
+          'name' => fake()->words(10, true),
+          'indications' => fake()->words(10, true)
+        ],
+        [
+          'name' => fake()->words(10, true),
+          'indications' => fake()->words(10, true)
+        ]]),
       'diagnostic' => fake()->words(10, true),
       'diet' => fake()->words(10, true),
       'add' => fake()->words(10, true),
@@ -53,6 +66,32 @@ class PrescriptionTest extends TestCase
       'file' => UploadedFile::fake()->image('photo.jpg'),
       'status' => fake()->randomNumber(3),
       'medicaments' => [
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'salt' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
+        [
+          'dose' => fake()->randomDigit() . fake()->word(),
+          'way' => fake()->words(10, true),
+          'frequency' => fake()->randomNumber() . fake()->word(),
+          'duration' => fake()->randomNumber() . fake()->word(),
+          'quantity' => fake()->randomDigit(),
+          'name' => fake()->word(),
+          'type' => fake()->word(),
+          'family' => fake()->word(),
+          'group' => fake()->word(),
+          'salt' => fake()->word(),
+          'medicament_id' => fake()->randomNumber(),
+        ],
         [
           'dose' => fake()->randomDigit() . fake()->word(),
           'way' => fake()->words(10, true),
