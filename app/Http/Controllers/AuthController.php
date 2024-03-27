@@ -86,16 +86,16 @@ class AuthController extends Controller
         if(!$magento->verifyFESA($inputs['fesa'])) {
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
-        if (!empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
+        if (!empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             $magento->registerMagento($request);
-        } /*elseif (empty ($inputs['idCX']) && empty ($inputs['clienteEcommerce'])) {
+        } elseif (empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             // registerCX
-            $magento->registerMagentoRepo($inputs);
-        }*/
+            //$magento->registerMagentoRepo($inputs);
+        }
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
-        $inputs['fesa'] = $inputs['idCX']?: $inputs['fesa'];
+        $inputs['fesa'] = !empty($inputs['idCX'])?$inputs['idCX']: $inputs['fesa'];
         $instance = User::create($inputs);
 
         event(new Registered($instance));
