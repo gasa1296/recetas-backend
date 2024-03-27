@@ -95,6 +95,7 @@ class AuthController extends Controller
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
+        $inputs['fesa'] = $inputs['idCX']?: $inputs['fesa'];
         $instance = User::create($inputs);
 
         event(new Registered($instance));
