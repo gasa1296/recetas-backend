@@ -111,15 +111,26 @@ class MagentoController extends Controller
             $res = $this->client->post('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com/ic/api/integration/v1/flows/rest/GESTIONCLIENTEREST/1.0/gestionClienteRest', [
                 'auth' => $this->magentoAuth,
                 'json' => [
-                    'correoElectronico' => $inputs['email'],
-                    'nombre' => $inputs['first_name'],
-                    'apellidoPaterno' => $inputs['last_name1'],
-                    'apellidoMaterno' => $inputs['last_name2'],
-                    'password' => $inputs['password'],
-                    'sexo' => $inputs['gender'],
-                    'phone' => $inputs['phone1'],
-                    "typeUsage" => "Celular"
-
+                    [
+                        "origen" => "Receta Medica Electronica",
+                        "nombre" => $inputs['first_name'],
+                        "apellidoPaterno" => $inputs['last_name1'],
+                        "apellidoMaterno" => $inputs['last_name2'],
+                        //"fechaNacimiento" => "fechaNacimiento",
+                        "canalInscripcion" => "Interface",
+                        "correoElectronico" => $inputs['email'],
+                        "sexo" => $inputs['gender'],
+                        //"razonSocial"  => "razonSocial", 
+                        "segmento" => "Mostrador",
+                        //"avisoPrivacidad"  => "avisoPrivacidad", 
+                        //"idVitamedica"  => "idVitamedica", 
+                        "unidadOperativa" => "FESA",
+                        "sistemaPOS" => "Seus",
+                        //"codigoPostalFanasa" => "01234",
+                        "status" => "Activo",
+                        "tipo" => "Medico"
+                        //"rfc"  => "rfc"
+                    ]
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
@@ -142,6 +153,7 @@ class MagentoController extends Controller
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
                 'auth' => $this->magentoAuth,
                 'json' => [
+                    'idContact' => $inputs['idCX'],
                     'email' => $inputs['email'],
                     'nombre' => $inputs['first_name'],
                     'apellidoPaterno' => $inputs['last_name1'],
