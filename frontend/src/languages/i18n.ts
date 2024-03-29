@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { initReactI18next } from "../../node_modules/react-i18next";
+import { initReactI18next } from "react-i18next";
 import lang_es from "./en/lang.json";
 import lang_en from "./en/lang.json";
 import { getInitLanguage } from "@/utils/getInitialLanguage";

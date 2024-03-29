@@ -42,6 +42,7 @@ export interface Field {
   minLength?: number;
   max?: number;
   min?: number;
+  isSubform?: number;
 }
 
 export interface FieldType {

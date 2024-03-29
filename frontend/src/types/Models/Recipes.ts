@@ -20,4 +20,5 @@ export interface IRecipes {
   created_at: string;
   room?: any;
   add_med?: string;
+  code?: string;
 }

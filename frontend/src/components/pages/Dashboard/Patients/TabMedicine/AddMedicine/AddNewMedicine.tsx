@@ -41,7 +41,7 @@ export default function AddNewMedicine({ nextStep, backStep }: any) {
       default: search || "",
     },
     {
-      label: "Indicaciones adicionales*",
+      label: "Posología *",
       name: "indications",
       required: true,
       type: "textarea",

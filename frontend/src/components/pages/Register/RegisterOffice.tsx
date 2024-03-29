@@ -81,7 +81,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           default: form3?.rooms ?? "",
         },
         {
-          label: "Codigo Postal *",
+          label: "Código Postal *",
           name: "zip",
           required: true,
           type: "text",

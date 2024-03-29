@@ -16,9 +16,9 @@ export default function InputRecetas({
   width = 100,
   recetasOptions,
   customChange,
+  isSubform = 0,
 }: Field) {
   const values: any = watch();
-
   if (visible && !values[visible]) return <> </>;
 
   return (
@@ -46,7 +46,7 @@ export default function InputRecetas({
               <input
                 type="radio"
                 name={name}
-                id={`${name}${index + 1}`}
+                id={`${name}${index + 1}-${isSubform + 1}`}
                 value={option.value}
                 className="ml-2"
                 {...register(name, { required })}
@@ -60,7 +60,10 @@ export default function InputRecetas({
                     });
                 }}
               />
-              <label className="ml-2" htmlFor={`${name}${index + 1}`}>
+              <label
+                className="ml-2"
+                htmlFor={`${name}${index + 1}-${isSubform + 1}`}
+              >
                 Elegir este diseño
               </label>
             </div>

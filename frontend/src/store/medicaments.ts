@@ -1,6 +1,7 @@
 // authStore.ts
 import {
   createMedicament,
+  getMedicamentByCode,
   getSearchExternalMedicament,
 } from "@/services/medicaments";
 
@@ -10,6 +11,8 @@ import {
   IMedicamentDefault,
   INewMedicament,
 } from "@/types/Models/Medicament";
+import { IRecipes } from "@/types/Models/Recipes";
+import { canAddMedicamentByGroup } from "@/utils/getValidGroup";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -24,6 +27,7 @@ type IState = {
   error: string | null;
   step: number;
   search: string;
+
   confirmRecipForm: IConfirmRecipForm;
   SearchMedicaments: (search: string) => any;
   SetSearch: (search: string) => any;
@@ -32,6 +36,10 @@ type IState = {
   SetStep: (step: number) => any;
   SetConfirmForm: (confirmRecipForm: IConfirmRecipForm) => any;
   SetAllCardMedicament: (medicaments: IMedicament[]) => any;
+  DuplicateRecipe: (
+    medicaments: IMedicament[],
+    confirmRecipForm: IRecipes
+  ) => any;
   CreateMedicament: (medicamentPayload: IMedicament) => any;
 };
 
@@ -74,6 +82,23 @@ export const useMedicamentStore = create<IState>((set, get) => ({
     set({ cardMedicament: medicaments });
   },
 
+  DuplicateRecipe: (medicaments: IMedicament[], confirmForm: IRecipes) => {
+    set({
+      cardMedicament: medicaments,
+      confirmRecipForm: {
+        temp: Number(confirmForm.temp),
+        weight: Number(confirmForm.weight),
+        height: Number(confirmForm.height),
+        pressure: Number(confirmForm.pressure),
+        saturation: Number(confirmForm.saturation),
+        ppm: Number(confirmForm.ppm),
+        diagnostic: confirmForm.diagnostic,
+        add: confirmForm.add,
+        room_id: String(confirmForm.room.id),
+      },
+    });
+  },
+
   SearchMedicaments: async (search: string = "") => {
     set({ loading: true, search });
     try {
@@ -82,13 +107,10 @@ export const useMedicamentStore = create<IState>((set, get) => ({
 
       const timeId = setTimeout(async () => {
         try {
-          /* const result = await getSearchMedicament(search); */
           const resultExternal = await getSearchExternalMedicament(search);
 
           set({
-            medicaments: resultExternal.data.Respuesta.filter(
-              (medicament: any) => medicament.clasificacionsa !== "Grupo I"
-            ),
+            medicaments: resultExternal.data.Respuesta,
             step: 2,
             loading: false,
             timeId: null,
@@ -127,7 +149,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
     });
   },
 
-  SelectMedicament: (medicamentId: string) => {
+  SelectMedicament: async (medicamentId: string) => {
     set({ loadingAction: true });
     try {
       const medicaments = get().medicaments;
@@ -135,10 +157,40 @@ export const useMedicamentStore = create<IState>((set, get) => ({
         (medicament) => medicament.uicodproducto === medicamentId
       );
 
+      set({
+        step: 3,
+        selectedMedicament: findMedicament,
+      });
+
+      //Validate group I
+      const medicamentResults = await getMedicamentByCode(
+        findMedicament?.uicodproducto ?? ""
+      );
+
+      const medicamentResult = medicamentResults.data.products[0];
+
+      const unificatedMedicament = {
+        ...findMedicament,
+        medicament_id: findMedicament?.uicodproducto,
+        family: findMedicament?.familia,
+        group: medicamentResult.saClassification || "",
+        name: findMedicament?.vnombreproducto ?? "",
+        type: medicamentResult.type || "",
+        salt: findMedicament?.vnombresal,
+      };
+
+      if (unificatedMedicament.group === "Grupo I") {
+        setTimeout(() => {
+          set({ loadingAction: false });
+        }, 200);
+        return toast.error("Medicamentos de Fracción 1 no se puede prescribir");
+      }
+
       if (findMedicament) {
         set({
-          step: 3,
-          selectedMedicament: findMedicament,
+          //step: 3,
+          loadingAction: false,
+          selectedMedicament: unificatedMedicament,
         });
       }
       setTimeout(() => {
@@ -155,6 +207,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
 
     try {
       const cardMedicament = get().cardMedicament || [];
+
       set({
         cardMedicament: [...cardMedicament, medicamentPayload],
         step: 1,

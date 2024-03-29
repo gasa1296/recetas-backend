@@ -107,8 +107,8 @@ export default function InputMedicaments({
                     : `${medicine.dose} | ${medicine.frequency} | ${medicine.duration} | ${medicine.way}  | ${medicine.quantity} | ${medicine.add}`}
                 </p>
                 {(medicine.new ||
-                  medicine.clasificacionsa === "Grupo II" ||
-                  medicine.clasificacionsa === "Grupo III") && (
+                  medicine.group === "Grupo II" ||
+                  medicine.group === "Grupo III") && (
                   <div className="bg-[#FFBB32] px-4 py-2 mr-4">
                     Atención: Este medicamento no puede prescribirse en una
                     receta médica electrónica, si continúa sólo podrá imprimirse

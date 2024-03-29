@@ -167,9 +167,9 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
     },
 
     {
-      label: "Diagnóstico Médico: *",
+      label: "Diagnóstico Médico: ",
       name: "diagnostic",
-      required: true,
+      required: false,
       type: "textarea",
       width: 100,
       default: confirmRecipForm?.diagnostic,
