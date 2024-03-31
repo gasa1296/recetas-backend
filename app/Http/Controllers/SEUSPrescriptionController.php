@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PrescriptionResource;
+use App\Models\Document;
 use Illuminate\Http\{Request, Response};
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Prescription;
 use GuzzleHttp\Client;
 use Validator;
-use Carbon\Carbon;
 class SEUSPrescriptionController extends Controller
 {
     private Client $client;
@@ -39,22 +39,21 @@ class SEUSPrescriptionController extends Controller
             return response()->json(['token' => 'token invalido'], 403);
         }
         $inputs = $request->all();
-        Log::debug('document', ['document' => $inputs['document']]);
-        $token = $request->bearerToken();
-        if ($token != env('PUBLIC_KEY', '')) {
-            return response()->json(['token' => 'token invalido'], 403);
-        }
-        $instance = Prescription::where('document_id', $inputs['document']['id'])
-            ->firstOrFail();
-        $inputs = $request->all();
-        Log::debug('prescription', ['prescription' => $instance->id]);
+        $document_id = $inputs['document']['id'];
+        $instance = Document::where('id', $document_id)->firstOrFail()->prescription;
+
+        $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
+        $multiple = count($medicaments) > 5;
+
         $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
+        if ($multiple) {
+            $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
+        }
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
-        Log::debug('prescription', ['file' => $instance->file]);
         return(new PrescriptionResource($instance))->response();
     }
     /**
@@ -85,15 +84,24 @@ class SEUSPrescriptionController extends Controller
     public function getFile(Request $request, Prescription $prescription)
     {
         $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty ($errors) || $prescription->add_med != '[]') {
-            return Storage::response("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf', [
+        $medicaments = array_merge($prescription->medicaments->toArray(), json_decode($prescription->add_med, true));
+        $multiple = count($medicaments) > 5;
+
+        if (!empty ($errors) || !empty(json_decode($prescription->add_med, true))) {
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
+            if ($multiple) {
+                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
+            }
+            return Storage::response($dir, 'receta.pdf', [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="receta.pdf"'
             ]);
-            //return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
         } else {
             $zip = new ZipArchive;
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
+            if ($multiple) {
+                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.";
+            }
             $status = $zip->open(base_path() . $dir . "zip");
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);

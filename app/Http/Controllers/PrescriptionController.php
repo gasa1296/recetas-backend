@@ -2,31 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PrescriptionMedicament;
+use App\Models\Document;
 use App\Notifications\PrescriptionSignedEmail;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
 use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
-use Milon\Barcode\DNS1D;
 
 
 class PrescriptionController extends Controller
 {
-    private Client $client;
-    private string $token;
-    public function __construct()
-    {
-        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
-    }
     /**
      * Display a listing of the resource.
      * @todo add search
@@ -174,11 +163,21 @@ class PrescriptionController extends Controller
     public function getFile(Request $request, Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+        $medicaments = array_merge($prescription->medicaments->toArray(), json_decode($prescription->add_med, true));
+        $multiple = count($medicaments) > 5;
+
+        if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
+            if ($multiple) {
+                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
+            }
+            return Storage::download($dir, 'receta.pdf');
         } else {
             $zip = new ZipArchive;
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
+            if ($multiple) {
+                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.";
+            }
             $status = $zip->open(base_path() . $dir . "zip");
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
@@ -208,26 +207,65 @@ class PrescriptionController extends Controller
     private function storeExtra(Prescription $instance): JsonResponse
     {
         $legalario = new LegalarioController();
-        $dir = "medics/$instance->user_id/prescriptions/$instance->id.pdf";
-        $document = $legalario->createDocument($instance);
-        if ($document->getStatusCode() >= 300) {
-            return $document;
+        $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
+        $document = $legalario->createDocument($instance, $medicaments);
+        $multiple = count($medicaments) > 5;
+
+        if ($multiple) {
+            $documentData = $document->getData(true);
+            foreach($documentData as $doc) {
+                if(is_array($doc)) {
+                    return response()->json($doc, 400);
+                }
+            }
+            $instance->document_id = implode(';', $documentData);
+        } else {
+            if($document->getStatusCode() >= 300) {
+                return $document;
+            }
+            $documentData = $document->getData(true);
+            $instance->document_id = $documentData['data']['id'];
+            Document::create([
+                'id' => $instance->document_id,
+                'prescription_id' => $instance->id
+            ]);
         }
-        $instance->document_id = $document->getData(true)['data']['id'];
+        $errors = $this->verifyPrescription($instance->medicaments);
         if (!empty($errors) || !empty(json_decode($instance->add_med, true))) {
             $instance->status = 5;
-            $file = $legalario->saveFile($instance);
-
-            if ($file->getStatusCode() >= 300) {
-                return $file;
-            }
-
-            $fileData = base64_decode($file->getData(true)['data']['document']);
-            if (!Storage::put($dir, $fileData)) {
-                return response()->json('Error guardando archivo', 500);
-            }
-
             $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
+            if ($multiple) {
+                foreach($documentData as $document_id)
+                {
+                    $document = Document::create([
+                        'id' => $document_id,
+                        'prescription_id' => $instance->id
+                    ]);
+                    $file = $legalario->saveFile($document_id);
+                    if ($file->getStatusCode() >= 300) {
+                        return $file;
+                    }
+                    $fileData = $file->getData(true);
+                    $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
+                    if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
+                        return response()->json('Error guardando archivo', 500);
+                    }
+                }
+            } else {
+                Document::create([
+                    'id' => $instance->document_id,
+                    'prescription_id' => $instance->id
+                ]);
+                $file = $legalario->saveFile($instance->document_id);
+                if ($file->getStatusCode() >= 300) {
+                    return $file;
+                }
+                $fileData = $file->getData(true);
+                $dir = "medics/$instance->user_id/prescriptions/$instance->id.pdf";
+                if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
+                    return response()->json('Error guardando archivo', 500);
+                }
+            }
         }
         $instance->save();
         return(new PrescriptionResource($instance))->response();

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Exception\{ServerException, ClientException};
 use Illuminate\Http\Request;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Log;
+use GuzzleHttp\{Client, Promise};
 use Milon\Barcode\DNS1D;
 use App\Models\Prescription;
 use Carbon\Carbon;
@@ -38,7 +37,7 @@ class LegalarioController extends Controller
                 ]
             ]);
             return json_decode($res->getBody(), true);
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
@@ -65,229 +64,247 @@ class LegalarioController extends Controller
                 ]
             ]);
             return json_decode($res->getBody(), true);
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
     /**
      * Add document id to prescription
      */
-    public function createDocument(Prescription $prescription): JsonResponse
+    public function createDocument(Prescription $prescription, array $medicaments): JsonResponse
     {
         $res = $this->legalarioToken();
         if (!$res['success']) {
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
-        try {
-            $medic = $prescription->medic;
-            $patient = $prescription->patient;
-            $room = $prescription->room;
-            Log::debug('timestamp', [$prescription->created_at]);
-            $date = new Carbon($prescription->created_at);
-            $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
-                'headers' => [
-                    'Authorization' => "Bearer $token",
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ],
-                'json' => [
-                    'name' => 'Receta',
-                    'type' => 'template',
-                    'template_id' => $room->design,
-                    'sequence' => [
-                        [
-                            [
-                                'key' => 1,
-                                'name' => 'name',
-                                'value' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 2,
-                                'name' => 'identification',
-                                'value' => implode(
-                                    ",",
-                                    array_map(function ($spec) {
-                                        return "$spec[name] Céd prof: $spec[identification]";
-                                    }, $medic->specializations->toArray())
-                                ),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 3,
-                                'name' => 'id',
-                                'value' => $prescription->code,
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 4,
-                                'name' => 'date',
-                                'value' => $date->format('d/m/Y'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 5,
-                                'name' => 'time',
-                                'value' => $date->format('H:i'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 6,
-                                'name' => 'patient name',
-                                'value' => "$patient->first_name $patient->last_name1 $patient->last_name2",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 7,
-                                'name' => 'birth date',
-                                'value' => Carbon::createFromFormat('Y-m-d', $patient->birth_date)->format('d/m/Y'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 8,
-                                'name' => 'weight',
-                                'value' => $prescription->weight ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 9,
-                                'name' => 'height',
-                                'value' => $prescription->height ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 10,
-                                'name' => 'temp',
-                                'value' => $prescription->temp ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 11,
-                                'name' => 'saturation',
-                                'value' => $prescription->saturation ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 12,
-                                'name' => 'pressure',
-                                'value' => $prescription->pressure ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 13,
-                                'name' => 'ppm',
-                                'value' => $prescription->ppm ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 14,
-                                'name' => 'diagnostic',
-                                'value' => $prescription->diagnostic ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 15,
-                                'name' => 'medicaments',
-                                'value' => implode(
-                                    "\n",
-                                    array_map(function ($medicament) {
-                                        return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
-                                    }, $prescription->medicaments->toArray())
-                                ) . "\n" . implode(
-                                    "\n",
-                                    array_map(function ($medicament) {
-                                        return "$medicament[name] \n $medicament[indications] \n";
-                                    }, json_decode($prescription->add_med, true) ?: [])
-                                ) . "\n" . $prescription->add,
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 16,
-                                'name' => 'room',
-                                'value' => $room->name ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 17,
-                                'name' => 'address',
-                                'value' => "$room->street, $room->n_exterior, $room->n_interior, $room->colony, $room->zip, $room->delegation, $room->state",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 18,
-                                'name' => 'phone',
-                                'value' => $medic->phone1 ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 19,
-                                'name' => 'email',
-                                'value' => $medic->email ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 20,
-                                'name' => 'specializations',
-                                'value' => $medic->specializations->first()->name ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 21,
-                                'name' => 'university',
-                                'value' => $medic->specializations->first()->university ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 1001,
-                                'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
-                                'value' => empty($medic->specializations->first()->logo) ? '' : base64_encode(Storage::disk('public')->get($medic->specializations->first()->logo)),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 1002,
-                                'name' => 'IMAGEN_CLIENTE_HOSPITAL',
-                                'value' => empty($room->logo) ? '' : base64_encode(Storage::disk('public')->get($room->logo)),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 1003,
-                                'name' => 'IMAGEN_CLIENTE_BARRAS',
-                                'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C128'),
-                            ]
-                        ],
-                    ]
-                ]
-            ]);
-            return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        if (count($medicaments) > 5) {
+            $promises = [];
+            for ($page = 0; $page <= ceil(count($medicaments) / 5); $page++) {
+                $medicamentsPaginated = array_slice($medicaments, $page * 5, 5);
+                array_push($promises, $this->requestDocument($prescription, $medicamentsPaginated, $token));
+            }
+            return response()->json(array_map(function ($response) {
+                if ($response['state'] == 'fulfilled') {
+                    return json_decode($response['value']->getBody(), true)['data']['id'];
+                } else {
+                    return json_decode($response['reason']->getResponse()->getBody(), true);
+                }
+            }, Promise\Utils::settle($promises)->wait()));
+        } else {
+            $res = $this->requestDocument($prescription, $medicaments, $token)->wait();
+            if ($res['state'] == 'fulfilled') {
+                return response()->json(json_decode($res['value']->getBody(), true));
+            } else {
+                return response()->json(json_decode($res['reason']->getResponse()->getBody(), true), $res['reason']->getStatusCode());
+            }
         }
     }
-    public function saveFile(Prescription $prescription): JsonResponse
+    private function requestDocument(Prescription $prescription, array $medicaments, string $token)
+    {
+        $medic = $prescription->medic;
+        $patient = $prescription->patient;
+        $room = $prescription->room;
+        $date = new Carbon($prescription->created_at);
+        $res = $this->client->postAsync(env('LEGALARIO_URL') . '/v2/documents', [
+            'headers' => [
+                'Authorization' => "Bearer $token",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
+            'json' => [
+                'name' => 'Receta',
+                'type' => 'template',
+                'template_id' => $room->design,
+                'sequence' => [
+                    [
+                        [
+                            'key' => 1,
+                            'name' => 'name',
+                            'value' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 2,
+                            'name' => 'identification',
+                            'value' => implode(
+                                ",",
+                                array_map(function ($spec) {
+                                    return "$spec[name] Céd prof: $spec[identification]";
+                                }, $medic->specializations->toArray())
+                            ),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 3,
+                            'name' => 'id',
+                            'value' => $prescription->code,
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 4,
+                            'name' => 'date',
+                            'value' => $date->format('d/m/Y'),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 5,
+                            'name' => 'time',
+                            'value' => $date->format('H:i'),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 6,
+                            'name' => 'patient name',
+                            'value' => "$patient->first_name $patient->last_name1 $patient->last_name2",
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 7,
+                            'name' => 'birth date',
+                            'value' => Carbon::createFromFormat('Y-m-d', $patient->birth_date)->format('d/m/Y'),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 8,
+                            'name' => 'weight',
+                            'value' => $prescription->weight ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 9,
+                            'name' => 'height',
+                            'value' => $prescription->height ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 10,
+                            'name' => 'temp',
+                            'value' => $prescription->temp ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 11,
+                            'name' => 'saturation',
+                            'value' => $prescription->saturation ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 12,
+                            'name' => 'pressure',
+                            'value' => $prescription->pressure ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 13,
+                            'name' => 'ppm',
+                            'value' => $prescription->ppm ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 14,
+                            'name' => 'diagnostic',
+                            'value' => $prescription->diagnostic ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 15,
+                            'name' => 'medicaments',
+                            'value' => implode(
+                                "\n",
+                                array_map(function ($key, $medicament) {
+                                    if (empty ($medicament['indications'])) {
+                                        return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
+                                    } else {
+                                        return "$medicament[name] \n $medicament[indications] \n";
+                                    }
+                                }, array_keys($medicaments), $medicaments)
+                            ),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 16,
+                            'name' => 'room',
+                            'value' => $room->name ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 17,
+                            'name' => 'address',
+                            'value' => "$room->street, $room->n_exterior, $room->n_interior, $room->colony, $room->zip, $room->delegation, $room->state",
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 18,
+                            'name' => 'phone',
+                            'value' => $medic->phone1 ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 19,
+                            'name' => 'email',
+                            'value' => $medic->email ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 20,
+                            'name' => 'specializations',
+                            'value' => $medic->specializations->first()->name ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 21,
+                            'name' => 'university',
+                            'value' => $medic->specializations->first()->university ?: '',
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 1001,
+                            'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
+                            'value' => empty($medic->specializations->first()->logo) ? '' : base64_encode(Storage::disk('public')->get($medic->specializations->first()->logo)),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 1002,
+                            'name' => 'IMAGEN_CLIENTE_HOSPITAL',
+                            'value' => empty($room->logo) ? '' : base64_encode(Storage::disk('public')->get($room->logo)),
+                        ]
+                    ],
+                    [
+                        [
+                            'key' => 1003,
+                            'name' => 'IMAGEN_CLIENTE_BARRAS',
+                            'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C128'),
+                        ]
+                    ],
+                ]
+            ]
+        ]);
+        return $res;
+    }
+    public function saveFile(string $document_id): JsonResponse
     {
         $res = $this->legalarioToken();
         if (!$res['success']) {
@@ -302,14 +319,14 @@ class LegalarioController extends Controller
                     'Accept' => 'application/json'
                 ],
                 'json' => [
-                    'document_id' => $prescription->document_id,
+                    'document_id' => $document_id,
                     "document_type" => 'Documento sin firmas',
                     "format" => "Base64",
                 ]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
     /**
@@ -330,9 +347,9 @@ class LegalarioController extends Controller
         }
         $token = $res['data']['access_token'];
 
-        try {
+        $promises = array_map(function($document) use ($prescription, $token) {
             $medic = $prescription->medic;
-            $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
+            $res = $this->client->postAsync(env('LEGALARIO_URL') . '/v2/signers', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                     'Content-Type' => 'application/json',
@@ -351,10 +368,16 @@ class LegalarioController extends Controller
                     ],
                 ]
             ]);
-            return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
-        }
+            return $res;
+        }, $prescription->documents->toArray());
+
+        return response()->json(array_map(function($response) {
+            if ($response['state'] == 'fulfilled') {
+                return json_decode($response['value']->getBody(), true);
+            } else {
+                return json_decode($response['reason']->getResponse()->getBody(), true);
+            }
+        }, Promise\Utils::settle($promises)->wait()));
     }
     public function getMedicaments(Request $request)
     {
@@ -373,8 +396,8 @@ class LegalarioController extends Controller
                 'json' => ['products' => $inputs['products']]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
 }
