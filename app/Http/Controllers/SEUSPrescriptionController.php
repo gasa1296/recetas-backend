@@ -54,6 +54,7 @@ class SEUSPrescriptionController extends Controller
         }
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
+        Log::debug('prescription', ['file' => $instance->file]);
         return(new PrescriptionResource($instance))->response();
     }
     /**

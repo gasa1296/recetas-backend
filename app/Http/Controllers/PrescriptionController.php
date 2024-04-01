@@ -209,21 +209,14 @@ class PrescriptionController extends Controller
         $legalario = new LegalarioController();
         $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
         $document = $legalario->createDocument($instance, $medicaments);
+        if ($document->getStatusCode() >= 300) {
+            return $document;
+        }
+        $documentData = $document->getData(true);
         $multiple = count($medicaments) > 5;
-
         if ($multiple) {
-            $documentData = $document->getData(true);
-            foreach($documentData as $doc) {
-                if(is_array($doc)) {
-                    return response()->json($doc, 400);
-                }
-            }
             $instance->document_id = implode(';', $documentData);
         } else {
-            if($document->getStatusCode() >= 300) {
-                return $document;
-            }
-            $documentData = $document->getData(true);
             $instance->document_id = $documentData['data']['id'];
             Document::create([
                 'id' => $instance->document_id,
