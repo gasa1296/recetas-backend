@@ -25,9 +25,9 @@ return new class extends Migration
             $table->text('add')->nullable();
             $table->json('add_med')->nullable();
             $table->string('client')->nullable();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('room_id')->constrained('consulting_rooms');
-            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('room_id')->constrained('consulting_rooms')->onDelete('cascade');
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->string('file')->nullable();
             $table->string('document_id')->nullable();
             $table->integer('status')->default(0);

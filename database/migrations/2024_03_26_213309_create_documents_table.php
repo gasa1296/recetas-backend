@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('prescription_id')->constrained('prescriptions');
+            $table->foreignId('prescription_id')->constrained('prescriptions')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

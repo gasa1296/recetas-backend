@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('family');
             $table->string('group');
             $table->string('salt');
-            $table->foreignId('prescription_id')->constrained('prescriptions');
+            $table->foreignId('prescription_id')->constrained('prescriptions')->onDelete('cascade');
             $table->timestamps();
         });
     }
