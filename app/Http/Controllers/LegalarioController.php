@@ -74,7 +74,7 @@ class LegalarioController extends Controller
     public function createDocument(Prescription $prescription, array $medicaments): JsonResponse
     {
         $responseData = [];
-        for ($page = 0; $page <= ceil(count($medicaments) / 5); $page++) {
+        for ($page = 0; $page < ceil(count($medicaments) / 5); $page++) {
             $medicamentsPaginated = array_slice($medicaments, $page * 5, 5);
             $res = $this->requestDocument($prescription, $medicamentsPaginated);
             if ($res->getStatusCode() >= 300) {
