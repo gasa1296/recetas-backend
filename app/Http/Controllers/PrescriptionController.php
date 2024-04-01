@@ -163,22 +163,13 @@ class PrescriptionController extends Controller
     public function getFile(Request $request, Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $medicaments = array_merge($prescription->medicaments->toArray(), json_decode($prescription->add_med, true));
-        $multiple = count($medicaments) > 5;
-
         if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
-            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
-            if ($multiple) {
-                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
-            }
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
             return Storage::download($dir, 'receta.pdf');
         } else {
             $zip = new ZipArchive;
-            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-            if ($multiple) {
-                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.";
-            }
-            $status = $zip->open(base_path() . $dir . "zip");
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.zip";
+            $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -213,48 +204,22 @@ class PrescriptionController extends Controller
             return $document;
         }
         $documentData = $document->getData(true);
-        $multiple = count($medicaments) > 5;
-        if ($multiple) {
-            $instance->document_id = implode(';', $documentData);
-        } else {
-            $instance->document_id = $documentData['data']['id'];
-            Document::create([
-                'id' => $instance->document_id,
-                'prescription_id' => $instance->id
-            ]);
-        }
+        $instance->document_id = implode(';', $documentData);
         $errors = $this->verifyPrescription($instance->medicaments);
         if (!empty($errors) || !empty(json_decode($instance->add_med, true))) {
             $instance->status = 5;
             $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
-            if ($multiple) {
-                foreach($documentData as $document_id)
-                {
-                    $document = Document::create([
-                        'id' => $document_id,
-                        'prescription_id' => $instance->id
-                    ]);
-                    $file = $legalario->saveFile($document_id);
-                    if ($file->getStatusCode() >= 300) {
-                        return $file;
-                    }
-                    $fileData = $file->getData(true);
-                    $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
-                    if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
-                        return response()->json('Error guardando archivo', 500);
-                    }
-                }
-            } else {
-                Document::create([
-                    'id' => $instance->document_id,
+            foreach ($documentData as $document_id) {
+                $document = Document::create([
+                    'id' => $document_id,
                     'prescription_id' => $instance->id
                 ]);
-                $file = $legalario->saveFile($instance->document_id);
+                $file = $legalario->saveFile($document_id);
                 if ($file->getStatusCode() >= 300) {
-                    return $file;
+                    return response()->json([$document_id] + $file->getData(true));
                 }
                 $fileData = $file->getData(true);
-                $dir = "medics/$instance->user_id/prescriptions/$instance->id.pdf";
+                $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
                 if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
                     return response()->json('Error guardando archivo', 500);
                 }

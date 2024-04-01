@@ -73,20 +73,17 @@ class LegalarioController extends Controller
      */
     public function createDocument(Prescription $prescription, array $medicaments): JsonResponse
     {
-        if (count($medicaments) > 5) {
-            $responseData = [];
-            for ($page = 0; $page <= ceil(count($medicaments) / 5); $page++) {
-                $medicamentsPaginated = array_slice($medicaments, $page * 5, 5);
-                $res = $this->requestDocument($prescription, $medicamentsPaginated);
-                if ($res->getStatusCode() >= 300) {
-                    return $res;
-                } else {
-                    array_push($responseData, $res->getData(true)['data']['id']);
-                }
+        $responseData = [];
+        for ($page = 0; $page <= ceil(count($medicaments) / 5); $page++) {
+            $medicamentsPaginated = array_slice($medicaments, $page * 5, 5);
+            $res = $this->requestDocument($prescription, $medicamentsPaginated);
+            if ($res->getStatusCode() >= 300) {
+                return $res;
+            } else {
+                array_push($responseData, $res->getData(true)['data']['id']);
             }
-            return response()->json($responseData);
         }
-        return $this->requestDocument($prescription, $medicaments);
+        return response()->json($responseData);
     }
     private function requestDocument(Prescription $prescription, array $medicaments)
     {
@@ -355,7 +352,7 @@ class LegalarioController extends Controller
                         'Accept' => 'application/json'
                     ],
                     'json' => [
-                        'document_id' => $prescription->document_id,
+                        'document_id' => $document,
                         'workflow' => true,
                         'use_whatsapp' => false,
                         'signers' => [

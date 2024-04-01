@@ -41,14 +41,7 @@ class SEUSPrescriptionController extends Controller
         $inputs = $request->all();
         $document_id = $inputs['document']['id'];
         $instance = Document::where('id', $document_id)->firstOrFail()->prescription;
-
-        $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
-        $multiple = count($medicaments) > 5;
-
-        $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
-        if ($multiple) {
-            $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
-        }
+        $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
@@ -85,25 +78,16 @@ class SEUSPrescriptionController extends Controller
     public function getFile(Request $request, Prescription $prescription)
     {
         $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
-        $medicaments = array_merge($prescription->medicaments->toArray(), json_decode($prescription->add_med, true));
-        $multiple = count($medicaments) > 5;
-
         if (!empty ($errors) || !empty(json_decode($prescription->add_med, true))) {
-            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
-            if ($multiple) {
-                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
-            }
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
             return Storage::response($dir, 'receta.pdf', [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="receta.pdf"'
             ]);
         } else {
             $zip = new ZipArchive;
-            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-            if ($multiple) {
-                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.";
-            }
-            $status = $zip->open(base_path() . $dir . "zip");
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.zip";
+            $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
