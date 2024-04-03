@@ -1,5 +1,5 @@
 // authStore.ts
-import { registerUser } from "@/services/auth";
+import { autopopulateProfile, registerUser } from "@/services/auth";
 import {
   IForm1,
   IForm2,
@@ -17,6 +17,7 @@ type IRegisterStore = {
   form1: IForm1 | null;
   form2: IForm2 | null;
   form3: IForm3 | null;
+  enableSearch: boolean;
 
   setClearForms: () => void;
 
@@ -25,6 +26,7 @@ type IRegisterStore = {
   setForm3: (form: IForm3) => void;
   setSuccess: (success: boolean) => void;
   handleSubmit: (registerPayload: IRegisterPayload) => Promise<any>;
+  handleAutoPopulate: (search: string) => Promise<any>;
 };
 
 export const useRegisterStore = create<IRegisterStore>((set) => ({
@@ -32,6 +34,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
   form1: null,
   form2: null,
   form3: null,
+  enableSearch: false,
   loading: false,
   error: null,
 
@@ -40,6 +43,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
       form1: null,
       form2: null,
       form3: null,
+      enableSearch: false,
     });
   },
 
@@ -62,6 +66,15 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
   handleSubmit: async (registerPayload: IRegisterPayload) => {
     set({ loading: true });
     try {
+      const result = await autopopulateProfile(registerPayload.email || "");
+
+      if (result && result.data.contacts) {
+        const contact = result.data.contacts[0] || null;
+        registerPayload.idCX = contact.datosGenerales.id;
+        registerPayload.clienteEcommerce =
+          contact.datosGenerales.clienteEcommerce === "No" ? false : true;
+      }
+
       const response = await registerUser(registerPayload);
       set({ success: true });
       return response.data;
@@ -71,6 +84,42 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
       set({ error: message });
     } finally {
       set({ loading: false });
+    }
+  },
+
+  handleAutoPopulate: async (search: string) => {
+    set({ loading: true });
+    try {
+      const result = await autopopulateProfile(search);
+
+      if (!result.data.results) {
+        toast.error("Medico no encontrado!");
+        return set({ loading: false, form1: null, enableSearch: false });
+      }
+      setTimeout(() => {
+        const contact = result.data.contacts[0] || null;
+
+        const user = {
+          first_name: contact.datosGenerales.nombre,
+          last_name1: contact.datosGenerales.apellidoPaterno,
+          last_name2: contact.datosGenerales.apellidoMaterno,
+          email: contact.listaCorreoElectronico[0].correroElectronico,
+          gender: contact.datosGenerales.sexo === "Masculino" ? "0" : "1",
+          phone1:
+            contact.listaTelefonos &&
+            contact.listaTelefonos[0].telefono.NumeroTelefonico,
+          phone2: "",
+          fesa: "",
+          password: "",
+          confirmPassword: "",
+        };
+        toast.success("Medico encontrado satisfactoriamente!");
+        set({ loading: false, form1: user, enableSearch: true });
+      }, 1000);
+    } catch (error: any) {
+      const message = getRequestError(error);
+      toast.error(message);
+      set({ error: message, loading: false, enableSearch: false, form1: null });
     }
   },
 }));

@@ -44,7 +44,16 @@ export interface IForm3 {
   rooms: IRoom[] | null;
 }
 
-export interface IRegisterPayload extends IForm1, IForm2, IForm3 {}
+export interface ExternalClient {
+  idCX: string | null;
+  clienteEcommerce: boolean | null;
+}
+
+export interface IRegisterPayload
+  extends IForm1,
+    IForm2,
+    IForm3,
+    ExternalClient {}
 
 export interface ILoginPayload {
   email: string | null;

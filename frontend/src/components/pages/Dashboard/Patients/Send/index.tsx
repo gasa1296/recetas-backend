@@ -3,18 +3,16 @@ import LoadingModal from "@/components/Loading/LoadingModal";
 import { useMedicamentStore } from "@/store/medicaments";
 import { usePacients } from "@/store/pacients";
 import { useRecipeStore } from "@/store/recipes";
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { FaRegEnvelope, FaWhatsapp, FaChevronDown } from "react-icons/fa";
+import React, { useEffect } from "react";
+
+import { FaRegEnvelope, FaChevronDown } from "react-icons/fa";
 import { MdOutlineLocalPrintshop } from "react-icons/md";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-export default function Send({ nextStep, backStep, resetTab }: any) {
+export default function Send({ resetTab }: any) {
   const ResetPacients = usePacients((state) => state.ResetPacients);
   const ResetMedicaments = useMedicamentStore(
     (state) => state.ResetMedicaments
   );
-  const ClearRecipe = useRecipeStore((state) => state.ClearRecipe);
   const {
     SendRecipeByEmail,
     handlePrint,
@@ -22,11 +20,13 @@ export default function Send({ nextStep, backStep, resetTab }: any) {
     setEnableDownload,
     enableDownload,
     hasMissingSign,
+    ClearRecipe,
+    recipes,
   } = useRecipeStore((state) => ({
-    SendRecipeByWhatsapp: state.SendRecipeByWhatsapp,
+    recipes: state.recipes,
     SendRecipeByEmail: state.SendRecipeByEmail,
     loading: state.loading,
-    recipe: state.recipe,
+    ClearRecipe: state.ClearRecipe,
     handlePrint: state.handlePrint,
     setEnableDownload: state.setEnableDownload,
     enableDownload: state.enableDownload,
@@ -43,11 +43,7 @@ export default function Send({ nextStep, backStep, resetTab }: any) {
     }, 30000);
   }, []);
 
-  useEffect(() => {
-    if (enableDownload && !loading) {
-      handlePrint();
-    }
-  }, [enableDownload]);
+  console.log("first", recipes);
 
   return (
     <section className=" ">
@@ -70,22 +66,32 @@ export default function Send({ nextStep, backStep, resetTab }: any) {
             Su receta fue generada de forma exitosa, puede compartirla con su
             paciente mediante alguno de los siguientes medios:
           </p>
-          <div className=" flex flex-wrap justify-center items-center mt-10 pb-10">
-            <button
-              onClick={handlePrint}
-              className="flex  justify-center items-center border button-print  mw-[15%] mx-3 text-[20px] mt-4 p-1 px-10"
-            >
-              <MdOutlineLocalPrintshop size={18} />
-              <p className="mx-2 "> Imprimir</p>
-            </button>
-            <button
-              onClick={() => SendRecipeByEmail()}
-              className="flex items-center justify-center button-white mw-[20%] p-1 px-10 mx-3 mt-4"
-            >
-              <FaRegEnvelope color="#1A1A1A " size={18} />
-              <p className="mx-2 "> Enviar por correo</p>
-            </button>
-          </div>
+
+          {recipes.map((recipe: any, index: number) => (
+            <div key={index} className="mt-10 pb-10">
+              <p className="text-[#1A1A1A] text-[20px] font-bold">
+                Receta: {recipe.groupType}
+              </p>
+              <div className=" flex flex-wrap justify-center items-center ">
+                <button
+                  onClick={() => handlePrint(recipe.id)}
+                  className="flex  justify-center items-center border button-print  mw-[15%] mx-3 text-[20px] mt-4 p-1 px-10"
+                >
+                  <MdOutlineLocalPrintshop size={18} />
+                  <p className="mx-2 "> Imprimir / Visualizar PDF</p>
+                </button>
+                {recipe.hasSign && (
+                  <button
+                    onClick={() => SendRecipeByEmail(recipe.id)}
+                    className="flex items-center justify-center button-white mw-[20%] p-1 px-10 mx-3 mt-4"
+                  >
+                    <FaRegEnvelope color="#1A1A1A " size={18} />
+                    <p className="mx-2 "> Enviar por correo</p>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
 
           <div className="block md:flex justify-center  py-6">
             <button
@@ -95,7 +101,7 @@ export default function Send({ nextStep, backStep, resetTab }: any) {
               }}
               className="button-BlacK w-full p-2 font-bold max-w-[660px] "
             >
-              Generar nueva receta
+              Terminar / Generar nueva receta
             </button>
           </div>
         </section>

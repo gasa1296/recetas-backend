@@ -5,20 +5,27 @@ import { getRecipeDate, getStatusName } from "@/utils/getDateFormat";
 import { usePacients } from "@/store/pacients";
 import { calculateAge } from "@/utils/getAge";
 import { MdOutlineArrowBackIos, MdOutlineLocalPrintshop } from "react-icons/md";
+import { HiOutlineDuplicate } from "react-icons/hi";
 import toast from "react-hot-toast";
 import LoadingModal from "@/components/Loading/LoadingModal";
+import { useMedicamentStore } from "@/store/medicaments";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function RecipesData({ nextStep, backStep }: any) {
   const submitData = async (data: any) => {
     nextStep();
   };
-  const { selectedRecipe, SetStep } = usePacients((state) => ({
+
+  const { DuplicateRecipe } = useMedicamentStore((state) => ({
+    DuplicateRecipe: state.DuplicateRecipe,
+  }));
+  const { selectedRecipe, SetStep, SetTabStep } = usePacients((state) => ({
     selectedRecipe: state.selectedRecipe,
     SetStep: state.SetStep,
+    SetTabStep: state.SetTabStep,
   }));
 
-  const newMedicaments = JSON.parse(selectedRecipe?.add_med || "[]");
+  const newMedicaments = JSON.parse(selectedRecipe?.add_med ?? "[]");
 
   const [downloadLoading, setDownloadLoading] = useState(false);
   const fields: Field[] = [
@@ -37,7 +44,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "text",
       width: 33,
       disabled: true,
-      default: getStatusName(selectedRecipe?.status || 0),
+      default: getStatusName(selectedRecipe?.status ?? 0),
     },
     {
       label: "Folio",
@@ -45,7 +52,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "text",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.id,
+      default: selectedRecipe?.code,
     },
 
     {
@@ -93,7 +100,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "number",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.temp,
+      default: Number(selectedRecipe?.temp),
     },
     {
       label: "Peso (kg)",
@@ -101,7 +108,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "number",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.weight,
+      default: Number(selectedRecipe?.weight),
     },
     {
       label: "Altura (cm)",
@@ -109,7 +116,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "number",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.height,
+      default: Number(selectedRecipe?.height),
     },
     {
       label: "Presión arterial",
@@ -117,7 +124,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "text",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.pressure,
+      default: Number(selectedRecipe?.pressure),
     },
     {
       label: "Saturación (%)",
@@ -125,7 +132,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "number",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.saturation,
+      default: Number(selectedRecipe?.saturation),
     },
     {
       label: "Frecuencia cardiaca (ppm)",
@@ -133,7 +140,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "number",
       width: 33,
       disabled: true,
-      default: selectedRecipe?.ppm,
+      default: Number(selectedRecipe?.ppm),
     },
     {
       label: "Separation",
@@ -142,9 +149,9 @@ export default function RecipesData({ nextStep, backStep }: any) {
     },
 
     {
-      label: "Diagnóstico Médico: *",
+      label: "Diagnóstico Médico: ",
       name: "diagnostic",
-      required: true,
+      required: false,
       type: "textarea",
       width: 100,
       disabled: true,
@@ -169,7 +176,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       required: true,
       type: "medicaments",
       disabled: true,
-      default: [...newMedicaments, ...(selectedRecipe?.medicaments || [])],
+      default: [...newMedicaments, ...(selectedRecipe?.medicaments ?? [])],
     },
     {
       label: "Separation",
@@ -177,6 +184,7 @@ export default function RecipesData({ nextStep, backStep }: any) {
       type: "separation",
     },
   ];
+  console.log("first", selectedRecipe);
 
   const handlePrint = async () => {
     try {
@@ -207,8 +215,30 @@ export default function RecipesData({ nextStep, backStep }: any) {
       setDownloadLoading(false);
     } catch (err) {
       setDownloadLoading(false);
-      toast.error("Error al descargar la receta");
+      toast(
+        "Favor de intentarlo nuevamente presionando el botón Imprimir/Visualizar PDF",
+        {
+          icon: "⚠️", // Icono unicode de advertencia (opcional)
+          style: {
+            border: "1px solid #ffa502", // Borde naranja
+            padding: "16px", // Espaciado interno
+            color: "#ffa502", // Color del texto naranja
+          },
+        }
+      );
       console.error("Error al obtener el PDF:", err);
+    }
+  };
+
+  const handleDuplicate = () => {
+    if (selectedRecipe) {
+      nextStep();
+      SetTabStep(2);
+      SetStep(2);
+      DuplicateRecipe(
+        [...newMedicaments, ...(selectedRecipe?.medicaments ?? [])],
+        selectedRecipe
+      );
     }
   };
 
@@ -223,13 +253,22 @@ export default function RecipesData({ nextStep, backStep }: any) {
           <MdOutlineArrowBackIos size={20} />
           <p className="ms-1"> Regresar</p>
         </button>
-        <button
-          onClick={handlePrint}
-          className="flex  justify-center items-center border button-print  mw-[15%] mx-3 text-[20px]  p-1 px-10"
-        >
-          <MdOutlineLocalPrintshop size={18} />
-          <p className="mx-2 "> Imprimir</p>
-        </button>
+        <div className="flex">
+          <button
+            onClick={() => handleDuplicate()}
+            className="button-BlacK flex justify-center items-center p-2 w-[120px] "
+          >
+            <HiOutlineDuplicate size={20} />
+            <p className="ms-1"> Duplicar </p>
+          </button>
+          <button
+            onClick={handlePrint}
+            className="flex  justify-center items-center border button-print  mw-[15%] mx-3 h-full  p-1 py-2 px-10"
+          >
+            <MdOutlineLocalPrintshop size={18} />
+            <p className="mx-2"> Imprimir / Visualizar PDF</p>
+          </button>
+        </div>
       </div>
       <div className="  mb-4 p-2 ps-3 container-dashboard">
         <p className="text-[#1A1A1A] text-[18px] my-6 font-bold pl-2">

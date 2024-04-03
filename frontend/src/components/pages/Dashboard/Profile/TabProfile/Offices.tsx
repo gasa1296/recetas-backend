@@ -95,7 +95,7 @@ export default function Offices() {
           default: rooms || "",
         },
         {
-          label: "Codigo Postal *",
+          label: "Código Postal *",
           name: "zip",
           required: true,
           type: "text",

@@ -107,6 +107,7 @@ export default function FormGenerator({
             register={register}
             setValue={setValue}
             watch={watch}
+            isSubform={isSubform}
             setError={setError}
             {...field}
             label={

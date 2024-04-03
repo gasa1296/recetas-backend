@@ -1,6 +1,6 @@
 export interface IMedicament {
-  name: string;
-  id: string;
+  name?: string;
+  id?: string;
   ingredient?: string;
   vnombreproducto?: string;
   vnombresal?: string;
@@ -8,8 +8,8 @@ export interface IMedicament {
   new?: boolean;
   familia?: string;
   via?: string;
-  clasificacionsa?: string;
-  tipoproducto?: string;
+  group?: string;
+  type?: string;
   information?: string;
 }
 
@@ -24,12 +24,12 @@ export interface INewMedicament {
 }
 
 export interface IConfirmRecipForm {
-  temp: string;
-  weight: string;
-  height: string;
-  pressure: string;
-  saturation: string;
-  ppm: string;
+  temp: string | number;
+  weight: string | number;
+  height: string | number;
+  pressure: string | number;
+  saturation: string | number;
+  ppm: string | number;
   diagnostic: string;
   add: string;
   room_id: string;

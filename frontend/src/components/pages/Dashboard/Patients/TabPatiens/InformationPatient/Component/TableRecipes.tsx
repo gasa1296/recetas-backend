@@ -53,11 +53,11 @@ export default function TableRecipes({ nextStep }: any) {
               {reversePreescriptions.map((prescription: any, index: number) => {
                 return (
                   <tr key={index} className="hover:bg-[#F7F8FA] text-[16px] ">
-                    <td className="px-6 h-[52px] ">{prescription.id}</td>
+                    <td className="px-6 h-[52px] ">{prescription.code}</td>
 
                     <td className="px-6 h-[52px] ">
-                      {prescription.diagnostic.slice(0, 160)}
-                      {prescription.diagnostic.length > 160 ? "..." : ""}
+                      {prescription.diagnostic?.slice(0, 160)}
+                      {prescription.diagnostic?.length > 160 ? "..." : ""}
                     </td>
                     <td className="px-6 h-[52px] ">
                       {new Date(prescription.created_at).toLocaleString()}

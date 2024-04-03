@@ -12,6 +12,7 @@ import { useMedicamentStore } from "@/store/medicaments";
 import { usePacients } from "@/store/pacients";
 import { useRecipeStore } from "@/store/recipes";
 import LoadingModal from "@/components/Loading/LoadingModal";
+import { getMedicamentByCode } from "@/services/medicaments";
 
 export default function Nav({ setScreen }: any) {
   const { user } = useAuthStore((state) => ({
