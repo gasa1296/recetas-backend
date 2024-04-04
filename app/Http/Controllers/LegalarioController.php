@@ -367,7 +367,7 @@ class LegalarioController extends Controller
                 $resBody = json_decode($res->getBody(), true);
                 array_push($response, $resBody);
             } catch (ClientException | ServerException $e) {
-                $resBody = json_decode($res->getBody(), true);
+                $resBody = json_decode($e->getResponse()->getBody(), true);
                 array_push($response, $resBody);
             }
         }
