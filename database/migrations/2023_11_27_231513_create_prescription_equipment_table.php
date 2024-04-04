@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('prescription_equipment', function (Blueprint $table) {
             $table->id();
             $table->text('add')->nullable();
-            $table->foreignId('equipment_id')->constrained('equipment');
-            $table->foreignId('prescription_id')->constrained('prescriptions');
+            $table->foreignId('equipment_id')->constrained('equipment')->onDelete('cascade');
+            $table->foreignId('prescription_id')->constrained('prescriptions')->onDelete('cascade');
             $table->timestamps();
 
             $table->unique(['equipment_id', 'prescription_id']);

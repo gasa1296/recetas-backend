@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('identification')->unique();
             $table->string('university');
             $table->string('logo')->nullable();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
