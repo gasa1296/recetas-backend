@@ -48,7 +48,7 @@ class LegalarioController extends Controller
     {
         $res = $this->legalarioLogin();
         if (empty($res['success'])) {
-            return response()->json($res, 400);
+            return $res;
         }
         try {
             $res = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
@@ -88,7 +88,7 @@ class LegalarioController extends Controller
     private function requestDocument(Prescription $prescription, array $medicaments)
     {
         $res = $this->legalarioToken();
-        if (!$res['success']) {
+        if (empty($res['success'])) {
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
@@ -302,7 +302,7 @@ class LegalarioController extends Controller
     public function saveFile(string $document_id): JsonResponse
     {
         $res = $this->legalarioToken();
-        if (!$res['success']) {
+        if (empty($res['success'])) {
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
@@ -337,7 +337,7 @@ class LegalarioController extends Controller
             return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
         }
         $res = $this->legalarioToken();
-        if (!$res['success']) {
+        if (empty($res['success'])) {
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
