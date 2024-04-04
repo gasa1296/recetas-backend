@@ -11,12 +11,12 @@ class PrescriptionSignedEmail extends Notification
 {
     use Queueable;
     private Prescription $prescription;
-    private string $fileData;
+    private array $fileData;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Prescription $prescription, $fileData)
+    public function __construct(Prescription $prescription, array $fileData)
     {
         $this->prescription = $prescription;
         $this->fileData = $fileData;
@@ -37,11 +37,14 @@ class PrescriptionSignedEmail extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-
-        return (new MailMessage)->markdown('mail.prescription', [
+        $email = (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
             'base_url' => env('APP_URL', '') . '/storage/'
-        ])->attachData($this->fileData, 'receta.pdf')->subject('Receta médica electrónica');
+        ])->subject('Receta médica electrónica');
+        foreach ($this->fileData as $key => $file) {
+            $email = $email->attachData($file, "$key.pdf");
+        }
+        return $email;
     }
     public function toWhatsApp(object $notifiable)
     {

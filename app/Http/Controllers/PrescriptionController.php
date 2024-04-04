@@ -139,19 +139,23 @@ class PrescriptionController extends Controller
     public function sendEmailNotification(Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
         $add_med = json_decode($prescription->add_med, true);
         if (empty($errors) && empty($add_med)) {
-            $zip = new ZipArchive;
-            $status = $zip->open(base_path() . $dir . "zip");
-            if ($status !== true) {
-                return response()->json('error al obtener archivo 1', 500);
+            $data = [];
+            foreach (explode(';', $prescription->documents_id) as $document) {
+                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
+                $zip = new ZipArchive;
+                $status = $zip->open(base_path() . $dir);
+                if ($status !== true) {
+                    continue;
+                }
+                $fileData = $zip->getFromName('signed_receta.pdf');
+                if ($fileData === false) {
+                    continue;
+                }
+                $data[$document] = $fileData;
             }
-            $fileData = $zip->getFromName('signed_receta.pdf');
-            if ($fileData === false) {
-                return response()->json('error al obtener archivo 2', 500);
-            }
-            $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
+            $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $data));
         } else {
             return response()->json(['prescription' => 'receta no valida para enviar por correo']);
         }
