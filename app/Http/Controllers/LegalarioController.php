@@ -47,8 +47,8 @@ class LegalarioController extends Controller
     private function legalarioToken(): array
     {
         $res = $this->legalarioLogin();
-        if (!$res['success']) {
-            return $res;
+        if (empty($res['success'])) {
+            return response()->json($res, 400);
         }
         try {
             $res = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
