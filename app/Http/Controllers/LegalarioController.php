@@ -342,7 +342,7 @@ class LegalarioController extends Controller
         }
         $token = $res['data']['access_token'];
         $response = [];
-        foreach (explode(';', $prescription->documents_id) as $document) {
+        foreach (explode(';', $prescription->document_id) as $document) {
             try {
                 $medic = $prescription->medic;
                 $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
