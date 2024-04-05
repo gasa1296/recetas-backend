@@ -14,15 +14,15 @@ import LoadingModal from "@/components/Loading/LoadingModal";
 import { useRoomsStore } from "@/store/rooms";
 
 export default function ConfirmAccount({ nextStep, backStep }: any) {
-  const { form3, form2, form1, handleSubmit, loading } = useRegisterStore(
-    (state) => ({
+  const { form3, form2, form1, handleSubmit, loading, enableSearch } =
+    useRegisterStore((state) => ({
       form3: state.form3,
       form2: state.form2,
       form1: state.form1,
       handleSubmit: state.handleSubmit,
       loading: state.loading,
-    })
-  );
+      enableSearch: state.enableSearch,
+    }));
 
   const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
@@ -52,6 +52,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       label: "Nombre(s) *",
       name: "first_name",
       required: true,
+      disabled: enableSearch,
       type: "text",
       width: 50,
       default: form1?.first_name || "",
@@ -60,6 +61,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       label: "Apellido Paterno *",
       name: "last_name1",
       required: true,
+      disabled: enableSearch,
       type: "text",
       width: 50,
       default: form1?.last_name1 || "",
@@ -67,6 +69,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
     {
       label: "Apellido Materno *",
       name: "last_name2",
+      disabled: enableSearch,
       required: true,
       type: "text",
       width: 50,
@@ -77,6 +80,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       label: "Correo electrónico *",
       name: "email",
       required: true,
+      disabled: enableSearch,
       type: "email",
       width: 50,
       default: form1?.email || "",
@@ -85,6 +89,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
     {
       label: "Teléfono celular *",
       name: "phone1",
+      disabled: enableSearch,
       required: true,
       type: "text",
       width: 50,
@@ -104,6 +109,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       label: "Seleccionar Género *",
       name: "gender",
       required: true,
+      disabled: enableSearch,
       type: "select",
       options: [
         { label: "Masculino", value: "0" },
@@ -117,7 +123,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       label: "Código FESA *",
       name: "fesa",
       required: true,
-      type: "number",
+      type: "text",
       width: 50,
       default: form1?.fesa || "",
     },
@@ -260,7 +266,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           default: form3?.rooms || "",
         },
         {
-          label: "Codigo Postal *",
+          label: "Código Postal *",
           name: "zip",
           required: true,
           type: "text",

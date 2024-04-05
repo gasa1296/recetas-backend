@@ -11,6 +11,7 @@ export interface IPacient {
   gender: string;
   prescriptions: any;
   birth_date: string;
+  code?: string;
 }
 
 export interface IDefaultPacient {

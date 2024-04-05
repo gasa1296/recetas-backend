@@ -5,6 +5,7 @@ import {
   logoutUser,
   recoverPassword,
   recoverUser,
+  recoverUserMagento,
   updateProfile,
   verifyUser,
 } from "@/services/auth";
@@ -15,10 +16,12 @@ import {
   IRecoverPayload,
   IRegisterPayload,
 } from "@/types/Store/Register";
-import { getRequestError, getRequestErrorArray } from "@/utils/getRequestError";
+import { getRequestErrorArray } from "@/utils/getRequestError";
 import { getResetPasswordParams } from "@/utils/getResetPasswordParams";
 import toast from "react-hot-toast";
 import { create } from "zustand";
+import { useRoomsStore } from "./rooms";
+import { useRegisterStore } from "./register";
 
 type AuthState = {
   isAuth: boolean;
@@ -32,7 +35,7 @@ type AuthState = {
   Verify: (id: string, hash: string) => any;
   ForgotPassword: (forgotPayload: IForgotPayload) => any;
   RecoverPassword: (recoverPayload: IRecoverPayload) => any;
-  RecoverUser: (token: string) => any;
+  RecoverUser: (token: string, externalToken?: boolean) => any;
   UpdateProfile: (profilePayload: IRegisterPayload) => any;
 };
 
@@ -45,9 +48,19 @@ export const useAuthStore = create<AuthState>((set) => ({
   loading: false,
   error: null,
 
-  RecoverUser: async (token: string) => {
+  RecoverUser: async (token: string, externalToken?: boolean) => {
     try {
-      const result = await recoverUser(token);
+      let result;
+      const { handleAutoPopulate } = useRegisterStore.getState();
+
+      if (externalToken) result = await recoverUserMagento(token);
+      else result = await recoverUser(token);
+
+      if (result.data.recetasUser === false && result.data.magentoEmail) {
+        handleAutoPopulate(result.data.magentoEmail);
+        return result.data;
+      }
+
       await localStorage.setItem("sessionUser", JSON.stringify(result.data));
       await localStorage.setItem("sessionToken", token);
       set({
@@ -55,6 +68,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         sessionToken: token,
         user: result.data,
       });
+      useRoomsStore.getState().GetRooms();
+      return {};
     } catch (error: any) {
       await localStorage.removeItem("sessionToken");
       toast.error(error.message);
@@ -68,17 +83,24 @@ export const useAuthStore = create<AuthState>((set) => ({
   Login: async (loginPayload: ILoginPayload) => {
     set({ loading: true, error: null });
     try {
+      const { handleAutoPopulate } = useRegisterStore.getState();
       const response = await loginUser(loginPayload);
+
+      const { user, token, recetasUser, magentoEmail } = response.data;
+
+      if (recetasUser === false && magentoEmail) {
+        handleAutoPopulate(magentoEmail);
+        return response.data;
+      }
+
       set({
         isAuth: true,
-        sessionToken: response.data.token,
-        user: response.data.user,
+        sessionToken: token,
+        user,
       });
-      await localStorage.setItem("sessionToken", response.data.token);
-      await localStorage.setItem(
-        "sessionUser",
-        JSON.stringify(response.data.user)
-      );
+      await localStorage.setItem("sessionToken", token);
+      await localStorage.setItem("sessionUser", JSON.stringify(user));
+      useRoomsStore.getState().GetRooms();
       return response.data;
     } catch (error: any) {
       const message = getRequestErrorArray(error);

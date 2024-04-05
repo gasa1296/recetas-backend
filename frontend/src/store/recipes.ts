@@ -16,13 +16,14 @@ type IState = {
   loading: any;
   error: string | null;
   recipe: any;
+  recipes: any[];
   enableDownload: boolean;
   hasMissingSign: boolean;
   CreateRecipe: (recipePayload: IRecipes, medicaments: IMedicament[]) => any;
-  SendRecipeByWhatsapp: () => void;
-  SendRecipeByEmail: () => void;
+  SendRecipeByWhatsapp: (recipeId?: string) => void;
+  SendRecipeByEmail: (recipeId?: string) => void;
   ClearRecipe: () => void;
-  handlePrint: () => void;
+  handlePrint: (recipeId?: string) => void;
   setEnableDownload: (value: boolean) => void;
 };
 
@@ -33,6 +34,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
   loading: false,
   error: null,
   recipe: "",
+  recipes: [],
   enableDownload: false,
   hasMissingSign: false,
 
@@ -45,52 +47,141 @@ export const useRecipeStore = create<IState>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const filterNewMedicaments = medicaments.filter(
-        (medicament) => medicament.new
-      );
+      const groupIIMedicaments: IMedicament[] = [];
+      const groupIIIMedicaments: IMedicament[] = [];
+      const groupNewMedicaments: IMedicament[] = [];
+      const groupMedicaments: IMedicament[] = [];
 
-      const filterMedicaments = medicaments.filter(
-        (medicament) => !medicament.new
-      );
+      const recipePayloadTemp = {
+        ...recipePayload,
+        height: Number(recipePayload.height),
+        ppm: Number(recipePayload.ppm),
+        saturation: Number(recipePayload.saturation),
+        temp: Number(recipePayload.temp),
+        weight: Number(recipePayload.weight),
+        medicaments: [],
+      };
 
-      recipePayload.height = Number(recipePayload.height);
-      recipePayload.ppm = Number(recipePayload.ppm);
-      recipePayload.saturation = Number(recipePayload.saturation);
-      recipePayload.temp = Number(recipePayload.temp);
-      recipePayload.weight = Number(recipePayload.weight);
-      recipePayload.add_med = JSON.stringify(filterNewMedicaments);
-      recipePayload.medicaments = filterMedicaments.map((medicament) => ({
-        ...medicament,
-        medicament_id: medicament.uicodproducto,
-        family: medicament.familia,
-        group: medicament.clasificacionsa,
-        name: medicament.vnombreproducto || "",
-        type: medicament.tipoproducto,
-        salt: medicament.vnombresal,
-      }));
-      const result = await createRecipe(recipePayload);
+      medicaments.map((medicament) => {
+        switch (medicament.group) {
+          case "Grupo II":
+            groupIIMedicaments.push(medicament);
+            break;
+          case "Grupo III":
+            groupIIIMedicaments.push(medicament);
+            break;
+          default:
+            if (medicament.new) {
+              groupNewMedicaments.push(medicament);
+            } else {
+              groupMedicaments.push(medicament);
+            }
+            break;
+        }
+      });
 
-      let findGroupMedicamente: any = filterMedicaments.filter(
-        (medicament) =>
-          medicament.clasificacionsa === "Grupo II" ||
-          medicament.clasificacionsa === "Grupo III"
-      );
+      const recipesPetition = [];
+      const result = [];
+      let missingSign = true;
 
-      let missingSign =
-        findGroupMedicamente?.length > 0 || filterNewMedicaments.length > 0
-          ? true
-          : false;
+      if (groupMedicaments.length > 0) {
+        missingSign = false;
 
-      let ResultSign = null;
-      if (!missingSign) {
-        ResultSign = await getRecipeSign(result.data.data.id);
+        const recipe = await createRecipe({
+          ...recipePayloadTemp,
+          medicaments: groupMedicaments,
+          add_med: "[]",
+        });
+
+        result.push(recipe);
+        /* recipesPetition.push(
+          createRecipe({
+            ...recipePayloadTemp,
+            medicaments: groupMedicaments,
+            add_med: "[]",
+          })
+        ); */
       }
 
+      if (groupIIMedicaments.length > 0) {
+        const recipe = await createRecipe({
+          ...recipePayloadTemp,
+          medicaments: groupIIMedicaments,
+          add_med: "[]",
+        });
+
+        result.push(recipe);
+        /* recipesPetition.push(
+          createRecipe({
+            ...recipePayloadTemp,
+            medicaments: groupIIMedicaments,
+            add_med: "[]",
+          })
+        ); */
+      }
+
+      if (groupIIIMedicaments.length > 0) {
+        const recipe = await createRecipe({
+          ...recipePayloadTemp,
+          medicaments: groupIIIMedicaments,
+          add_med: "[]",
+        });
+
+        result.push(recipe);
+        /*  recipesPetition.push(
+          createRecipe({
+            ...recipePayloadTemp,
+            medicaments: groupIIIMedicaments,
+            add_med: "[]",
+          })
+        ); */
+      }
+
+      if (groupNewMedicaments.length > 0) {
+        const recipe = await createRecipe({
+          ...recipePayloadTemp,
+          add_med: JSON.stringify(groupNewMedicaments),
+        });
+
+        result.push(recipe);
+        /* recipesPetition.push(
+          createRecipe({
+            ...recipePayloadTemp,
+            add_med: JSON.stringify(groupNewMedicaments),
+          })
+        ); */
+      }
+
+      /* const result = await Promise.all(recipesPetition); */
+
+      const recipePromises = result.map(async (recipe) => {
+        const { data } = recipe.data;
+
+        const groupType =
+          (data.medicaments[0] && data.medicaments[0].group) ||
+          "Nuevos medicamentos";
+
+        if (
+          groupType !== "Grupo II" &&
+          groupType !== "Grupo III" &&
+          data.add_med === "[]"
+        ) {
+          const sign = await getRecipeSign(recipe.data.data.id);
+          return {
+            ...recipe.data.data,
+            sign: sign?.data.data.signers[0].id || "",
+            hasSign: true,
+            groupType: "Medicamentos generales",
+          };
+        }
+
+        return { ...recipe.data.data, groupType };
+      });
+
+      const recipes = await Promise.all(recipePromises);
+
       set({
-        recipe: {
-          ...result.data,
-          signer: ResultSign?.data.data.signers[0].id || "",
-        },
+        recipes,
         enableDownload: false,
         hasMissingSign: missingSign,
       });
@@ -127,31 +218,41 @@ export const useRecipeStore = create<IState>((set, get) => ({
     }
   },
 
-  SendRecipeByEmail: async () => {
+  SendRecipeByEmail: async (recipeId?: string) => {
     set({ loading: true, error: null });
 
     try {
       const recipe = get().recipe;
 
-      await sendRecipeByEmail(recipe?.data?.id);
+      await sendRecipeByEmail(recipeId || recipe?.data?.id);
 
       toast.success("Receta enviada por Email");
       return true;
     } catch (error: any) {
-      toast.error("Error al descargar la receta, aun no esta lista");
+      toast(
+        "Favor de intentarlo nuevamente presionando el botón Enviar por correo",
+        {
+          icon: "⚠️", // Icono unicode de advertencia (opcional)
+          style: {
+            border: "1px solid #ffa502", // Borde naranja
+            padding: "16px", // Espaciado interno
+            color: "#ffa502", // Color del texto naranja
+          },
+        }
+      );
       set({ error: error.message });
     } finally {
       set({ loading: false });
     }
   },
 
-  handlePrint: async () => {
+  handlePrint: async (recipeId?: string) => {
     try {
       const recipe = get().recipe;
       set({ loading: true, error: null });
       const token: string | null = await localStorage.getItem("sessionToken");
       const response = await fetch(
-        `${baseUrl}/api/prescription/${recipe.data.id}/file`,
+        `${baseUrl}/api/prescription/${recipeId || recipe.data.id}/file`,
         {
           method: "GET",
           headers: {
@@ -174,7 +275,17 @@ export const useRecipeStore = create<IState>((set, get) => ({
       set({ loading: false, error: null });
     } catch (err) {
       set({ loading: false });
-      toast.error("Error al descargar la receta, aun no esta lista");
+      toast(
+        "Favor de intentarlo nuevamente presionando el botón Imprimir/Visualizar PDF",
+        {
+          icon: "⚠️", // Icono unicode de advertencia (opcional)
+          style: {
+            border: "1px solid #ffa502", // Borde naranja
+            padding: "16px", // Espaciado interno
+            color: "#ffa502", // Color del texto naranja
+          },
+        }
+      );
       console.error("Error al obtener el PDF:", err);
     }
   },

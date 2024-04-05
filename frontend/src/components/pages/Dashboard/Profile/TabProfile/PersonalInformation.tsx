@@ -87,7 +87,7 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
       label: "Código FESA *",
       name: "fesa",
       required: true,
-      type: "number",
+      type: "text",
       width: 50,
       default: user?.fesa || "",
     },

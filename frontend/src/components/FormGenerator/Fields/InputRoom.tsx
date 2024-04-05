@@ -5,14 +5,13 @@ import { Field } from "@/types/Generals/FormGenerator";
 
 export default function InputRoom({
   register,
-  label,
+
   name,
   required,
   error,
   disabled,
   watch,
-  tooltip,
-  setValue,
+
   width = 100,
 }: Field) {
   const GetRooms = useRoomsStore((state) => state.GetRooms);

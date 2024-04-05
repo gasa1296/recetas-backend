@@ -8,13 +8,13 @@ import { IMedicament } from "@/types/Models/Medicament";
 import useScrollToTop from "@/hooks/useScrollToTop";
 
 export default function AddMedicationPrescription({ setStep }: any) {
-  const { CreateMedicament, selectedMedicament } = useMedicamentStore(
-    (state) => ({
+  const { CreateMedicament, selectedMedicament, loadingAction } =
+    useMedicamentStore((state) => ({
       CreateMedicament: state.CreateMedicament,
       SetStep: state.SetStep,
       selectedMedicament: state.selectedMedicament,
-    })
-  );
+      loadingAction: state.loadingAction,
+    }));
   useScrollToTop();
 
   const submitData = async (data: IMedicament) => {
@@ -59,7 +59,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
     },
     {
       label: `Duración del tratamiento (Sin abreviaturas) ${getVigencia(
-        selectedMedicament?.clasificacionsa
+        selectedMedicament?.group
       )} *`,
       name: "duration",
       required: true,
@@ -90,7 +90,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
       type: "number",
       width: 50,
       default: "",
-      max: getMaxAmount(selectedMedicament?.clasificacionsa) ? 2 : 0,
+      max: getMaxAmount(selectedMedicament?.group) ? 2 : 0,
       min: 1,
     },
   ];
@@ -137,7 +137,8 @@ export default function AddMedicationPrescription({ setStep }: any) {
             onClick={() => {
               setStep(2);
             }}
-            className="button-BlacK flex justify-center items-center p-2 w-[120px] "
+            disabled={loadingAction}
+            className="button-BlacK disabled:opacity-40 flex justify-center items-center p-2 w-[120px] "
           >
             <FaTrash size={20} /> <p className="ms-1"> Eliminar</p>{" "}
           </button>
@@ -155,9 +156,12 @@ export default function AddMedicationPrescription({ setStep }: any) {
               <button
                 className="button-BlacK disabled:opacity-40 flex justify-center items-center border-black border-2 p-1 text-black rounded-lg w-full mx-3 py-2 my-4"
                 type="submit"
+                disabled={loadingAction}
               >
                 <FaPlus color="#fbfbfb" className="me-3" size={20} />
-                Agregar medicamento a la receta
+                {loadingAction
+                  ? "Cargando Medicamento..."
+                  : "Agregar medicamento a la receta"}
               </button>
             </div>
           )}

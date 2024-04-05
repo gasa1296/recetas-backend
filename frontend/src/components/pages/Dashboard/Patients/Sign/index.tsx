@@ -5,9 +5,9 @@ import React from "react";
 import { FaSignature } from "react-icons/fa";
 export default function Sign({ nextStep, backStep }: any) {
   const GetRooms = useRoomsStore((state) => state.GetRooms);
-  const recipe = useRecipeStore((state) => state.recipe);
+  const recipes = useRecipeStore((state) => state.recipes);
 
-  const [activeFirma, setActiveFirme] = React.useState(false);
+  const signRecipes = recipes.find((recipe) => recipe.sign);
 
   const [error, setError] = React.useState<any>(false);
   const [accepted, setAccepted] = React.useState(false);
@@ -21,7 +21,6 @@ export default function Sign({ nextStep, backStep }: any) {
     }
 
     handleClickFirma();
-    /*  nextStep(); */
   };
 
   function signatureFinish(data: any) {
@@ -32,16 +31,15 @@ export default function Sign({ nextStep, backStep }: any) {
       nextStep();
   }
   const handleClickFirma = async () => {
-    setActiveFirme(true);
     const legalario = new (window as any).LegalarioSDK({
       organizationId: process.env.NEXT_PUBLIC_LEGALARIO_ORGANIZATION_ID,
       apiKey: process.env.NEXT_PUBLIC_LEGALARIO_KEY,
       env: process.env.NEXT_PUBLIC_LEGALARIO_ENVIRONMENT,
     });
 
-    const result = await legalario.signature(
+    await legalario.signature(
       {
-        signerId: recipe.signer,
+        signerId: signRecipes.sign,
         modules: ["documents", "signature"],
         authType: "NONE",
         callbacks: {
@@ -62,8 +60,7 @@ export default function Sign({ nextStep, backStep }: any) {
       <section className="container-Patiens px-8 py-5">
         <div className="">
           <h6 className="text-[20px] text-[#1A1A1A] font-bold my-4 text-center mt-10">
-            Firma tu receta en el recuadro o agrégala desde un archivo como
-            imagen
+            Firma tu receta en el recuadro
           </h6>
           {/*   <div className="container-sing mx-auto"></div> */}
 
