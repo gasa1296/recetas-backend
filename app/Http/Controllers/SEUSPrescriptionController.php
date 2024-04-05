@@ -40,14 +40,21 @@ class SEUSPrescriptionController extends Controller
         }
         $inputs = $request->all();
         $document_id = $inputs['document']['id'];
-        $instance = Document::where('id', $document_id)->firstOrFail()->prescription;
+        
+        Log::info('addfile',['doc' => $document_id]);
+
+        $doc = Document::where('id', $document_id)->firstOrFail();
+
+        Log::info('addfile',['document' => $doc]);
+
+        $instance = $doc->prescription;
+
         $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
-        Log::debug('prescription', ['file' => $instance->file]);
         return(new PrescriptionResource($instance))->response();
     }
     /**
