@@ -147,11 +147,17 @@ class PrescriptionController extends Controller
                 $zip = new ZipArchive;
                 $status = $zip->open(base_path() . $dir);
                 if ($status !== true) {
-                    continue;
+                    return response()->json([
+                        'file' => 'archivo no encontrado 1',
+                        'document_id' => $document
+                    ], 500);
                 }
                 $fileData = $zip->getFromName('signed_receta.pdf');
                 if ($fileData === false) {
-                    continue;
+                    return response()->json([
+                        'file' => 'archivo no encontrado 2',
+                        'document_id' => $document
+                    ], 500);
                 }
                 $data[$document] = $fileData;
             }
