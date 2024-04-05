@@ -52,7 +52,7 @@ class AuthController extends Controller
             'password' => ['nullable', 'string'],
             'phone1' => ['nullable', 'string'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'fesa' => ['required',],
             'rooms' => ['required', 'array'],
             'specializations' => ['required', 'array'],
@@ -148,7 +148,7 @@ class AuthController extends Controller
             'password' => ['nullable', 'string'],
             'phone1' => ['nullable', 'string'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'fesa' => ['required',],
         ]);
         if ($validator->fails()) {

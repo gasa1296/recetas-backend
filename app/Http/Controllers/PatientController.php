@@ -48,7 +48,7 @@ class PatientController extends Controller
             'email' => ['required', 'email'],
             'phone1' => ['required', 'string'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'birth_date' => ['required', 'date'],
         ]);
         if ($validator->fails()) {
@@ -86,7 +86,7 @@ class PatientController extends Controller
             'email' => ['required', 'email'],
             'phone1' => ['required', 'string'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'birth_date' => ['required', 'date'],
         ]);
         if ($validator->fails()) {
