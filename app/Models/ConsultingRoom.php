@@ -35,8 +35,8 @@ class ConsultingRoom extends Model
     /**
      * Get the medic of the room.
      */
-    public function medic(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'medic_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
