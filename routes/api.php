@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\LegalarioController;
 use App\Http\Controllers\MagentoController;
+use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
@@ -68,6 +69,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'specialization' => SpecializationController::class,
+        'phone' => PhoneController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
         'equipment' => EquipmentController::class,

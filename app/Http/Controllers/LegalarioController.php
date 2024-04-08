@@ -245,7 +245,7 @@ class LegalarioController extends Controller
                             [
                                 'key' => 18,
                                 'name' => 'phone',
-                                'value' => $medic->phone1 ?: '',
+                                'value' => $medic->phones->first()?->phone ?? '',
                             ]
                         ],
                         [
@@ -259,14 +259,14 @@ class LegalarioController extends Controller
                             [
                                 'key' => 20,
                                 'name' => 'specializations',
-                                'value' => $medic->specializations->first()->name ?: '',
+                                'value' => $medic->specializations->first()?->name ?? '',
                             ]
                         ],
                         [
                             [
                                 'key' => 21,
                                 'name' => 'university',
-                                'value' => $medic->specializations->first()->university ?: '',
+                                'value' => $medic->specializations->first()?->university ?? '',
                             ]
                         ],
                         [
