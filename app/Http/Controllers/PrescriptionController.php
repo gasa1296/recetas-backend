@@ -218,8 +218,8 @@ class PrescriptionController extends Controller
         $errors = $this->verifyPrescription($instance->medicaments);
         if (!empty($errors) || !empty(json_decode($instance->add_med, true))) {
             $instance->status = 5;
+            $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         }
-        $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         foreach ($documentData as $document_id) {
             Document::create([
                 'id' => $document_id,
