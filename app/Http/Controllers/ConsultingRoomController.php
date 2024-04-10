@@ -28,7 +28,7 @@ class ConsultingRoomController extends Controller
         $validator = Validator::make($request->all(), [
             'data' => ['required', 'array'],
             'data.*.id' => ['nullable', 'numeric'],
-            'data.*.name' => ['required', 'string'],
+            'data.*.name' => ['nullable', 'string'],
             'data.*.zip' => ['required', 'string'],
             'data.*.street' => ['required', 'string'],
             'data.*.colony' => ['required', 'string'],
@@ -91,7 +91,7 @@ class ConsultingRoomController extends Controller
             return response()->json([], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string'],
+            'name' => ['nullable', 'string'],
             'zip' => ['required', 'string'],
             'street' => ['required', 'string'],
             'colony' => ['required', 'string'],
