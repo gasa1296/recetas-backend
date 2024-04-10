@@ -31,12 +31,13 @@ class AuthTest extends TestCase
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
-            'phone1' => fake()->phoneNumber(),
-            'phone2' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['M','F']),
             'fesa' => "MED00040",
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
+            'phones' => [
+                ['phone' => fake()->randomNumber() . ""]
+            ],
             'rooms' => [
                 [
                     'name' => fake()->name(),
@@ -62,6 +63,7 @@ class AuthTest extends TestCase
             'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
             'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
         ]);
+        print_r($response->json());
         $response->assertOk();
     }
     public function test_failRegisterByFesa(): void
