@@ -209,6 +209,7 @@ class PrescriptionController extends Controller
     {
         $legalario = new LegalarioController();
         $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
+        array_push($medicaments, $instance->add);
         $document = $legalario->createDocument($instance, $medicaments);
         if ($document->getStatusCode() >= 300) {
             return $document;

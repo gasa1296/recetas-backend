@@ -218,10 +218,12 @@ class LegalarioController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($key, $medicament) {
-                                        if (empty ($medicament['indications'])) {
-                                            return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
-                                        } else {
+                                        if (!empty ($medicament['indications'])) {
                                             return "$medicament[name] \n $medicament[indications] \n";
+                                        } elseif(empty($medicament['name'])){
+                                            return $medicament;
+                                        } else {
+                                            return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
                                         }
                                     }, array_keys($medicaments), $medicaments)
                                 ),
