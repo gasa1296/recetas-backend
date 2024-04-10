@@ -64,28 +64,31 @@ class MagentoController extends Controller
     }
     public function registerMagentoRepo(array $inputs): JsonResponse
     {
+        $req = [
+            'idContact' => $inputs['idCX'],
+            'email' => $inputs['email'],
+            'firstname' => $inputs['first_name'],
+            'lastname' => $inputs['last_name1'],
+            'middleName' => $inputs['last_name2'],
+            'password' => $inputs['password'],
+            'gender' => $inputs['gender'],
+            "typeUsage" => "Celular"
+
+        ];
         if (strtoupper($inputs['gender']) == 'M') {
-            $inputs['gender'] == 'Masculino';
+            $req['gender'] = 'Masculino';
         } elseif (strtoupper($inputs['gender']) == 'F') {
-            $inputs['gender'] == 'Femenino';
+            $req['gender'] = 'Femenino';
         } else {
-            $inputs['gender'] == 'Indefinido';
+            $req['gender'] = 'Indefinido';
+        }
+        if (!empty($inputs['phones'])) {
+            $req['phone'] = $inputs['phones'][0]['phone'];
         }
         try {
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
                 'auth' => $this->magentoAuth,
-                'json' => [
-                    'idContact' => $inputs['idCX'],
-                    'email' => $inputs['email'],
-                    'firstname' => $inputs['first_name'],
-                    'lastname' => $inputs['last_name1'],
-                    'middleName' => $inputs['last_name2'],
-                    'password' => $inputs['password'],
-                    'gender' => $inputs['gender'],
-                    'phone' => $inputs['phone1'],
-                    "typeUsage" => "Celular"
-
-                ]
+                'json' => $req
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             if ($decodedRes['success']) {
@@ -94,18 +97,18 @@ class MagentoController extends Controller
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['magento', 'req' => json_encode($req)], $e->getResponse()->getStatusCode());
         }
     }
     public function registerCX(Request $request): JsonResponse
     {
         $inputs = $request->all();
         if (strtoupper($inputs['gender']) == 'M') {
-            $inputs['gender'] == 'Masculino';
+            $inputs['gender'] = 'Masculino';
         } elseif (strtoupper($inputs['gender']) == 'F') {
-            $inputs['gender'] == 'Femenino';
+            $inputs['gender'] = 'Femenino';
         } else {
-            $inputs['gender'] == 'Indefinido';
+            $inputs['gender'] = 'Indefinido';
         }
         try {
             $res = $this->client->post('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com/ic/api/integration/v1/flows/rest/GESTIONCLIENTEREST/1.0/gestionClienteRest', [
@@ -116,27 +119,27 @@ class MagentoController extends Controller
                         "nombre" => $inputs['first_name'],
                         "apellidoPaterno" => $inputs['last_name1'],
                         "apellidoMaterno" => $inputs['last_name2'],
-                        //"fechaNacimiento" => "fechaNacimiento",
                         "canalInscripcion" => "Interface",
                         "correoElectronico" => $inputs['email'],
                         "sexo" => $inputs['gender'],
-                        //"razonSocial"  => "razonSocial", 
                         "segmento" => "Mostrador",
-                        //"avisoPrivacidad"  => "avisoPrivacidad", 
-                        //"idVitamedica"  => "idVitamedica", 
                         "unidadOperativa" => "FESA",
                         "sistemaPOS" => "Seus",
-                        //"codigoPostalFanasa" => "01234",
                         "status" => "Activo",
-                        "tipo" => "Medico"
-                        //"rfc"  => "rfc"
-                    ]
+                        "tipo" => "Medico",
+                        'listaCedulas' => array_map(function ($esp) {
+                            return [
+                                'cedulaProfesional' => $esp['identification'],
+                                'especialidad' => $esp['name']
+                            ];
+                        }, $inputs['specializations'])
+                    ],
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
         } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['CX'], $e->getResponse()->getStatusCode());
         }
     }
     public function updateMagento(Request $request): JsonResponse
