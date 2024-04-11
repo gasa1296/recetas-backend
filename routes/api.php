@@ -69,7 +69,6 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'specialization' => SpecializationController::class,
-        'phone' => PhoneController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
         'equipment' => EquipmentController::class,

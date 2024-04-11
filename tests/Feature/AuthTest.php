@@ -35,9 +35,9 @@ class AuthTest extends TestCase
             'fesa' => "MED00040",
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
-            'phones' => [
-                ['phone' => fake()->randomNumber() . ""]
-            ],
+            'phone1' => json_encode([
+                ['phone' => fake()->randomNumber()]
+            ]),
             'rooms' => [
                 [
                     'name' => fake()->name(),

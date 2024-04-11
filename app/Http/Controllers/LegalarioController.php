@@ -95,6 +95,7 @@ class LegalarioController extends Controller
         $medic = $prescription->medic;
         $patient = $prescription->patient;
         $room = $prescription->room;
+        $phones = json_decode($medic->phone1, true);
         try {
             $date = new Carbon($prescription->created_at);
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
@@ -247,7 +248,7 @@ class LegalarioController extends Controller
                             [
                                 'key' => 18,
                                 'name' => 'phone',
-                                'value' => $medic->phones->first()?->phone ?? '',
+                                'value' => empty($phones) ? '' : $phones[0]['phone'],
                             ]
                         ],
                         [

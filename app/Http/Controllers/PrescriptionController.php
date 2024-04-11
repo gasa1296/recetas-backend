@@ -217,7 +217,8 @@ class PrescriptionController extends Controller
         $documentData = $document->getData(true);
         $instance->document_id = implode(';', $documentData);
         $errors = $this->verifyPrescription($instance->medicaments);
-        if (!empty($errors) || !empty(json_decode($instance->add_med, true))) {
+        $validation = !empty($errors) || !empty(json_decode($instance->add_med, true));
+        if ($validation) {
             $instance->status = 5;
             $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         }
@@ -226,7 +227,7 @@ class PrescriptionController extends Controller
                 'id' => $document_id,
                 'prescription_id' => $instance->id
             ]);
-            if (!empty($errors) || !empty(json_decode($instance->add_med, true))) {
+            if ($validation) {
                 $file = $legalario->saveFile($document_id);
                 if ($file->getStatusCode() >= 300) {
                     return response()->json([$document_id] + $file->getData(true));

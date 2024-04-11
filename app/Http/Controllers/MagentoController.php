@@ -82,8 +82,9 @@ class MagentoController extends Controller
         } else {
             $req['gender'] = 'Indefinido';
         }
-        if (!empty($inputs['phones'])) {
-            $req['phone'] = $inputs['phones'][0]['phone'];
+        if (!empty($inputs['phone1'])) {
+            $req['phone'] = json_decode($inputs['phone1'], true)[0]['phone'];
+            $req['typeUsage'] = 'Celular';
         }
         try {
             $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
@@ -97,7 +98,7 @@ class MagentoController extends Controller
                 return response()->json($decodedRes, 400);
             }
         } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['magento', 'req' => json_encode($req)], $e->getResponse()->getStatusCode());
+            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['magento', 'req' => json_encode($inputs)], $e->getResponse()->getStatusCode());
         }
     }
     public function registerCX(Request $request): JsonResponse
