@@ -1,43 +1,54 @@
 <x-mail::message>
-  <img src="{{ asset('Logo.png') }}" alt="logo" class="img">
-  <h1 class="center h1">Receta médica electrónica</h1>
-  <p class="center p">Estimado (a), {{$prescription->patient->first_name}} {{$prescription->patient->last_name1}}<br>Le compartimos su receta electrónica en formato pdf de su consulta</p>
-  <sub>Este correo electrónico ha sido generado automáticamente por el Sistema de Emisión de Recetas electrónicas por lo que le
-  solicitamos no responder a este mensaje, ya que las respuestas a este correo electrónico no serán leídas.
-  Está recibiendo este correo electrónico debido a que ha proporcionado la dirección de correo electrónico
-  ejemplo@gmail.com a Farmacias Especializadas para hacerle llegar su Receta Electrónica.</sub>
+  <div style="background-color:#efefef;padding: 20px;text-align: center">
+    <div style="background-color:#ffffff;margin:20px auto;width: 100%; max-width:450px; overflow:hidden">
+      <div style="text-align: right;">
+        <img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;">
+      </div>
+      <div style="background-color: #213d8d; display: flex; justify-content: end;">
+        <p style="font-size:19px; padding:0px 10px;width: 50%;color: #fff; font-weight: bold; text-align: center" >  REVISA TU RECETA MEDICA ELECTRONICA AQUI!</p>
+      </div>
 
+      <div style=" display: flex; justify-content: start; margin-top: -180px;">
+        <img src="{{ asset('email/Fotografia.png') }}" alt="" style="position: relative;max-width: 400px; left: -80px;">
+      </div>
+
+      <div style="background-color: #213d8d;"> 
+        <div style="position: relative; top: -30px"> 
+
+          <div style="background-color: #f3670f; width: 70%; margin: 0 auto; padding: 5px 10px;"> 
+              <p style="color: fff; font-size: 19px;font-weight:100;text-align: center;">
+                Surte tu Receta Electrónica en Farmacias Especializadas ¡la única farmacia que recibe recetas electrónicas y cuida el medio ambiente!
+              </p>
+              <p style="color: fff; font-size: 19px;font-weight:500;text-align: center;">
+                Para surtir tu receta, descarga nuestra App, regístrate y compra tus medicamentos.
+              </p>
+              <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: fff; font-size: 19px;font-weight:500;text-align: center;">
+                Si no puedes visualizar tu receta ¡descárgala aqui!
+              </p>
+              <p style="color: fff; font-size: 17px;font-weight:lighter;text-align: center;margin-bottom: 0px;">
+                Descarga la App y surte tu receta hoy.
+              </p>
+              <div>                
+                <a target="_blank" href="https://www.youtube.com/">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 40%"> </a>
+                <a target="_blank" href="https://www.youtube.com/"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 40%"></a> 
+              </div>
+          </div>
+          <div> 
+          <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: fff; font-size: 18px;font-weight:200;text-align: center;">
+            Síguenos en nuestras redes sociales: 
+          </p>
+          <div>                
+            <a target="_blank" href="https://www.youtube.com/">   <img src="{{ asset('email/FACEBOOk.png') }}" alt="ios" style="width: 20%"> </a>
+            <a target="_blank" href="https://www.youtube.com/"> <img src="{{ asset('email/Instagram.png') }}" alt="google" style="width: 20%"></a> 
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
 </x-mail::message>
 <style>
-  .h1 {
-    font: normal normal normal 28px/33px Roboto;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  .p {
-    font: normal normal normal 14px/18px Roboto;
-  }
-
-  .btn {
-    background: #181818;
-    border: 1px solid #181818;
-    border-radius: 8px;
-    color: #fff;
-    padding: 16px 32px;
-    font: normal normal normal 16px/16px Roboto;
-  }
-
-  .logo,
-  .footer p {
+  .logo, .footer p {
     display: none;
-  }
-
-  .img {
-    margin-left: auto;
-    margin-right: auto;
-    width: 70%;
   }
 </style>
