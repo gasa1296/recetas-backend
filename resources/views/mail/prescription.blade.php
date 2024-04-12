@@ -18,7 +18,7 @@
           <p style="color: white; font-size: 19px;font-weight:500;text-align: center;">
             Para surtir tu receta, descarga nuestra App, regístrate y compra tus medicamentos.
           </p>
-          <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: fff; font-size: 19px;font-weight:500;text-align: center;">
+          <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 19px;font-weight:500;text-align: center;">
             Si no puedes visualizar tu receta ¡descárgala aqui!
           </p>
           <p style="color: white; font-size: 17px;font-weight:lighter;text-align: center;margin-bottom: 0px;">
@@ -30,7 +30,7 @@
           </div>
           </div>
           <div> 
-          <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: fff; font-size: 18px;font-weight:200;text-align: center;">
+          <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 18px;font-weight:200;text-align: center;">
             Síguenos en nuestras redes sociales: 
           </p>
           <div>                
