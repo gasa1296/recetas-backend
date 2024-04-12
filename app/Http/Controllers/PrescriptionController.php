@@ -142,7 +142,7 @@ class PrescriptionController extends Controller
         $add_med = json_decode($prescription->add_med, true);
         if (empty($errors) && empty($add_med)) {
             $data = [];
-            foreach (explode(';', $prescription->documents_id) as $document) {
+            foreach (explode(';', $prescription->document_id) as $document) {
                 $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
                 $zip = new ZipArchive;
                 $status = $zip->open(base_path() . $dir);
