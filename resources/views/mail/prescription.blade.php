@@ -7,7 +7,7 @@
       <p style="font-size:19px; margin:0; padding:10px;width: 50%;color: #fff; font-weight: bold;" >  REVISA TU RECETA MEDICA ELECTRONICA AQUI!</p>
     </div>
     <div style=" display: flex; justify-content: center; ">
-      <img src="test/Fotografia.png" alt="" style="position: relative;max-width: 400px; ">
+      <img src="{{ asset('email/Fotografia.png') }}" alt="" style="position: relative;max-width: 400px; ">
     </div>
     <div style="background-color: #213d8d;"> 
       <div style="position: relative; padding-top: 30px;"> 
