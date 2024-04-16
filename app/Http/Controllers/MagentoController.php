@@ -133,7 +133,29 @@ class MagentoController extends Controller
                                 'cedulaProfesional' => $esp['identification'],
                                 'especialidad' => $esp['name']
                             ];
-                        }, $inputs['specializations'])
+                        }, $inputs['specializations']),
+                        'listaTelefono' => array_map(function($phone) {
+                            return [
+                                'numeroTelefonico' => $phone['phone'],
+                                'tipoDeUso' => 'Celular',
+                                'status' => 'Activo'
+                            ];
+                        }, json_decode($inputs['phone1'], true)),
+                        'listaDireccion' => array_map(function ($room) {
+                            return [ 
+                                "calle" => $room['street'], 
+                                "numeroExterior" => $room['n_exterior'], 
+                                "numeroInterior" => $room['n_interior'], 
+                                "colonia" => $room['colony'], 
+                                "delegacionMunicipio" => $room['delegation'], 
+                                "ciudad" => $room['delegation'], 
+                                "estado" => $room['state'], 
+                                "codigoPostal" => $room['zip'], 
+                                "pais" => "MX", 
+                                "tipo" => "Consultorio", 
+                                "estatus" => "Activo"
+                            ];
+                        }, $inputs['rooms']),
                     ],
                 ]
             ]);
