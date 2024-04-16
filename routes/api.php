@@ -11,6 +11,7 @@ use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SEUSPrescriptionController;
 use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
@@ -38,6 +39,7 @@ Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->grou
     Route::post('generateMagentoToken', 'generateMagentoToken');
     Route::post('getUserByTokenMagento', 'getUserByTokenMagento');
 });
+Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
