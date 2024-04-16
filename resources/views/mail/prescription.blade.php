@@ -1,16 +1,17 @@
+<x-mail::message>
 <div style="background-color:#efefef;padding: 20px;text-align: center">
-  <div style="background-color:#ffffff;margin:20px auto;width: 100%; max-width:450px; overflow:hidden">
+  <div style="background-color: white;margin:20px auto;width: 100%;">
     <div style="text-align: right;">
       <img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;">
     </div>
-    <div style="background-color: #213d8d; display: flex; justify-content: center;">
-      <p style="font-size:19px; margin:0; padding:10px;width: 50%;color: #fff; font-weight: bold;" >  REVISA TU RECETA MEDICA ELECTRONICA AQUI!</p>
+    <div style="background-color: #213d8d;">
+      <p style="font-size:19px; margin:0; padding:10px;width: 50%;color: white; font-weight: bold; margin-left:auto; margin-right:auto; " >  REVISA TU RECETA MEDICA ELECTRONICA AQUI!</p>
     </div>
-    <div style=" display: flex; justify-content: center; ">
-      <img src="{{ asset('email/Fotografia.png') }}" alt="" style="position: relative;max-width: 400px; ">
+    <div style="">
+      <img src="{{ asset('email/Fotografia.png') }}" alt="" style="max-width: 400px; ">
     </div>
     <div style="background-color: #213d8d;"> 
-      <div style="position: relative; padding-top: 30px;"> 
+      <div style="padding-top: 30px;"> 
         <div style="background-color: #f3670f; width: 70%; margin: 0 auto; padding: 5px 10px;"> 
           <p style="color: white; font-size: 19px;font-weight:100;text-align: center;">
             Surte tu Receta Electrónica en Farmacias Especializadas ¡la única farmacia que recibe recetas electrónicas y cuida el medio ambiente!
@@ -41,3 +42,4 @@
     </div>
   </div>
 </div>
+</x-mail::message>
