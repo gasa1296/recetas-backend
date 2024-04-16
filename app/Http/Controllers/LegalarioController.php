@@ -96,6 +96,15 @@ class LegalarioController extends Controller
         $patient = $prescription->patient;
         $room = $prescription->room;
         $phones = json_decode($medic->phone1, true);
+        $esp = $medic->specializations->first();
+        $esp_logo = '';
+        if (!empty ($esp->logo)) {
+            if( str_contains($esp->logo, 'http')) {
+                $esp_logo = base64_encode(@file_get_contents($esp->logo) ?: '');
+            } else {
+                $esp_logo = base64_encode(Storage::disk('public')->get($esp->logo));
+            }
+        }
         try {
             $date = new Carbon($prescription->created_at);
             $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
@@ -276,7 +285,7 @@ class LegalarioController extends Controller
                             [
                                 'key' => 1001,
                                 'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
-                                'value' => empty ($medic->specializations->first()->logo) ? '' : base64_encode(Storage::disk('public')->get($medic->specializations->first()->logo)),
+                                'value' => $esp_logo,
                             ]
                         ],
                         [
