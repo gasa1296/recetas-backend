@@ -92,7 +92,7 @@ class LegalarioController extends Controller
             return response()->json($res, 400);
         }
         $token = $res['data']['access_token'];
-        $medic = auth()->user();
+        $medic = $prescription->medic;
         $patient = $prescription->patient;
         $room = $prescription->room;
         $phones = json_decode($medic->phone1, true);
