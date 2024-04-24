@@ -1,6 +1,6 @@
 <x-mail::message>
   <div style="text-align: right;">
-    <img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;">
+    <a href="https://www.farmaciasespecializadas.com/?utm_source=email&utm_medium=logo&utm_id=descarga_tu_receta"><img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;"></a>
   </div>
   <div style="background-color: #213d8d;">
     <p style="font-size:19px; width: 50%;color: white; font-weight: bold; margin-left:auto; margin-right:auto; text-align: center;" >REVISA TU RECETA MEDICA ELECTRONICA AQUI!</p>
@@ -24,8 +24,8 @@
           Descarga la App y surte tu receta hoy.
         </p>
         <div>                
-          <a target="_blank" href="https://www.youtube.com/">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 40%"> </a>
-          <a target="_blank" href="https://www.youtube.com/"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 40%"></a> 
+          <a target="_blank" href="https://apple.co/3Q45hq6">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 40%"> </a>
+          <a target="_blank" href="https://bit.ly/4cRX6Hc"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 40%"></a> 
         </div>
       </div>
       <div> 
@@ -33,8 +33,8 @@
         Síguenos en nuestras redes sociales: 
       </p>
       <div>                
-        <a target="_blank" href="https://www.youtube.com/">   <img src="{{ asset('email/FACEBOOk.png') }}" alt="ios" style="width: 20%"> </a>
-        <a target="_blank" href="https://www.youtube.com/"> <img src="{{ asset('email/Instagram.png') }}" alt="google" style="width: 20%"></a> 
+        <a target="_blank" href="https://bit.ly/3Q1QZGw">   <img src="{{ asset('email/FACEBOOk.png') }}" alt="ios" style="width: 20%"> </a>
+        <a target="_blank" href="https://bit.ly/49H6ue6"> <img src="{{ asset('email/Instagram.png') }}" alt="google" style="width: 20%"></a> 
       </div>
     </div>
   </div>
