@@ -71,6 +71,7 @@ class AuthController extends Controller
             'specializations.*.name' => ['required', 'string'],
             'specializations.*.identification' => ['required', 'unique:specializations'],
             'specializations.*.university' => ['nullable', 'string'],
+            'specializations.*.logo' => ['nullable', 'string'],
             'logo_room' => ['nullable', 'array'],
             'logo_spec' => ['nullable', 'array'],
             'logo_room.*' => ['nullable', 'file', 'mimes:jpg,png'],
