@@ -43,7 +43,7 @@ class PatientController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
-            'last_name1' => ['required', 'string'],
+            'last_name1' => ['nullable', 'string'],
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
             'phone1' => ['required', 'string'],
@@ -81,7 +81,7 @@ class PatientController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
-            'last_name1' => ['required', 'string'],
+            'last_name1' => ['nullable', 'string'],
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
             'phone1' => ['required', 'string'],
