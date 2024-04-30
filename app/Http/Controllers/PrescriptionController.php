@@ -52,7 +52,7 @@ class PrescriptionController extends Controller
         }
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
-        $inputs1['code'] = base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36);
+        $inputs1['code'] = strtoupper(base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36));
         
         $room = $request->user()->rooms;
         $filteredRoom = $room->where('user_id', '=', $inputs1['user_id'])->where('id', '=', $inputs1['room_id'])->first();
