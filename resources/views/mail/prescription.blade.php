@@ -15,7 +15,7 @@
           Surte tu Receta Electrónica en Farmacias Especializadas ¡la única farmacia que recibe recetas electrónicas y cuida el medio ambiente!
         </p>
         <p style="color: white; font-size: 19px; font-weight:500; text-align: center;">
-          Para surtir tu receta, descarga nuestra App, regístrate y compra tus medicamentos.
+          Para surtir tu receta, descarga nuestra App,  regístrate e ingresa el folio de receta {{$prescription->code}} y compra tus medicamentos.
         </p>
         <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 19px;font-weight:500;text-align: center;">
           Si no puedes visualizar tu receta ¡descárgala aqui!
@@ -24,17 +24,17 @@
           Descarga la App y surte tu receta hoy.
         </p>
         <div>                
-          <a target="_blank" href="https://apple.co/3Q45hq6">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 40%"> </a>
-          <a target="_blank" href="https://bit.ly/4cRX6Hc"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 40%"></a> 
+          <a target="_blank" href="https://apple.co/3Q45hq6">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 45%"> </a>
+          <a target="_blank" href="https://bit.ly/4cRX6Hc"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 45%"></a> 
         </div>
       </div>
       <div> 
       <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 18px;font-weight:200;text-align: center;">
         Síguenos en nuestras redes sociales: 
       </p>
-      <div>                
-        <a target="_blank" href="https://bit.ly/3Q1QZGw">   <img src="{{ asset('email/FACEBOOk.png') }}" alt="ios" style="width: 20%"> </a>
-        <a target="_blank" href="https://bit.ly/49H6ue6"> <img src="{{ asset('email/Instagram.png') }}" alt="google" style="width: 20%"></a> 
+      <div style="width:50%">                
+        <a target="_blank" href="https://bit.ly/3Q1QZGw"><img src="{{ asset('email/FACEBOOk.png') }}" alt="ios" style="width: 50%"> </a>
+        <a target="_blank" href="https://bit.ly/49H6ue6"> <img src="{{ asset('email/Instagram.png') }}" alt="google" style="width: 50%"></a> 
       </div>
     </div>
   </div>
