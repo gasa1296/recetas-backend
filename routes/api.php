@@ -38,6 +38,8 @@ Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->grou
     Route::post('updateMagento', 'updateMagento');
     Route::post('generateMagentoToken', 'generateMagentoToken');
     Route::post('getUserByTokenMagento', 'getUserByTokenMagento');
+    Route::post('specializations', 'getSpecialization');
+    Route::post('states', 'getStates');
 });
 Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {

@@ -120,12 +120,11 @@ class MagentoController extends Controller
                         "nombre" => $inputs['first_name'],
                         "apellidoPaterno" => $inputs['last_name1'],
                         "apellidoMaterno" => $inputs['last_name2'],
-                        "canalInscripcion" => "Interface",
+                        "canalInscripcion" => "Receta Medica Electronica",
                         "correoElectronico" => $inputs['email'],
                         "sexo" => $inputs['gender'],
                         "segmento" => "Mostrador",
                         "unidadOperativa" => "FESA",
-                        "sistemaPOS" => "Seus",
                         "status" => "Activo",
                         "tipo" => "Medico",
                         'listaCedulas' => array_map(function ($esp) {
@@ -236,6 +235,36 @@ class MagentoController extends Controller
                     'magentoEmail' => $decodedRes['email']
                 ]);
             }
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
+    public function getSpecialization(): JsonResponse
+    {
+        try {
+            $res = $this->client->get('https://rnowgrupofarmacos--tst1.custhelp.com/services/rest/connect/v1.4/queryResults/?query=select', [
+                'auth' => [
+                    'OICUSER2',
+                    'iCSUSER2018'
+                ],
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            return response()->json($decodedRes);
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
+    public function getStates(): JsonResponse
+    {
+        try {
+            $res = $this->client->get('https://rnowgrupofarmacos--tst1.custhelp.com/services/rest/connect/v1.4/queryResults/?query=select', [
+                'auth' => [
+                    'OICUSER2',
+                    'iCSUSER2018'
+                ],
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            return response()->json($decodedRes);
         } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
