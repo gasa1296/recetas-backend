@@ -68,6 +68,8 @@ class AuthController extends Controller
             'rooms.*.address' => ['nullable', 'string'],
             'rooms.*.phone' => ['nullable', 'string'],
             'rooms.*.fav' => ['nullable'],
+            'rooms.*.auto_email' => ['nullable'],
+            'rooms.*.auto_whatsapp' => ['nullable'],
             'rooms.*.design' => ['nullable', 'string'],
             'specializations.*.name' => ['required', 'string'],
             'specializations.*.identification' => ['required', 'unique:specializations'],

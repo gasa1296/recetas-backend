@@ -40,6 +40,8 @@ class ConsultingRoomController extends Controller
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'string'],
             'data.*.fav' => ['nullable'],
+            'data.*.auto_email' => ['nullable'],
+            'data.*.auto_whatsapp' => ['nullable'],
             'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
@@ -103,6 +105,8 @@ class ConsultingRoomController extends Controller
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
             'fav' => ['nullable'],
+            'auto_email' => ['nullable'],
+            'auto_whatsapp' => ['nullable'],
             'design' => ['nullable', 'string'],
             'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);

@@ -31,6 +31,8 @@ class ConsultingRoom extends Model
         'logo',
         'design',
         'fav',
+        'auto_email', 
+        'auto_whatsapp',
         'user_id',
     ];
     /**

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('consulting_rooms', function (Blueprint $table) {
             $table->boolean('fav')->default(false);
+            $table->boolean('auto_email')->default(false);
+            $table->boolean('auto_whatsapp')->default(false);
         });
     }
 
@@ -23,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             $table->dropColumn('fav');
+            $table->dropColumn('auto_email');
+            $table->dropColumn('auto_whatsapp');
         });
     }
 };
