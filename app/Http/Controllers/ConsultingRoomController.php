@@ -39,6 +39,7 @@ class ConsultingRoomController extends Controller
             'data.*.address' => ['nullable', 'string'],
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'string'],
+            'data.*.fav' => ['nullable'],
             'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
@@ -101,6 +102,7 @@ class ConsultingRoomController extends Controller
             'n_interior' => ['nullable',],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
+            'fav' => ['nullable'],
             'design' => ['nullable', 'string'],
             'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);
