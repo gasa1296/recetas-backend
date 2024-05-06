@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Prescription;
 use GuzzleHttp\Client;
 use Validator;
+use App\Notifications\PrescriptionSignedEmail;
 class SEUSPrescriptionController extends Controller
 {
     private Client $client;
@@ -55,6 +56,26 @@ class SEUSPrescriptionController extends Controller
         }
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
+        if($instance->auto_email) {
+            $dir = "/storage/app/medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
+            $zip = new ZipArchive;
+            $status = $zip->open(base_path() . $dir);
+            if ($status !== true) {
+                return response()->json([
+                    'file' => 'archivo no encontrado 1',
+                    'document_id' => $document_id
+                ], 500);
+            }
+            $fileData = $zip->getFromName('signed_receta.pdf');
+            if ($fileData === false) {
+                return response()->json([
+                    'file' => 'archivo no encontrado 2',
+                    'document_id' => $document_id
+                ], 500);
+            }
+            $data[$document_id] = $fileData;
+            $instance->patient->notify(new PrescriptionSignedEmail($instance, $data));
+        }
         return(new PrescriptionResource($instance))->response();
     }
     /**
