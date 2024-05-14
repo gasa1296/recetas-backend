@@ -108,4 +108,15 @@ class PrescriptionMedicamentController extends Controller
             ->delete();
         return response()->json();
     }
+    public function mostUsed(): JsonResponse
+    {
+        $instances = PrescriptionMedicament::withCount('medicament_id')
+            ->whereHas('prescription', function($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->distinct()
+            ->orderBy('medicament_id_count', 'desc')
+            ->makeHidden('prescription_id');
+        return response()->json($instances);
+    }
 }
