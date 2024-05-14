@@ -72,6 +72,7 @@ class MagentoController extends Controller
             'middleName' => $inputs['last_name2'],
             'password' => $inputs['password'],
             'gender' => $inputs['gender'],
+            'phone' => $inputs['phone1'][0]['phone'],
             "typeUsage" => "Celular"
 
         ];
