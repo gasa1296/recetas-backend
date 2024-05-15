@@ -70,6 +70,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::put('', 'update');
         Route::delete('', 'destroy');
     });
+    Route::get('most_used', [PrescriptionMedicamentController::class, 'mostUsed']);
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'specialization' => SpecializationController::class,
@@ -84,7 +85,6 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::get('{prescription}/document', 'createDocument')->name('document');
         Route::get('{prescription}/file', 'getFile')->name('getFile');
     });
-    Route::get('prescription/most_used', [PrescriptionMedicamentController::class, 'mostUsed']);
 
     Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::post('medicaments', 'getMedicaments');
