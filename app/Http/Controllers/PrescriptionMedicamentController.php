@@ -115,8 +115,7 @@ class PrescriptionMedicamentController extends Controller
                 $query->where('user_id', auth()->id());
             })
             ->distinct()
-            ->orderBy('medicament_id_count', 'desc')
-            ->makeHidden('prescription_id');
+            ->orderBy('medicament_id_count', 'desc')->paginate(10);
         return response()->json($instances);
     }
 }
