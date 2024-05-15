@@ -40,7 +40,7 @@ class PrescriptionSignedEmail extends Notification
         $email = (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
             'base_url' => env('APP_URL', '') . '/storage/'
-        ])->subject('Receta médica electrónica');
+        ])->subject('Receta médica electrónica ' . $this->prescription->code);
         foreach ($this->fileData as $key => $file) {
             $email = $email->attachData($file, "$key.pdf");
         }
