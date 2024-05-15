@@ -114,7 +114,7 @@ class PrescriptionMedicamentController extends Controller
             ->whereHas('prescription', function($query) {
                 $query->where('user_id', auth()->id());
             })
-            ->distinct()
+            ->groupBy('medicament_id')
             ->orderBy('medicament_id_count', 'desc')->paginate(10);
         return response()->json($instances);
     }
