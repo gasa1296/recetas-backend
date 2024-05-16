@@ -2,8 +2,10 @@ import React from "react";
 import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 import { LuFileCheck } from "react-icons/lu";
-import CardRecipesAdd from "./CardRecipesAdd";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+import {
+  MdOutlineArrowBackIos,
+  MdOutlineMedicalServices,
+} from "react-icons/md";
 import { usePacients } from "@/store/pacients";
 import { calculateAge } from "@/utils/getAge";
 import { getRecipeDate } from "@/utils/getDateFormat";
@@ -11,8 +13,14 @@ import { useMedicamentStore } from "@/store/medicaments";
 import { validateSameObject } from "@/utils/isSameObject";
 import { IConfirmRecipForm } from "@/types/Models/Medicament";
 import { useRecipeStore } from "@/store/recipes";
+import { GiWeight } from "react-icons/gi";
+import { MdOutlineBloodtype } from "react-icons/md";
+import { CiTempHigh } from "react-icons/ci";
+import { SiOxygen } from "react-icons/si";
+import { BsJournalMedical } from "react-icons/bs";
+import { GiBodyHeight } from "react-icons/gi";
+import { TbHeartRateMonitor } from "react-icons/tb";
 import { useAuthStore } from "@/store/auth";
-import LoadingModal from "@/components/Loading/LoadingModal";
 
 export default function ConfirmRecipes({ nextStep, backStep }: any) {
   const CreateRecipe = useRecipeStore((state) => state.CreateRecipe);
@@ -55,6 +63,13 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
     selectedPacient: state.selectedPacient,
   }));
 
+  let phone1Parse;
+  try {
+    phone1Parse = JSON.parse(selectedPacient?.phone1 || "");
+  } catch (error) {
+    phone1Parse = [""];
+  }
+
   const fields: Field[] = [
     {
       label: "Fecha",
@@ -96,12 +111,12 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       default: selectedPacient?.email,
     },
     {
-      label: "Teléfono celular *",
+      label: "Teléfono celular ",
       name: "phone1",
-      type: "text",
+      type: "multiPhone",
       width: 50,
       disabled: true,
-      default: selectedPacient?.phone1,
+      default: phone1Parse,
       maxFile: 10,
     },
     {
@@ -119,46 +134,83 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
       type: "separation",
     },
     {
-      label: "Temperatura (°C)",
-      name: "temp",
-      type: "number",
-      width: 33,
-      default: confirmRecipForm?.temp,
+      label: "Información adicional del paciente",
+      name: "title",
+      type: "collapse",
+      form: [
+        {
+          label: "Temperatura (°C) (Opcional)",
+          name: "temp",
+          type: "number",
+          width: 33,
+          default: confirmRecipForm?.temp,
+          Icon: CiTempHigh,
+        },
+        {
+          label: "Peso (kg) (Opcional)",
+          name: "weight",
+          type: "number",
+          width: 33,
+          default: confirmRecipForm?.weight,
+          Icon: GiWeight,
+        },
+        {
+          label: "Altura (cm) (Opcional)",
+          name: "height",
+          type: "number",
+          width: 33,
+          default: confirmRecipForm?.height,
+          Icon: GiBodyHeight,
+        },
+        {
+          label: "Presión arterial (Opcional)",
+          name: "pressure",
+          type: "text",
+          width: 33,
+          default: confirmRecipForm?.pressure,
+          Icon: MdOutlineBloodtype,
+        },
+        {
+          label: "Saturación (%) (Opcional)",
+          name: "saturation",
+          type: "number",
+          width: 33,
+          default: confirmRecipForm?.saturation,
+          Icon: SiOxygen,
+        },
+        {
+          label: "Frecuencia cardiaca (ppm) (Opcional)",
+          name: "ppm",
+          type: "number",
+          width: 33,
+          default: confirmRecipForm?.ppm,
+          Icon: TbHeartRateMonitor,
+        },
+      ],
     },
+
     {
-      label: "Peso (kg)",
-      name: "weight",
-      type: "number",
-      width: 33,
-      default: confirmRecipForm?.weight,
+      label: "Separation",
+      name: "title",
+      type: "separation",
     },
+
     {
-      label: "Altura (cm)",
-      name: "height",
-      type: "number",
-      width: 33,
-      default: confirmRecipForm?.height,
-    },
-    {
-      label: "Presión arterial",
-      name: "pressure",
-      type: "text",
-      width: 33,
-      default: confirmRecipForm?.pressure,
-    },
-    {
-      label: "Saturación (%)",
-      name: "saturation",
-      type: "number",
-      width: 33,
-      default: confirmRecipForm?.saturation,
-    },
-    {
-      label: "Frecuencia cardiaca (ppm)",
-      name: "ppm",
-      type: "number",
-      width: 33,
-      default: confirmRecipForm?.ppm,
+      label: "Diagnóstico Médico",
+      name: "title",
+      type: "collapse",
+      form: [
+        {
+          label: "Diagnóstico Médico (Opcional): ",
+          name: "diagnostic",
+          required: false,
+          max: 150,
+          type: "textarea",
+          width: 100,
+          default: confirmRecipForm?.diagnostic,
+          Icon: BsJournalMedical,
+        },
+      ],
     },
     {
       label: "Separation",
@@ -167,20 +219,22 @@ export default function ConfirmRecipes({ nextStep, backStep }: any) {
     },
 
     {
-      label: "Diagnóstico Médico: ",
-      name: "diagnostic",
-      required: false,
-      type: "textarea",
-      width: 100,
-      default: confirmRecipForm?.diagnostic,
+      label: "Indicaciones médicas adicionales",
+      name: "title",
+      type: "collapse",
+      form: [
+        {
+          label: "Indicaciones médicas adicionales (Opcional):",
+          name: "add",
+          type: "textarea",
+          max: 500,
+          width: 100,
+          default: confirmRecipForm?.add,
+          Icon: MdOutlineMedicalServices,
+        },
+      ],
     },
-    {
-      label: "Indicaciones médicas adicionales:",
-      name: "add",
-      type: "textarea",
-      width: 100,
-      default: confirmRecipForm?.add,
-    },
+
     {
       label: "Separation",
       name: "title",

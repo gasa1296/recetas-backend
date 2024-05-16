@@ -6,6 +6,8 @@ const nextConfig = {
       "receta.farmaciasespecializadas.com",
       "s3-repositorio-cloudseus.s3.amazonaws.com",
       "apireceta.farmaciasespecializadas.com",
+      "testapireceta.farmaciasespecializadas.com",
+      "aplicacion.farmaciasespecializadas.com",
     ],
   },
 };

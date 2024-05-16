@@ -1,5 +1,6 @@
 // authStore.ts
 import {
+  GetPopularMedicament,
   createMedicament,
   getMedicamentByCode,
   getSearchExternalMedicament,
@@ -27,8 +28,10 @@ type IState = {
   error: string | null;
   step: number;
   search: string;
+  popularMedicaments: IMedicament[] | [];
 
   confirmRecipForm: IConfirmRecipForm;
+  GetPopularMedicaments: () => any;
   SearchMedicaments: (search: string) => any;
   SetSearch: (search: string) => any;
   ResetMedicaments: () => any;
@@ -47,6 +50,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   // Estado inicial
   timeId: null,
   medicaments: null,
+  popularMedicaments: [],
   step: 1,
   loading: false,
   confirmRecipForm: {
@@ -82,14 +86,28 @@ export const useMedicamentStore = create<IState>((set, get) => ({
     set({ cardMedicament: medicaments });
   },
 
+  GetPopularMedicaments: async () => {
+    try {
+      if (get().popularMedicaments.length) return;
+      const result = await GetPopularMedicament();
+      set({ popularMedicaments: result.data });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    }
+  },
+
   DuplicateRecipe: (medicaments: IMedicament[], confirmForm: IRecipes) => {
     set({
-      cardMedicament: medicaments,
+      cardMedicament: medicaments.map((medicament) => ({
+        ...medicament,
+        uicodproducto: medicament.medicament_id,
+      })),
       confirmRecipForm: {
         temp: Number(confirmForm.temp),
         weight: Number(confirmForm.weight),
         height: Number(confirmForm.height),
-        pressure: Number(confirmForm.pressure),
+        pressure: confirmForm.pressure,
         saturation: Number(confirmForm.saturation),
         ppm: Number(confirmForm.ppm),
         diagnostic: confirmForm.diagnostic,
@@ -172,7 +190,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
       const unificatedMedicament = {
         ...findMedicament,
         medicament_id: findMedicament?.uicodproducto,
-        family: findMedicament?.familia,
+        family: medicamentResult.saClassification || "",
         group: medicamentResult.saClassification || "",
         name: findMedicament?.vnombreproducto ?? "",
         type: medicamentResult.type || "",

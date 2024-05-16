@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
+import MedicineDefault from "@/assets/images/placeholder.jpg";
 import { useMedicamentStore } from "@/store/medicaments";
 import { IMedicament } from "@/types/Models/Medicament";
 import useScrollToTop from "@/hooks/useScrollToTop";
 
 export default function AddMedicationPrescription({ setStep }: any) {
+  const [error, setError] = useState(false);
   const { CreateMedicament, selectedMedicament, loadingAction } =
     useMedicamentStore((state) => ({
       CreateMedicament: state.CreateMedicament,
@@ -15,7 +17,6 @@ export default function AddMedicationPrescription({ setStep }: any) {
       selectedMedicament: state.selectedMedicament,
       loadingAction: state.loadingAction,
     }));
-  useScrollToTop();
 
   const submitData = async (data: IMedicament) => {
     CreateMedicament({ ...data, ...selectedMedicament });
@@ -75,14 +76,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
       width: 50,
       default: "",
     },
-    {
-      label: "Indicaciones adicionales",
-      name: "add",
-      required: false,
-      type: "text",
-      width: 50,
-      default: "",
-    },
+
     {
       label: "Cantidad de cajas para cubrir el tratamiento *",
       name: "quantity",
@@ -92,6 +86,16 @@ export default function AddMedicationPrescription({ setStep }: any) {
       default: "",
       max: getMaxAmount(selectedMedicament?.group) ? 2 : 0,
       min: 1,
+    },
+
+    {
+      label: "Indicaciones adicionales (Opcional)",
+      name: "add",
+      required: false,
+      type: "textarea",
+      max: 200,
+      width: 50,
+      default: "",
     },
   ];
 
@@ -110,13 +114,24 @@ export default function AddMedicationPrescription({ setStep }: any) {
           return (
             <div className=" mt-2 flex flex-col md:flex-row justify-center items-center ">
               <div className="">
-                {medicine.presentacion && (
+                {error ? (
+                  <Image
+                    src={MedicineDefault}
+                    alt="Picture"
+                    width={500}
+                    height={500}
+                    className="image-medicament"
+                  />
+                ) : (
                   <Image
                     src={medicine.presentacion}
                     alt="Picture"
                     width={500}
                     height={500}
                     className="image-medicament"
+                    onError={({ currentTarget }) => {
+                      setError(true);
+                    }}
                   />
                 )}
               </div>

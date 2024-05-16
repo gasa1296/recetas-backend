@@ -2,7 +2,7 @@ import { IRecipes } from "@/types/Models/Recipes";
 import { Api } from ".";
 import { IMedicament } from "@/types/Models/Medicament";
 
-export const createRecipe = (recipePayload: IRecipes) => {
+export const createRecipe = (recipePayload: any) => {
   return Api({
     endpoint: `/prescription`,
     method: "POST",

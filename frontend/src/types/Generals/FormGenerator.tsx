@@ -4,14 +4,17 @@ export interface Field {
   label?: string;
   secondLabel?: string;
   name: string;
+  temporalName?: string;
   required?: boolean;
   type: FieldTypeString;
   default?: any;
   options?: { label: string; value: string | number }[];
   maxFile?: number;
   ModalComponent?: any;
+  moreOne?: boolean;
   Component?: any;
   createTitle?: string;
+  minDigit?: number;
   selectTitle?: string;
   subLabel?: string;
   limitDays?: number;
@@ -27,6 +30,9 @@ export interface Field {
   inputType?: string;
   validate?: (value: string, payload: any) => void;
   handleChange?: (value: any) => void;
+  ModalNotFound?: any;
+  NotFound?: any;
+  Icon?: any;
   setError?: any;
   register?: any;
   error?: any;
@@ -56,6 +62,7 @@ export interface FieldType {
   radioButton: any;
   select: any;
   file: any;
+  selectSearch: any;
   textarea: any;
   date: any;
   selecDesing: any;
@@ -65,6 +72,8 @@ export interface FieldType {
   separation: any;
   medicaments: any;
   room: any;
+  collapse: any;
+  multiPhone: any;
 }
 export type FieldTypeString =
   | "text"
@@ -85,7 +94,10 @@ export type FieldTypeString =
   | "subtitle"
   | "separation"
   | "medicaments"
-  | "room";
+  | "room"
+  | "multiPhone"
+  | "collapse"
+  | "selectSearch";
 
 export interface SelectedItems {
   type: "cause" | "prize";

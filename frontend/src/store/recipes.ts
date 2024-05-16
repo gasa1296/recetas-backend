@@ -11,6 +11,7 @@ import { IMedicament } from "@/types/Models/Medicament";
 import { IRecipes } from "@/types/Models/Recipes";
 import toast from "react-hot-toast";
 import { create } from "zustand";
+import { usePacients } from "./pacients";
 
 type IState = {
   loading: any;
@@ -18,12 +19,15 @@ type IState = {
   recipe: any;
   recipes: any[];
   enableDownload: boolean;
+  loadingDownload: boolean;
+  emailLoading: boolean;
+  hasDownload: boolean;
   hasMissingSign: boolean;
   CreateRecipe: (recipePayload: IRecipes, medicaments: IMedicament[]) => any;
   SendRecipeByWhatsapp: (recipeId?: string) => void;
   SendRecipeByEmail: (recipeId?: string) => void;
   ClearRecipe: () => void;
-  handlePrint: (recipeId?: string) => void;
+  handlePrint: (recipeId?: string, documentId?: string) => void;
   setEnableDownload: (value: boolean) => void;
 };
 
@@ -32,19 +36,30 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export const useRecipeStore = create<IState>((set, get) => ({
   // Estado inicial
   loading: false,
+  loadingDownload: false,
   error: null,
   recipe: "",
   recipes: [],
+  emailLoading: false,
+  hasDownload: false,
   enableDownload: false,
   hasMissingSign: false,
 
   ClearRecipe: () => {
-    set({ recipe: "" });
+    try {
+      const { GetPacients } = usePacients.getState();
+
+      set({ recipe: "" });
+
+      GetPacients();
+    } catch (error) {
+      console.log("ERROR", error);
+    }
   },
 
   // Accion de update
   CreateRecipe: async (recipePayload: IRecipes, medicaments: IMedicament[]) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, hasDownload: false });
 
     try {
       const groupIIMedicaments: IMedicament[] = [];
@@ -59,6 +74,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
         saturation: Number(recipePayload.saturation),
         temp: Number(recipePayload.temp),
         weight: Number(recipePayload.weight),
+        pressure: String(recipePayload.pressure),
         medicaments: [],
       };
 
@@ -82,10 +98,19 @@ export const useRecipeStore = create<IState>((set, get) => ({
 
       const recipesPetition = [];
       const result = [];
+
       let missingSign = true;
+
+      set({
+        hasMissingSign: missingSign,
+      });
 
       if (groupMedicaments.length > 0) {
         missingSign = false;
+
+        set({
+          hasMissingSign: false,
+        });
 
         const recipe = await createRecipe({
           ...recipePayloadTemp,
@@ -159,7 +184,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
 
         const groupType =
           (data.medicaments[0] && data.medicaments[0].group) ||
-          "Nuevos medicamentos";
+          "Medicamentos fuera de catálogo";
 
         if (
           groupType !== "Grupo II" &&
@@ -169,7 +194,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
           const sign = await getRecipeSign(recipe.data.data.id);
           return {
             ...recipe.data.data,
-            sign: sign?.data.data.signers[0].id || "",
+            sign: sign?.data,
             hasSign: true,
             groupType: "Medicamentos generales",
           };
@@ -186,7 +211,6 @@ export const useRecipeStore = create<IState>((set, get) => ({
         hasMissingSign: missingSign,
       });
 
-      toast.success("Receta precreada correctamente");
       return { missingSign };
     } catch (error: any) {
       toast.error(error.message);
@@ -219,7 +243,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
   },
 
   SendRecipeByEmail: async (recipeId?: string) => {
-    set({ loading: true, error: null });
+    set({ emailLoading: true, error: null });
 
     try {
       const recipe = get().recipe;
@@ -240,49 +264,63 @@ export const useRecipeStore = create<IState>((set, get) => ({
           },
         }
       );
-      set({ error: error.message });
+      set({ error: error.message, emailLoading: false });
     } finally {
-      set({ loading: false });
+      set({ emailLoading: false, hasDownload: true });
     }
   },
 
-  handlePrint: async (recipeId?: string) => {
+  handlePrint: async (recipeId?: string, documentIds?: string) => {
     try {
       const recipe = get().recipe;
-      set({ loading: true, error: null });
+      set({ error: null, loadingDownload: true });
       const token: string | null = await localStorage.getItem("sessionToken");
-      const response = await fetch(
-        `${baseUrl}/api/prescription/${recipeId || recipe.data.id}/file`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.status}`);
+      const idsToPrint = documentIds
+        ? documentIds.split(";")
+        : [recipe.data.id];
+
+      for (const docId of idsToPrint) {
+        const response = await fetch(
+          `${baseUrl}/api/prescription/${recipeId || recipe.data.id}/file${
+            docId ? `?document_id=${docId}` : ""
+          }`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const blob = new Blob([await response.blob()], {
+          type: "application/pdf",
+        });
+
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Abre cada documento en una nueva pestaña.
+        window.open(blobUrl, "_blank");
+
+        // Podrías querer esperar a que el documento se abra antes de continuar. Si es el caso, puedes descomentar la siguiente línea:
+        // await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      const blob = new Blob([await response.blob()], {
-        type: "application/pdf",
-      });
-
-      const blobUrl = URL.createObjectURL(blob);
-
-      window.open(blobUrl, "_blank");
-      set({ loading: false, error: null });
+      set({ loadingDownload: false, error: null, hasDownload: true });
     } catch (err) {
-      set({ loading: false });
+      set({ loadingDownload: false });
       toast(
         "Favor de intentarlo nuevamente presionando el botón Imprimir/Visualizar PDF",
         {
-          icon: "⚠️", // Icono unicode de advertencia (opcional)
+          icon: "⚠️",
           style: {
-            border: "1px solid #ffa502", // Borde naranja
-            padding: "16px", // Espaciado interno
-            color: "#ffa502", // Color del texto naranja
+            border: "1px solid #ffa502",
+            padding: "16px",
+            color: "#ffa502",
           },
         }
       );

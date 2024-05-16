@@ -12,12 +12,14 @@ export default function InputNumber({
   watch,
   visible,
   customChange,
+  minDigit,
   width = 100,
   max,
   min,
 }: Field) {
   const values: any = watch();
   if (visible && !values[visible]) return <> </>;
+  console.log("errors", error);
   return (
     <div className="px-2 full-width relative" style={{ width: `${width}%` }}>
       <label
@@ -34,11 +36,14 @@ export default function InputNumber({
         {...register(name, {
           required,
           validate: (value: string) => {
-            if (max && Number(value) > max) {
+            if (max && Number(value || 0) > max) {
               return `El valor máximo es ${max}`;
             }
-            if (min && Number(value) < min) {
+            if (min && Number(value || 0) < min) {
               return `El valor minimo es ${min}`;
+            }
+            if (minDigit && value.length < minDigit) {
+              return `El valor minimo de digitos es ${minDigit}`;
             }
           },
         })}
@@ -47,7 +52,7 @@ export default function InputNumber({
         }`}
       />
       {error && error?.message && (
-        <span className="text-[12px] text-red-400 absolute -bottom-3 w-full left-2">
+        <span className="text-[12px] text-red-400 absolute -bottom-2 w-full left-2">
           {`(${error?.message})`}{" "}
         </span>
       )}

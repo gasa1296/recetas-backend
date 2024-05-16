@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Image from "next/image";
-import medicineLogo from "@/assets/images/placeholder.jpg";
-import { FaPen, FaTrash, FaPlusCircle } from "react-icons/fa";
+
+import { FaPlusCircle } from "react-icons/fa";
 import ModalEditMedicine from "@/components/Modals/ModalEditMedicine";
 import { Field } from "@/types/Generals/FormGenerator";
+import { InputMedicament } from "../Components/InputMedicament";
 
 export default function InputMedicaments({
   label,
@@ -30,7 +30,7 @@ export default function InputMedicaments({
           medicine.uicodproducto || medicine.medicament_id
         }.png`,
     name: medicine.new ? medicine.name : medicine.vnombreproducto,
-    uuid: medicine.uicodproducto,
+    uuid: medicine.uicodproducto || medicine.medicament_id,
     new: medicine.new,
     ...medicine,
   }));
@@ -83,66 +83,13 @@ export default function InputMedicaments({
 
       {medicines.map((medicine: any, index: number) => {
         return (
-          <div
+          <InputMedicament
+            removeMedicament={removeMedicament}
+            setShow={setShow}
+            disabled={disabled}
+            medicine={medicine}
             key={index}
-            className=" cardRecipesMedicine flex-col lg:flex-row flex  justify-between items-center py-2 px-3  "
-          >
-            <div className="flex flex-col lg:flex-row justify-between  items-center">
-              <div className=" pr-3 min-w-[220px]">
-                <Image
-                  src={medicine.presentacion || medicineLogo}
-                  alt="Picture"
-                  width={100}
-                  height={100}
-                  className="image-medicament2"
-                />
-              </div>
-              <div className="border-stone-950">
-                <p className="text-[#1A1A1A] font-bold text-[20px] ">
-                  {medicine.name}
-                </p>
-                <p className="text-[#141414] text-[16px] ">
-                  {medicine.new
-                    ? medicine.indications
-                    : `${medicine.dose} | ${medicine.frequency} | ${medicine.duration} | ${medicine.way}  | ${medicine.quantity} | ${medicine.add}`}
-                </p>
-                {(medicine.new ||
-                  medicine.group === "Grupo II" ||
-                  medicine.group === "Grupo III") && (
-                  <div className="bg-[#FFBB32] px-4 py-2 mr-4">
-                    Atención: Este medicamento no puede prescribirse en una
-                    receta médica electrónica, si continúa sólo podrá imprimirse
-                    la receta y requerirá la firma “autógrafa“.
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {!disabled && (
-              <div className="mt-4 lg:mt-0">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeMedicament(medicine.uuid);
-                  }}
-                  className="button-delete  p-1 w-[119px] "
-                >
-                  <FaTrash color="#F23D4F" size={20} className="me-2" />{" "}
-                  <p>Eliminar</p>
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShow(medicine);
-                  }}
-                  className="button-edit flex  w-[119px] p-1 mt-2 "
-                >
-                  <FaPen color="#000000" size={20} className="me-2" />{" "}
-                  <p>Editar</p>
-                </button>
-              </div>
-            )}
-          </div>
+          />
         );
       })}
 

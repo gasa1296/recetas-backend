@@ -10,6 +10,7 @@ import AddMedicationPrescription from "../AddMedicine/AddMedicationPrescription"
 import AddNewMedicine from "../AddMedicine/AddNewMedicine";
 import { usePacients } from "@/store/pacients";
 import { useMedicamentStore } from "@/store/medicaments";
+import { PopularMedicaments } from "../../PopularMedicaments";
 export default function SearchMedicine({ nextStep, backStep }: any) {
   const { selectedPacient } = usePacients((state) => ({
     selectedPacient: state.selectedPacient,

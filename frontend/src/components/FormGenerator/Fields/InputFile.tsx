@@ -14,6 +14,7 @@ export default function InputFile({
   subLabel,
   watch,
   customChange,
+  temporalName = "",
   width,
 }: Field) {
   const values: any = watch();
@@ -23,17 +24,14 @@ export default function InputFile({
   const MAX_SIZE_FILE = 10;
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Funciones para manejar el drag & drop
   const onDragOver = (event: React.DragEvent): void => {
     event.preventDefault();
     event.stopPropagation();
-    // Aquí podrías cambiar el estado para mostrar que el drag está activo
   };
 
   const onDragLeave = (event: React.DragEvent): void => {
     event.preventDefault();
     event.stopPropagation();
-    // Aquí podrías cambiar el estado para mostrar que el drag ha terminado
   };
 
   const onDrop = (event: React.DragEvent): void => {
@@ -47,7 +45,6 @@ export default function InputFile({
     const fileArray = Array.from(inputFiles);
 
     fileArray.forEach((file, index) => {
-      // Puedes aplicar filtros o validaciones adicionales aquí
       if (
         previews.length + index < MAX_UPLOAD_ITEMS &&
         file.type.startsWith("image/")
@@ -116,15 +113,18 @@ export default function InputFile({
     let previews = [];
     try {
       if (!values[name]) return;
+
       previews = values[name].map((image: any) => {
         if (typeof image !== "string") return URL.createObjectURL(image);
         return isHttp(image)
           ? image
           : `${process.env.NEXT_PUBLIC_BASE_URL}/storage/${image}`;
       });
+
       setPreviews(previews);
 
       const files = await handleGetFiles(values[name]);
+
       setFiles(files as any);
       setValue(name, files);
     } catch (error) {
@@ -136,10 +136,11 @@ export default function InputFile({
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       handleParseFiles();
+      if (temporalName) setValue(temporalName, null);
     }, 200);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [values[temporalName]]);
 
   return (
     <div style={{ width: `${width}%` }} className="px-2 full-width">
@@ -155,7 +156,9 @@ export default function InputFile({
         name={name}
         accept="image/*"
         type="file"
-        onChange={(event) => onChangeFile(event)}
+        onChange={(event) => {
+          onChangeFile(event);
+        }}
         style={{ display: "none" }}
         ref={fileRef}
       />
@@ -176,7 +179,7 @@ export default function InputFile({
                 e.preventDefault();
                 onDelete(index);
               }}
-              className="absolute z-[10] top-0 right-0  mt-2 me-2 p-1 pt-0"
+              className="absolute z-[0] top-0 right-0  mt-2 me-2 p-1 pt-0"
             >
               <AiFillCloseCircle size={20} color="red" />
             </button>

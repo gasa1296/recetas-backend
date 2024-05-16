@@ -39,7 +39,7 @@ export default function TableRecipes({ nextStep }: any) {
                 </th>
 
                 <th scope="col" className="px-6 py-3 ">
-                  Diagnostico
+                  Diagnóstico
                 </th>
                 <th scope="col" className="px-6 py-3 ">
                   Fecha

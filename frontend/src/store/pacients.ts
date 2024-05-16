@@ -55,7 +55,10 @@ export const usePacients = create<IState>((set, get) => ({
       const result = await getPatients();
 
       set({
-        pacients: result.data.data,
+        pacients: result.data.data.map((pacient: IPacient) => ({
+          ...pacient,
+          last_name1: pacient.last_name1 ?? "",
+        })),
       });
     } catch (error: any) {
       toast.error(error.message);
@@ -92,7 +95,10 @@ export const usePacients = create<IState>((set, get) => ({
           const result = await getSearchPatients(search);
 
           set({
-            pacients: result.data.data,
+            pacients: result.data.data.map((pacient: IPacient) => ({
+              ...pacient,
+              last_name1: pacient.last_name1 ?? "",
+            })),
             loading: false,
             timeId: null,
           });
@@ -118,13 +124,16 @@ export const usePacients = create<IState>((set, get) => ({
     try {
       const pacients = get().pacients;
       const findPacient = pacients?.find(
-        (pacient) => pacient.email === pacientEmail
+        (pacient) => pacient.id === pacientEmail
       );
 
       if (findPacient) {
         set({
           step: 2,
-          selectedPacient: findPacient,
+          selectedPacient: {
+            ...findPacient,
+            last_name1: findPacient.last_name1 ?? "",
+          },
           selectedPacientDefault: {
             value: findPacient.email,
             label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
@@ -144,16 +153,23 @@ export const usePacients = create<IState>((set, get) => ({
     set({ loadingAction: true, error: null });
 
     try {
+      pacientPayload.phone1 = JSON.stringify(pacientPayload.phone1);
       const result = await createPatient(pacientPayload);
 
       const findPacient = result.data.data;
 
       set({
         step: 2,
-        selectedPacient: findPacient,
+        selectedPacient: {
+          ...findPacient,
+          last_name1: findPacient.last_name1 ?? "",
+        },
+
         selectedPacientDefault: {
           value: findPacient.email,
-          label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
+          label: `${findPacient.last_name1 ?? ""} ${findPacient.last_name2}, ${
+            findPacient.first_name
+          } | ${findPacient.email}`,
         },
       });
 
@@ -172,6 +188,7 @@ export const usePacients = create<IState>((set, get) => ({
     set({ loadingAction: true, error: null });
 
     try {
+      pacientPayload.phone1 = JSON.stringify(pacientPayload.phone1);
       const result = await updatePatient(pacientPayload);
 
       toast.success("Paciente actualizado correctamente");
@@ -180,10 +197,13 @@ export const usePacients = create<IState>((set, get) => ({
 
       set({
         step: 2,
+        editPacient: null,
         selectedPacient: findPacient,
         selectedPacientDefault: {
           value: findPacient.email,
-          label: `${findPacient.last_name1} ${findPacient.last_name2}, ${findPacient.first_name} | ${findPacient.email}`,
+          label: `${findPacient.last_name1 ?? ""} ${findPacient.last_name2}, ${
+            findPacient.first_name
+          } | ${findPacient.email}`,
         },
       });
       return result;
