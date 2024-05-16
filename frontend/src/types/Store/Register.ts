@@ -7,6 +7,12 @@ export interface ISpecialization {
   id?: number | null;
 }
 
+export interface IUniversity {
+  name: string | null;
+  id?: number | null;
+  image: string | null;
+}
+
 export interface IRoom {
   name: string | null;
   zip: string | null;
@@ -29,7 +35,7 @@ export interface IForm1 {
   last_name1: string | null;
   last_name2: string | null;
   email: string | null;
-  phone1: string | null;
+  phone1?: any;
   phone2: string | null;
   gender: string | null;
   fesa: string | null;

@@ -44,6 +44,7 @@ export default function AddNewMedicine({ nextStep, backStep }: any) {
       label: "Posología *",
       name: "indications",
       required: true,
+      max: 200,
       type: "textarea",
       default: "",
     },

@@ -10,6 +10,7 @@ export interface IMedicament {
   via?: string;
   group?: string;
   type?: string;
+  medicament_id?: string;
   information?: string;
 }
 

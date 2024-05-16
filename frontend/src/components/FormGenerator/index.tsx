@@ -112,8 +112,8 @@ export default function FormGenerator({
             {...field}
             label={
               isSubform && isSubform > 0
-                ? field.secondLabel || field.label
-                : field.label
+                ? `${field.secondLabel || field.label}`
+                : `${field.label}`
             }
           />
         );
@@ -121,13 +121,15 @@ export default function FormGenerator({
       {renderButton ? (
         renderButton(handleSubmit(submitData))
       ) : (
-        <button
-          disabled={loading}
-          className="bg-[#000000] disabled:opacity-40 p-3 text-[#EBF4F8] rounded-lg w-60 mx-auto block my-8"
-          type="submit"
-        >
-          {buttonText}
-        </button>
+        <div className="w-full">
+          <button
+            disabled={loading}
+            className="bg-[#000000]  disabled:opacity-40 p-3 text-[#EBF4F8] rounded-lg w-60 mx-auto block my-8"
+            type="submit"
+          >
+            {buttonText}
+          </button>
+        </div>
       )}
     </form>
   );

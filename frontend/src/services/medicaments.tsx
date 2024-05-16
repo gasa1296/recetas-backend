@@ -32,3 +32,10 @@ export const updateMedicament = (pacientPayload: IMedicament) => {
     _data: pacientPayload,
   });
 };
+
+export const GetPopularMedicament = () => {
+  return Api({
+    endpoint: `/most_used`,
+    method: "GET",
+  });
+};

@@ -17,6 +17,13 @@ export default function SelectedUser({ nextStep }: any) {
     //nextStep();
   };
 
+  let phone1Parse;
+  try {
+    phone1Parse = JSON.parse(selectedPacient?.phone1 || "");
+  } catch (error) {
+    phone1Parse = [""];
+  }
+
   const fields: Field[] = [
     {
       label: "Nombre(s)",
@@ -37,19 +44,19 @@ export default function SelectedUser({ nextStep }: any) {
       default: selectedPacient?.email,
     },
     {
-      label: "Teléfono celular *",
+      label: "Teléfono celular ",
       name: "phone1",
-      required: true,
-      type: "text",
+      //required: true,
+      type: "multiPhone",
       width: 50,
       disabled: true,
-      default: selectedPacient?.phone1,
+      default: phone1Parse,
       maxFile: 10,
     },
     {
       label: "Edad *",
       name: "birth_date",
-      required: true,
+      //required: true,
       type: "number",
       width: 50,
       disabled: true,

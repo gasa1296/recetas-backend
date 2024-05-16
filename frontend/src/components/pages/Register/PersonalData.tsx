@@ -4,8 +4,10 @@ import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm1, IRegisterPayload } from "@/types/Store/Register";
 import { validateSameObject } from "@/utils/isSameObject";
+import * as yup from "yup";
 import React from "react";
 import toast from "react-hot-toast";
+import { form1Schema } from "./helper";
 
 export default function PersonalData({ nextStep }: any) {
   const setForm1 = useRegisterStore((state) => state.setForm1);
@@ -77,26 +79,6 @@ export default function PersonalData({ nextStep }: any) {
       width: 50,
       default: form1?.email ?? "",
     },
-
-    {
-      label: "Teléfono celular *",
-      name: "phone1",
-      required: true,
-      disabled: enableSearch,
-      type: "text",
-      width: 50,
-      default: form1?.phone1 ?? "",
-      maxFile: 10,
-    },
-    {
-      label: "Teléfono fijo",
-      name: "phone2",
-      required: false,
-      type: "text",
-      width: 50,
-      default: form1?.phone2 ?? "",
-      maxFile: 10,
-    },
     {
       label: "Seleccionar Género *",
       name: "gender",
@@ -104,13 +86,33 @@ export default function PersonalData({ nextStep }: any) {
       disabled: enableSearch,
       type: "select",
       options: [
-        { label: "Masculino", value: "0" },
-        { label: "Femenino", value: "1" },
-        { label: "Indefinido", value: "2" },
+        { label: "Masculino", value: "M" },
+        { label: "Femenino", value: "F" },
+        { label: "Indefinido", value: "I" },
       ],
       width: 50,
       default: form1?.gender ?? "",
     },
+    {
+      label: "Teléfono celular ",
+      name: "phone1",
+      required: true,
+      // disabled: enableSearch,
+      type: "multiPhone",
+      width: 50,
+      default: form1?.phone1 ?? [""],
+      maxFile: 10,
+    },
+    {
+      label: "Teléfono fijo (Opcional)",
+      name: "phone2",
+      required: false,
+      type: "text",
+      width: 50,
+      default: form1?.phone2 ?? "",
+      maxFile: 10,
+    },
+
     {
       label: "Código FESA *",
       name: "fesa",
@@ -147,7 +149,7 @@ export default function PersonalData({ nextStep }: any) {
   return (
     <section className="max-w-[1000px] mx-auto px-3 md:px-2">
       <h2 className="text-center text-[#1A1A1A] text-[24px] mt-5 font-medium">
-        Buscate para autorellenar tus datos
+        Ingrese su cédula o correo electrónico para buscar su información
       </h2>
 
       <FormGenerator
@@ -170,6 +172,7 @@ export default function PersonalData({ nextStep }: any) {
             setForm1(form as IForm1);
           }
         }}
+        schema={form1Schema}
         submitData={submitData}
         fields={fields}
         loading={false}

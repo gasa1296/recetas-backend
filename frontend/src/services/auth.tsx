@@ -38,11 +38,18 @@ export const registerUser = (registerPayload: any) => {
 
         // Añadir archivo si no es null
         if (specialization.file.length && specialization.file[0] !== null) {
-          formData.append(
-            `logo_spec[${index}]`,
-            specialization.file[0],
-            specialization.file[0].name
-          );
+          if (typeof specialization.file[0] === "string") {
+            formData.append(
+              `specializations[${index}][logo]`,
+              specialization.file[0]
+            );
+          } else {
+            formData.append(
+              `logo_spec[${index}]`,
+              specialization.file[0],
+              specialization.file[0].name
+            );
+          }
         }
       }
     );

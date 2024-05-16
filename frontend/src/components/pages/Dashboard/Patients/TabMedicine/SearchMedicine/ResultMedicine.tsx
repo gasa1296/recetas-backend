@@ -41,7 +41,7 @@ export default function ResultMedicine() {
           className="flex justify-center items-center button-BlacK p-2 px-3 absolute right-0 top-0"
         >
           <HiPlusSmall size={25} />
-          Nuevo medicamento
+          Otro medicamento
         </button>
       ) : null}
 

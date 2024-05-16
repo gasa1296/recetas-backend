@@ -2,16 +2,21 @@ import FormGenerator from "@/components/FormGenerator";
 import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import React from "react";
-import * as yup from "yup";
+
 import Receta1 from "@/assets/images/recetas/Receta1.png";
 import Receta2 from "@/assets/images/recetas/Receta2.png";
 import Receta3 from "@/assets/images/recetas/Receta3.png";
-import { IForm3, IRegisterPayload } from "@/types/Store/Register";
-import { SpecializationSchema } from "@/utils/ValidationSchema/SpecializationSchema";
-import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
+import { IRegisterPayload } from "@/types/Store/Register";
+
 import useScrollToTop from "@/hooks/useScrollToTop";
 import LoadingModal from "@/components/Loading/LoadingModal";
 import { useRoomsStore } from "@/store/rooms";
+import { confirmationSchema } from "./helper";
+import { useSpecializationsStore } from "@/store/specializations";
+import useCustomEffect from "@/hooks/useCustomEffect";
+import toast from "react-hot-toast";
+import ModalUniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/ModalUniversityNotFound";
+import UniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/UniversityNotFound";
 
 export default function ConfirmAccount({ nextStep, backStep }: any) {
   const { form3, form2, form1, handleSubmit, loading, enableSearch } =
@@ -26,26 +31,35 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
 
   const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
+  const { university, GetUniversity } = useSpecializationsStore((state) => ({
+    university: state.university,
+    GetUniversity: state.GetUniversity,
+  }));
+
   useScrollToTop();
+  useCustomEffect({ requestGet: GetUniversity });
+
+  const universityOptions = university?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
 
   const submitData = async (data: IRegisterPayload) => {
     const result = await handleSubmit(data);
+    console.log("asdasd", result);
 
     if (result) nextStep();
   };
 
-  const schema = yup.object().shape({
-    specializations: yup
-      .array()
-      .of(SpecializationSchema)
-      .min(1, "Debe tener al menos una especialización")
-      .required("Debe tener al menos una especialización"),
-    rooms: yup
-      .array()
-      .of(RoomSchema)
-      .min(1, "Debe tener al menos un consultorio")
-      .required("Debe tener al menos un consuiltorio"),
-  });
+  let phone1Parse;
+  try {
+    phone1Parse =
+      typeof form1?.phone1 === "string"
+        ? JSON.parse(form1?.phone1 || "")
+        : form1?.phone1 || [""];
+  } catch (error) {
+    phone1Parse = [""];
+  }
 
   const fields: Field[] = [
     {
@@ -85,26 +99,6 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       width: 50,
       default: form1?.email || "",
     },
-
-    {
-      label: "Teléfono celular *",
-      name: "phone1",
-      disabled: enableSearch,
-      required: true,
-      type: "text",
-      width: 50,
-      default: form1?.phone1 || "",
-      maxFile: 10,
-    },
-    {
-      label: "Teléfono fijo",
-      name: "phone2",
-      required: false,
-      type: "text",
-      width: 50,
-      default: form1?.phone2 || "",
-      maxFile: 10,
-    },
     {
       label: "Seleccionar Género *",
       name: "gender",
@@ -112,13 +106,33 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       disabled: enableSearch,
       type: "select",
       options: [
-        { label: "Masculino", value: "0" },
-        { label: "Femenino", value: "1" },
-        { label: "Indefinido", value: "2" },
+        { label: "Masculino", value: "M" },
+        { label: "Femenino", value: "F" },
+        { label: "Indefinido", value: "I" },
       ],
       width: 50,
       default: form1?.gender || "",
     },
+    {
+      label: "Teléfono celular ",
+      name: "phone1",
+      //disabled: enableSearch,
+      required: true,
+      type: "multiPhone",
+      width: 50,
+      default: phone1Parse,
+      maxFile: 10,
+    },
+    {
+      label: "Teléfono fijo (Opcional)",
+      name: "phone2",
+      required: false,
+      type: "text",
+      width: 50,
+      default: form1?.phone2 || "",
+      maxFile: 10,
+    },
+
     {
       label: "Código FESA *",
       name: "fesa",
@@ -198,15 +212,29 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           label: "Institución que otorga la licenciatura *",
           secondLabel: "Institución que otorga la especialidad *",
           name: "university",
+          ModalNotFound: ModalUniversityNotFound,
+          NotFound: UniversityNotFound,
           required: true,
-          type: "text",
+          type: "selectSearch",
+          options: universityOptions,
           width: 50,
           subFormKey: "university",
           default: form2?.specializations || "",
+          customChange: async (newValue: any, setValue: any) => {
+            const findUniversity = university?.find(
+              (uni) => uni.name === newValue
+            );
+
+            if (findUniversity?.image) {
+              setValue("file", [findUniversity?.image || ""]);
+              setValue("temporalLogo", [findUniversity?.image || ""]);
+            }
+          },
         },
         {
           label: "Agrega el logotipo de tu Universidad *",
           name: "file",
+          temporalName: "temporalLogo",
           maxFile: 1,
           required: false,
           type: "file",
@@ -257,8 +285,9 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           width: 100,
         },
         {
-          label: "Nombre del consultorio *",
+          label: "Nombre del consultorio",
           name: "name",
+          moreOne: true,
           required: true,
           type: "text",
           width: 50,
@@ -269,7 +298,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           label: "Código Postal *",
           name: "zip",
           required: true,
-          type: "text",
+          type: "number",
           width: 50,
           subFormKey: "zip",
           default: form3?.rooms || "",
@@ -399,7 +428,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
             submitData={submitData}
             fields={fields}
             loading={false}
-            schema={schema}
+            schema={confirmationSchema}
             renderButton={(handleSubmit) => (
               <div className="flex justify-center w-full ">
                 <button

@@ -13,6 +13,7 @@ import { usePacients } from "@/store/pacients";
 import { useRecipeStore } from "@/store/recipes";
 import LoadingModal from "@/components/Loading/LoadingModal";
 import { getMedicamentByCode } from "@/services/medicaments";
+import { BsFileMedical } from "react-icons/bs";
 
 export default function Nav({ setScreen }: any) {
   const { user } = useAuthStore((state) => ({
@@ -21,6 +22,7 @@ export default function Nav({ setScreen }: any) {
 
   const router = useRouter();
   const loading = useRecipeStore((state) => state.loading);
+  const hasMissingSign = useRecipeStore((state) => state.hasMissingSign);
   const ClearRecipe = useRecipeStore((state) => state.ClearRecipe);
   const [time, setTime] = useState<any>("");
 
@@ -45,7 +47,13 @@ export default function Nav({ setScreen }: any) {
   }, []);
   return (
     <nav className=" p-5 block md:flex justify-between  bg-[#FFFFFF] container-nav sticky top-0 z-[100]  ">
-      {loading && <LoadingModal />}
+      {loading && (
+        <LoadingModal
+          text={
+            hasMissingSign ? "Generando receta" : "Generando receta para firma"
+          }
+        />
+      )}
       <div className=" absolute flex items-center justify-center top-6 right-14 md:hidden">
         <button
           onClick={() => {
@@ -129,7 +137,7 @@ export default function Nav({ setScreen }: any) {
           <div className=" content-card flex align-center justify-center bg-[#000] text-white w-[20px] h-[20px] text-[12px]  absolute top-[-5px] right-[-5px] leading-[20px]">
             {cardMedicament.length}
           </div>
-          <FaFilePrescription size={32} color="bg-[#fff]" />
+          <BsFileMedical size={32} color="bg-[#fff]" />
         </div>
       </section>
     </nav>

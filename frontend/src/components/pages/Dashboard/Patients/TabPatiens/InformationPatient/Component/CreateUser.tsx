@@ -4,7 +4,8 @@ import { Field } from "@/types/Generals/FormGenerator";
 import { usePacients } from "@/store/pacients";
 import { IPacient } from "@/types/Models/Pacient";
 import { MdOutlineArrowBackIos } from "react-icons/md";
-export default function CreateUser() {
+import { PacientSchema } from "./helper";
+export default function CreateUser({ nextStep }: any) {
   const {
     CreatePacient,
     editPacient,
@@ -24,23 +25,18 @@ export default function CreateUser() {
   }));
   const submitData = async (data: IPacient) => {
     if (editPacient) UpdatePacient({ ...editPacient, ...data });
-    else CreatePacient(data);
-  };
-
-  const getGender = (gender: string) => {
-    switch (gender) {
-      case "F":
-        return "1";
-      case "M":
-        return "0";
-      case "0":
-        return "0";
-      case "1":
-        return "1";
-      default:
-        "";
+    else {
+      await CreatePacient(data);
+      nextStep();
     }
   };
+
+  let phone1Parse;
+  try {
+    phone1Parse = JSON.parse(editPacient?.phone1 || "");
+  } catch (error) {
+    phone1Parse = [""];
+  }
 
   const fields: Field[] = [
     {
@@ -59,14 +55,7 @@ export default function CreateUser() {
       default: editPacient?.first_name,
       width: 50,
     },
-    {
-      label: "Apellido Paterno *",
-      name: "last_name1",
-      required: true,
-      type: "text",
-      default: editPacient?.last_name1 || "",
-      width: 50,
-    },
+
     {
       label: "Apellido Materno *",
       name: "last_name2",
@@ -76,42 +65,19 @@ export default function CreateUser() {
       width: 50,
     },
     {
-      label: "Correo electrónico para envio de recetas *",
+      label: "Apellido Paterno (Opcional)",
+      name: "last_name1",
+      required: false,
+      type: "text",
+      default: editPacient?.last_name1 || "",
+      width: 50,
+    },
+    {
+      label: "Correo electrónico para envió de recetas *",
       name: "email",
       required: true,
       type: "email",
       default: editPacient?.email || "",
-      width: 50,
-    },
-    {
-      label: "Teléfono celular *",
-      name: "phone1",
-      required: true,
-      type: "text",
-      default: editPacient?.phone1 || "",
-      width: 50,
-      maxFile: 10,
-    },
-    {
-      label: "Teléfono fijo",
-      name: "phone2",
-      required: false,
-      type: "text",
-      default: editPacient?.phone2 || "",
-      width: 50,
-      maxFile: 10,
-    },
-    {
-      label: "Seleccionar Género *",
-      name: "gender",
-      required: true,
-      type: "select",
-      options: [
-        { label: "Masculino", value: "0" },
-        { label: "Femenino", value: "1" },
-        { label: "Indefinido", value: "2" },
-      ],
-      default: getGender(editPacient?.gender || ""),
       width: 50,
     },
     {
@@ -121,6 +87,37 @@ export default function CreateUser() {
       inputType: "date",
       type: "date",
       default: editPacient?.birth_date,
+      width: 50,
+    },
+    {
+      label: "Teléfono celular ",
+      name: "phone1",
+      required: true,
+      type: "multiPhone",
+      default: phone1Parse,
+      width: 50,
+      maxFile: 10,
+    },
+    {
+      label: "Teléfono fijo (Opcional)",
+      name: "phone2",
+      required: false,
+      type: "text",
+      default: editPacient?.phone2 || "",
+      width: 50,
+      maxFile: 10,
+    },
+    {
+      label: "Seleccionar Género (Opcional)",
+      name: "gender",
+      required: false,
+      type: "select",
+      options: [
+        { label: "Masculino", value: "M" },
+        { label: "Femenino", value: "F" },
+        { label: "Indefinido", value: "I" },
+      ],
+      default: editPacient?.gender || "",
       width: 50,
     },
   ];
@@ -142,6 +139,7 @@ export default function CreateUser() {
         <FormGenerator
           submitData={submitData}
           fields={fields}
+          schema={PacientSchema}
           loading={loadingAction}
           buttonText="Guardar"
         />

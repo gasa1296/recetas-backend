@@ -24,7 +24,7 @@ export default function LoginForm() {
   const submitData = async (data: ILoginPayload) => {
     const result = await Login(data);
     if (result) {
-      if (result.recetasUser === false) router.push("/register");
+      if (result?.recetasUser === false) router.push("/register");
       else router.push("/dashboard");
 
       //Reset old data
