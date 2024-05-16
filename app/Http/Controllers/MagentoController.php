@@ -71,9 +71,6 @@ class MagentoController extends Controller
             'lastname' => $inputs['last_name1'],
             'middleName' => $inputs['last_name2'],
             'password' => $inputs['password'],
-            'gender' => $inputs['gender'],
-            'phone' => $inputs['phone1'][0]['phone'],
-            "typeUsage" => "Celular"
 
         ];
         if (strtoupper($inputs['gender']) == 'M') {
@@ -133,7 +130,7 @@ class MagentoController extends Controller
                                 'cedulaProfesional' => $esp['identification'],
                                 'especialidad' => $esp['name']
                             ];
-                        }, $inputs['specializations']),
+                        }, $inputs['specializations'] ?? []),
                         'listaTelefono' => array_map(function($phone) {
                             return [
                                 'numeroTelefonico' => $phone['phone'],
@@ -155,7 +152,7 @@ class MagentoController extends Controller
                                 "tipo" => "Consultorio", 
                                 "estatus" => "Activo"
                             ];
-                        }, $inputs['rooms']),
+                        }, $inputs['rooms'] ?? []),
                     ],
                 ]
             ]);
