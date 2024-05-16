@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConsultingRoom;
-use App\Models\Phone;
 use App\Models\Specialization;
 use Validator;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -93,16 +93,19 @@ class AuthController extends Controller
         }
         if (!empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             $res = $magento->registerMagentoRepo($inputs);
+            Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
         } elseif (empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             $res = $magento->registerCX($request);
+            Log::debug('cx register', $res->getData(true));
             if($res->getStatusCode() >= 300) {
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
             $res = $magento->registerMagentoRepo($inputs);
+            Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
