@@ -13,6 +13,7 @@ import { create } from "zustand";
 type IRegisterStore = {
   success: boolean;
   loading: boolean;
+  errorMessage: boolean;
   error: string | null;
   form1: IForm1 | null;
   form2: IForm2 | null;
@@ -34,6 +35,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
   form1: null,
   form2: null,
   form3: null,
+  errorMessage: false,
   enableSearch: false,
   loading: false,
   error: null,
@@ -64,24 +66,36 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
   },
 
   handleSubmit: async (registerPayload: IRegisterPayload) => {
-    set({ loading: true });
+    set({ loading: true, errorMessage: false });
     try {
-      const result = await autopopulateProfile(registerPayload.email || "");
+      const payload = { ...registerPayload };
+      const result = await autopopulateProfile(payload.email || "");
 
       if (result && result.data.contacts) {
         const contact = result.data.contacts[0] || null;
-        registerPayload.idCX = contact.datosGenerales.id;
-        registerPayload.clienteEcommerce =
+        payload.idCX = contact.datosGenerales.idExterno;
+        payload.clienteEcommerce =
           contact.datosGenerales.clienteEcommerce === "No" ? false : true;
       }
 
-      const response = await registerUser(registerPayload);
+      payload.phone1 = JSON.stringify(
+        payload.phone1?.map((phone: string) => ({ phone })) || []
+      );
+
+      const response = await registerUser(payload);
       set({ success: true });
       return response.data;
     } catch (error: any) {
-      const message = getRequestError(error);
-      toast.error(message);
-      set({ error: message });
+      const includeErrorEmail =
+        error?.response?.data?.message?.includes("RFC 2606");
+      if (includeErrorEmail) {
+        set({ success: true, errorMessage: true });
+        return true;
+      } else {
+        const message = getRequestError(error);
+        toast.error(message);
+        set({ error: message });
+      }
     } finally {
       set({ loading: false });
     }
@@ -104,17 +118,49 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
           last_name1: contact.datosGenerales.apellidoPaterno,
           last_name2: contact.datosGenerales.apellidoMaterno,
           email: contact.listaCorreoElectronico[0].correroElectronico,
-          gender: contact.datosGenerales.sexo === "Masculino" ? "0" : "1",
+          gender: contact.datosGenerales.sexo === "Masculino" ? "M" : "F",
           phone1:
             contact.listaTelefonos &&
-            contact.listaTelefonos[0].telefono.NumeroTelefonico,
+            contact.listaTelefonos.map(
+              (tlf: any) => tlf.telefono.NumeroTelefonico
+            ),
           phone2: "",
           fesa: "",
           password: "",
           confirmPassword: "",
         };
+
+        const cedulas =
+          contact.listaCedula?.map((cedula: any) => ({
+            name: cedula.especialidad || "",
+            identification: cedula.cedulaProfesional || "",
+          })) || null;
+
+        const direcciones =
+          contact.listaDireccion?.map((direccion: any) => ({
+            name: "",
+            zip: direccion.direccion.codigoPostal || "",
+            street: direccion.direccion.calle || "",
+            colony: direccion.direccion.colonia || "",
+            state: direccion.direccion.estado || "",
+            delegation: direccion.direccion.delgacionMunicipio || "",
+            n_exterior: direccion.direccion.numeroExterior || "",
+            n_interior: direccion.direccion.numeroInterior || "",
+            address:
+              direccion.direccion.calle +
+              " " +
+              direccion.direccion.numeroExterior,
+            phone: "",
+          })) || null;
+
         toast.success("Medico encontrado satisfactoriamente!");
-        set({ loading: false, form1: user, enableSearch: true });
+        set({
+          loading: false,
+          form1: user,
+          form2: { specializations: cedulas },
+          form3: { rooms: direcciones },
+          enableSearch: true,
+        });
       }, 1000);
     } catch (error: any) {
       const message = getRequestError(error);

@@ -4,6 +4,7 @@ import { Field } from "@/types/Generals/FormGenerator";
 import { FaSave } from "react-icons/fa";
 import { useAuthStore } from "@/store/auth";
 import { IUser } from "@/types/Models/User";
+import { form1ProfileSchema } from "@/components/pages/Register/helper";
 
 export default function PersonalInformation({ nextStep, backStep }: any) {
   const { user, UpdateProfile, loading } = useAuthStore((state) => ({
@@ -15,6 +16,13 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
   const submitData = async (data: IUser) => {
     UpdateProfile(data as any);
   };
+
+  let phone1Parse;
+  try {
+    phone1Parse = JSON.parse(user?.phone1 || "");
+  } catch (error) {
+    phone1Parse = [""];
+  }
 
   const fields: Field[] = [
     {
@@ -51,18 +59,31 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
       width: 50,
       default: user?.email || "",
     },
+    {
+      label: "Seleccionar Género *",
+      name: "gender",
+      required: true,
+      type: "select",
+      options: [
+        { label: "Masculino", value: "M" },
+        { label: "Femenino", value: "F" },
+        { label: "Indefinido", value: "I" },
+      ],
+      width: 50,
+      default: user?.gender || "",
+    },
 
     {
-      label: "Teléfono celular *",
+      label: "Teléfono celular ",
       name: "phone1",
       required: true,
-      type: "text",
+      type: "multiPhone",
       width: 50,
-      default: user?.phone1 || "",
+      default: phone1Parse.map((phone: any) => phone.phone),
       maxFile: 10,
     },
     {
-      label: "Teléfono fijo",
+      label: "Teléfono fijo (Opcional)",
       name: "phone2",
       required: false,
       type: "text",
@@ -70,19 +91,7 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
       default: user?.phone2 || "",
       maxFile: 10,
     },
-    {
-      label: "Seleccionar Género *",
-      name: "gender",
-      required: true,
-      type: "select",
-      options: [
-        { label: "Masculino", value: "0" },
-        { label: "Femenino", value: "1" },
-        { label: "Indefinido", value: "2" },
-      ],
-      width: 50,
-      default: user?.gender || "",
-    },
+
     {
       label: "Código FESA *",
       name: "fesa",
@@ -98,6 +107,7 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
         submitData={submitData}
         fields={fields}
         loading={false}
+        schema={form1ProfileSchema}
         renderButton={(handleSubmit) => (
           <div className="flex justify-center w-full  ">
             <button

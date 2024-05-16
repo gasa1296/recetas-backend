@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import medicineLogo from "@/assets/images/medicine.png";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import React from "react";
+
 import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 export default function ModalEditMedicine({
@@ -13,6 +11,24 @@ export default function ModalEditMedicine({
     updateMedicament(show.uuid, data);
     closeModal();
   };
+  const getMaxAmount = (group?: string) => {
+    if (group === "Grupo II" || group === "Group III") return true;
+
+    return false;
+  };
+
+  const getVigencia = (vigencia?: string) => {
+    switch (vigencia) {
+      case "Grupo II":
+        return "(Vigente por 30 dias)";
+      case "Grupo III":
+        return "(Vigente por 180 dias)";
+      case "RESTRICCION ANTIBIOTICOS":
+        return "(Vigente por duración del tratamiento)";
+      default:
+        return "";
+    }
+  };
   const fields: Field[] = show.new
     ? [
         {
@@ -23,16 +39,17 @@ export default function ModalEditMedicine({
           default: show.name,
         },
         {
-          label: "Indicaciones adicionales *",
+          label: "Posología *",
           name: "indications",
           required: true,
+          max: 200,
           type: "textarea",
           default: show.indications,
         },
       ]
     : [
         {
-          label: "Dosis *",
+          label: "Dosis (Sin abreviaturas) *",
           name: "dose",
           required: true,
           type: "text",
@@ -40,7 +57,7 @@ export default function ModalEditMedicine({
           default: show.dose,
         },
         {
-          label: "Frecuencia *",
+          label: "Frecuencia (Sin abreviaturas) *",
           name: "frequency",
           required: true,
           type: "text",
@@ -48,7 +65,9 @@ export default function ModalEditMedicine({
           default: show.frequency,
         },
         {
-          label: "Duración *",
+          label: `Duración del tratamiento (Sin abreviaturas) ${getVigencia(
+            show?.group
+          )} *`,
           name: "duration",
           required: true,
           type: "text",
@@ -56,21 +75,14 @@ export default function ModalEditMedicine({
           default: show.duration,
         },
         {
-          label: "Via de administración *",
+          label: "Via de administración (Sin abreviaturas) *",
           name: "way",
           required: true,
           type: "text",
           width: 50,
           default: show.way,
         },
-        {
-          label: "Indicaciones adicionales",
-          name: "add",
-          required: false,
-          type: "text",
-          width: 50,
-          default: show.add,
-        },
+
         {
           label: "Cantidad de cajas para cubrir el tratamiento *",
           name: "quantity",
@@ -78,13 +90,24 @@ export default function ModalEditMedicine({
           type: "number",
           width: 50,
           default: show.quantity,
+          max: getMaxAmount(show?.group) ? 2 : 0,
+          min: 1,
+        },
+        {
+          label: "Indicaciones adicionales (Opcional)",
+          name: "add",
+          required: false,
+          type: "textarea",
+          max: 200,
+          width: 50,
+          default: show.add,
         },
       ];
 
   return (
     <>
       {show && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity ">
           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div className="flex min-h-full items-end justify-center p-2 text-center sm:items-center sm:p-0">
               <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl">
@@ -112,7 +135,7 @@ export default function ModalEditMedicine({
                         <p className="text-[#141414] text-[20px] ms-4 mt-1">
                           {show.new
                             ? show.indications
-                            : `${show.dose} | ${show.frequency} | ${show.duration} | ${show.via} | ${show.indications} | ${show.quantity}`}
+                            : `${show.dose} | ${show.frequency} | ${show.duration} | ${show.way} | ${show.add} | ${show.quantity}`}
                         </p>
                       </div>
                     </div>
@@ -125,7 +148,7 @@ export default function ModalEditMedicine({
                       buttonText="Continuar"
                       renderButton={(handleSubmit) => (
                         <div className=" w-full  ">
-                          <div className="bar-lateral  " />
+                          <div className="bar-lateral mt-4 " />
 
                           <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                             <button

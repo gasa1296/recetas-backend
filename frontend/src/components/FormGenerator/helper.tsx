@@ -19,6 +19,9 @@ import InputSubTitle from "./Fields/InputSubtitle";
 import InputSeparation from "./Fields/InputSeparation";
 import InputMedicaments from "./Fields/InputMedicaments";
 import InputRoom from "./Fields/InputRoom";
+import InputMultiPhone from "./Fields/InputMultiPhone";
+import InputCollapseForm from "./Fields/InputCollapseSubform";
+import InputSelectSearch from "./Fields/inputSelectSearch";
 
 export const getDefaultValues = (fields: Field[], isSubform?: number) => {
   const defaultValues: any = {};
@@ -27,8 +30,12 @@ export const getDefaultValues = (fields: Field[], isSubform?: number) => {
     if (field.type !== "title" && field.type !== "separation") {
       defaultValues[field.name] = field.default || "";
     }
+    if (field.type === "collapse") {
+      field.form.map((field: Field) => {
+        defaultValues[field.name] = field.default || "";
+      });
+    }
   });
-  12;
 
   return defaultValues;
 };
@@ -43,6 +50,7 @@ export const FieldComponents: FieldType = {
   title: InputTitle,
   radioButton: InputRadioButton,
   select: InputSelect,
+  selectSearch: InputSelectSearch,
   file: InputFile,
   textarea: InputTextarea,
   date: InputDate,
@@ -53,6 +61,8 @@ export const FieldComponents: FieldType = {
   separation: InputSeparation,
   medicaments: InputMedicaments,
   room: InputRoom,
+  multiPhone: InputMultiPhone,
+  collapse: InputCollapseForm,
 };
 
 export function isHttp(url: String) {

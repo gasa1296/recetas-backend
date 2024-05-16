@@ -2,15 +2,15 @@ import FormGenerator from "@/components/FormGenerator";
 import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm3 } from "@/types/Store/Register";
-import * as yup from "yup";
 import { validateSameObject } from "@/utils/isSameObject";
 import Receta1 from "@/assets/images/recetas/Receta1.png";
 import Receta2 from "@/assets/images/recetas/Receta2.png";
 import Receta3 from "@/assets/images/recetas/Receta3.png";
 import React from "react";
-import { RoomSchema } from "@/utils/ValidationSchema/RoomsSchema";
+
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { useRoomsStore } from "@/store/rooms";
+import { RoomArraySchema } from "./helper";
 
 export default function RegisterOffice({ nextStep, backStep }: any) {
   const setForm3 = useRegisterStore((state) => state.setForm3);
@@ -22,14 +22,6 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
   const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
   useScrollToTop();
-
-  const schema = yup.object().shape({
-    rooms: yup
-      .array()
-      .of(RoomSchema)
-      .min(1, "Debe tener al menos un consultorio")
-      .required("Debe tener al menos un consuiltorio"),
-  });
 
   const fields: Field[] = [
     {
@@ -72,8 +64,9 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           width: 100,
         },
         {
-          label: "Nombre del consultorio *",
+          label: "Nombre del consultorio",
           name: "name",
+          moreOne: true,
           required: true,
           type: "text",
           width: 50,
@@ -84,8 +77,10 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           label: "Código Postal *",
           name: "zip",
           required: true,
-          type: "text",
+          type: "number",
           width: 50,
+          minDigit: 5,
+          min: 0,
           subFormKey: "zip",
           default: form3?.rooms ?? "",
         },
@@ -212,7 +207,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
             submitData={submitData}
             fields={fields}
             loading={false}
-            schema={schema}
+            schema={RoomArraySchema}
             onFormChange={(form) => {
               if (validateSameObject(form3 as object, form)) {
                 setForm3(form as IForm3);

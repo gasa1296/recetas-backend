@@ -8,6 +8,10 @@ import { useSpecializationsStore } from "@/store/specializations";
 import useCustomEffect from "@/hooks/useCustomEffect";
 import Loading from "@/components/Loading";
 import { SpecializationProfileSchema } from "@/utils/ValidationSchema/SpecializationSchema";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import ModalUniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/ModalUniversityNotFound";
+import UniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/UniversityNotFound";
 
 export default function ProfessionalDataProfile() {
   const {
@@ -15,21 +19,27 @@ export default function ProfessionalDataProfile() {
     UpdateSpecializations,
     loading,
     loadingUpdate,
+    university,
+    GetUniversity,
     GetSpecializations,
   } = useSpecializationsStore((state) => ({
     loading: state.loading,
+    university: state.university,
     loadingUpdate: state.loadingUpdate,
     specializations: state.specializations,
+    GetUniversity: state.GetUniversity,
     UpdateSpecializations: state.UpdateSpecializations,
     GetSpecializations: state.GetSpecializations,
   }));
 
   const submitData = async (data: { specializations: ISpecialization[] }) => {
+    console.log("asdasd", data);
     const result = await UpdateSpecializations(data.specializations);
     if (result) GetSpecializations();
   };
 
   useCustomEffect({ requestGet: GetSpecializations });
+  useCustomEffect({ requestGet: GetUniversity });
 
   const schema = yup.object().shape({
     specializations: yup
@@ -38,6 +48,11 @@ export default function ProfessionalDataProfile() {
       .min(1, "Debe tener al menos una especialización")
       .required("Debe tener al menos una especialización"),
   });
+
+  const universityOptions = university?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
 
   const fields: Field[] = [
     {
@@ -101,15 +116,29 @@ export default function ProfessionalDataProfile() {
           label: "Institución que otorga la licenciatura *",
           secondLabel: "Institución que otorga la especialidad *",
           name: "university",
+          ModalNotFound: ModalUniversityNotFound,
+          NotFound: UniversityNotFound,
           required: true,
-          type: "text",
+          type: "selectSearch",
           width: 50,
+          options: universityOptions,
           subFormKey: "university",
+          customChange: async (newValue: any, setValue: any) => {
+            const findUniversity = university?.find(
+              (uni) => uni.name === newValue
+            );
+
+            if (findUniversity) {
+              setValue("logo", [findUniversity?.image || ""]);
+              setValue("temporalLogo", [findUniversity?.image || ""]);
+            }
+          },
           default: specializations || "",
         },
         {
           label: "Agrega el logotipo de tu Universidad *",
           name: "logo",
+          temporalName: "temporalLogo",
           maxFile: 1,
           required: false,
           type: "file",

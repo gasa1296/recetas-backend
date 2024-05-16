@@ -1,4 +1,5 @@
 import { Field } from "@/types/Generals/FormGenerator";
+import { watch } from "fs";
 import React from "react";
 
 export default function InputTextarea({
@@ -10,7 +11,10 @@ export default function InputTextarea({
   subLabel,
   width = 100,
   disabled,
+  watch,
+  max,
 }: Field) {
+  const values = watch();
   return (
     <div style={{ width: `${width}%` }} className="px-2 full-width">
       <label
@@ -38,10 +42,16 @@ export default function InputTextarea({
         }`}
         id={name}
         name={name}
+        maxLength={max}
         disabled={disabled}
         cols={5}
         rows={5}
       ></textarea>
+      <div className="flex justify-end">
+        <p className="text-[#1A1A1A] text-[16px] mb-2">
+          {max ? `${values[name].length}/${max}` : ""}
+        </p>
+      </div>
     </div>
   );
 }

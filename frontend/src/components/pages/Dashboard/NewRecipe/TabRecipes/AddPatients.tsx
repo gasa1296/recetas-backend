@@ -62,7 +62,7 @@ export default function AddPatients({ nextStep, backStep }: any) {
       maxFile: 10,
     },
     {
-      label: "Teléfono fijo",
+      label: "Teléfono fijo (Opcional)",
       name: "Landline",
       required: false,
       type: "text",
@@ -70,7 +70,7 @@ export default function AddPatients({ nextStep, backStep }: any) {
       maxFile: 10,
     },
     {
-      label: "Seleccionar Género *",
+      label: "Seleccionar Género (Opcional)",
       name: "Select-Genre",
       required: false,
       type: "select",

@@ -34,7 +34,7 @@ export default function InformationPatient({ nextStep }: any) {
   useCustomEffect({ requestGet: GetPacients });
 
   const userOptions = pacients?.map((pacient) => ({
-    value: pacient.email,
+    value: pacient.id,
     label: `${pacient.last_name1} ${pacient.last_name2}, ${pacient.first_name} | ${pacient.email}`,
   }));
 

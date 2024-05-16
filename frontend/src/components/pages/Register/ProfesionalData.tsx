@@ -1,11 +1,16 @@
 import FormGenerator from "@/components/FormGenerator";
+import ModalUniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/ModalUniversityNotFound";
+import UniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/UniversityNotFound";
+import useCustomEffect from "@/hooks/useCustomEffect";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { useRegisterStore } from "@/store/register";
+import { useSpecializationsStore } from "@/store/specializations";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm2 } from "@/types/Store/Register";
 import { SpecializationSchema } from "@/utils/ValidationSchema/SpecializationSchema";
 import { validateSameObject } from "@/utils/isSameObject";
 import React from "react";
+import toast from "react-hot-toast";
 import * as yup from "yup";
 
 export default function ProfesionalData({ nextStep, backStep }: any) {
@@ -15,7 +20,13 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
     nextStep();
   };
 
+  const { university, GetUniversity } = useSpecializationsStore((state) => ({
+    university: state.university,
+    GetUniversity: state.GetUniversity,
+  }));
+
   useScrollToTop();
+  useCustomEffect({ requestGet: GetUniversity });
 
   const schema = yup.object().shape({
     specializations: yup
@@ -24,6 +35,11 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
       .min(1, "Debe tener al menos una especialización")
       .required("Debe tener al menos una especialización"),
   });
+
+  const universityOptions = university?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
   const fields: Field[] = [
     {
       label: "Datos profesionales",
@@ -79,15 +95,29 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
           label: "Institución que otorga la licenciatura *",
           secondLabel: "Institución que otorga la especialidad *",
           name: "university",
+          ModalNotFound: ModalUniversityNotFound,
+          NotFound: UniversityNotFound,
           required: true,
-          type: "text",
+          type: "selectSearch",
           width: 50,
+          options: universityOptions,
+          customChange: async (newValue: any, setValue: any) => {
+            const findUniversity = university?.find(
+              (uni) => uni.name === newValue
+            );
+
+            if (findUniversity?.image) {
+              setValue("file", [findUniversity?.image || ""]);
+              setValue("temporalLogo", [findUniversity?.image || ""]);
+            }
+          },
           subFormKey: "university",
           default: form2?.specializations || "",
         },
         {
           label: "Agrega el logotipo de tu Universidad *",
           name: "file",
+          temporalName: "temporalLogo",
           maxFile: 1,
           required: false,
           type: "file",

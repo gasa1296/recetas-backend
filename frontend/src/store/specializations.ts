@@ -1,26 +1,30 @@
 // authStore.ts
 import {
   getSpecializations,
+  getUniversity,
   postSpecializations,
   removeSpecializations,
   updateSpecializations,
 } from "@/services/specializations";
-import { ISpecialization } from "@/types/Store/Register";
+import { ISpecialization, IUniversity } from "@/types/Store/Register";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
 type AuthState = {
   loading: boolean;
   loadingUpdate: boolean;
+  university: IUniversity[] | null;
   specializations: ISpecialization[] | null;
   error: string | null;
   GetSpecializations: () => any;
+  GetUniversity: () => any;
   UpdateSpecializations: (profilePayload: ISpecialization[]) => any;
 };
 
 export const useSpecializationsStore = create<AuthState>((set, get) => ({
   // Estado inicial
   specializations: null,
+  university: null,
   loading: false,
   loadingUpdate: false,
   error: null,
@@ -35,6 +39,22 @@ export const useSpecializationsStore = create<AuthState>((set, get) => ({
           ...specialization,
           logo: [specialization.logo],
         })),
+      });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  GetUniversity: async () => {
+    set({ loading: true });
+    try {
+      const result = await getUniversity();
+
+      set({
+        university: result.data,
       });
     } catch (error: any) {
       toast.error(error.message);

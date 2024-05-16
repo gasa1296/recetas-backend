@@ -115,6 +115,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   UpdateProfile: async (profilePayload: IRegisterPayload) => {
     set({ loading: true, error: null });
     try {
+      profilePayload.phone1 = JSON.stringify(
+        profilePayload.phone1?.map((phone: string) => ({ phone })) || []
+      );
       const response = await updateProfile(profilePayload);
       set({
         user: response.data,
@@ -190,7 +193,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       toast.success("Contraseña actualizada correctamente");
       return response;
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data.message || error.message);
       set({ error: error.message });
     } finally {

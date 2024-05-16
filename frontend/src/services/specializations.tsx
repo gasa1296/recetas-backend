@@ -10,6 +10,13 @@ export const getSpecializations = () => {
   });
 };
 
+export const getUniversity = () => {
+  return Api({
+    method: "GET",
+    endpoint: `/university`,
+  });
+};
+
 export const updateSpecializations = (data: ISpecialization[]) => {
   const formData = new FormData();
   if (data && Array.isArray(data)) {
@@ -25,16 +32,16 @@ export const updateSpecializations = (data: ISpecialization[]) => {
       });
 
       // Añadir archivo si no es null
-      if (
-        specialization.logo.length &&
-        specialization.logo[0] &&
-        typeof specialization.logo[0] !== "string"
-      ) {
-        formData.append(
-          `logo[${index}]`,
-          specialization.logo[0],
-          specialization.logo[0].name
-        );
+      if (specialization.logo.length && specialization.logo[0]) {
+        if (typeof specialization.logo[0] === "string") {
+          formData.append(`data[${index}][logo]`, specialization.logo[0]);
+        } else {
+          formData.append(
+            `logo[${index}]`,
+            specialization.logo[0],
+            specialization.logo[0].name
+          );
+        }
       } else {
         formData.append(`data[${index}][logo]`, "");
       }

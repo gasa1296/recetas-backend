@@ -38,7 +38,7 @@ export default function AuthWrapper({ children }: Props) {
     }
 
     const result = await RecoverUser(token || "", externalToken ? true : false);
-    if (result.recetasUser === false) router.push("/register");
+    if (result?.recetasUser === false) router.push("/register");
     else router.push("/dashboard");
 
     setTimeout(() => setLoading(false), 1000);
