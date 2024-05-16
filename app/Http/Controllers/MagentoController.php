@@ -93,7 +93,7 @@ class MagentoController extends Controller
                 'json' => $req
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
+            if (!empty($decodedRes['success'])) {
                 return response()->json($decodedRes);
             } else {
                 return response()->json($decodedRes, 400);
