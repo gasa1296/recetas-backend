@@ -1,7 +1,7 @@
 <x-mail::message>
-  <div style="text-align: right;">
+  <!--<div style="text-align: right;">
     <a href="https://www.farmaciasespecializadas.com/?utm_source=email&utm_medium=logo&utm_id=descarga_tu_receta"><img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;"></a>
-  </div>
+  </div>-->
   <div style="background-color: #213d8d;">
     <p style="font-size:19px; width: 50%;color: white; font-weight: bold; margin-left:auto; margin-right:auto; text-align: center;text-transform: uppercase;" >REVISA TU RECETA médica electrónica aquí!</p>
   </div>
