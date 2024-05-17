@@ -28,7 +28,7 @@ class MagentoController extends Controller
     public function getMedic(Request $request): JsonResponse
     {
         try {
-            $res = $this->client->get('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/CONSULTACONTACTOREST/1.0/consultacontacto', [
+            $res = $this->client->get(env('URL_MEDIC'), [
                 'auth' => $this->magentoAuth,
                 'query' => $request->only('email', 'cedula')
             ]);
@@ -44,7 +44,7 @@ class MagentoController extends Controller
     public function verifyFESA(string $fesa): bool
     {
         try {
-            $res = $this->client->post('https://cxoicdevapp-idxyuubrquuo-ia.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/VALIDARCODIGOMEDICO/1.0/medico/codigo', [
+            $res = $this->client->post(env('URL_FESA'), [
                 'auth' => $this->magentoAuth,
                 'json' => ['codigoMedico' => $fesa]
             ]);
@@ -85,7 +85,7 @@ class MagentoController extends Controller
             $req['typeUsage'] = 'Celular';
         }
         try {
-            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/CREATEPROFILEMAGENTO/1.0/magento/profile', [
+            $res = $this->client->post(env('URL_REGISTER_MAGENTO'), [
                 'auth' => $this->magentoAuth,
                 'json' => $req
             ]);
@@ -110,7 +110,7 @@ class MagentoController extends Controller
             $inputs['gender'] = 'Indefinido';
         }
         try {
-            $res = $this->client->post('https://cxoicdevcc-idxyuubrquuo-ia.integration.ocp.oraclecloud.com/ic/api/integration/v1/flows/rest/GESTIONCLIENTEREST/1.0/gestionClienteRest', [
+            $res = $this->client->post(env('URL_REGISTER_CX'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
                     [
@@ -173,7 +173,7 @@ class MagentoController extends Controller
             $inputs['gender'] == 'Indefinido';
         }
         try {
-            $res = $this->client->post($this->magentoUrl . '/ic/api/integration/v1/flows/rest/UPDATEPROFILEMAGENTO/1.0/updateprofile', [
+            $res = $this->client->post(env('URL_UPDATE_MAGENTO'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
                     'idContact' => $inputs['idCX'],
@@ -199,7 +199,7 @@ class MagentoController extends Controller
     {
         $inputs = $request->only('email', 'password');
         try {
-            $res = $this->client->post('https://mcstaging.farmaciasespecializadas.com/rest/V1/integration/customer/token', [
+            $res = $this->client->post(env('URL_GEN_MAGENTO_TOKEN'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
                     'username' => $inputs['email'],
@@ -215,7 +215,7 @@ class MagentoController extends Controller
     public function getUserByTokenMagento(Request $request): JsonResponse
     {
         try {
-            $res = $this->client->get('https://mcstaging.farmaciasespecializadas.com/rest/V1/customers/me', [
+            $res = $this->client->get(env('URL_VER_MAGENTO_TOKEN'), [
                 'headers' => [
                     'Authorization' => "Bearer $request->token",
                 ],

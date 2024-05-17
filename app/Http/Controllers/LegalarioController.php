@@ -395,7 +395,7 @@ class LegalarioController extends Controller
         }
         $inputs = $validator->safe()->all();
         try {
-            $res = $this->client->post('https://tsoagobiernogrfe-pub-oci.opc.oracleoutsourcing.com/farmacos/subrogation/electronic-medical-prescription/v1/products/_detail', [
+            $res = $this->client->post(env('URL_MEDICAMENTS'), [
                 'headers' => [
                     'Authorization' => "Basic " . base64_encode("userTest:Vwq5MYEUtesVwYtK"),
                 ],
