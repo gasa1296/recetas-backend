@@ -110,11 +110,9 @@ class PrescriptionMedicamentController extends Controller
     }
     public function mostUsed(): JsonResponse
     {
-        $instances = PrescriptionMedicament::whereHas('prescription', function($query) {
-                $query->where('user_id', auth()->id());
-            })
-            ->select(['medicament_id', 'name'])->distinct()
-            ->orderByRaw('COUNT(medicament_id) DESC')->paginate(10);
+        $instances = PrescriptionMedicament::select('salt')->distinct()
+            ->whereIn('prescription_id', Prescription::where('user_id', auth()->id())->get('id'))
+            ->orderByRaw('COUNT(salt) DESC')->limit(10);
         return response()->json($instances);
     }
 }
