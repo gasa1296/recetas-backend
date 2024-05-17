@@ -396,8 +396,9 @@ class LegalarioController extends Controller
         $inputs = $validator->safe()->all();
         try {
             $res = $this->client->post(env('URL_MEDICAMENTS'), [
-                'headers' => [
-                    'Authorization' => "Basic " . base64_encode("userTest:Vwq5MYEUtesVwYtK"),
+                'auth' => [
+                    env('MEDICAMENT_USER'),
+                    env('MEDICAMENT_PASS')
                 ],
                 'json' => ['products' => $inputs['products']]
             ]);
