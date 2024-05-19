@@ -113,6 +113,6 @@ class PrescriptionMedicamentController extends Controller
         $instances = PrescriptionMedicament::select('salt')->distinct()
             ->whereIn('prescription_id', Prescription::select('id')->where('user_id', auth()->id()))
             ->orderByRaw('COUNT(salt) DESC')->limit(10);
-        return response()->json($instances->toRawSql());
+        return response()->json($instances);
     }
 }
