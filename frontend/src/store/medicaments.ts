@@ -1,4 +1,5 @@
 // authStore.ts
+import { PopularMedicaments } from "@/components/pages/Dashboard/Patients/PopularMedicaments";
 import {
   GetPopularMedicament,
   createMedicament,
@@ -29,7 +30,7 @@ type IState = {
   step: number;
   search: string;
   popularMedicaments: IMedicament[] | [];
-
+  loadingPopularMedicaments: boolean;
   confirmRecipForm: IConfirmRecipForm;
   GetPopularMedicaments: () => any;
   SearchMedicaments: (search: string) => any;
@@ -53,6 +54,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   popularMedicaments: [],
   step: 1,
   loading: false,
+  loadingPopularMedicaments: false,
   confirmRecipForm: {
     temp: "",
     weight: "",
@@ -89,11 +91,35 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   GetPopularMedicaments: async () => {
     try {
       if (get().popularMedicaments.length) return;
+      set({ loadingPopularMedicaments: true });
       const result = await GetPopularMedicament();
-      set({ popularMedicaments: result.data });
+      getSearchExternalMedicament(result.data[0].salt);
+
+      const medicamentsPromises = result.data.map(async (medicament: any) => {
+        const searchResult = await getSearchExternalMedicament(medicament.salt);
+
+        const filteredSearchResult = searchResult.data.Respuesta.find(
+          (option: any) => option.vnombresal === medicament.salt
+        );
+
+        if (!filteredSearchResult) return;
+
+        return {
+          ...filteredSearchResult,
+        };
+      });
+
+      const allMedicamentsWithSearchResults = await Promise.all(
+        medicamentsPromises
+      );
+
+      set({
+        popularMedicaments: allMedicamentsWithSearchResults.filter(Boolean),
+        loadingPopularMedicaments: false,
+      });
     } catch (error: any) {
       toast.error(error.message);
-      set({ error: error.message });
+      set({ error: error.message, loadingPopularMedicaments: false });
     }
   },
 
@@ -171,9 +197,16 @@ export const useMedicamentStore = create<IState>((set, get) => ({
     set({ loadingAction: true });
     try {
       const medicaments = get().medicaments;
-      const findMedicament = medicaments?.find(
+      const popularMedicaments = get().popularMedicaments;
+      let findMedicament = medicaments?.find(
         (medicament) => medicament.uicodproducto === medicamentId
       );
+
+      if (!findMedicament) {
+        findMedicament = popularMedicaments.find(
+          (medicament) => medicament.uicodproducto === medicamentId
+        );
+      }
 
       set({
         step: 3,

@@ -4,6 +4,7 @@ import { useMedicamentStore } from "@/store/medicaments";
 import { HiPlusSmall } from "react-icons/hi2";
 import Loading from "@/components/Loading";
 import { ResultMedicineItem } from "./Components/ResultMedicineItem";
+import { PopularMedicaments } from "../../PopularMedicaments";
 export default function ResultMedicine() {
   const { medicaments, SetStep, loadingAction } = useMedicamentStore(
     (state) => ({
@@ -56,6 +57,8 @@ export default function ResultMedicine() {
           <MedicineNotFound />
         )}
       </div>
+
+      <PopularMedicaments />
     </section>
   );
 }

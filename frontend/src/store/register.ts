@@ -75,7 +75,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
         const contact = result.data.contacts[0] || null;
         payload.idCX = contact.datosGenerales.idExterno;
         payload.clienteEcommerce =
-          contact.datosGenerales.clienteEcommerce === "No" ? false : true;
+          contact.datosGenerales.clienteEcommerce === "No" ? 0 : 1;
       }
 
       payload.phone1 = JSON.stringify(
