@@ -22,9 +22,7 @@ export function PopularMedicaments() {
     uuid: medicine.uicodproducto,
   }));
 
-  console.log("first", medicines, popularMedicaments);
-
-  useCustomEffect({ requestGet: GetPopularMedicaments });
+  /*  useCustomEffect({ requestGet: GetPopularMedicaments }); */
 
   if (loadingPopularMedicaments)
     return (
