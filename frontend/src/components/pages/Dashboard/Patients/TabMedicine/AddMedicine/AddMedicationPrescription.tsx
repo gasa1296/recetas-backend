@@ -18,6 +18,7 @@ export default function AddMedicationPrescription({ setStep }: any) {
       loadingAction: state.loadingAction,
     }));
 
+  useScrollToTop(0, "dose");
   const submitData = async (data: IMedicament) => {
     CreateMedicament({ ...data, ...selectedMedicament });
   };
@@ -164,7 +165,6 @@ export default function AddMedicationPrescription({ setStep }: any) {
           submitData={submitData}
           fields={fields}
           loading={false}
-          focus
           buttonText="Continuar"
           renderButton={(handleSubmit) => (
             <div className="flex justify-center w-full  ">

@@ -1,6 +1,7 @@
 import useCustomEffect from "@/hooks/useCustomEffect";
 import { useMedicamentStore } from "@/store/medicaments";
 import { ResultMedicineItem } from "../TabMedicine/SearchMedicine/Components/ResultMedicineItem";
+import Loading from "@/components/Loading";
 
 export function PopularMedicaments() {
   const GetPopularMedicaments = useMedicamentStore(
@@ -10,6 +11,10 @@ export function PopularMedicaments() {
     (state) => state.popularMedicaments
   );
 
+  const loadingPopularMedicaments = useMedicamentStore(
+    (state) => state.loadingPopularMedicaments
+  );
+
   const medicines = popularMedicaments?.map((medicine) => ({
     presentacion: `https://s3-repositorio-cloudseus.s3.amazonaws.com/commerce/products/product_${medicine.uicodproducto}.png`,
     name: medicine.vnombreproducto,
@@ -17,8 +22,16 @@ export function PopularMedicaments() {
     uuid: medicine.uicodproducto,
   }));
 
-  /*   useCustomEffect({ requestGet: GetPopularMedicaments }); */
+  console.log("first", medicines, popularMedicaments);
 
+  useCustomEffect({ requestGet: GetPopularMedicaments });
+
+  if (loadingPopularMedicaments)
+    return (
+      <section className="mt-4  relative">
+        <Loading text="Cargando medicamentos favoritos" />
+      </section>
+    );
   if (!medicines.length) return null;
 
   return (

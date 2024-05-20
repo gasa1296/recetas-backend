@@ -52,7 +52,7 @@ export interface IForm3 {
 
 export interface ExternalClient {
   idCX: string | null;
-  clienteEcommerce: boolean | null;
+  clienteEcommerce: number | null;
 }
 
 export interface IRegisterPayload

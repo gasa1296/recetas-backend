@@ -9,7 +9,9 @@ export default function Nav() {
     <nav className="bg-[#F7F7F7]   ">
       <Image
         onClick={() => router.push("/")}
-        src={fondo}
+        src={"/logo-display.png"}
+        width={1000}
+        height={1000}
         alt="fondo-home"
         className="  max-w-[1366px] w-full mx-auto object-contain"
       />

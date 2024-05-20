@@ -2,13 +2,12 @@ import FormGenerator from "@/components/FormGenerator";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IRoom } from "@/types/Store/Register";
 import { FaSave } from "react-icons/fa";
-import Receta1 from "@/assets/images/recetas/Receta1.png";
-import Receta2 from "@/assets/images/recetas/Receta2.png";
-import Receta3 from "@/assets/images/recetas/Receta3.png";
+
 import React from "react";
 import { useRoomsStore } from "@/store/rooms";
 import useCustomEffect from "@/hooks/useCustomEffect";
 import Loading from "@/components/Loading";
+import MexicoStates from "@/utils/constants/mexico-states.json";
 import { RoomArraySchema } from "@/components/pages/Register/helper";
 export default function Offices() {
   const { rooms, GetRooms, loading, loadingUpdate, UpdateRooms } =
@@ -117,9 +116,10 @@ export default function Offices() {
           label: "Estado *",
           name: "state",
           required: true,
-          type: "text",
+          type: "selectSearch",
           width: 50,
           subFormKey: "state",
+          options: MexicoStates,
           default: rooms || "",
         },
         {
@@ -170,7 +170,7 @@ export default function Offices() {
         },
 
         {
-          label: "Agrega el logotipo de su consultorio *",
+          label: "Agrega el logotipo de su consultorio ",
           name: "logo",
           required: false,
           type: "file",
@@ -197,9 +197,9 @@ export default function Offices() {
           subFormKey: "design",
           default: rooms || "",
           recetasOptions: [
-            { image: Receta1, value: roomDesigns[0] },
-            { image: Receta2, value: roomDesigns[1] },
-            { image: Receta3, value: roomDesigns[2] },
+            { image: "/recetas/Receta1.png", value: roomDesigns[0] },
+            { image: "/recetas/Receta2.png", value: roomDesigns[1] },
+            { image: "/recetas/Receta3.png", value: roomDesigns[2] },
           ],
         },
       ],

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-export default function useScrollToTop() {
+export default function useScrollToTop(topSeparation = 0, fieldName?: string) {
   // Función para detectar el scroll
   const toggleVisibility = () => {
     scrollToTop();
@@ -8,10 +8,18 @@ export default function useScrollToTop() {
 
   // Función para hacer scroll hacia arriba
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // Efecto de desplazamiento suave
-    });
+    if (fieldName) {
+      const element = document.getElementById(fieldName);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        element.focus && element.focus();
+      }
+    } else {
+      window.scrollTo({
+        top: topSeparation,
+        behavior: "smooth", // Efecto de desplazamiento suave
+      });
+    }
   };
 
   // Escuchar el evento scroll

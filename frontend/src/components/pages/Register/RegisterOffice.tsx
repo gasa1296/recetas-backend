@@ -3,11 +3,9 @@ import { useRegisterStore } from "@/store/register";
 import { Field } from "@/types/Generals/FormGenerator";
 import { IForm3 } from "@/types/Store/Register";
 import { validateSameObject } from "@/utils/isSameObject";
-import Receta1 from "@/assets/images/recetas/Receta1.png";
-import Receta2 from "@/assets/images/recetas/Receta2.png";
-import Receta3 from "@/assets/images/recetas/Receta3.png";
-import React from "react";
 
+import React from "react";
+import MexicoStates from "@/utils/constants/mexico-states.json";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { useRoomsStore } from "@/store/rooms";
 import { RoomArraySchema } from "./helper";
@@ -106,8 +104,9 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           label: "Estado *",
           name: "state",
           required: true,
-          type: "text",
+          type: "selectSearch",
           width: 50,
+          options: MexicoStates,
           subFormKey: "state",
           default: form3?.rooms ?? "",
         },
@@ -159,7 +158,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
         },
 
         {
-          label: "Agrega el logotipo de su consultorio *",
+          label: "Agrega el logotipo de su consultorio ",
           name: "files",
           required: false,
           type: "file",
@@ -186,9 +185,9 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           subFormKey: "design",
           default: form3?.rooms ?? "",
           recetasOptions: [
-            { image: Receta1, value: roomDesigns && roomDesigns[0] },
-            { image: Receta2, value: roomDesigns && roomDesigns[1] },
-            { image: Receta3, value: roomDesigns && roomDesigns[2] },
+            { image: "/recetas/Receta1.png", value: roomDesigns[0] },
+            { image: "/recetas/Receta2.png", value: roomDesigns[1] },
+            { image: "/recetas/Receta3.png", value: roomDesigns[2] },
           ],
         },
       ],
