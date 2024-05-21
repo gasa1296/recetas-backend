@@ -35,7 +35,7 @@ export default function InputRecetas({
       <div className="flex flex-wrap justify-center lg:justify-between pt-6 w-full">
         {recetasOptions?.map((option, index) => (
           <div className="mb-5" key={index}>
-            <Image
+            <img
               src={option.image}
               alt={`image-${index}`}
               width={320}

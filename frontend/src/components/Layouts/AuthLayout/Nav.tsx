@@ -1,13 +1,11 @@
 import React from "react";
-import fondo from "../../../assets/Header-img2x.png";
-import Image from "next/image";
 import { useRouter } from "next/router";
 
 export default function Nav() {
   const router = useRouter();
   return (
     <nav className="bg-[#F7F7F7]   ">
-      <Image
+      <img
         onClick={() => router.push("/")}
         src={"/logo-display.png"}
         width={1000}
