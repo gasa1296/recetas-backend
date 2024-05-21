@@ -1,15 +1,15 @@
 {
   "/_app": "pages/_app.js",
-  "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.html",
   "/dashboard/newRecipes": "pages/dashboard/newRecipes.html",
+  "/_document": "pages/_document.js",
   "/dashboard/patiens": "pages/dashboard/patiens.html",
-  "/dashboard/profile": "pages/dashboard/profile.html",
   "/dashboard/searchRecipes": "pages/dashboard/searchRecipes.html",
+  "/dashboard/profile": "pages/dashboard/profile.html",
   "/forgotPassword": "pages/forgotPassword.html",
   "/": "pages/index.html",
-  "/recoverPassword": "pages/recoverPassword.html",
   "/register": "pages/register.html",
+  "/recoverPassword": "pages/recoverPassword.html",
   "/_error": "pages/_error.js",
   "/404": "pages/404.html"
 }

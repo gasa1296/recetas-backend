@@ -43,7 +43,7 @@ export interface Field {
   subFormKey?: string;
   buttonAddText?: string;
   notFirstTitle?: boolean;
-  recetasOptions?: { image: StaticImageData; value: string }[];
+  recetasOptions?: { image: string; value: string }[];
   externalError?: any;
   minLength?: number;
   max?: number;
