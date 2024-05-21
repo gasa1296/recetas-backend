@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prescription_equipment', function (Blueprint $table) {
-            $table->id();
-            $table->text('add')->nullable();
-            $table->foreignId('equipment_id')->constrained('equipment')->onDelete('cascade');
+        Schema::create('documents', function (Blueprint $table) {
+            $table->string('id')->primary();
             $table->foreignId('prescription_id')->constrained('prescriptions')->onDelete('cascade');
             $table->timestamps();
-
-            $table->unique(['equipment_id', 'prescription_id']);
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prescription_equipment');
+        Schema::dropIfExists('documents');
     }
 };

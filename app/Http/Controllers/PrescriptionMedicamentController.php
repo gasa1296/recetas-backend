@@ -108,4 +108,11 @@ class PrescriptionMedicamentController extends Controller
             ->delete();
         return response()->json();
     }
+    public function mostUsed(): JsonResponse
+    {
+        $instances = PrescriptionMedicament::select('salt')->groupBy('salt')
+            ->whereIn('prescription_id', Prescription::select('id')->where('user_id', auth()->id()))
+            ->orderByRaw('COUNT(salt) DESC')->limit(10);
+        return response()->json($instances->get());
+    }
 }

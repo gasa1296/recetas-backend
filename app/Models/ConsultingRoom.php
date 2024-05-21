@@ -30,13 +30,16 @@ class ConsultingRoom extends Model
         'phone',
         'logo',
         'design',
+        'fav',
+        'auto_email', 
+        'auto_whatsapp',
         'user_id',
     ];
     /**
      * Get the medic of the room.
      */
-    public function medic(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'medic_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

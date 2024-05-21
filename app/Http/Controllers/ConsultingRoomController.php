@@ -28,7 +28,7 @@ class ConsultingRoomController extends Controller
         $validator = Validator::make($request->all(), [
             'data' => ['required', 'array'],
             'data.*.id' => ['nullable', 'numeric'],
-            'data.*.name' => ['required', 'string'],
+            'data.*.name' => ['nullable', 'string'],
             'data.*.zip' => ['required', 'string'],
             'data.*.street' => ['required', 'string'],
             'data.*.colony' => ['required', 'string'],
@@ -39,6 +39,9 @@ class ConsultingRoomController extends Controller
             'data.*.address' => ['nullable', 'string'],
             'data.*.phone' => ['nullable', 'string'],
             'data.*.design' => ['nullable', 'string'],
+            'data.*.fav' => ['nullable'],
+            'data.*.auto_email' => ['nullable'],
+            'data.*.auto_whatsapp' => ['nullable'],
             'data.*.logo' => ['nullable', 'string'],
             'logo' => ['nullable', 'array'],
             'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
@@ -91,7 +94,7 @@ class ConsultingRoomController extends Controller
             return response()->json([], 404);
         }
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string'],
+            'name' => ['nullable', 'string'],
             'zip' => ['required', 'string'],
             'street' => ['required', 'string'],
             'colony' => ['required', 'string'],
@@ -101,6 +104,9 @@ class ConsultingRoomController extends Controller
             'n_interior' => ['nullable',],
             'address' => ['nullable', 'string'],
             'phone' => ['nullable', 'string'],
+            'fav' => ['nullable'],
+            'auto_email' => ['nullable'],
+            'auto_whatsapp' => ['nullable'],
             'design' => ['nullable', 'string'],
             'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ]);

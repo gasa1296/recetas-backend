@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ConsultingRoom;
 use App\Models\Specialization;
 use Validator;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -17,13 +18,25 @@ class AuthController extends Controller
     {
         $instance = User::where('email', request()->email)->first();
         if (empty($instance)) {
+            $magentoToken = (new MagentoController)->generateMagentoToken($request);
+            if ($magentoToken->getStatusCode() < 300) {
+                return response()->json([
+                    'recetasUser' => false,
+                    'magentoEmail' => $request->email
+                ]);
+            }
             return response()->json([['email' => __('email incorrecto')]], 404);
         }
+        $okResponse = [
+            'token' => $instance->createToken('recipe')->plainTextToken,
+            'user' => $instance,
+        ];
         if (Hash::check(request()->password, $instance->password)) {
-            return response()->json([
-                'token' => $instance->createToken('recipe')->plainTextToken,
-                'user' => $instance,
-            ]);
+            return response()->json($okResponse);
+        }
+        $magentoToken = (new MagentoController)->generateMagentoToken($request);
+        if ($magentoToken->getStatusCode() < 300) {
+            return response()->json($okResponse);
         }
         return response()->json([['password' => __('contraseña incorrecta')]], 404);
     }
@@ -37,14 +50,14 @@ class AuthController extends Controller
             'last_name1' => ['required', 'string'],
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'string'],
-            'phone1' => ['nullable', 'string'],
+            'password' => ['nullable', 'string'],
+            'phone1' => ['nullable', 'json'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'fesa' => ['required',],
             'rooms' => ['required', 'array'],
             'specializations' => ['required', 'array'],
-            'rooms.*.name' => ['required', 'string'],
+            'rooms.*.name' => ['nullable', 'string'],
             'rooms.*.zip' => ['required', 'string'],
             'rooms.*.street' => ['required', 'string'],
             'rooms.*.colony' => ['required', 'string'],
@@ -54,20 +67,55 @@ class AuthController extends Controller
             'rooms.*.n_interior' => ['nullable',],
             'rooms.*.address' => ['nullable', 'string'],
             'rooms.*.phone' => ['nullable', 'string'],
+            'rooms.*.fav' => ['nullable'],
+            'rooms.*.auto_email' => ['nullable'],
+            'rooms.*.auto_whatsapp' => ['nullable'],
             'rooms.*.design' => ['nullable', 'string'],
             'specializations.*.name' => ['required', 'string'],
             'specializations.*.identification' => ['required', 'unique:specializations'],
             'specializations.*.university' => ['nullable', 'string'],
+            'specializations.*.logo' => ['nullable', 'string'],
             'logo_room' => ['nullable', 'array'],
             'logo_spec' => ['nullable', 'array'],
             'logo_room.*' => ['nullable', 'file', 'mimes:jpg,png'],
             'logo_spec.*' => ['nullable', 'file', 'mimes:jpg,png'],
+
+            'idCX' => ['nullable'],
+            'clienteEcommerce' => ['nullable'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
+        $magento = new MagentoController();
+        if(!$magento->verifyFESA($inputs['fesa'])) {
+            return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
+        }
+        if (!empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+            $res = $magento->registerMagentoRepo($inputs);
+            Log::debug('magento register', $res->getData(true));
+            if ($res->getStatusCode() >= 300) {
+                return $res;
+            }
+        } elseif (empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+            $res = $magento->registerCX($request);
+            Log::debug('cx register', $res->getData(true));
+            if($res->getStatusCode() >= 300) {
+                return $res;
+            }
+            $inputs['idCX'] = $res->getData(true)['idCX'];
+            $res = $magento->registerMagentoRepo($inputs);
+            Log::debug('magento register', $res->getData(true));
+            if ($res->getStatusCode() >= 300) {
+                return $res;
+            }
+        }
+        if (empty($inputs['password'])) {
+            $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
+        }
+        $inputs['fesa'] = !empty($inputs['idCX'])?$inputs['idCX']: $inputs['fesa'];
         $instance = User::create($inputs);
+
         event(new Registered($instance));
         foreach ($inputs['rooms'] as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
@@ -88,7 +136,6 @@ class AuthController extends Controller
 
         return response()->json();
     }
-
     /**
      * Display the specified resource.
      */
@@ -96,7 +143,6 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -108,9 +154,9 @@ class AuthController extends Controller
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
             'password' => ['nullable', 'string'],
-            'phone1' => ['nullable', 'string'],
+            'phone1' => ['nullable', 'json'],
             'phone2' => ['nullable', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['nullable', 'string'],
             'fesa' => ['required',],
         ]);
         if ($validator->fails()) {
@@ -124,7 +170,6 @@ class AuthController extends Controller
         $instance->update($inputs);
         return response()->json($instance);
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -133,7 +178,6 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json();
     }
-
     /**
      * Remove the specified resource from storage.
      */

@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string('saturation')->nullable();
             $table->string('ppm')->nullable();
             $table->text('allergy')->nullable();
-            $table->text('diagnostic');
+            $table->text('diagnostic')->nullable();
             $table->text('diet')->nullable();
             $table->text('add')->nullable();
             $table->json('add_med')->nullable();
             $table->string('client')->nullable();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('room_id')->constrained('consulting_rooms');
             $table->foreignId('patient_id')->constrained('patients');
             $table->string('file')->nullable();

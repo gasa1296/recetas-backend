@@ -68,7 +68,7 @@ class PatientTest extends TestCase
     }
     public function test_search(): void
     {
-        Patient::factory(10)->create();
+        Patient::factory(100)->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient?search=F');
         $response->assertOk();
         $this->assertGreaterThan(1, $response->json()['data']);

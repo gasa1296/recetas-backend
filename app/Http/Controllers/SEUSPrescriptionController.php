@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\PrescriptionResource;
+use App\Models\Document;
+use Illuminate\Http\{Request, Response};
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use GuzzleHttp\Client;
 use Validator;
-use Carbon\Carbon;
+use App\Notifications\PrescriptionSignedEmail;
 class SEUSPrescriptionController extends Controller
 {
     private Client $client;
@@ -39,22 +40,42 @@ class SEUSPrescriptionController extends Controller
             return response()->json(['token' => 'token invalido'], 403);
         }
         $inputs = $request->all();
-        Log::debug('document', ['document' => $inputs['document']]);
-        $token = $request->bearerToken();
-        if ($token != env('PUBLIC_KEY', '')) {
-            return response()->json(['token' => 'token invalido'], 403);
-        }
-        $instance = Prescription::where('document_id', $inputs['document']['id'])
-            ->firstOrFail();
-        $inputs = $request->all();
-        Log::debug('prescription', ['prescription' => $instance->id]);
-        $dir = "medics/$instance->user_id/prescriptions/$instance->id.zip";
+        $document_id = $inputs['document']['id'];
+        
+        Log::info('addfile',['doc' => $document_id]);
+
+        $doc = Document::where('id', $document_id)->firstOrFail();
+
+        Log::info('addfile',['document' => $doc]);
+
+        $instance = $doc->prescription;
+
+        $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
         if (!Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
-        $instance->file = env('APP_URL') . '/api/receta/' . $instance->id . '/file';
+        $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
-        Log::debug('prescription', ['file' => $instance->file]);
+        if($instance->auto_email) {
+            $dir = "/storage/app/medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
+            $zip = new ZipArchive;
+            $status = $zip->open(base_path() . $dir);
+            if ($status !== true) {
+                return response()->json([
+                    'file' => 'archivo no encontrado 1',
+                    'document_id' => $document_id
+                ], 500);
+            }
+            $fileData = $zip->getFromName('signed_receta.pdf');
+            if ($fileData === false) {
+                return response()->json([
+                    'file' => 'archivo no encontrado 2',
+                    'document_id' => $document_id
+                ], 500);
+            }
+            $data[$document_id] = $fileData;
+            $instance->patient->notify(new PrescriptionSignedEmail($instance, $data));
+        }
         return(new PrescriptionResource($instance))->response();
     }
     /**
@@ -84,13 +105,24 @@ class SEUSPrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
-        $errors = $this->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+        $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
+
+        $documents = explode(';', $prescription->document_id);
+        if (count($documents) == 1) {
+            $document = $documents[0];
+        } else {
+            $document = $request->document_id;
+        }
+        if (!empty ($errors) || !empty(json_decode($prescription->add_med, true))) {
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$document.pdf";
+            return Storage::response($dir, 'receta.pdf', [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="receta.pdf"'
+            ]);
         } else {
             $zip = new ZipArchive;
-            $status = $zip->open(base_path() . $dir . "zip");
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
+            $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -98,9 +130,12 @@ class SEUSPrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
-            return response()->streamDownload(function () use ($fileData) {
+            return response()->stream(function () use ($fileData) {
                 echo $fileData;
-            }, 'receta.pdf');
+            }, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="receta.pdf"'
+            ]);
         }
     }
     /**

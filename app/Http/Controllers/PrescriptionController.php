@@ -2,31 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PrescriptionMedicament;
+use App\Models\Document;
 use App\Notifications\PrescriptionSignedEmail;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
 use Validator;
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Prescription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
-use Milon\Barcode\DNS1D;
 
 
 class PrescriptionController extends Controller
 {
-    private Client $client;
-    private string $token;
-    public function __construct()
-    {
-        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
-    }
     /**
      * Display a listing of the resource.
      * @todo add search
@@ -50,7 +39,7 @@ class PrescriptionController extends Controller
             'saturation' => ['nullable ', 'numeric'],
             'ppm' => ['nullable ', 'numeric'],
             'allergy' => ['nullable ', 'string'],
-            'diagnostic' => ['required', 'string'],
+            'diagnostic' => ['nullable', 'string'],
             'diet' => ['nullable ', 'string'],
             'add' => ['nullable ', 'string'],
             'add_med' => ['nullable ', 'json'],
@@ -63,16 +52,17 @@ class PrescriptionController extends Controller
         }
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
-        $inputs1['code'] = dechex(Carbon::now()->getPreciseTimestamp(6));
-
+        $inputs1['code'] = strtoupper(base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36));
+        
+        $room = $request->user()->rooms;
+        $filteredRoom = $room->where('user_id', '=', $inputs1['user_id'])->where('id', '=', $inputs1['room_id'])->first();
+        if(empty($filteredRoom)) {
+            return response()->json(['room' => ['consultorio no pertenece a medico']], 400);
+        }
         $instance = Prescription::create($inputs1);
 
         if (empty($inputs1['medicaments'])) {
-            $document = $this->createDocument($instance);
-            if ($document->getStatusCode() >= 300) {
-                return $document;
-            }
-            return (new PrescriptionResource($instance))->response();
+            return $this->storeExtra($instance);
         }
         $validator = Validator::make($inputs1['medicaments'], [
             '*.add' => ['nullable', 'string'],
@@ -93,13 +83,7 @@ class PrescriptionController extends Controller
         }
         $inputs2 = $validator->safe()->all();
         $instance->medicaments()->createMany($inputs2);
-
-        $document = $this->createDocument($instance);
-        if ($document->getStatusCode() >= 300) {
-            return $document;
-        }
-
-        return (new PrescriptionResource($instance))->response();
+        return $this->storeExtra($instance);
     }
     /**
      * Display the specified resource.
@@ -124,7 +108,7 @@ class PrescriptionController extends Controller
             'saturation' => ['nullable ', 'numeric'],
             'ppm' => ['nullable ', 'numeric'],
             'allergy' => ['nullable ', 'string'],
-            'diagnostic' => ['required', 'string'],
+            'diagnostic' => ['nullable', 'string'],
             'diet' => ['nullable ', 'string'],
             'add' => ['nullable ', 'string'],
             'add_med' => ['nullable ', 'json'],
@@ -155,24 +139,32 @@ class PrescriptionController extends Controller
     public function sendEmailNotification(Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+        $add_med = json_decode($prescription->add_med, true);
+        if (empty($errors) && empty($add_med)) {
+            $data = [];
+            foreach (explode(';', $prescription->document_id) as $document) {
+                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
+                $zip = new ZipArchive;
+                $status = $zip->open(base_path() . $dir);
+                if ($status !== true) {
+                    return response()->json([
+                        'file' => 'archivo no encontrado 1',
+                        'document_id' => $document
+                    ], 500);
+                }
+                $fileData = $zip->getFromName('signed_receta.pdf');
+                if ($fileData === false) {
+                    return response()->json([
+                        'file' => 'archivo no encontrado 2',
+                        'document_id' => $document
+                    ], 500);
+                }
+                $data[$document] = $fileData;
+            }
+            $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $data));
         } else {
-            $zip = new ZipArchive;
-            $status = $zip->open(base_path() . $dir . "zip");
-            if ($status !== true) {
-                return response()->json('error al obtener archivo 1', 500);
-            }
-            $fileData = $zip->getFromName('signed_receta.pdf');
-            if ($fileData === false) {
-                return response()->json('error al obtener archivo 2', 500);
-            }
-            return response()->streamDownload(function () use ($fileData) {
-                echo $fileData;
-            }, 'receta.pdf');
+            return response()->json(['prescription' => 'receta no valida para enviar por correo']);
         }
-        $prescription->patient->notify(new PrescriptionSignedEmail($prescription, $fileData));
         return response()->json();
     }
     /**
@@ -181,12 +173,13 @@ class PrescriptionController extends Controller
     public function getFile(Request $request, Prescription $prescription)
     {
         $errors = $this->verifyPrescription($prescription->medicaments);
-        $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id.";
-        if (!empty($errors) || $prescription->add_med != '[]') {
-            return Storage::download("medics/$prescription->user_id/prescriptions/$prescription->id.pdf", 'receta.pdf');
+        if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
+            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
+            return Storage::download($dir, 'receta.pdf');
         } else {
             $zip = new ZipArchive;
-            $status = $zip->open(base_path() . $dir . "zip");
+            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.zip";
+            $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -202,7 +195,7 @@ class PrescriptionController extends Controller
     /**
      * Verify if prescription can be sended or signed
      */
-    private function verifyPrescription($medicaments)
+    public function verifyPrescription($medicaments)
     {
         $errors = [];
         foreach ($medicaments as $medicament) {
@@ -212,340 +205,41 @@ class PrescriptionController extends Controller
         }
         return $errors;
     }
-    /**
-     * Login to legalario
-     */
-    private function legalarioLogin(): array
+    private function storeExtra(Prescription $instance): JsonResponse
     {
-        try {
-            $res = $this->client->post(env('LEGALARIO_URL') . '/auth/login', [
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json'
-                ],
-                'form_params' => [
-                    'email' => env('LEGALARIO_USER', ''),
-                    'password' => env('LEGALARIO_PASSWORD', ''),
-                ]
+        $legalario = new LegalarioController();
+        $medicaments = array_merge($instance->medicaments->toArray(), json_decode($instance->add_med, true));
+        array_push($medicaments, $instance->add);
+        $document = $legalario->createDocument($instance, $medicaments);
+        if ($document->getStatusCode() >= 300) {
+            return $document;
+        }
+        $documentData = $document->getData(true);
+        $instance->document_id = implode(';', $documentData);
+        $errors = $this->verifyPrescription($instance->medicaments);
+        $validation = !empty($errors) || !empty(json_decode($instance->add_med, true));
+        if ($validation) {
+            $instance->status = 5;
+            $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
+        }
+        foreach ($documentData as $document_id) {
+            Document::create([
+                'id' => $document_id,
+                'prescription_id' => $instance->id
             ]);
-            return json_decode($res->getBody(), true);
-        } catch (ClientException $e) {
-            return json_decode($e->getResponse()->getBody(), true);
-        }
-    }
-    /**
-     * Get Legalario bearer token
-     */
-    private function legalarioToken(): array
-    {
-        $res = $this->legalarioLogin();
-        if (!$res['success']) {
-            return $res;
-        }
-        try {
-            $res = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json'
-                ],
-                'form_params' => [
-                    'client_id' => $res['data']['client_id'],
-                    'client_secret' => $res['data']['client_secret'],
-                    'grant_type' => $res['data']['grant_type'],
-                    'scope' => $res['data']['scopes'],
-                ]
-            ]);
-            return json_decode($res->getBody(), true);
-        } catch (ClientException $e) {
-            return json_decode($e->getResponse()->getBody(), true);
-        }
-    }
-    /**
-     * Add document id to prescription
-     */
-    public function createDocument(Prescription $prescription): JsonResponse
-    {
-        $res = $this->legalarioToken();
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $token = $res['data']['access_token'];
-        try {
-            $medic = $prescription->medic;
-            $patient = $prescription->patient;
-            $room = $prescription->room;
-            Log::debug('timestamp', [$prescription->created_at]);
-            $date = new Carbon($prescription->created_at);
-            $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
-                'headers' => [
-                    'Authorization' => "Bearer $token",
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ],
-                'json' => [
-                    'name' => 'Receta',
-                    'type' => 'template',
-                    'template_id' => $room->design,
-                    'sequence' => [
-                        [
-                            [
-                                'key' => 1,
-                                'name' => 'name',
-                                'value' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 2,
-                                'name' => 'identification',
-                                'value' => implode(
-                                    ",",
-                                    array_map(function ($spec) {
-                                        return "$spec[name] Ced prof: $spec[identification]";
-                                    }, $medic->specializations->toArray())
-                                ),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 3,
-                                'name' => 'id',
-                                'value' => $prescription->code,
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 4,
-                                'name' => 'date',
-                                'value' => $date->format('d/m/Y'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 5,
-                                'name' => 'time',
-                                'value' => $date->format('H:i'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 6,
-                                'name' => 'patient name',
-                                'value' => "$patient->first_name $patient->last_name1 $patient->last_name2",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 7,
-                                'name' => 'birth date',
-                                'value' => Carbon::createFromFormat('Y-m-d', $patient->birth_date)->format('d/m/Y'),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 8,
-                                'name' => 'weight',
-                                'value' => $prescription->weight ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 9,
-                                'name' => 'height',
-                                'value' => $prescription->height ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 10,
-                                'name' => 'temp',
-                                'value' => $prescription->temp ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 11,
-                                'name' => 'saturation',
-                                'value' => $prescription->saturation ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 12,
-                                'name' => 'pressure',
-                                'value' => $prescription->pressure ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 13,
-                                'name' => 'ppm',
-                                'value' => $prescription->ppm ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 14,
-                                'name' => 'diagnostic',
-                                'value' => $prescription->diagnostic ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 15,
-                                'name' => 'medicaments',
-                                'value' => implode(
-                                    "\n",
-                                    array_map(function ($medicament) {
-                                        return "$medicament[salt] $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
-                                    }, $prescription->medicaments->toArray())
-                                ) . "\n" . implode(
-                                    "\n",
-                                    array_map(function ($medicament) {
-                                        return "$medicament[name] \n $medicament[indications] \n";
-                                    }, json_decode($prescription->add_med, true) ?: [])
-                                ) . "\n" . $prescription->add,
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 16,
-                                'name' => 'room',
-                                'value' => $room->name ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 17,
-                                'name' => 'address',
-                                'value' => "$room->street, $room->n_exterior, $room->n_interior, $room->colony, $room->zip, $room->delegation, $room->state",
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 18,
-                                'name' => 'phone',
-                                'value' => $medic->phone1 ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 19,
-                                'name' => 'email',
-                                'value' => $medic->email ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 20,
-                                'name' => 'specializations',
-                                'value' => $medic->specializations->first()->name ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 21,
-                                'name' => 'university',
-                                'value' => $medic->specializations->first()->university ?: '',
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 1001,
-                                'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
-                                'value' => base64_encode(Storage::disk('public')->get($medic->specializations->first()->logo)),
-                            ]
-                        ],
-                        [
-                            [
-                                'key' => 1002,
-                                'name' => 'IMAGEN_CLIENTE_HOSPITAL',
-                                'value' => base64_encode(Storage::disk('public')->get($room->logo)),
-                            ]
-                        ],
-                        /*[
-                            [
-                                'key' => 1003,
-                                'name' => 'IMAGEN_CLIENTE_BARRAS',
-                                'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C39'),
-                            ]
-                        ],*/
-                    ]
-                ]
-            ]);
-            $prescription->document_id = json_decode($res->getBody(), true)['data']['id'];
-            $prescription->save();
-
-            $errors = $this->verifyPrescription($prescription->medicaments);
-            if (!empty($errors) || $prescription->add_med != '[]') {
-                $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
-                    'headers' => [
-                        'Authorization' => "Bearer $token",
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json'
-                    ],
-                    'json' => [
-                        'document_id' => $prescription->document_id,
-                        "document_type" => 'Documento sin firmas',
-                        "format" => "Base64",
-                    ]
-                ]);
-                $dir = "medics/$prescription->user_id/prescriptions/$prescription->id.pdf";
-                $fileData = base64_decode(json_decode($res->getBody(), true)['data']['document']);
-                if (!Storage::put($dir, $fileData)) {
+            if ($validation) {
+                $file = $legalario->saveFile($document_id);
+                if ($file->getStatusCode() >= 300) {
+                    return response()->json([$document_id] + $file->getData(true));
+                }
+                $fileData = $file->getData(true);
+                $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
+                if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
                     return response()->json('Error guardando archivo', 500);
                 }
-                $prescription->status = 5;
-                $prescription->file = env('APP_URL') . '/api/receta/' . $prescription->id . '/file';
-                $prescription->save();
             }
-            return response()->json();
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
         }
-    }
-    /**
-     * Create and return prescription signers
-     */
-    public function createSigner(Prescription $prescription): JsonResponse
-    {
-        $errors = $this->verifyPrescription($prescription->medicaments);
-        if (!empty($errors)) {
-            return response()->json($errors, 400);
-        }
-        /*if(!empty($prescription->file)) {
-            return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
-        }*/
-        $res = $this->legalarioToken();
-        if (!$res['success']) {
-            return response()->json($res, 400);
-        }
-        $token = $res['data']['access_token'];
-
-        try {
-            $medic = $prescription->medic;
-            $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
-                'headers' => [
-                    'Authorization' => "Bearer $token",
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
-                ],
-                'json' => [
-                    'document_id' => $prescription->document_id,
-                    'workflow' => true,
-                    'use_whatsapp' => false,
-                    'signers' => [
-                        [
-                            'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                            'email' => $medic->email,
-                            'type' => 'MEDICO'
-                        ]
-                    ],
-                ]
-            ]);
-            return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), 400);
-        }
+        $instance->save();
+        return(new PrescriptionResource($instance))->response();
     }
 }

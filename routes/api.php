@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\LegalarioController;
+use App\Http\Controllers\MagentoController;
+use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SEUSPrescriptionController;
 use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
@@ -28,6 +32,16 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     Route::post('login', 'login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
 });
+Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
+    Route::post('medic', 'getMedic');
+    Route::post('registerMagento', 'registerMagento');
+    Route::post('updateMagento', 'updateMagento');
+    Route::post('generateMagentoToken', 'generateMagentoToken');
+    Route::post('getUserByTokenMagento', 'getUserByTokenMagento');
+    Route::post('specializations', 'getSpecialization');
+    Route::post('states', 'getStates');
+});
+Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
@@ -56,6 +70,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::put('', 'update');
         Route::delete('', 'destroy');
     });
+    Route::get('most_used', [PrescriptionMedicamentController::class, 'mostUsed']);
     Route::apiResources([
         'room'=> ConsultingRoomController::class,
         'specialization' => SpecializationController::class,
@@ -67,8 +82,12 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     ]);
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
-        Route::get('{prescription}/sign', 'createSigner')->name('sign');
         Route::get('{prescription}/document', 'createDocument')->name('document');
         Route::get('{prescription}/file', 'getFile')->name('getFile');
+    });
+
+    Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
+        Route::post('medicaments', 'getMedicaments');
+        Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
 });
