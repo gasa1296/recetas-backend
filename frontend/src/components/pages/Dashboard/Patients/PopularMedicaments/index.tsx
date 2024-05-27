@@ -22,7 +22,7 @@ export function PopularMedicaments() {
     uuid: medicine.uicodproducto,
   }));
 
-  /*  useCustomEffect({ requestGet: GetPopularMedicaments }); */
+  /*   useCustomEffect({ requestGet: GetPopularMedicaments }); */
 
   if (loadingPopularMedicaments)
     return (
@@ -35,7 +35,7 @@ export function PopularMedicaments() {
   return (
     <section className="mt-6  relative">
       <p className="text-[#4B4B4B] text-[16px] font-bold mt-3">
-        Medicamentos favoritos
+        Medicamentos con mayor prescripción
       </p>
       <p className="text-[#4B4B4B] text-[16px]  mt-2">
         Medicamentos que ha agregado a sus recetas frecuentemente

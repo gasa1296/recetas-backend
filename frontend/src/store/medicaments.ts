@@ -144,15 +144,15 @@ export const useMedicamentStore = create<IState>((set, get) => ({
   },
 
   SearchMedicaments: async (search: string = "") => {
-    set({ loading: true, search });
+    set({ search });
     try {
       const timeIdState = get().timeId;
       timeIdState && clearTimeout(timeIdState);
 
       const timeId = setTimeout(async () => {
         try {
+          set({ loading: true });
           const resultExternal = await getSearchExternalMedicament(search);
-
           set({
             medicaments: resultExternal.data.Respuesta,
             step: 2,

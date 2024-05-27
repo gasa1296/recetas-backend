@@ -27,7 +27,7 @@ type IRegisterStore = {
   setForm3: (form: IForm3) => void;
   setSuccess: (success: boolean) => void;
   handleSubmit: (registerPayload: IRegisterPayload) => Promise<any>;
-  handleAutoPopulate: (search: string) => Promise<any>;
+  handleAutoPopulate: (search: string, password?: string) => Promise<any>;
 };
 
 export const useRegisterStore = create<IRegisterStore>((set) => ({
@@ -101,7 +101,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
     }
   },
 
-  handleAutoPopulate: async (search: string) => {
+  handleAutoPopulate: async (search: string, password?: string) => {
     set({ loading: true });
     try {
       const result = await autopopulateProfile(search);
@@ -126,8 +126,8 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
             ),
           phone2: "",
           fesa: "",
-          password: "",
-          confirmPassword: "",
+          password: password || "",
+          confirmPassword: password || "",
         };
 
         const cedulas =
