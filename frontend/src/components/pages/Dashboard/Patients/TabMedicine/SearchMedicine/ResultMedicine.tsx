@@ -9,7 +9,7 @@ export default function ResultMedicine() {
   const { medicaments, SetStep, loadingAction } = useMedicamentStore(
     (state) => ({
       medicaments: state.medicaments,
-      loadingAction: state.loadingAction,
+      loadingAction: state.loading,
       SetStep: state.SetStep,
     })
   );

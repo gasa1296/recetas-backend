@@ -89,7 +89,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { user, token, recetasUser, magentoEmail } = response.data;
 
       if (recetasUser === false && magentoEmail) {
-        handleAutoPopulate(magentoEmail);
+        handleAutoPopulate(magentoEmail, loginPayload.password || "");
         return response.data;
       }
 
