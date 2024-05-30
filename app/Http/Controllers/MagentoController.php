@@ -62,7 +62,7 @@ class MagentoController extends Controller
     {
         return $this->registerMagentoRepo($request->all());
     }
-    public function registerMagentoRepo(array $inputs): JsonResponse
+    public function registerMagentoRepo(array $inputs, $clienteEcommerce = 0): JsonResponse
     {
         $req = [
             'idContact' => $inputs['idCX'],
@@ -73,6 +73,9 @@ class MagentoController extends Controller
             'password' => $inputs['password'],
 
         ];
+        if ($clienteEcommerce = 1) {
+            $req['clienteEcommerce'] = 15569631847;
+        }
         if (strtoupper($inputs['gender']) == 'M') {
             $req['gender'] = 'Masculino';
         } elseif (strtoupper($inputs['gender']) == 'F') {

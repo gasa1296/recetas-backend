@@ -104,7 +104,7 @@ class AuthController extends Controller
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
-            $res = $magento->registerMagentoRepo($inputs);
+            $res = $magento->registerMagentoRepo($inputs, 1);
             Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
