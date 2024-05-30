@@ -15,7 +15,8 @@ class WhatsappController extends Controller
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => env('LIKENUUK_URL', '')
+            'base_uri' => env('LIKENUUK_URL', ''),
+            'verify' => env('VERIFY_FILE', false)
         ]);
     }
     private function login(): JsonResponse
