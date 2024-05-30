@@ -49,7 +49,7 @@ class MagentoController extends Controller
                 'json' => ['codigoMedico' => $fesa]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['codigo'] == 8001) {
+            if (in_array($decodedRes['codigo'], [8001, 200])) {
                 return true;
             } else {
                 return false;
