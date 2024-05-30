@@ -15,6 +15,7 @@ use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,10 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     Route::post('register', 'register');
     Route::post('login', 'login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
+});
+Route::controller(WhatsappController::class)->prefix('whatsapp')->group(function () {
+    Route::get('templates', 'getTemplates');
+    Route::get('send/{prescription}', 'sendMessage');
 });
 Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('medic', 'getMedic');
@@ -90,4 +95,5 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::post('medicaments', 'getMedicaments');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
+    
 });
