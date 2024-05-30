@@ -74,7 +74,7 @@ class MagentoController extends Controller
 
         ];
         if ($clienteEcommerce = 1) {
-            $req['clienteEcommerce'] = 15569631847;
+            $req['clienteEcommerce'] = 1;
         }
         if (strtoupper($inputs['gender']) == 'M') {
             $req['gender'] = 'Masculino';
