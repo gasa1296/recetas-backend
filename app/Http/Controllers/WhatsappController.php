@@ -61,7 +61,7 @@ class WhatsappController extends Controller
                         ],
                         'media' => [
                             'type' => 'document',
-                            'url' => 'https://testapireceta.farmaciasespecializadas.com/api/receta/LWPUFDR4/file?document_id=' . $document,
+                            'url' => $prescription->file . '?document_id=' . $document,
                         ]
                     ]
                 ]);
