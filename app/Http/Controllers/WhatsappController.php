@@ -34,7 +34,7 @@ class WhatsappController extends Controller
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
-    public function sendMessage (Prescription $prescription): JsonResponse
+    public function sendMessage(Prescription $prescription): JsonResponse
     {
         $login = $this->login();
         if ($login->getStatusCode() >= 300) {
@@ -47,7 +47,7 @@ class WhatsappController extends Controller
         }
         try {
             $documents = explode(';', $prescription->document_id);
-            foreach( $documents as $document) {
+            foreach ($documents as $document) {
                 $res = $this->client->post('/api/message/send', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $loginDecoded['token']

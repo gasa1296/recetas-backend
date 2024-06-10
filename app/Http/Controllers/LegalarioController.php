@@ -98,8 +98,8 @@ class LegalarioController extends Controller
         $phones = json_decode($medic->phone1, true);
         $esp = $medic->specializations->first();
         $esp_logo = '';
-        if (!empty ($esp->logo)) {
-            if( str_contains($esp->logo, 'http')) {
+        if (!empty($esp->logo)) {
+            if (str_contains($esp->logo, 'http')) {
                 $esp_logo = base64_encode(@file_get_contents($esp->logo) ?: '');
             } else {
                 $esp_logo = base64_encode(Storage::disk('public')->get($esp->logo));
@@ -228,9 +228,9 @@ class LegalarioController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($key, $medicament) {
-                                        if (!empty ($medicament['indications'])) {
+                                        if (!empty($medicament['indications'])) {
                                             return "$medicament[name] \n $medicament[indications] \n";
-                                        } elseif(empty($medicament['name'])){
+                                        } elseif (empty($medicament['name'])) {
                                             return $medicament;
                                         } else {
                                             return "$medicament[salt] | $medicament[name] \n $medicament[dose] | $medicament[frequency] | $medicament[duration] | $medicament[way]  | $medicament[quantity] cajas | $medicament[add] \n";
@@ -292,7 +292,7 @@ class LegalarioController extends Controller
                             [
                                 'key' => 1002,
                                 'name' => 'IMAGEN_CLIENTE_HOSPITAL',
-                                'value' => empty ($room->logo) ? '' : base64_encode(Storage::disk('public')->get($room->logo)),
+                                'value' => empty($room->logo) ? '' : base64_encode(Storage::disk('public')->get($room->logo)),
                             ]
                         ],
                         [
@@ -345,7 +345,7 @@ class LegalarioController extends Controller
         if (!empty($errors)) {
             return response()->json($errors, 400);
         }
-        if(!empty($prescription->file)) {
+        if (!empty($prescription->file)) {
             return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
         }
         $res = $this->legalarioToken();

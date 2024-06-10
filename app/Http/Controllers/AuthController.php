@@ -88,19 +88,19 @@ class AuthController extends Controller
         }
         $inputs = $validator->safe()->all();
         $magento = new MagentoController();
-        if(!$magento->verifyFESA($inputs['fesa'])) {
+        if (!$magento->verifyFESA($inputs['fesa'])) {
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
-        if (!empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+        if (!empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             $res = $magento->registerMagentoRepo($inputs);
             Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
-        } elseif (empty ($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+        } elseif (empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
             $res = $magento->registerCX($request);
             Log::debug('cx register', $res->getData(true));
-            if($res->getStatusCode() >= 300) {
+            if ($res->getStatusCode() >= 300) {
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
@@ -113,7 +113,7 @@ class AuthController extends Controller
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
-        $inputs['fesa'] = !empty($inputs['idCX'])?$inputs['idCX']: $inputs['fesa'];
+        $inputs['fesa'] = !empty($inputs['idCX']) ? $inputs['idCX'] : $inputs['fesa'];
         $instance = User::create($inputs);
 
         event(new Registered($instance));
@@ -164,7 +164,7 @@ class AuthController extends Controller
         }
         $instance = auth()->user();
         $inputs = $validator->safe()->all();
-        if(!empty($inputs['password'])) {
+        if (!empty($inputs['password'])) {
             $inputs['password'] = Hash::make($inputs['password']);
         }
         $instance->update($inputs);

@@ -134,7 +134,7 @@ class MagentoController extends Controller
                                 'especialidad' => $esp['name']
                             ];
                         }, $inputs['specializations'] ?? []),
-                        'listaTelefono' => array_map(function($phone) {
+                        'listaTelefono' => array_map(function ($phone) {
                             return [
                                 'numeroTelefonico' => $phone['phone'],
                                 'tipoDeUso' => 'Celular',
@@ -142,17 +142,17 @@ class MagentoController extends Controller
                             ];
                         }, json_decode($inputs['phone1'], true)),
                         'listaDireccion' => array_map(function ($room) {
-                            return [ 
-                                "calle" => $room['street'], 
-                                "numeroExterior" => $room['n_exterior'], 
-                                "numeroInterior" => $room['n_interior'], 
-                                "colonia" => $room['colony'], 
-                                "delegacionMunicipio" => $room['delegation'], 
-                                "ciudad" => $room['delegation'], 
-                                "estado" => $room['state'], 
-                                "codigoPostal" => $room['zip'], 
-                                "pais" => "MX", 
-                                "tipo" => "Consultorio", 
+                            return [
+                                "calle" => $room['street'],
+                                "numeroExterior" => $room['n_exterior'],
+                                "numeroInterior" => $room['n_interior'],
+                                "colonia" => $room['colony'],
+                                "delegacionMunicipio" => $room['delegation'],
+                                "ciudad" => $room['delegation'],
+                                "estado" => $room['state'],
+                                "codigoPostal" => $room['zip'],
+                                "pais" => "MX",
+                                "tipo" => "Consultorio",
                                 "estatus" => "Activo"
                             ];
                         }, $inputs['rooms'] ?? []),

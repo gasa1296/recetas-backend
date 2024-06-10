@@ -53,10 +53,10 @@ class PrescriptionController extends Controller
         $inputs1 = $validator->safe()->all();
         $inputs1['user_id'] = auth()->id();
         $inputs1['code'] = strtoupper(base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36));
-        
+
         $room = $request->user()->rooms;
         $filteredRoom = $room->where('user_id', '=', $inputs1['user_id'])->where('id', '=', $inputs1['room_id'])->first();
-        if(empty($filteredRoom)) {
+        if (empty($filteredRoom)) {
             return response()->json(['room' => ['consultorio no pertenece a medico']], 400);
         }
         $instance = Prescription::create($inputs1);
@@ -240,6 +240,6 @@ class PrescriptionController extends Controller
             }
         }
         $instance->save();
-        return(new PrescriptionResource($instance))->response();
+        return (new PrescriptionResource($instance))->response();
     }
 }
