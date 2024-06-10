@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\{ServerException, ClientException};
 use App\Models\Prescription;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -39,7 +41,8 @@ class PrescriptionSignedEmail extends Notification
     {
         $email = (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
-            'base_url' => env('APP_URL', '') . '/storage/'
+            'base_url' => env('APP_URL', '') . '/storage/',
+            'link' => $this->generateLink()
         ])->subject('Receta médica electrónica ' . $this->prescription->code);
         foreach ($this->fileData as $key => $file) {
             $email = $email->attachData($file, "$key.pdf");
@@ -63,5 +66,39 @@ class PrescriptionSignedEmail extends Notification
         return [
             //
         ];
+    }
+
+    private function generateLink() {
+        $client = new Client([
+            'verify' => env('VERIFY_FILE', false),
+            'base_url' => env('URL_LINK', '')
+        ]);
+        try {
+            $res = $client->post('api/fesa-auth/Auth/AuthWebhook', [
+                'json' => [
+                    'UserName' => env('USR_LINK', ''),
+                    'Password' => env('PASS_LINK', '')
+                ]
+            ]);
+
+            $resBody = json_decode($res->getBody(), true);
+            $token = $resBody['data']['token'];
+
+
+            $res = $client->post('api/webhook/Recetas/CrearShortUrl', [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                ],
+                'json' => [
+                    'idFolio' => $this->prescription->code
+                ]
+            ]);
+
+            $resBody = json_decode($res->getBody(), true);
+            return $resBody['data']['shortLink'];
+        } catch (ClientException | ServerException $e) {
+            return 'error ' . $e->getMessage();
+        }
+
     }
 }

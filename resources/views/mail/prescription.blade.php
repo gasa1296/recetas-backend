@@ -20,9 +20,11 @@
         <p style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 19px;font-weight:500;text-align: center;">
           Si no puedes visualizar tu receta ¡descárgala aqui!
         </p>
-        <p style="color: white; font-size: 17px; font-weight:lighter; text-align: center;margin: 0px; padding-top: 20px;">
+        <a href="{{$link}}">
+          <p style="color: white; font-size: 17px; font-weight:lighter; text-align: center;margin: 0px; padding-top: 20px;">
           Descarga la App y surte tu receta hoy.
-        </p>
+          </p>
+        </a>
         <div style="width:50%;margin: 0 auto">                
           <a target="_blank" href="https://apple.co/3Q45hq6">   <img src="{{ asset('email/IOS.png') }}" alt="ios" style="width: 45%"> </a>
           <a target="_blank" href="https://bit.ly/4cRX6Hc"> <img src="{{ asset('email/Googleplay.png') }}" alt="google" style="width: 45%"></a> 
