@@ -29,22 +29,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function () {
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/]);
+    Route::post('register', 'register')->name('register');
+    Route::post('login', 'login')->name('login');
+    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/])->name('logout');
 });
-Route::controller(WhatsappController::class)->prefix('whatsapp')->group(function () {
-    Route::get('templates', 'getTemplates');
-    Route::get('send/{prescription}', 'sendMessage');
+Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp.')->group(function () {
+    Route::get('templates', 'getTemplates')->name('templates');
+    Route::get('send/{prescription}', 'sendMessage')->name('send');
 });
 Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
-    Route::post('medic', 'getMedic');
-    Route::post('registerMagento', 'registerMagento');
-    Route::post('updateMagento', 'updateMagento');
-    Route::post('generateMagentoToken', 'generateMagentoToken');
-    Route::post('getUserByTokenMagento', 'getUserByTokenMagento');
-    Route::post('specializations', 'getSpecialization');
-    Route::post('states', 'getStates');
+    Route::post('medic', 'getMedic')->name('getMedic');
+    Route::post('registerMagento', 'registerMagento')->name('registerMagento');
+    Route::post('updateMagento', 'updateMagento')->name('updateMagento');
+    Route::post('generateMagentoToken', 'generateMagentoToken')->name('generateMagentoToken');
+    Route::post('getUserByTokenMagento', 'getUserByTokenMagento')->name('getUserByTokenMagento');
+    Route::post('specializations', 'getSpecialization')->name('getSpecialization');
+    Route::post('states', 'getStates')->name('getStates');
 });
 Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
@@ -52,11 +52,11 @@ Route::controller(ResetController::class)->prefix('password')->name('password.')
     Route::post('reset', 'reset')->name('reset');
 });
 Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
-    Route::get('', 'getByClient');
-    Route::post('file', 'addFile');
-    Route::get('{prescription:code}', 'show');
-    Route::post('{prescription:code}', 'addClient');
-    Route::put('{prescription:code}', 'updateStatus');
+    Route::get('', 'getByClient')->name('getByClient');
+    Route::post('file', 'addFile')->name('addFile');
+    Route::get('{prescription:code}', 'show')->name('showPrescription');
+    Route::post('{prescription:code}', 'addClient')->name('addClient');
+    Route::put('{prescription:code}', 'updateStatus')->name('updateStatus');
     Route::get('{prescription:code}/file', 'getFile')->name('getFile');
 });
 Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.')->group(function () {
@@ -71,9 +71,9 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::get('notice', 'notice')->name('notice');
     });
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
-        Route::get('', 'show');
-        Route::put('', 'update');
-        Route::delete('', 'destroy');
+        Route::get('', 'show')->name('show');
+        Route::put('', 'update')->name('update');
+        Route::delete('', 'destroy')->name('delete');
     });
     Route::get('most_used', [PrescriptionMedicamentController::class, 'mostUsed']);
     Route::apiResources([
@@ -92,7 +92,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
     });
 
     Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
-        Route::post('medicaments', 'getMedicaments');
+        Route::post('medicaments', 'getMedicaments')->name('medicaments');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
     
