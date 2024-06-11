@@ -70,6 +70,15 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::post('resend', 'resend')->name('resend');
         Route::get('notice', 'notice')->name('notice');
     });
+});
+
+Route::middleware(['auth:sanctum', /*'verified'*/])->name('authenticated.')->group(function () {
+
+    Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
+        Route::get('verify/{id}', 'verify')->name('verify');
+        Route::post('resend', 'resend')->name('resend');
+        Route::get('notice', 'notice')->name('notice');
+    });
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show')->name('show');
         Route::put('', 'update')->name('update');
