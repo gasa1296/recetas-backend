@@ -128,6 +128,7 @@ class MagentoController extends Controller
                         "unidadOperativa" => "FESA",
                         "status" => "Activo",
                         "tipo" => "Medico",
+                        "clienteEcommerce" => 'Si',
                         'listaCedulas' => array_map(function ($esp) {
                             return [
                                 'cedulaProfesional' => $esp['identification'],
