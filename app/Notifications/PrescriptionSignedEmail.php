@@ -71,9 +71,10 @@ class PrescriptionSignedEmail extends Notification
     private function generateLink() {
         $client = new Client([
             'verify' => env('VERIFY_FILE', false),
+            'base_url' => env('URL_LINK', '')
         ]);
         try {
-            $res = $client->post(env('URL_LINK', '') . '/api/fesa-auth/Auth/AuthWebhook', [
+            $res = $client->post('/api/fesa-auth/Auth/AuthWebhook', [
                 'json' => [
                     'UserName' => env('USR_LINK', ''),
                     'Password' => env('PASS_LINK', '')
@@ -84,7 +85,7 @@ class PrescriptionSignedEmail extends Notification
             $token = $resBody['data']['token'];
 
 
-            $res = $client->post(env('URL_LINK', '') . 'api/webhook/Recetas/CrearShortUrl', [
+            $res = $client->post('/api/webhook/Recetas/CrearShortUrl', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                 ],
