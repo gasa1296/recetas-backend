@@ -1,56 +1,58 @@
 <x-mail::message>
-  <!--<div style="text-align: right;">
-    <a href="https://www.farmaciasespecializadas.com/?utm_source=email&utm_medium=logo&utm_id=descarga_tu_receta"><img src="{{ asset('email/Logo.png') }}" alt="" style="max-width: 300px;"></a>
-  </div>-->
-  <div style="background-color: #213d8d;">
-    <p
-      style="font-size:19px; width: 50%;color: white; font-weight: bold; margin-left:auto; margin-right:auto; text-align: center;text-transform: uppercase;">
-      REVISA TU RECETA médica electrónica aquí!</p>
-  </div>
-  <div style="">
-    <img src="{{ asset('email/Fotografia.png') }}" alt="" style="max-width: 400px; ">
-  </div>
-  <div style="background-color: #213d8d;">
-    <div style="padding-top: 30px;">
-      <div style="background-color: #f3670f; width: 70%; margin: 0 auto; padding: 5px 10px;">
-        <p style="color: white; font-size: 19px;font-weight:100;text-align: center;">
-          Surte tu Receta Electrónica en Farmacias Especializadas ¡la única farmacia que recibe recetas electrónicas y
-          cuida el medio ambiente!
-        </p>
-        <p style="color: white; font-size: 19px; font-weight:500; text-align: center;">
-          Para surtir tu receta, descarga nuestra App, regístrate e ingresa el folio de receta <span
-            style="font-size: 21px;">{{$prescription->code}}<span> y compra tus medicamentos.
-        </p>
-        <p style="text-align: center;background-color: #213d8d;">
-          <a style="width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 19px;font-weight:500;text-align: center;"
-            href="{{ $link }}">
-            Si no puedes visualizar tu receta ¡descárgala aqui!
-          </a>
-        </p>
-        <p
-          style="color: white; font-size: 17px; font-weight:lighter; text-align: center;margin: 0px; padding-top: 20px;">
-          Descarga la App y surte tu receta hoy.
-        </p>
-        <div style="width:50%;margin: 0 auto">
-          <a target="_blank" href="https://apple.co/3Q45hq6"> <img src="{{ asset('email/IOS.png') }}" alt="ios"
-              style="width: 45%"> </a>
-          <a target="_blank" href="https://bit.ly/4cRX6Hc"> <img src="{{ asset('email/Googleplay.png') }}" alt="google"
-              style="width: 45%"></a>
-        </div>
-      </div>
-      <div>
-        <p
-          style="background-color: #213d8d;width:80%;margin: 0 auto; padding: 10px 5px; color: white; font-size: 18px;font-weight:200;text-align: center;">
-          Síguenos en nuestras redes sociales:
-        </p>
-        <div style="width:50%;margin: 0 auto">
-          <a target="_blank" href="https://bit.ly/3Q1QZGw"><img src="{{ asset('email/FACEBOOk.png') }}" alt="ios"
-              style="width: 45%"> </a>
-          <a target="_blank" href="https://bit.ly/49H6ue6"> <img src="{{ asset('email/Instagram.png') }}" alt="google"
-              style="width: 45%"></a>
-        </div>
-      </div>
+  <div class="container">
+    <div class="content">
+      <p class="welcome">Hola <span class="welcome-2">{{$prescription->patient->first_name}} {{$prescription->patient->last_name}} {{$prescription->patient->last_name1}}</span></p>
+      <p class="medic">
+        tu médico <span class="medic-bold">{{$prescription->medic->first_name}} {{$prescription->medic->last_name}} {{$prescription->medic->last_name1}}</span> te ha
+        enviado una Receta Médica Electrónica.
+      </p>
     </div>
+    <img
+      src="{{ asset('email/background.jpg')}}"
+      alt="background"
+      class="img-background"
+    />
+    <img class="img-square" src="{{ asset('email/square.svg')}}" alt="square" />
+
+    <p class="folio-text">El folio de tu Receta Médicas Electrónica es:</p>
+    <p class="folio">{{$prescription->code}}</p>
+
+    <a href="{{$link}}"><img src="{{ asset('email/consulta.svg')}}" class="img-consulta" alt="consulta" /></a>
+
+    <img src="{{ asset('email/vineta.svg')}}" class="img-vineta" alt="vineta" />
+
+    <p class="follow">Síguenos en redes sociales</p>
+
+    <div>
+      <a href="https://www.facebook.com/" class="social">
+        <img src="{{ asset('email/facebook.svg')}}" alt="facebook" />
+      </a>
+      <a href="https://www.instagram.com/" class="social">
+        <img src="{{ asset('email/instagram.svg')}}" alt="instagram" />
+      </a>
+      <a href="https://www.linkeding.com/" class="social">
+        <img src="{{ asset('email/linkeding.svg')}}" alt="linkeding" />
+      </a>
+      <a href="https://www.x.com/" class="social">
+        <img src="{{ asset('email/x.svg')}}" alt="x" />
+      </a>
+    </div>
+    <div class="container-download">
+      <div class="border-download"></div>
+
+      <div class="download">Descarga nuestra aplicacion móvil:</div>
+      <div class="border-download"></div>
+    </div>
+
+    <div class="app">
+      <a href="https://www.facebook.com/" class="social">
+        <img src="{{ asset('email/google.svg')}}" alt="google" />
+      </a>
+      <a href="https://www.instagram.com/" class="social">
+        <img src="{{ asset('email/appstore.svg')}}" alt="appstore" />
+      </a>
+    </div>
+  </div>
 </x-mail::message>
 <style>
   .logo,
@@ -58,5 +60,129 @@
   .x_footer p,
   .footer p {
     display: none;
+  }
+</style>
+<style>
+  .container {
+    width: 100%;
+    max-width: 602px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px 0px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .header {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 10px 10px 0 0;
+  }
+  .content {
+    padding: 20px;
+  }
+  .welcome {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .medic {
+    max-width: 350px;
+    line-height: 26px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0 auto;
+  }
+  .medic-bold {
+    font-weight: bold;
+  }
+  .welcome-2 {
+    color: #27348b;
+  }
+  .footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 0 0 10px 10px;
+    margin-top: 20px;
+  }
+  a {
+    color: #4caf50;
+    text-decoration: none;
+  }
+  .img-background {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .img-square {
+    width: 95%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    top: -3px;
+  }
+  .folio-text {
+    font-size: 16px;
+    margin-top: 30px;
+    font-weight: 200;
+    color: #27348b;
+  }
+  .folio {
+    border: 2px solid #27348b;
+    margin: 0 auto;
+    color: #27348b;
+    font-weight: bold;
+    display: inline-block;
+    padding: 16px 32px;
+    font-size: 28px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+  }
+  .img-vineta {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .img-consulta {
+    width: 80%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .follow {
+    font-weight: bold;
+    font-size: 28px;
+  }
+  .social {
+    margin: 0px 10px;
+  }
+  .app {
+    margin-top: 10px;
+  }
+  .download {
+    font-size: 14px;
+    font-weight: 500px;
+    color: #ff6700;
+    margin: 0 10px;
+  }
+  .container-download {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 40px;
+  }
+  .border-download {
+    border-top: 2px solid #ff6700;
+    width: 20%;
+    margin: 0 auto;
+    margin-top: 7px;
   }
 </style>
