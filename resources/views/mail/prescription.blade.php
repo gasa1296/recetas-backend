@@ -13,16 +13,11 @@
       class="img-background"
     />
     <img class="img-square" src="{{ asset('email/square.jpg')}}"/>
-
     <p class="folio-text">El folio de tu Receta Médicas Electrónica es:</p>
     <p class="folio">{{$prescription->code}}</p>
-
     <a href="{{$link}}"><img src="{{ asset('email/consulta.jpg')}}" class="img-consulta" alt="consulta" /></a>
-
     <img src="{{ asset('email/vineta.jpg')}}" class="img-vineta" alt="vineta" />
-
     <p class="follow">Síguenos en redes sociales</p>
-
     <div>
       <a href="https://www.facebook.com/" class="social">
         <img src="{{ asset('email/facebook.jpg')}}" alt="facebook" />
@@ -31,7 +26,7 @@
         <img src="{{ asset('email/instagram.jpg')}}" alt="instagram" />
       </a>
       <a href="https://www.linkeding.com/" class="social">
-        <img src="{{ asset('email/linkeding.jpg')}}" alt="linkeding" />
+        <img src="{{ asset('email/linkedin.jpg')}}" alt="linkeding" />
       </a>
       <a href="https://www.x.com/" class="social">
         <img src="{{ asset('email/x.jpg')}}" alt="x" />
@@ -39,11 +34,9 @@
     </div>
     <div class="container-download">
       <div class="border-download"></div>
-
       <div class="download">Descarga nuestra aplicacion móvil:</div>
       <div class="border-download"></div>
     </div>
-
     <div class="app">
       <a href="https://www.facebook.com/" class="social">
         <img src="{{ asset('email/google.jpg')}}" alt="google" />
