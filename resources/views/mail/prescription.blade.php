@@ -19,10 +19,10 @@
     <img src="{{ asset('email/vineta.jpg')}}" class="img-vineta" alt="vineta" />
     <p class="follow">Síguenos en redes sociales</p>
     <div>
-      <a href="https://www.facebook.com/" class="social">
+      <a href="https://bit.ly/3Q1QZGw" class="social">
         <img src="{{ asset('email/facebook.jpg')}}" alt="facebook" />
       </a>
-      <a href="https://www.instagram.com/" class="social">
+      <a href="https://bit.ly/49H6ue6" class="social">
         <img src="{{ asset('email/instagram.jpg')}}" alt="instagram" />
       </a>
       <a href="https://www.linkeding.com/" class="social">
@@ -38,10 +38,10 @@
       <div class="border-download"></div>
     </div>
     <div class="app">
-      <a href="https://www.facebook.com/" class="social">
+      <a href="https://bit.ly/4cRX6Hc" class="social">
         <img src="{{ asset('email/google.jpg')}}" alt="google" />
       </a>
-      <a href="https://www.instagram.com/" class="social">
+      <a href="https://apple.co/3Q45hq6" class="social">
         <img src="{{ asset('email/appstore.jpg')}}" alt="appstore" />
       </a>
     </div>
@@ -66,13 +66,6 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  .header {
-    text-align: center;
-    padding: 10px 0;
-    background-color: #4caf50;
-    color: white;
-    border-radius: 10px 10px 0 0;
-  }
   .content {
     padding: 20px;
   }
@@ -94,14 +87,6 @@
   }
   .welcome-2 {
     color: #27348b;
-  }
-  .footer {
-    text-align: center;
-    padding: 10px 0;
-    background-color: #4caf50;
-    color: white;
-    border-radius: 0 0 10px 10px;
-    margin-top: 20px;
   }
   a {
     color: #4caf50;
