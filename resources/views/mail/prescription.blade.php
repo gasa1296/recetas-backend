@@ -12,29 +12,29 @@
       alt="background"
       class="img-background"
     />
-    <img class="img-square" src="{{ asset('email/square.svg')}}" alt="square" />
+    <img class="img-square" src="{{ asset('email/square.jpg')}}"/>
 
     <p class="folio-text">El folio de tu Receta Médicas Electrónica es:</p>
     <p class="folio">{{$prescription->code}}</p>
 
-    <a href="{{$link}}"><img src="{{ asset('email/consulta.svg')}}" class="img-consulta" alt="consulta" /></a>
+    <a href="{{$link}}"><img src="{{ asset('email/consulta.jpg')}}" class="img-consulta" alt="consulta" /></a>
 
-    <img src="{{ asset('email/vineta.svg')}}" class="img-vineta" alt="vineta" />
+    <img src="{{ asset('email/vineta.jpg')}}" class="img-vineta" alt="vineta" />
 
     <p class="follow">Síguenos en redes sociales</p>
 
     <div>
       <a href="https://www.facebook.com/" class="social">
-        <img src="{{ asset('email/facebook.svg')}}" alt="facebook" />
+        <img src="{{ asset('email/facebook.jpg')}}" alt="facebook" />
       </a>
       <a href="https://www.instagram.com/" class="social">
-        <img src="{{ asset('email/instagram.svg')}}" alt="instagram" />
+        <img src="{{ asset('email/instagram.jpg')}}" alt="instagram" />
       </a>
       <a href="https://www.linkeding.com/" class="social">
-        <img src="{{ asset('email/linkeding.svg')}}" alt="linkeding" />
+        <img src="{{ asset('email/linkeding.jpg')}}" alt="linkeding" />
       </a>
       <a href="https://www.x.com/" class="social">
-        <img src="{{ asset('email/x.svg')}}" alt="x" />
+        <img src="{{ asset('email/x.jpg')}}" alt="x" />
       </a>
     </div>
     <div class="container-download">
@@ -46,10 +46,10 @@
 
     <div class="app">
       <a href="https://www.facebook.com/" class="social">
-        <img src="{{ asset('email/google.svg')}}" alt="google" />
+        <img src="{{ asset('email/google.jpg')}}" alt="google" />
       </a>
       <a href="https://www.instagram.com/" class="social">
-        <img src="{{ asset('email/appstore.svg')}}" alt="appstore" />
+        <img src="{{ asset('email/appstore.jpg')}}" alt="appstore" />
       </a>
     </div>
   </div>
