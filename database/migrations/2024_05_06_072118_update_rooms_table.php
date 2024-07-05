@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('patients', function (Blueprint $table) {
+        Schema::table('consulting_rooms', function (Blueprint $table) {
             $table->dropColumn('fav');
             $table->dropColumn('auto_email');
             $table->dropColumn('auto_whatsapp');
