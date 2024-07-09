@@ -12,6 +12,7 @@ use App\Models\Prescription;
 use GuzzleHttp\Client;
 use Validator;
 use App\Notifications\PrescriptionSignedEmail;
+
 class SEUSPrescriptionController extends Controller
 {
     private Client $client;
@@ -28,7 +29,7 @@ class SEUSPrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        return(new PrescriptionResource($prescription))->response();
+        return (new PrescriptionResource($prescription))->response();
     }
     /**
      * Display a listing of the resource by client.
@@ -41,12 +42,12 @@ class SEUSPrescriptionController extends Controller
         }
         $inputs = $request->all();
         $document_id = $inputs['document']['id'];
-        
-        Log::info('addfile',['doc' => $document_id]);
+
+        Log::info('addfile', ['doc' => $document_id]);
 
         $doc = Document::where('id', $document_id)->firstOrFail();
 
-        Log::info('addfile',['document' => $doc]);
+        Log::info('addfile', ['document' => $doc]);
 
         $instance = $doc->prescription;
 
@@ -56,7 +57,7 @@ class SEUSPrescriptionController extends Controller
         }
         $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
-        if($instance->auto_email) {
+        if ($instance->auto_email) {
             $dir = "/storage/app/medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
             $zip = new ZipArchive;
             $status = $zip->open(base_path() . $dir);
@@ -76,7 +77,7 @@ class SEUSPrescriptionController extends Controller
             $data[$document_id] = $fileData;
             $instance->patient->notify(new PrescriptionSignedEmail($instance, $data));
         }
-        return(new PrescriptionResource($instance))->response();
+        return (new PrescriptionResource($instance))->response();
     }
     /**
      * Update the specified resource in storage.
@@ -98,7 +99,7 @@ class SEUSPrescriptionController extends Controller
         }
         $inputs = $validator->safe()->only('client');
         $prescription->update($inputs);
-        return(new PrescriptionResource($prescription))->response();
+        return (new PrescriptionResource($prescription))->response();
     }
     /**
      * Download precription file
@@ -113,7 +114,7 @@ class SEUSPrescriptionController extends Controller
         } else {
             $document = $request->document_id;
         }
-        if (!empty ($errors) || !empty(json_decode($prescription->add_med, true))) {
+        if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
             $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$document.pdf";
             return Storage::response($dir, 'receta.pdf', [
                 'Content-Type' => 'application/pdf',
@@ -200,6 +201,6 @@ class SEUSPrescriptionController extends Controller
         $prescription->save();
         $prescription->push();
 
-        return(new PrescriptionResource($prescription))->response();
+        return (new PrescriptionResource($prescription))->response();
     }
 }

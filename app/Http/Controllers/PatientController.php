@@ -19,10 +19,10 @@ class PatientController extends Controller
         if (env('DB_CONNECTION') == 'sqlsrv') {
             $operator = '+';
         }
-        if( $request->search ){
+        if ($request->search) {
             $search = $request->search;
             $instances = Patient::where('user_id', '=', auth()->id())
-                ->where(function($query) use ($operator, $search) {
+                ->where(function ($query) use ($operator, $search) {
                     $query->where('first_name', 'LIKE', "%$search%")
                         ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$search%")
                         ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$search%")

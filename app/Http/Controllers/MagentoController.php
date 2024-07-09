@@ -30,7 +30,7 @@ class MagentoController extends Controller
         try {
             $res = $this->client->get(env('URL_MEDIC'), [
                 'auth' => $this->magentoAuth,
-                'query' => $request->only('email', 'cedula')
+                'query' => $request->only('email', 'cedula', 'telefono')
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
@@ -49,7 +49,7 @@ class MagentoController extends Controller
                 'json' => ['codigoMedico' => $fesa]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['codigo'] == 8001) {
+            if (in_array($decodedRes['codigo'], [8001, 200])) {
                 return true;
             } else {
                 return false;
@@ -62,7 +62,7 @@ class MagentoController extends Controller
     {
         return $this->registerMagentoRepo($request->all());
     }
-    public function registerMagentoRepo(array $inputs): JsonResponse
+    public function registerMagentoRepo(array $inputs, $clienteEcommerce = 0): JsonResponse
     {
         $req = [
             'idContact' => $inputs['idCX'],
@@ -73,6 +73,9 @@ class MagentoController extends Controller
             'password' => $inputs['password'],
 
         ];
+        if ($clienteEcommerce = 1) {
+            $req['clienteEcommerce'] = 'Sí';
+        }
         if (strtoupper($inputs['gender']) == 'M') {
             $req['gender'] = 'Masculino';
         } elseif (strtoupper($inputs['gender']) == 'F') {
@@ -125,13 +128,14 @@ class MagentoController extends Controller
                         "unidadOperativa" => "FESA",
                         "status" => "Activo",
                         "tipo" => "Medico",
+                        "clienteEcommerce" => 'Si',
                         'listaCedulas' => array_map(function ($esp) {
                             return [
                                 'cedulaProfesional' => $esp['identification'],
                                 'especialidad' => $esp['name']
                             ];
                         }, $inputs['specializations'] ?? []),
-                        'listaTelefono' => array_map(function($phone) {
+                        'listaTelefono' => array_map(function ($phone) {
                             return [
                                 'numeroTelefonico' => $phone['phone'],
                                 'tipoDeUso' => 'Celular',
@@ -139,17 +143,17 @@ class MagentoController extends Controller
                             ];
                         }, json_decode($inputs['phone1'], true)),
                         'listaDireccion' => array_map(function ($room) {
-                            return [ 
-                                "calle" => $room['street'], 
-                                "numeroExterior" => $room['n_exterior'], 
-                                "numeroInterior" => $room['n_interior'], 
-                                "colonia" => $room['colony'], 
-                                "delegacionMunicipio" => $room['delegation'], 
-                                "ciudad" => $room['delegation'], 
-                                "estado" => $room['state'], 
-                                "codigoPostal" => $room['zip'], 
-                                "pais" => "MX", 
-                                "tipo" => "Consultorio", 
+                            return [
+                                "calle" => $room['street'],
+                                "numeroExterior" => $room['n_exterior'],
+                                "numeroInterior" => $room['n_interior'],
+                                "colonia" => $room['colony'],
+                                "delegacionMunicipio" => $room['delegation'],
+                                "ciudad" => $room['delegation'],
+                                "estado" => $room['state'],
+                                "codigoPostal" => $room['zip'],
+                                "pais" => "MX",
+                                "tipo" => "Consultorio",
                                 "estatus" => "Activo"
                             ];
                         }, $inputs['rooms'] ?? []),
