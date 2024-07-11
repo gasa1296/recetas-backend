@@ -42,6 +42,7 @@ class WhatsappController extends Controller
         }
         $loginDecoded = $login->getData(true);
         $patient = $prescription->patient;
+        $medic = $prescription->medic;
         if (empty($prescription->file)) {
             return response()->json(['file' => 'archivo no encontrado'], 500);
         }
@@ -57,10 +58,12 @@ class WhatsappController extends Controller
                         "origin" => "Receta",
                         "phone" => json_decode($patient->phone1, true)[0],
                         "channel" => "whatsapp",
-                        "templateName" => "envio_receta",
+                        "templateName" => "surtir_receta_2",
                         "params" => [
                             $patient->first_name . ' ' . $patient->last_name1 ?? '' . ' ' . $patient->last_name2 ?? '',
-                            (new Carbon($prescription->createdAt))->toDateString()
+                            $medic->first_name . ' ' . $medic->last_name1 ?? '' . ' ' . $medic->last_name2 ?? '',
+                            (new Carbon($prescription->createdAt))->toDateString(),
+                            $prescription->code,
                         ],
                         'media' => [
                             'type' => 'document',
