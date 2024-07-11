@@ -42,7 +42,7 @@ class WhatsappController extends Controller
         }
         $loginDecoded = $login->getData(true);
         $patient = $prescription->patient;
-        $medic = $prescription->patient;
+        $medic = $prescription->medic;
         if (empty($prescription->file)) {
             return response()->json(['file' => 'archivo no encontrado'], 500);
         }
