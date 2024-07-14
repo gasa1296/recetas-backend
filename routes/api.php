@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\LegalarioController;
 use App\Http\Controllers\MagentoController;
-use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
@@ -39,8 +38,6 @@ Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp
 });
 Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('medic', 'getMedic')->name('getMedic');
-    Route::post('registerMagento', 'registerMagento')->name('registerMagento');
-    Route::post('updateMagento', 'updateMagento')->name('updateMagento');
     Route::post('generateMagentoToken', 'generateMagentoToken')->name('generateMagentoToken');
     Route::post('getUserByTokenMagento', 'getUserByTokenMagento')->name('getUserByTokenMagento');
     Route::post('specializations', 'getSpecialization')->name('getSpecialization');
@@ -70,10 +67,6 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::post('resend', 'resend')->name('resend');
         Route::get('notice', 'notice')->name('notice');
     });
-});
-
-Route::middleware(['auth:sanctum', /*'verified'*/])->name('authenticated.')->group(function () {
-    
     Route::controller(AuthController::class)->prefix('profile')->group(function () {
         Route::get('', 'show')->name('show');
         Route::put('', 'update')->name('update');
@@ -81,7 +74,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->name('authenticated.')->gro
     });
     Route::get('most_used', [PrescriptionMedicamentController::class, 'mostUsed']);
     Route::apiResources([
-        'room'=> ConsultingRoomController::class,
+        'room' => ConsultingRoomController::class,
         'specialization' => SpecializationController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
@@ -93,6 +86,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->name('authenticated.')->gro
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
         Route::get('{prescription}/document', 'createDocument')->name('document');
         Route::get('{prescription}/file', 'getFile')->name('getFile');
+        Route::post('{prescription}/file', 'addFile')->name('addFile');
     });
 
     Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
