@@ -18,9 +18,6 @@ class RoomsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('zip')
@@ -72,11 +69,8 @@ class RoomsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('room.name')
+            ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
