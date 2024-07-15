@@ -27,8 +27,7 @@ class SpecializationsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('university')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('logo')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('logo'),
                 Forms\Components\TextInput::make('id_ext')
                     ->required()
                     ->maxLength(255)
