@@ -3,21 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers\RoomsRelationManager;
-use App\Filament\Resources\UserResource\RelationManagers\SpecializationsRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\{Select, TextInput, DateTimePicker};
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
-    public User $user;
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -26,39 +23,34 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                Forms\Components\TextInput::make('name')
                     ->maxLength(255),
-                TextInput::make('first_name')
+                Forms\Components\TextInput::make('first_name')
                     ->maxLength(255),
-                TextInput::make('last_name1')
+                Forms\Components\TextInput::make('last_name1')
                     ->maxLength(255),
-                TextInput::make('last_name2')
+                Forms\Components\TextInput::make('last_name2')
                     ->maxLength(255),
-                TextInput::make('phone1')
+                Forms\Components\TextInput::make('phone1')
+                    ->tel(),
+                Forms\Components\TextInput::make('phone2')
                     ->tel()
                     ->maxLength(255),
-                TextInput::make('phone2')
-                    ->tel()
+                Forms\Components\TextInput::make('gender')
                     ->maxLength(255),
-                Select::make('gender')
-                    ->options([
-                        'M' => 'Male',
-                        'F' => 'Famale',
-                    ])
-                    ->required(),
-                TextInput::make('fesa')
+                Forms\Components\TextInput::make('fesa')
                     ->maxLength(255),
-                TextInput::make('email')
+                Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                DateTimePicker::make('email_verified_at'),
-                TextInput::make('password')
+                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\TextInput::make('password')
                     ->password()
-                    ->dehydrated(fn($state) => filled($state))
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                    ->required()
                     ->maxLength(255),
-
+                Forms\Components\Toggle::make('is_admin')
+                    ->required(),
             ]);
     }
 
@@ -67,46 +59,57 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->numeric()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('first_name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name1')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name2')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone1')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone2')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gender')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('fesa')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('is_admin')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -129,8 +132,8 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RoomsRelationManager::class,
-            SpecializationsRelationManager::class,
+            UserResource\RelationManagers\RoomsRelationManager::class,
+            UserResource\RelationManagers\SpecializationsRelationManager::class,
         ];
     }
     

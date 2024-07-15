@@ -1,31 +1,26 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\PatientResource\RelationManagers;
 
-use App\Filament\Resources\PrescriptionResource\Pages;
-use App\Filament\Resources\PrescriptionResource\RelationManagers;
-use App\Models\Prescription;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PrescriptionResource extends Resource
+class PrescriptionsRelationManager extends RelationManager
 {
-    protected static ?string $model = Prescription::class;
+    protected static string $relationship = 'prescriptions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('medic', 'email')
-                    ->required(),
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\Select::make('room_id')
                     ->relationship('room', 'name')
                     ->required(),
@@ -67,7 +62,6 @@ class PrescriptionResource extends Resource
                 Forms\Components\TextInput::make('status')
                     ->required()
                     ->numeric()
-                    ->maxValue(5)
                     ->default(0),
                 Forms\Components\TextInput::make('code')
                     ->required()
@@ -75,9 +69,10 @@ class PrescriptionResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->numeric()
@@ -159,44 +154,22 @@ class PrescriptionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                //
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
-            ]);
-    }
-    
-    public static function getRelations(): array
-    {
-        return [
-            PrescriptionResource\RelationManagers\MedicamentsRelationManager::class,
-        ];
-    }
-    
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListPrescriptions::route('/'),
-            'create' => Pages\CreatePrescription::route('/create'),
-            'edit' => Pages\EditPrescription::route('/{record}/edit'),
-        ];
-    }    
-    
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
             ]);
     }
 }

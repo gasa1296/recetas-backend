@@ -4,7 +4,6 @@ namespace App\Filament\Resources\PrescriptionResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\{Textarea, TextInput};
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,35 +18,77 @@ class MedicamentsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                TextInput::make('medicament_id')
+                Forms\Components\TextInput::make('medicament_id')
                     ->numeric()
                     ->required(),
-                Textarea::make('add'),
-                TextInput::make('dose'),
-                TextInput::make('way'),
-                TextInput::make('frequency')
+                Forms\Components\Textarea::make('add'),
+                Forms\Components\TextInput::make('dose'),
+                Forms\Components\TextInput::make('way'),
+                Forms\Components\TextInput::make('frequency')
                     ->numeric(),
-                TextInput::make('duration')
+                Forms\Components\TextInput::make('duration')
                     ->numeric(),
-                TextInput::make('quantity')
+                Forms\Components\TextInput::make('quantity')
                     ->numeric(),
-                TextInput::make('quantity_exp')
+                Forms\Components\TextInput::make('quantity_exp')
                     ->numeric(),
-                TextInput::make('medicament_id')
+                Forms\Components\TextInput::make('medicament_id')
                     ->numeric(),
-                TextInput::make('name'),
-                TextInput::make('type'),
-                TextInput::make('family'),
-                TextInput::make('group'),
+                Forms\Components\TextInput::make('name'),
+                Forms\Components\TextInput::make('type'),
+                Forms\Components\TextInput::make('family'),
+                Forms\Components\TextInput::make('group'),
+                Forms\Components\TextInput::make('salt'),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('medicament_id')
+            ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('medicament_id'),
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('medicament_id')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('add')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('dose')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('way')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('frequency')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('duration')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('quantity_exp')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('medicament_id')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('family')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('group')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('salt')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
