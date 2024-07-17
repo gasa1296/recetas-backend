@@ -5,7 +5,7 @@ import React from "react";
 
 export default function PatiensPage() {
   const sdkUrl =
-    process.env.NEXT_PUBLIC_LEGALARIO_ENVIRONMENT === "SANDBOX"
+    process.env.NEXT_PUBLIC_LEGALARIO_ENVIRONMENT === "SANDBOX2"
       ? "https://sdk.legalario.com/3.4/sdk-dev.js"
       : "https://sdk.legalario.com/3.4/sdk-dist.js";
   return (

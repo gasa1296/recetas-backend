@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import { create } from "zustand";
 import { useRoomsStore } from "./rooms";
 import { useRegisterStore } from "./register";
+import { useMedicamentStore } from "./medicaments";
 
 type AuthState = {
   isAuth: boolean;
@@ -101,6 +102,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       await localStorage.setItem("sessionToken", token);
       await localStorage.setItem("sessionUser", JSON.stringify(user));
       useRoomsStore.getState().GetRooms();
+      useMedicamentStore.getState().SetPopularMedicaments([]);
       return response.data;
     } catch (error: any) {
       const message = getRequestErrorArray(error);

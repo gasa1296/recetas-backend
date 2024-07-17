@@ -10,6 +10,14 @@ export const createRecipe = (recipePayload: any) => {
   });
 };
 
+export const uploadRecipeFile = (recipeId: string, recipePayload: any) => {
+  return Api({
+    endpoint: `/prescription/${recipeId}/file`,
+    method: "POST",
+    _data: recipePayload,
+  });
+};
+
 export const getRecipeSign = (recipeId: string) => {
   return Api({
     endpoint: `/prescription/${recipeId}/sign`,
@@ -19,13 +27,9 @@ export const getRecipeSign = (recipeId: string) => {
 
 export const sendRecipeByWhatsapp = (recipeId: string) => {
   return Api({
+    endpoint: `/whatsapp/send/${recipeId}`,
     method: "GET",
-    endpoint: `/room`,
   });
-  /*   return Api({
-    endpoint: `/prescription/${recipeId}/sign`,
-    method: "GET",
-  }); */
 };
 
 export const sendRecipeByEmail = (recipeId: string) => {

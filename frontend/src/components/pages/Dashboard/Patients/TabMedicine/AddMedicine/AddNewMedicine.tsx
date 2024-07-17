@@ -51,9 +51,6 @@ export default function AddNewMedicine({ nextStep, backStep }: any) {
   ];
   return (
     <section>
-      <p className="text-[#4B4B4B] text-[16px] font-bold mt-3">
-        Resultados de su búsqueda
-      </p>
       <div className="container-AddMdicine px-10 py-3 mt-5 mb-6">
         <div className="flex flex-col md:flex-row justify-between">
           <p className="text-[#4B4B4B] text-[18px] font-bold mt-3">

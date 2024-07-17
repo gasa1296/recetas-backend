@@ -34,6 +34,7 @@ type IState = {
   confirmRecipForm: IConfirmRecipForm;
   GetPopularMedicaments: () => any;
   SearchMedicaments: (search: string) => any;
+  SetPopularMedicaments: (popularMedicaments: IMedicament[]) => any;
   SetSearch: (search: string) => any;
   ResetMedicaments: () => any;
   SelectMedicament: (medicamentId: string) => any;
@@ -88,18 +89,21 @@ export const useMedicamentStore = create<IState>((set, get) => ({
     set({ cardMedicament: medicaments });
   },
 
+  SetPopularMedicaments: (popularMedicaments: IMedicament[]) => {
+    set({ popularMedicaments });
+  },
+
   GetPopularMedicaments: async () => {
     try {
       if (get().popularMedicaments.length) return;
       set({ loadingPopularMedicaments: true });
       const result = await GetPopularMedicament();
-      getSearchExternalMedicament(result.data[0].salt);
 
       const medicamentsPromises = result.data.map(async (medicament: any) => {
-        const searchResult = await getSearchExternalMedicament(medicament.salt);
+        const searchResult = await getSearchExternalMedicament(medicament.name);
 
         const filteredSearchResult = searchResult.data.Respuesta.find(
-          (option: any) => option.vnombresal === medicament.salt
+          (option: any) => option.vnombreproducto === medicament.name
         );
 
         if (!filteredSearchResult) return;

@@ -39,11 +39,7 @@ export default function Send({ resetTab }: any) {
     ResetPacients();
     ResetMedicaments();
 
-    if (hasMissingSign) setEnableDownload(true);
-
-    setTimeout(() => {
-      setEnableDownload(true);
-    }, 30000);
+    setEnableDownload(true);
   }, []);
 
   const recipesReverse = [...recipes].reverse();

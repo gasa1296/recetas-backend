@@ -2,10 +2,10 @@ import * as yup from "yup";
 
 export const PacientSchema = yup.object().shape({
   first_name: yup.string().trim().required("El campo Nombre(s) es obligatorio"),
-  /* last_name1: yup
+  last_name1: yup
     .string()
     .trim()
-    .required("El campo Apellido Paterno es obligatorio"), */
+    .required("El campo Apellido Paterno es obligatorio"),
   last_name2: yup
     .string()
     .trim()
