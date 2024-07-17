@@ -56,9 +56,9 @@ export default function CreateUser({ nextStep }: any) {
       width: 50,
     },
     {
-      label: "Apellido Paterno (Opcional)",
+      label: "Apellido Paterno *",
       name: "last_name1",
-      required: false,
+      required: true,
       type: "text",
       default: editPacient?.last_name1 || "",
       width: 50,
@@ -73,7 +73,7 @@ export default function CreateUser({ nextStep }: any) {
     },
 
     {
-      label: "Correo electrónico para envió de recetas *",
+      label: "Correo electrónico para envío de recetas *",
       name: "email",
       required: true,
       type: "email",

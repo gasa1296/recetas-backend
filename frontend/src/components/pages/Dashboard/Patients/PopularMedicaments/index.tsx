@@ -22,24 +22,25 @@ export function PopularMedicaments() {
     uuid: medicine.uicodproducto,
   }));
 
-  /*   useCustomEffect({ requestGet: GetPopularMedicaments }); */
+  useCustomEffect({ requestGet: GetPopularMedicaments });
 
   if (loadingPopularMedicaments)
     return (
       <section className="mt-4  relative">
-        <Loading text="Cargando medicamentos favoritos" />
+        <Loading
+          text="Cargando medicamentos preescritos con mayor frecuencia"
+          textSize={30}
+        />
       </section>
     );
   if (!medicines.length) return null;
 
   return (
     <section className="mt-6  relative">
-      <p className="text-[#4B4B4B] text-[16px] font-bold mt-3">
-        Medicamentos con mayor prescripción
+      <p className="text-[#4B4B4B] text-[18px] font-bold mt-3">
+        Medicamentos preescritos con mayor frecuencia
       </p>
-      <p className="text-[#4B4B4B] text-[16px]  mt-2">
-        Medicamentos que ha agregado a sus recetas frecuentemente
-      </p>
+
       <div className="flex flex-wrap justify-start mt-4 ">
         {medicines?.map((medicine: any) => {
           return <ResultMedicineItem key={medicine.uuid} medicine={medicine} />;

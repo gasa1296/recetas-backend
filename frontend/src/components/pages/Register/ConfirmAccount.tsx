@@ -42,7 +42,6 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
 
   const submitData = async (data: IRegisterPayload) => {
     const result = await handleSubmit(data);
-    console.log("asdasd", result);
 
     if (result) nextStep();
   };

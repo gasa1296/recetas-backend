@@ -19,7 +19,6 @@ export default function InputNumber({
 }: Field) {
   const values: any = watch();
   if (visible && !values[visible]) return <> </>;
-  console.log("errors", error);
   return (
     <div className="px-2 full-width relative" style={{ width: `${width}%` }}>
       <label

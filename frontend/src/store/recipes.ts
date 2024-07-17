@@ -6,6 +6,7 @@ import {
   getRecipeSign,
   sendRecipeByEmail,
   sendRecipeByWhatsapp,
+  uploadRecipeFile,
 } from "@/services/recipes";
 import { IMedicament } from "@/types/Models/Medicament";
 import { IRecipes } from "@/types/Models/Recipes";
@@ -29,6 +30,11 @@ type IState = {
   ClearRecipe: () => void;
   handlePrint: (recipeId?: string, documentId?: string) => void;
   setEnableDownload: (value: boolean) => void;
+  handleUploadDocument: (
+    recipeId: string,
+    documentId: string,
+    fileBase64: String
+  ) => void;
 };
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -95,8 +101,6 @@ export const useRecipeStore = create<IState>((set, get) => ({
             break;
         }
       });
-
-      const recipesPetition = [];
       const result = [];
 
       let missingSign = true;
@@ -119,13 +123,6 @@ export const useRecipeStore = create<IState>((set, get) => ({
         });
 
         result.push(recipe);
-        /* recipesPetition.push(
-          createRecipe({
-            ...recipePayloadTemp,
-            medicaments: groupMedicaments,
-            add_med: "[]",
-          })
-        ); */
       }
 
       if (groupIIMedicaments.length > 0) {
@@ -136,13 +133,6 @@ export const useRecipeStore = create<IState>((set, get) => ({
         });
 
         result.push(recipe);
-        /* recipesPetition.push(
-          createRecipe({
-            ...recipePayloadTemp,
-            medicaments: groupIIMedicaments,
-            add_med: "[]",
-          })
-        ); */
       }
 
       if (groupIIIMedicaments.length > 0) {
@@ -153,13 +143,6 @@ export const useRecipeStore = create<IState>((set, get) => ({
         });
 
         result.push(recipe);
-        /*  recipesPetition.push(
-          createRecipe({
-            ...recipePayloadTemp,
-            medicaments: groupIIIMedicaments,
-            add_med: "[]",
-          })
-        ); */
       }
 
       if (groupNewMedicaments.length > 0) {
@@ -169,15 +152,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
         });
 
         result.push(recipe);
-        /* recipesPetition.push(
-          createRecipe({
-            ...recipePayloadTemp,
-            add_med: JSON.stringify(groupNewMedicaments),
-          })
-        ); */
       }
-
-      /* const result = await Promise.all(recipesPetition); */
 
       const recipePromises = result.map(async (recipe) => {
         const { data } = recipe.data;
@@ -224,13 +199,11 @@ export const useRecipeStore = create<IState>((set, get) => ({
     set({ enableDownload: value });
   },
 
-  SendRecipeByWhatsapp: async () => {
-    set({ loading: true, error: null });
+  SendRecipeByWhatsapp: async (id?: string) => {
+    set({ emailLoading: true, error: null });
 
     try {
-      const recipe = get().recipe;
-
-      await sendRecipeByWhatsapp(recipe?.data?.id);
+      await sendRecipeByWhatsapp(id || "");
 
       toast.success("Receta enviada por Whatsapp");
       return true;
@@ -238,7 +211,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
       toast.error(error.message);
       set({ error: error.message });
     } finally {
-      set({ loading: false });
+      set({ emailLoading: false, hasDownload: true });
     }
   },
 
@@ -256,11 +229,11 @@ export const useRecipeStore = create<IState>((set, get) => ({
       toast(
         "Favor de intentarlo nuevamente presionando el botón Enviar por correo",
         {
-          icon: "⚠️", // Icono unicode de advertencia (opcional)
+          icon: "⚠️",
           style: {
-            border: "1px solid #ffa502", // Borde naranja
-            padding: "16px", // Espaciado interno
-            color: "#ffa502", // Color del texto naranja
+            border: "1px solid #ffa502",
+            padding: "16px",
+            color: "#ffa502",
           },
         }
       );
@@ -303,11 +276,7 @@ export const useRecipeStore = create<IState>((set, get) => ({
 
         const blobUrl = URL.createObjectURL(blob);
 
-        // Abre cada documento en una nueva pestaña.
         window.open(blobUrl, "_blank");
-
-        // Podrías querer esperar a que el documento se abra antes de continuar. Si es el caso, puedes descomentar la siguiente línea:
-        // await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       set({ loadingDownload: false, error: null, hasDownload: true });
@@ -325,6 +294,21 @@ export const useRecipeStore = create<IState>((set, get) => ({
         }
       );
       console.error("Error al obtener el PDF:", err);
+    }
+  },
+
+  handleUploadDocument: async (
+    recipeId: string,
+    documentId: string,
+    fileBase64: String
+  ) => {
+    try {
+      await uploadRecipeFile(recipeId, {
+        document_id: documentId,
+        file: fileBase64,
+      });
+    } catch (error) {
+      console.log("error", error);
     }
   },
 }));

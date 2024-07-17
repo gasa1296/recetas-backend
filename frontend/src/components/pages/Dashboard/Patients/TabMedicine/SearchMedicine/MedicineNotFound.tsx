@@ -8,7 +8,7 @@ export default function MedicineNotFound() {
   }));
   return (
     <section
-      className="flex flex-col md:flex-row text-black justify-center  w-full p-20 "
+      className="flex flex-col md:flex-row text-black justify-center  w-full p-20 py-10 "
       style={{
         background: "#F7F8FA 0% 0% no-repeat padding-box",
         border: "1px solid #DBE2EA",

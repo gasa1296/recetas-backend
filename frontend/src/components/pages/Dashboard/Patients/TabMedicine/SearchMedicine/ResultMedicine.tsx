@@ -5,7 +5,9 @@ import { HiPlusSmall } from "react-icons/hi2";
 import Loading from "@/components/Loading";
 import { ResultMedicineItem } from "./Components/ResultMedicineItem";
 import { PopularMedicaments } from "../../PopularMedicaments";
+import useScrollToTop from "@/hooks/useScrollToTop";
 export default function ResultMedicine() {
+  useScrollToTop();
   const { medicaments, SetStep, loadingAction } = useMedicamentStore(
     (state) => ({
       medicaments: state.medicaments,
@@ -32,21 +34,11 @@ export default function ResultMedicine() {
 
   return (
     <section className="mt-4  relative">
-      <p className="text-[#4B4B4B] text-[16px] font-bold mt-3">
+      <p className="text-[#4B4B4B] text-[18px] font-bold mt-4">
         Resultados de su búsqueda
       </p>
 
-      {medicines?.length ? (
-        <button
-          onClick={() => SetStep(4)}
-          className="flex justify-center items-center button-BlacK p-2 px-3 absolute right-0 top-0"
-        >
-          <HiPlusSmall size={25} />
-          Otro medicamento
-        </button>
-      ) : null}
-
-      <div className="flex flex-wrap justify-start mt-8 ">
+      <div className="flex flex-wrap justify-start mt-4 ">
         {medicines?.length ? (
           medicines?.map((medicine: any) => {
             return (

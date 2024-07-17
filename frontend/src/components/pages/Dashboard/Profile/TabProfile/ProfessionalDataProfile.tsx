@@ -33,7 +33,6 @@ export default function ProfessionalDataProfile() {
   }));
 
   const submitData = async (data: { specializations: ISpecialization[] }) => {
-    console.log("asdasd", data);
     const result = await UpdateSpecializations(data.specializations);
     if (result) GetSpecializations();
   };

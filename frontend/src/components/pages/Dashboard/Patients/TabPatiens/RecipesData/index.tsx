@@ -13,7 +13,7 @@ import { HiOutlineDuplicate } from "react-icons/hi";
 import LoadingModal from "@/components/Loading/LoadingModal";
 import { useMedicamentStore } from "@/store/medicaments";
 import { useRecipeStore } from "@/store/recipes";
-import { FaRegEnvelope } from "react-icons/fa";
+import { FaRegEnvelope, FaWhatsapp } from "react-icons/fa";
 import { GiWeight } from "react-icons/gi";
 import { MdOutlineBloodtype } from "react-icons/md";
 import { CiTempHigh } from "react-icons/ci";
@@ -40,10 +40,12 @@ export default function RecipesData({ nextStep, backStep }: any) {
     SetTabStep: state.SetTabStep,
   }));
 
-  const { handlePrint, SendRecipeByEmail } = useRecipeStore((state) => ({
-    handlePrint: state.handlePrint,
-    SendRecipeByEmail: state.SendRecipeByEmail,
-  }));
+  const { handlePrint, SendRecipeByEmail, sendRecipeByWhatsapp } =
+    useRecipeStore((state) => ({
+      handlePrint: state.handlePrint,
+      SendRecipeByEmail: state.SendRecipeByEmail,
+      sendRecipeByWhatsapp: state.SendRecipeByWhatsapp,
+    }));
 
   const newMedicaments = JSON.parse(selectedRecipe?.add_med ?? "[]");
 
@@ -310,18 +312,32 @@ export default function RecipesData({ nextStep, backStep }: any) {
           </button>
 
           {!notHaveSign && (
-            <button
-              onClick={async () => {
-                setEmailLoading(true);
-                await SendRecipeByEmail(selectedRecipe?.id);
+            <>
+              <button
+                onClick={async () => {
+                  setEmailLoading(true);
+                  await SendRecipeByEmail(selectedRecipe?.id);
 
-                setEmailLoading(false);
-              }}
-              className="flex flex-wrap  items-center justify-center button-white mw-[20%] p-1 px-10 mx-3 mt-4"
-            >
-              <FaRegEnvelope color="#1A1A1A " size={18} />
-              <p className="mx-2 "> Enviar por correo</p>
-            </button>
+                  setEmailLoading(false);
+                }}
+                className="flex flex-wrap  items-center justify-center button-white mw-[20%] p-1 px-10 mx-3 mt-4"
+              >
+                <FaRegEnvelope color="#1A1A1A " size={18} />
+                <p className="mx-2 "> Enviar por correo</p>
+              </button>
+              <button
+                onClick={async () => {
+                  setEmailLoading(true);
+                  await sendRecipeByWhatsapp(selectedRecipe?.id);
+
+                  setEmailLoading(false);
+                }}
+                className="flex items-center border justify-center button-whatsapp  mw-[15%] text-[20px] mt-4 p-1 mx-3 px-10"
+              >
+                <FaWhatsapp color="white" size={20} className="" />
+                <p className="mx-2 "> Enviar por Whatsapp</p>
+              </button>
+            </>
           )}
         </div>
       </div>

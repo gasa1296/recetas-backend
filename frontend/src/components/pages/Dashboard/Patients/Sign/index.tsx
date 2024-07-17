@@ -6,6 +6,9 @@ import { FaSignature } from "react-icons/fa";
 export default function Sign({ nextStep, backStep }: any) {
   const GetRooms = useRoomsStore((state) => state.GetRooms);
   const recipes = useRecipeStore((state) => state.recipes);
+  const handleUploadDocument = useRecipeStore(
+    (state) => state.handleUploadDocument
+  );
 
   const signRecipes = recipes.find((recipe) => recipe.sign);
 
@@ -17,7 +20,7 @@ export default function Sign({ nextStep, backStep }: any) {
 
   useCustomEffect({ requestGet: GetRooms });
 
-  function signatureFinish(data: any, signerIndex: number) {
+  async function signatureFinish(data: any, signerIndex: number) {
     if (
       data.documents[0].status === "approved" &&
       data.signer.status === "confirmed"
@@ -28,6 +31,12 @@ export default function Sign({ nextStep, backStep }: any) {
       } else {
         nextStep();
       }
+      console.log("DATA", data);
+      handleUploadDocument(
+        signRecipes?.id,
+        data.documents[0].id,
+        data.documents[0].base64_sign || data.documents[0].base64
+      );
     } else {
       setError("Una de las firmas no se completó exitosamente.");
     }

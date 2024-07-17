@@ -11,6 +11,7 @@ import AddNewMedicine from "../AddMedicine/AddNewMedicine";
 import { usePacients } from "@/store/pacients";
 import { useMedicamentStore } from "@/store/medicaments";
 import { PopularMedicaments } from "../../PopularMedicaments";
+import { HiPlusSmall } from "react-icons/hi2";
 export default function SearchMedicine({ nextStep, backStep }: any) {
   const { selectedPacient } = usePacients((state) => ({
     selectedPacient: state.selectedPacient,
@@ -61,7 +62,7 @@ export default function SearchMedicine({ nextStep, backStep }: any) {
   const Component = screen[step];
   return (
     <section>
-      <div className="flex items-center  mb-4 p-2 ps-3 container-dashboard">
+      <div className="flex items-center  mb-2 p-2 ps-3  container-dashboard">
         <button
           onClick={() => {
             SetStep(1);
@@ -73,24 +74,33 @@ export default function SearchMedicine({ nextStep, backStep }: any) {
           <p className="ms-1"> Regresar</p>
         </button>
       </div>
-      <FormGenerator
-        submitData={submitData}
-        fields={fields}
-        loading={false}
-        renderButton={(handleSubmit) => (
-          <div className="flex justify-center w-full  "></div>
-        )}
-      />
 
-      <div className="flex items-center  border-Tab p-2 ps-3 mt-4">
-        <FaPills color="#Fff " size={28} />
-        <p className="text-[#fff] text-[26px] ms-3">Medicamento</p>
-      </div>
-      <section className="container-Patiens  flex justify-center py-5 ">
+      <section className="container-Patiens  flex justify-center py-5   mb-4">
         <div className="w-[100%] px-8">
-          <SearchInput />
+          <FormGenerator
+            submitData={submitData}
+            fields={fields}
+            loading={false}
+            renderButton={(handleSubmit) => (
+              <div className="flex justify-center w-full  "></div>
+            )}
+          />
+          <div className="px-2 mt-8 relative">
+            <p className=" font-bold text-[#4B4B4B] text-[18px] text-start mb-6 pt-2">
+              Buscar Medicamentos
+            </p>
 
-          <Component setStep={SetStep} nextStep={nextStep} />
+            <button
+              onClick={() => SetStep(4)}
+              className="flex justify-center items-center button-BlacK p-2 px-3 absolute right-0 top-0"
+            >
+              <FaPills size={25} />
+              <span className="ps-2">Crear nuevo medicamento</span>
+            </button>
+
+            <SearchInput />
+            <Component setStep={SetStep} nextStep={nextStep} />
+          </div>
         </div>
       </section>
     </section>
