@@ -3,13 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PatientResource\Pages;
+use App\Filament\Resources\PatientResource\RelationManagers;
 use App\Models\Patient;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\{Select, TextInput, DatePicker};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -23,32 +23,29 @@ class PatientResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('first_name')
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('last_name1')
-                    ->required()
+                Forms\Components\TextInput::make('last_name1')
                     ->maxLength(255),
-                TextInput::make('last_name2')
+                Forms\Components\TextInput::make('last_name2')
                     ->maxLength(255),
-                TextInput::make('email')
+                Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                TextInput::make('phone1')
-                    ->tel()
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('phone2')
+                Forms\Components\TextInput::make('phone1')
                     ->tel()
                     ->maxLength(255),
-                Select::make('gender')
-                    ->options([
-                        'M' => 'Male',
-                        'F' => 'Famale',
-                    ])
-                    ->required(),
-                DatePicker::make('birth_date')
+                Forms\Components\TextInput::make('phone2')
+                    ->tel()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('gender')
+                    ->maxLength(255),
+                Forms\Components\DatePicker::make('birth_date')
                     ->required(),
             ]);
     }
@@ -58,37 +55,53 @@ class PatientResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->numeric()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user_id')
+                    ->numeric()
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('first_name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name1')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name2')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone1')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone2')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gender')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birth_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -111,7 +124,7 @@ class PatientResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PatientResource\RelationManagers\PrescriptionsRelationManager::class
         ];
     }
     

@@ -138,12 +138,20 @@ class PrescriptionController extends Controller
      */
     public function sendEmailNotification(Prescription $prescription)
     {
+        $medic = $prescription->user_id;
         $errors = $this->verifyPrescription($prescription->medicaments);
         $add_med = json_decode($prescription->add_med, true);
         if (empty($errors) && empty($add_med)) {
             $data = [];
             foreach (explode(';', $prescription->document_id) as $document) {
-                $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
+                $fileName = "$prescription->id-$document";
+                $dir = "medics/$medic/prescriptions/$fileName.pdf";
+                $fileData = Storage::get($dir);
+                if ($fileData) {
+                    $data[$document] = $fileData;
+                    continue;
+                }
+                $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
                 $zip = new ZipArchive;
                 $status = $zip->open(base_path() . $dir);
                 if ($status !== true) {
@@ -172,13 +180,19 @@ class PrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
+        $fileName = "$prescription->id-$request->document_id";
+        $medic = $prescription->user_id;
         $errors = $this->verifyPrescription($prescription->medicaments);
         if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
-            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.pdf";
+            $dir = "medics/$medic/prescriptions/$fileName.pdf";
             return Storage::download($dir, 'receta.pdf');
         } else {
+            $dir = "medics/$medic/prescriptions/$fileName.pdf";
+            if (Storage::disk('local')->exists($dir)) {
+                return Storage::download($dir, 'receta.pdf');
+            }
             $zip = new ZipArchive;
-            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$request->document_id.zip";
+            $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
             $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
@@ -239,6 +253,26 @@ class PrescriptionController extends Controller
                 }
             }
         }
+        $instance->save();
+        return (new PrescriptionResource($instance))->response();
+    }
+    /**
+     * Display a listing of the resource by client.
+     */
+    public function addFile(Request $request)
+    {
+        $inputs = $request->all();
+        $document_id = $inputs['document_id'];
+
+        $doc = Document::where('id', $document_id)->firstOrFail();
+
+        $instance = $doc->prescription;
+
+        $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
+        if (!Storage::put($dir, base64_decode($inputs['file']))) {
+            return response()->json('Error guardando archivo', 500);
+        }
+        $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
         $instance->save();
         return (new PrescriptionResource($instance))->response();
     }

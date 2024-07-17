@@ -106,23 +106,30 @@ class SEUSPrescriptionController extends Controller
      */
     public function getFile(Request $request, Prescription $prescription)
     {
+        $medic = $prescription->user_id;
         $errors = (new PrescriptionController())->verifyPrescription($prescription->medicaments);
-
         $documents = explode(';', $prescription->document_id);
         if (count($documents) == 1) {
             $document = $documents[0];
         } else {
             $document = $request->document_id;
         }
+        $fileName = "$prescription->id-$document";
+        $dir = "medics/$medic/prescriptions/$fileName.pdf";
         if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
-            $dir = "medics/$prescription->user_id/prescriptions/$prescription->id-$document.pdf";
             return Storage::response($dir, 'receta.pdf', [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="receta.pdf"'
             ]);
         } else {
+            if (Storage::disk('local')->exists($dir)) {
+                return Storage::response($dir, 'receta.pdf', [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="receta.pdf"'
+                ]);
+            }
             $zip = new ZipArchive;
-            $dir = "/storage/app/medics/$prescription->user_id/prescriptions/$prescription->id-$document.zip";
+            $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
             $status = $zip->open(base_path() . $dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
