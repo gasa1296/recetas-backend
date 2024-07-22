@@ -36,7 +36,7 @@ class AuthTest extends TestCase
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'phone1' => json_encode([
-                ['phone' => fake()->randomNumber()]
+                ['phone' => '0123456789']
             ]),
             'rooms' => [
                 [
