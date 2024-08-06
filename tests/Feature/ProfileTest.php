@@ -39,13 +39,16 @@ class ProfileTest extends TestCase
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
-            'phone1' => fake()->phoneNumber(),
+            'phone1' => json_encode([
+                ['phone' => '0123456789']
+            ]),
             'phone2' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['M', 'F']),
             'fesa' => fake()->randomNumber(),
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
         ]);
+        print_r($response->json());
         $response->assertOk();
     }
     public function test_delete(): void

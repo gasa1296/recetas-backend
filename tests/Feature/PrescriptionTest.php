@@ -118,7 +118,6 @@ class PrescriptionTest extends TestCase
         ],
       ]
     ]);
-    print_r($response->json());
     $response->assertStatus(201);
   }
   public function test_update(): void
