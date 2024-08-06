@@ -18,7 +18,7 @@ class AuthController extends Controller
     {
         $instance = User::where('email', request()->email)->first();
         if (empty($instance)) {
-            $magentoToken = (new MagentoController)->generateMagentoToken($request);
+            $magentoToken = (new MagentoController)->getToken($request);
             if ($magentoToken->getStatusCode() < 300) {
                 return response()->json([
                     'recetasUser' => false,
@@ -34,7 +34,7 @@ class AuthController extends Controller
         if (Hash::check(request()->password, $instance->password)) {
             return response()->json($okResponse);
         }
-        $magentoToken = (new MagentoController)->generateMagentoToken($request);
+        $magentoToken = (new MagentoController)->getToken($request);
         if ($magentoToken->getStatusCode() < 300) {
             return response()->json($okResponse);
         }
@@ -57,6 +57,7 @@ class AuthController extends Controller
             'fesa' => ['required',],
             'rooms' => ['required', 'array'],
             'specializations' => ['required', 'array'],
+            'rooms.*.id_ext' => ['nullable'],
             'rooms.*.name' => ['nullable', 'string'],
             'rooms.*.zip' => ['required', 'string'],
             'rooms.*.street' => ['required', 'string'],
@@ -72,6 +73,7 @@ class AuthController extends Controller
             'rooms.*.auto_whatsapp' => ['nullable'],
             'rooms.*.design' => ['nullable', 'string'],
             'specializations.*.name' => ['required', 'string'],
+            'specializations.*.id_ext' => ['nullable'],
             'specializations.*.identification' => ['required', 'unique:specializations'],
             'specializations.*.university' => ['nullable', 'string'],
             'specializations.*.logo' => ['nullable', 'string'],
@@ -92,19 +94,19 @@ class AuthController extends Controller
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
         if (!empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->registerMagentoRepo($inputs);
+            $res = $magento->store($inputs);
             Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
         } elseif (empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->registerCX($request);
+            $res = $magento->CX($inputs);
             Log::debug('cx register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
-            $res = $magento->registerMagentoRepo($inputs, 1);
+            $res = $magento->store($inputs);
             Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
@@ -168,6 +170,15 @@ class AuthController extends Controller
             $inputs['password'] = Hash::make($inputs['password']);
         }
         $instance->update($inputs);
+        $inputs = $instance->toArray();
+        $inputs['idCX'] = $instance->fesa;
+        $inputs['specializations'] = $instance->specializations->toArray();
+        $inputs['rooms'] = $instance->rooms->toArray();
+
+        $magento = new MagentoController();
+        $magento->CX($inputs);
+        $magento->update($inputs);
+        
         return response()->json($instance);
     }
     /**
