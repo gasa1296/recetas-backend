@@ -28,6 +28,7 @@ export interface Field {
   disabled?: boolean;
   visible?: string;
   inputType?: string;
+  hidden?: boolean;
   validate?: (value: string, payload: any) => void;
   handleChange?: (value: any) => void;
   ModalNotFound?: any;
