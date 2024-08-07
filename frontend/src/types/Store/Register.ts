@@ -5,6 +5,7 @@ export interface ISpecialization {
   file: any | null;
   logo?: any | null;
   id?: number | null;
+  id_ext?: string | null;
 }
 
 export interface IUniversity {
@@ -28,6 +29,7 @@ export interface IRoom {
   logo?: any | null;
   id?: number | null;
   design: any | null;
+  id_ext?: string | null;
 }
 
 export interface IForm1 {

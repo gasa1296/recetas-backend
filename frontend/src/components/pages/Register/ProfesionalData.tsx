@@ -75,6 +75,17 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
         {
           label: "Licenciatura *",
           secondLabel: "Especialidad *",
+          name: "id_ext",
+          required: false,
+          hidden: true,
+          type: "text",
+          width: 50,
+          subFormKey: "id_ext",
+          default: form2?.specializations || "",
+        },
+        {
+          label: "Licenciatura *",
+          secondLabel: "Especialidad *",
           name: "name",
           required: true,
           type: "text",
@@ -141,6 +152,7 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
         schema={schema}
         onFormChange={(form) => {
           if (validateSameObject(form2 as object, form)) {
+            console.log("first", form);
             setForm2(form as IForm2);
           }
         }}

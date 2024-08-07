@@ -62,6 +62,17 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           width: 100,
         },
         {
+          label: "Licenciatura *",
+          secondLabel: "Especialidad *",
+          name: "id_ext",
+          required: false,
+          hidden: true,
+          type: "text",
+          width: 50,
+          subFormKey: "id_ext",
+          default: form3?.rooms || "",
+        },
+        {
           label: "Nombre del consultorio",
           name: "name",
           moreOne: true,

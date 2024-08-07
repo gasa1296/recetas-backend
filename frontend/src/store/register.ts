@@ -134,6 +134,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
           contact.listaCedula?.map((cedula: any) => ({
             name: cedula.especialidad || "",
             identification: cedula.cedulaProfesional || "",
+            id_ext: cedula.ID || "",
           })) || null;
 
         const direcciones =
@@ -151,15 +152,18 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
               " " +
               direccion.direccion.numeroExterior,
             phone: "",
+            id_ext: direccion.direccion.id_externo || "",
           })) || null;
 
         toast.success("Medico encontrado satisfactoriamente!");
+
         set({
           loading: false,
           form1: user,
           form2: { specializations: cedulas },
           form3: { rooms: direcciones },
-          enableSearch: true,
+          enableSearch:
+            contact.datosGenerales.medicoVisitable !== "No" ? false : true,
         });
       }, 1000);
     } catch (error: any) {

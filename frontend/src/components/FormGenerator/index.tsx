@@ -99,6 +99,8 @@ export default function FormGenerator({
       {fields.map((field, index) => {
         const FieldComponent = FieldComponents[field.type];
 
+        if (field.hidden) return null;
+
         return (
           <FieldComponent
             key={index}

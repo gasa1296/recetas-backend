@@ -31,7 +31,6 @@ export default function Sign({ nextStep, backStep }: any) {
       } else {
         nextStep();
       }
-      console.log("DATA", data);
       handleUploadDocument(
         signRecipes?.id,
         data.documents[0].id,
