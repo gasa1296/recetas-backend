@@ -236,7 +236,10 @@ export const useMedicamentStore = create<IState>((set, get) => ({
 
       if (unificatedMedicament.group === "Grupo I") {
         setTimeout(() => {
-          set({ loadingAction: false });
+          set({
+            loadingAction: false,
+            selectedMedicament: unificatedMedicament,
+          });
         }, 200);
         return toast.error("Medicamentos de Fracción 1 no se puede prescribir");
       }
@@ -262,6 +265,16 @@ export const useMedicamentStore = create<IState>((set, get) => ({
 
     try {
       const cardMedicament = get().cardMedicament || [];
+      const selectedMedicament = get().selectedMedicament;
+
+      if (selectedMedicament?.group === "Grupo I") {
+        setTimeout(() => {
+          set({
+            loadingAction: false,
+          });
+        }, 200);
+        return toast.error("Medicamentos de Fracción 1 no se puede prescribir");
+      }
 
       set({
         cardMedicament: [...cardMedicament, medicamentPayload],
