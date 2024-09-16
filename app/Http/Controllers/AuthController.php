@@ -16,29 +16,29 @@ class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        $instance = User::where('email', request()->email)->first();
+        $instance = User::where(column: 'email', operator: request()->email)->first();
         if (empty($instance)) {
-            $magentoToken = (new MagentoController)->getToken($request);
+            $magentoToken = (new MagentoController)->getToken(request: $request);
             if ($magentoToken->getStatusCode() < 300) {
-                return response()->json([
+                return response()->json(data: [
                     'recetasUser' => false,
                     'magentoEmail' => $request->email
                 ]);
             }
-            return response()->json([['email' => __('email incorrecto')]], 404);
+            return response()->json(data: [['email' => __(key: 'email incorrecto')]], status: 404);
         }
         $okResponse = [
-            'token' => $instance->createToken('recipe')->plainTextToken,
+            'token' => $instance->createToken(name: 'recipe')->plainTextToken,
             'user' => $instance,
         ];
-        if (Hash::check(request()->password, $instance->password)) {
-            return response()->json($okResponse);
+        if (Hash::check(value: request()->password, hashedValue: $instance->password)) {
+            return response()->json(data: $okResponse);
         }
-        $magentoToken = (new MagentoController)->getToken($request);
+        $magentoToken = (new MagentoController)->getToken(request: $request);
         if ($magentoToken->getStatusCode() < 300) {
-            return response()->json($okResponse);
+            return response()->json(data: $okResponse);
         }
-        return response()->json([['password' => __('contraseña incorrecta')]], 404);
+        return response()->json(data: [['password' => __(key: 'contraseña incorrecta')]], status: 404);
     }
     /**
      * Store a newly created resource in storage.
@@ -86,54 +86,54 @@ class AuthController extends Controller
             'clienteEcommerce' => ['nullable'],
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(data: $validator->errors(), status: 400);
         }
         $inputs = $validator->safe()->all();
         $magento = new MagentoController();
-        if (!$magento->verifyFESA($inputs['fesa'])) {
-            return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
+        if (!$magento->verifyFESA(fesa: $inputs['fesa'])) {
+            return response()->json(data: ['fesa' => 'Codigo de FESA invalido'], status: 400);
         }
         if (!empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
+            $res = $magento->store(inputs: $inputs);
+            Log::debug(message: 'magento register', context: $res->getData(assoc: true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
         } elseif (empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->CX($inputs);
-            Log::debug('cx register', $res->getData(true));
+            $res = $magento->CX(inputs: $inputs);
+            Log::debug(message: 'cx register', context: $res->getData(assoc: true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
-            $inputs['idCX'] = $res->getData(true)['idCX'];
-            $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
+            $inputs['idCX'] = $res->getData(assoc: true)['idCX'];
+            $res = $magento->store(inputs: $inputs);
+            Log::debug(message: 'magento register', context: $res->getData(assoc: true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
         }
         if (empty($inputs['password'])) {
-            $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
+            $inputs['password'] = Hash::make(value: uuid_create(UUID_TYPE_RANDOM));
         }
         $inputs['fesa'] = !empty($inputs['idCX']) ? $inputs['idCX'] : $inputs['fesa'];
-        $instance = User::create($inputs);
+        $instance = User::create(attributes: $inputs);
 
-        event(new Registered($instance));
+        event(args: new Registered(user: $instance));
         foreach ($inputs['rooms'] as $key => $el) {
-            if (!empty($request->file('logo_room')[$key])) {
-                $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id, 'public');
+            if (!empty($request->file(key: 'logo_room')[$key])) {
+                $file = $request->file(key: 'logo_room')[$key]->store(path: 'medics/' . $instance->id, options: 'public');
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
-            ConsultingRoom::create($el);
+            ConsultingRoom::create(attributes: $el);
         }
         foreach ($inputs['specializations'] as $key => $el) {
-            if (!empty($request->file('logo_spec')[$key])) {
-                $file = $request->file('logo_spec')[$key]->store('medics/' . $instance->id, 'public');
+            if (!empty($request->file(key: 'logo_spec')[$key])) {
+                $file = $request->file(key: 'logo_spec')[$key]->store(path: 'medics/' . $instance->id, options: 'public');
                 $el['logo'] = $file;
             }
             $el['user_id'] = $instance->id;
-            Specialization::create($el);
+            Specialization::create(attributes: $el);
         }
 
         return response()->json();
@@ -141,16 +141,16 @@ class AuthController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show(Request $request): JsonResponse
     {
-        return response()->json($request->user());
+        return response()->json(data: $request->user());
     }
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make(data: $request->all(), rules: [
             'first_name' => ['required', 'string'],
             'last_name1' => ['required', 'string'],
             'last_name2' => ['nullable', 'string'],
@@ -162,24 +162,24 @@ class AuthController extends Controller
             'fesa' => ['required',],
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(data: $validator->errors(), status: 400);
         }
         $instance = auth()->user();
         $inputs = $validator->safe()->all();
         if (!empty($inputs['password'])) {
-            $inputs['password'] = Hash::make($inputs['password']);
+            $inputs['password'] = Hash::make(value: $inputs['password']);
         }
-        $instance->update($inputs);
+        $instance->update(attributes: $inputs);
         $inputs = $instance->toArray();
         $inputs['idCX'] = $instance->fesa;
         $inputs['specializations'] = $instance->specializations->toArray();
         $inputs['rooms'] = $instance->rooms->toArray();
 
         $magento = new MagentoController();
-        $magento->CX($inputs);
-        $magento->update($inputs);
+        $magento->CX(inputs: $inputs);
+        $magento->update(inputs: $inputs);
         
-        return response()->json($instance);
+        return response()->json(data: $instance);
     }
     /**
      * Remove the specified resource from storage.
