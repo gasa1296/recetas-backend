@@ -33,10 +33,18 @@ export default function InformationPatient({ nextStep }: any) {
 
   useCustomEffect({ requestGet: GetPacients });
 
-  const userOptions = pacients?.map((pacient) => ({
-    value: pacient.id,
-    label: `${pacient.last_name1} ${pacient.last_name2}, ${pacient.first_name} | ${pacient.email}`,
-  }));
+  const userOptions = pacients
+    ?.map((pacient) => ({
+      value: pacient.id,
+      label: `${pacient.last_name1} ${pacient.last_name2}, ${pacient.first_name} | ${pacient.email}`,
+    }))
+    .sort((a, b) => {
+      const labelA = a.label.trim().toLowerCase();
+      const labelB = b.label.trim().toLowerCase();
+      if (labelA < labelB) return -1;
+      if (labelA > labelB) return 1;
+      return 0;
+    });
 
   const screen: any = {
     1: FindPacient,

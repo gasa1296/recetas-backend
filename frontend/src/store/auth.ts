@@ -62,11 +62,13 @@ export const useAuthStore = create<AuthState>((set) => ({
         return result.data;
       }
 
+      const newToken = result.data.token;
+
       await localStorage.setItem("sessionUser", JSON.stringify(result.data));
-      await localStorage.setItem("sessionToken", token);
+      await localStorage.setItem("sessionToken", newToken);
       set({
         isAuth: true,
-        sessionToken: token,
+        sessionToken: newToken,
         user: result.data,
       });
       useRoomsStore.getState().GetRooms();
