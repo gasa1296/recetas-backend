@@ -28,11 +28,16 @@ class PatientController extends Controller
                         ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$search%")
                         ->orWhere('email', 'LIKE', "%$search%")
                         ->orWhere('phone1', 'LIKE', "%$search%")
-                        ->orWhere('phone2', 'LIKE', "%$search%");
+                        ->orWhere('phone2', 'LIKE', "%$search%")
+                        ->orWhere(function($query) use ($operator, $search) {
+                            $query->whereHas('prescriptions', function($query) use ($operator, $search) {
+                                $query->where('code', 'LIKE', "%$search%");
+                            });
+                        });
                 });
             return PatientResource::collection($instances->paginate(10))->response();
         } else {
-            return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
+            return PatientResource::collection(Patient::all())->response();
         }
     }
 
