@@ -31,9 +31,7 @@ class AuthController extends Controller
             'token' => $instance->createToken('recipe')->plainTextToken,
             'user' => $instance,
         ];
-        $magento = new MagentoController();
         if (Hash::check($request->password, $instance->password)) {
-            $medic = $magento->getMedicReq($request->except('password'))->getData(true);
             return response()->json($okResponse);
         }
         $magentoToken = (new MagentoController)->getToken($request);
