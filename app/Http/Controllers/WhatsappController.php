@@ -58,12 +58,13 @@ class WhatsappController extends Controller
                         "origin" => "Receta",
                         "phone" => json_decode($patient->phone1, true)[0],
                         "channel" => "whatsapp",
-                        "templateName" => "surtir_receta_2",
+                        "templateName" => "surtir_receta_5",
                         "params" => [
                             $patient->first_name . ' ' . $patient->last_name1 ?? '' . ' ' . $patient->last_name2 ?? '',
                             $medic->first_name . ' ' . $medic->last_name1 ?? '' . ' ' . $medic->last_name2 ?? '',
                             (new Carbon($prescription->createdAt))->toDateString(),
                             $prescription->code,
+                            $this->generateAppLink($prescription)
                         ],
                         'media' => [
                             'type' => 'document',
@@ -95,6 +96,39 @@ class WhatsappController extends Controller
             return response()->json($decodedRes);
         } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
+
+    private function generateAppLink(Prescription $prescription): String
+    {
+        $client = new Client([
+            'verify' => env('VERIFY_FILE', false)
+        ]);
+        try {
+            $res = $client->post(env('URL_LINK', '') . '/api/fesa-auth/Auth/AuthWebhook', [
+                'json' => [
+                    'UserName' => env('USR_LINK', ''),
+                    'Password' => env('PASS_LINK', '')
+                ]
+            ]);
+
+            $resBody = json_decode($res->getBody(), true);
+            $token = $resBody['data']['token'];
+
+
+            $res = $client->post(env('URL_LINK', '') . '/api/webhook/Recetas/CrearShortUrl', [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                ],
+                'json' => [
+                    'idFolio' => $prescription->code
+                ]
+            ]);
+
+            $resBody = json_decode($res->getBody(), true);
+            return $resBody['data']['shortLink'];
+        } catch (ClientException | ServerException $e) {
+            return '';
         }
     }
 }
