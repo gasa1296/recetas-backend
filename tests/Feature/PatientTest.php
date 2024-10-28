@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Patient;
+use App\Models\Prescription;
 use Laravel\Sanctum\Sanctum;
 
 class PatientTest extends TestCase
@@ -54,14 +55,18 @@ class PatientTest extends TestCase
     }
     public function test_show(): void
     {
-        $instance = Patient::factory()->create(['user_id' => $this->user->id]);
+        $instance = Patient::factory()
+            ->has(Prescription::factory()->count(3), 'prescriptions')
+            ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient/' . $instance->id);
-
         $response->assertOk();
+        $this->assertCount(3, $response->json()['data']['prescriptions']);
     }
     public function test_list(): void
     {
-        Patient::factory(10)->create(['user_id' => $this->user->id]);
+        Patient::factory(10)
+            ->has(Prescription::factory()->count(10), 'prescriptions')
+            ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient');
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
