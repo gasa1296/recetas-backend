@@ -65,8 +65,8 @@ class WhatsappController extends Controller
                             (new Carbon($prescription->createdAt))->toDateString(),
                             $prescription->code,
                             str_replace([
-                                'https://app.farmaciasespecializadas.com',
-                                'https://appfesaqa.farmaciasespecializadas.com'
+                                'https://app.farmaciasespecializadas.com/',
+                                'https://appfesaqa.farmaciasespecializadas.com/'
                             ],'',$this->generateAppLink($prescription))
                         ],
                         'media' => [
