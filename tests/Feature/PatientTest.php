@@ -64,7 +64,7 @@ class PatientTest extends TestCase
     public function test_list(): void
     {
         Patient::factory(20)
-            ->has(Prescription::factory()->count(50), 'prescriptions')
+            ->has(Prescription::factory()->count(20), 'prescriptions')
             ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient');
         $response->assertOk();
@@ -73,7 +73,7 @@ class PatientTest extends TestCase
     public function test_search(): void
     {
         Patient::factory(20)
-            ->has(Prescription::factory()->count(50), 'prescriptions')
+            ->has(Prescription::factory()->count(20), 'prescriptions')
             ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient?search=F');
         $response->assertOk();
