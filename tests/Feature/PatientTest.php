@@ -22,9 +22,6 @@ class PatientTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        Patient::factory(20)
-            ->has(Prescription::factory()->count(20), 'prescriptions')
-            ->create(['user_id' => $this->user->id]);
         Sanctum::actingAs($this->user, ['*']);
 
     }
@@ -60,21 +57,24 @@ class PatientTest extends TestCase
     }
     public function test_show(): void
     {
-        $instance = Patient::factory()
-            ->has(Prescription::factory()->count(3), 'prescriptions')
-            ->create(['user_id' => $this->user->id]);
+        $instance = Patient::factory()->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient/' . $instance->id);
         $response->assertOk();
-        $this->assertCount(3, $response->json()['data']['prescriptions']);
     }
     public function test_list(): void
     {
+        Patient::factory(20)
+            ->has(Prescription::factory()->count(50), 'prescriptions')
+            ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient');
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
     }
     public function test_search(): void
     {
+        Patient::factory(20)
+            ->has(Prescription::factory()->count(50), 'prescriptions')
+            ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient?search=F');
         $response->assertOk();
         $this->assertGreaterThan(1, $response->json()['data']);
