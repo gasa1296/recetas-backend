@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Patient;
-use App\Models\Prescription;
+use App\Models\{
+    User,
+    Patient,
+    Prescription
+};
 use Laravel\Sanctum\Sanctum;
 
 class PatientTest extends TestCase
@@ -20,6 +22,9 @@ class PatientTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        Patient::factory(20)
+            ->has(Prescription::factory()->count(20), 'prescriptions')
+            ->create(['user_id' => $this->user->id]);
         Sanctum::actingAs($this->user, ['*']);
 
     }
@@ -64,16 +69,12 @@ class PatientTest extends TestCase
     }
     public function test_list(): void
     {
-        Patient::factory(10)
-            ->has(Prescription::factory()->count(10), 'prescriptions')
-            ->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient');
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
     }
     public function test_search(): void
     {
-        Patient::factory(100)->create(['user_id' => $this->user->id]);
         $response = $this->get('api/patient?search=F');
         $response->assertOk();
         $this->assertGreaterThan(1, $response->json()['data']);
