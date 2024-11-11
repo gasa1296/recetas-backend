@@ -85,18 +85,20 @@ export default function SearchMedicine({ nextStep, backStep }: any) {
               <div className="flex justify-center w-full  "></div>
             )}
           />
-          <div className="px-2 mt-8 relative">
-            <p className=" font-bold text-[#4B4B4B] text-[18px] text-start mb-6 pt-2">
-              Buscar Medicamentos
-            </p>
+          <div className="px-2 mt-8  relative">
+            <div className="flex flex-wrap mb-6 items-center justify-between">
+              <p className=" font-bold text-[#4B4B4B]  text-[18px] text-start ">
+                Buscar Medicamentos
+              </p>
 
-            <button
-              onClick={() => SetStep(4)}
-              className="flex justify-center items-center button-BlacK p-2 px-3 absolute right-0 top-0"
-            >
-              <FaPills size={25} />
-              <span className="ps-2">Crear nuevo medicamento</span>
-            </button>
+              <button
+                onClick={() => SetStep(4)}
+                className="flex justify-center items-center h-[40px] mt-3 lg:mt-0 button-BlacK p-2 px-3 "
+              >
+                <FaPills size={25} />
+                <span className="ps-2">Crear nuevo medicamento</span>
+              </button>
+            </div>
 
             <SearchInput />
             <Component setStep={SetStep} nextStep={nextStep} />

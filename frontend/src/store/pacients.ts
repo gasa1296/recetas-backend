@@ -85,7 +85,7 @@ export const usePacients = create<IState>((set, get) => ({
   },
 
   SearchPacients: async (search: string = "") => {
-    set({ loading: true });
+    set({ loading: true, pacients: null });
     try {
       const timeIdState = get().timeId;
       timeIdState && clearTimeout(timeIdState);
@@ -106,7 +106,7 @@ export const usePacients = create<IState>((set, get) => ({
           toast.error(error.message);
           set({ error: error.message, loading: false, timeId: null });
         }
-      }, 1000);
+      }, 500);
 
       set({ timeId });
     } catch (error: any) {

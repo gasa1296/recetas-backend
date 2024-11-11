@@ -237,6 +237,7 @@ export const useMedicamentStore = create<IState>((set, get) => ({
       if (unificatedMedicament.group === "Grupo I") {
         setTimeout(() => {
           set({
+            step: 2,
             loadingAction: false,
             selectedMedicament: unificatedMedicament,
           });

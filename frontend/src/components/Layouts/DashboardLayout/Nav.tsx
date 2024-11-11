@@ -65,7 +65,7 @@ export default function Nav({ setScreen }: any) {
           disabled={cardMedicament.length ? false : true}
           className="flex justify-center items-center   py-1 disabled:opacity-50 relative top-[19px]"
         >
-          <FaTrash size={26} color="bg-[#fff]" />
+          <FaTrash size={22} color="bg-[#fff]" />
         </button>
         <div
           className="mx-4 relative top-[19px]"
@@ -75,7 +75,7 @@ export default function Nav({ setScreen }: any) {
           <div className=" content-card flex align-center justify-center bg-[#000] text-white w-[20px] h-[20px] text-[12px]  absolute top-[-5px] right-[-5px] leading-[20px]">
             {cardMedicament.length}
           </div>
-          <FaFilePrescription size={32} color="bg-[#fff]" />
+          <BsFileMedical size={22} color="bg-[#fff]" />
         </div>
 
         <div
@@ -83,7 +83,7 @@ export default function Nav({ setScreen }: any) {
             setScreen(true);
           }}
         >
-          <FaBars size={40} className=" absolute " />
+          <FaBars size={26} className=" absolute top-[20px] " />
         </div>
       </div>
 
