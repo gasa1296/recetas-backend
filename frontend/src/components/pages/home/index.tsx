@@ -11,7 +11,7 @@ export default function Home() {
         <h6 className="font-medium  text-[#141414] text-[28px]">Registro</h6>
         <p className="text-[18px] mt-5 font-normal h-[118px]">
           Para obtener acceso a la plataforma de
-          <p className="text-[#FC6700]">recetas médicas electrónicas</p>
+          <p className="text-[#FC6700]">recetas médica electrónicas</p>
           consulta a tu representante de ventas
         </p>
         <button

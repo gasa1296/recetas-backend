@@ -27,18 +27,40 @@ export default function PersonalData({ nextStep }: any) {
 
     nextStep();
   };
-  const submitDataAutoPopulate = async (data: { search: string }) => {
-    handleAutoPopulate(data.search);
+  const submitDataAutoPopulate = async (data: {
+    searchCedula: string;
+    searchEmail: string;
+  }) => {
+    if (!data.searchCedula && !data.searchEmail) {
+      return toast.error("Debe ingresar al menos un campo de busqueda");
+    }
+    let result = false;
+
+    if (data.searchCedula) {
+      result = await handleAutoPopulate(data.searchCedula, undefined, "cédula");
+    }
+
+    if (data.searchEmail && !result) {
+      result = await handleAutoPopulate(data.searchEmail, undefined, "email");
+    }
   };
 
   const fieldsAutopulate: Field[] = [
     {
-      label: "Buscate por email o cedula *",
-      name: "search",
-      required: true,
+      label: "Buscate por cédula",
+      name: "searchCedula",
       type: "text",
       width: 100,
       default: "",
+      required: true,
+    },
+    {
+      label: "Buscate por email",
+      name: "searchEmail",
+      type: "text",
+      width: 100,
+      default: "",
+      required: true,
     },
   ];
   const fields: Field[] = [

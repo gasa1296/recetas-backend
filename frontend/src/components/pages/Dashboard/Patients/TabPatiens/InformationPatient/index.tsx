@@ -36,7 +36,7 @@ export default function InformationPatient({ nextStep }: any) {
   const userOptions = pacients
     ?.map((pacient) => ({
       value: pacient.id,
-      label: `${pacient.last_name1} ${pacient.last_name2}, ${pacient.first_name} | ${pacient.email}`,
+      label: `${pacient.last_name1} ${pacient.last_name2}, ${pacient.first_name} | ${pacient.email} `,
     }))
     .sort((a, b) => {
       const labelA = a.label.trim().toLowerCase();
@@ -67,7 +67,7 @@ export default function InformationPatient({ nextStep }: any) {
           <section className="container-Patiens  py-5 flex justify-center  ">
             <div className="w-full px-8">
               <Select
-                placeholder="Buscar paciente por Nombre, Apellido, Correo, Teléfono, Folio de receta"
+                placeholder="Buscar paciente por Nombre, Apellido, Correo, Teléfono"
                 className=""
                 defaultValue={selectedPacientDefault}
                 value={""}
@@ -77,13 +77,40 @@ export default function InformationPatient({ nextStep }: any) {
                 styles={colourStyles}
                 isLoading={loading}
                 noOptionsMessage={() => <PacientsNotFound />}
-                onInputChange={(value) => {
-                  if (value) SearchPacients(value);
+                onInputChange={(value, actionMeta) => {
+                  if (
+                    value ||
+                    (value === "" && actionMeta.action === "input-change")
+                  )
+                    SearchPacients(value);
                   return value;
                 }}
                 onChange={(value: any) => {
                   SelectPacient(value.value);
                   GetPacients();
+                }}
+                filterOption={(option, inputValue) => {
+                  const { label, value } = option;
+                  const pacient = pacients?.find((p) => p.id === value);
+                  if (!pacient) return false;
+
+                  const searchableFields = [
+                    pacient.first_name,
+                    pacient.last_name1,
+                    pacient.last_name2,
+                    pacient.email,
+                    typeof pacient.phone1 === "string"
+                      ? pacient.phone1.startsWith("[")
+                        ? JSON.parse(pacient.phone1)
+                        : pacient.phone1
+                      : pacient.phone1 || [],
+                  ]
+                    .flat()
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+                  return searchableFields.includes(inputValue.toLowerCase());
                 }}
               />
 
