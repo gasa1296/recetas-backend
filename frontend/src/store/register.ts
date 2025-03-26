@@ -27,7 +27,11 @@ type IRegisterStore = {
   setForm3: (form: IForm3) => void;
   setSuccess: (success: boolean) => void;
   handleSubmit: (registerPayload: IRegisterPayload) => Promise<any>;
-  handleAutoPopulate: (search: string, password?: string) => Promise<any>;
+  handleAutoPopulate: (
+    search: string,
+    password?: string,
+    type?: string
+  ) => Promise<any>;
 };
 
 export const useRegisterStore = create<IRegisterStore>((set) => ({
@@ -101,14 +105,38 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
     }
   },
 
-  handleAutoPopulate: async (search: string, password?: string) => {
+  handleAutoPopulate: async (
+    search: string,
+    password?: string,
+    type?: string
+  ) => {
     set({ loading: true });
     try {
       const result = await autopopulateProfile(search);
 
       if (!result.data.results) {
-        toast.error("Medico no encontrado!");
-        return set({ loading: false, form1: null, enableSearch: false });
+        toast.error(`Médico no encontrado ${type ? `por ${type}` : ""}!`);
+        set({
+          loading: false,
+          form1:
+            type === "email"
+              ? {
+                  email: search,
+                  password: "",
+                  confirmPassword: "",
+                  phone1: "",
+                  phone2: "",
+                  gender: "",
+                  fesa: "",
+                  first_name: "",
+                  last_name1: "",
+                  last_name2: "",
+                }
+              : null,
+          enableSearch: false,
+        });
+
+        return false;
       }
       setTimeout(() => {
         const contact = result.data.contacts[0] || null;
@@ -155,7 +183,9 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
             id_ext: direccion.direccion.id_externo || "",
           })) || null;
 
-        toast.success("Medico encontrado satisfactoriamente!");
+        toast.success(
+          `Médico encontrado satisfactoriamente ${type ? `por ${type}` : ""}!`
+        );
 
         set({
           loading: false,
@@ -166,6 +196,8 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
             contact.datosGenerales.medicoVisitable !== "No" ? false : true,
         });
       }, 1000);
+
+      return true;
     } catch (error: any) {
       const message = getRequestError(error);
       toast.error(message);

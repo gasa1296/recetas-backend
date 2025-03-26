@@ -72,7 +72,7 @@ export default function Send({ resetTab }: any) {
           <>
             <p className="text-[#1A1A1A] text-[20px] font-bold mt-10 max-w-[480px] mx-auto">
               {enableDownload
-                ? "Receta con firma electrónica generada, certificada y enviada por correo"
+                ? "Receta con firma electrónica generada con éxito para compartir a paciente presione el botón de su elección"
                 : "Receta con firma electrónica certificando"}
             </p>
 

@@ -15,7 +15,7 @@ const Collapse = ({ title, children, form }: any) => {
           setIsOpen(!isOpen);
         }}
       >
-        <span className="flex items-center">
+        <span className="flex flex-wrap items-center">
           <span className="pr-3">{title} </span>{" "}
           {form.map(
             ({ Icon }: Field) =>

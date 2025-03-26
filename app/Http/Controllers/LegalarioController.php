@@ -9,8 +9,9 @@ use Milon\Barcode\DNS1D;
 use App\Models\Prescription;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Storage, Log};
 use Validator;
+
 
 class LegalarioController extends Controller
 {
@@ -355,6 +356,18 @@ class LegalarioController extends Controller
         $token = $res['data']['access_token'];
         $response = [];
         foreach (explode(';', $prescription->document_id) as $document) {
+            Log::info('LegalarioController@createSigner', [
+                'document_id' => $document,
+                'workflow' => true,
+                'use_whatsapp' => false,
+                'signers' => [
+                    [
+                        'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
+                        'email' => $medic->email,
+                        'type' => 'MEDICO'
+                    ]
+                ],
+            ]);
             try {
                 $medic = $prescription->medic;
                 $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
@@ -383,6 +396,7 @@ class LegalarioController extends Controller
                 array_push($response, $resBody);
             }
         }
+        Log::info('LegalarioController@createSigner', $response);
         return response()->json($response);
     }
     public function getMedicaments(Request $request)
