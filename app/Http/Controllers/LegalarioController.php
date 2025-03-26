@@ -367,6 +367,7 @@ class LegalarioController extends Controller
                         'document_id' => $document,
                         'workflow' => true,
                         'use_whatsapp' => false,
+                        'send_invite' => false,
                         'signers' => [
                             [
                                 'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",

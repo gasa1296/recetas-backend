@@ -19,7 +19,7 @@ class PatientController extends Controller
         if (env('DB_CONNECTION') == 'sqlsrv') {
             $operator = '+';
         }
-        if ($request->search) {
+        if (!empty($request->search)) {
             $search = $request->search;
             $instances = Patient::where('user_id', '=', auth()->id())
                 ->where(function ($query) use ($operator, $search) {
@@ -29,15 +29,15 @@ class PatientController extends Controller
                         ->orWhere('email', 'LIKE', "%$search%")
                         ->orWhere('phone1', 'LIKE', "%$search%")
                         ->orWhere('phone2', 'LIKE', "%$search%")
-                        ->orWhere(function($query) use ($operator, $search) {
-                            $query->whereHas('prescriptions', function($query) use ($operator, $search) {
-                                $query->where('code', 'LIKE', "%$search%");
+                        ->orWhere(function($query) use ($search) {
+                            $query->whereHas('prescriptions', function($query) use ($search) {
+                                $query->where('code', '=', strtoupper($search));
                             });
                         });
                 });
             return PatientResource::collection($instances->paginate(10))->response();
         } else {
-            return PatientResource::collection(Patient::all())->response();
+            return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
         }
     }
 
