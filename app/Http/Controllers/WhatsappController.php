@@ -61,7 +61,7 @@ class WhatsappController extends Controller
                         "templateName" => "surtir_receta_5",
                         "params" => [
                             $patient->first_name . ' ' . $patient->last_name1 ?? '' . ' ' . $patient->last_name2 ?? '',
-                            $medic->first_name . ' ' . $medic->last_name1 ?? '' . ' ' . $medic->last_name2 ?? '',
+                            ($medic->first_name) . ' ' . ($medic->last_name1 ?? '') . ' ' . ($medic->last_name2 ?? '') . ' ',
                             (new Carbon($prescription->createdAt))->toDateString(),
                             $prescription->code,
                             str_replace([
