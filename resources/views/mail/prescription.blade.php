@@ -1,4 +1,4 @@
-<x-mail::message>
+﻿<x-mail::message>
   <div class="container">
     <div class="content">
       <p class="welcome">Hola <span class="welcome-2">{{$prescription->patient->first_name}} {{$prescription->patient->last_name}} {{$prescription->patient->last_name1}}</span></p>
@@ -13,7 +13,7 @@
       class="img-background"
     />
     <img class="img-square" src="{{ asset('email/square.jpg')}}"/>
-    <p class="folio-text">El folio de tu Receta Médicas Electrónica es:</p>
+    <p class="folio-text">El folio de tu Receta Médica Electrónica es:</p>
     <p class="folio">{{$prescription->code}}</p>
     <a href="{{$link}}"><img src="{{ asset('email/consulta.jpg')}}" class="img-consulta" alt="consulta" /></a>
     <img src="{{ asset('email/vineta.jpg')}}" class="img-vineta" alt="vineta" />
