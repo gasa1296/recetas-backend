@@ -47,6 +47,7 @@ Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
+    Route::post('request/magento', 'resetPasswordMagento')->name('resetPasswordMagento');
 });
 Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
     Route::get('', 'getByClient')->name('getByClient');
