@@ -53,7 +53,7 @@ class ResetController extends Controller
             response()->json(['email' => __($status)], 400);
         }
     }
-    public function resetPasswordMagento(string $email)
+    public function resetPasswordMagento(Request $request)
     {
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
@@ -62,7 +62,7 @@ class ResetController extends Controller
                     'Farmacos2020dev'
                 ],
                 'json' => [
-                    'login' => $email,
+                    'login' => $request->email,
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
