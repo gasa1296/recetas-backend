@@ -11,9 +11,28 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SignupMail;
 
 class AuthController extends Controller
 {
+    public function requestSignup(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email', 'unique:users'],
+            'name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'professional_id' => ['required', 'string'],
+            'specialization' => ['required', 'string'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
+        Mail::send(new SignupMail($inputs));
+        return response()->json(['message' => 'Solicitud de registro enviada correctamente']);
+    }
     public function login(Request $request): JsonResponse
     {
         $instance = User::where('email', $request->email)->first();
