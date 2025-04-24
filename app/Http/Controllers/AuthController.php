@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SignupMail;
+use App\Http\Mail\SignupMail;
 
 class AuthController extends Controller
 {
