@@ -30,7 +30,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        Mail::send(new SignupMail($inputs));
+        Mail::to(env('MAIL_SIGNUP_REPLY_TO'))->send(new SignupMail($inputs));
         return response()->json(['message' => 'Solicitud de registro enviada correctamente']);
     }
     public function login(Request $request): JsonResponse

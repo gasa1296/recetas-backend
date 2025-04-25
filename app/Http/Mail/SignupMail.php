@@ -28,10 +28,6 @@ class SignupMail extends Mailable
     {
         return new Envelope(
             subject: "Solicitud de registro",
-            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
-            replyTo: [
-                new Address(env('MAIL_SIGNUP_REPLY_TO'))
-            ]
         );
     }
 
@@ -41,6 +37,7 @@ class SignupMail extends Mailable
     public function content(): Content
     {
         return new Content(
+            markdown: 'mail.signup',
             with: [
                 'inputs' => $this->inputs
             ]
