@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Mail;
+namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\{Content, Address, Envelope};
 use Illuminate\Queue\SerializesModels;
 
-class SignupMail extends Mailable
+class RegisterCompletedMail extends Mailable
 {
     use Queueable, SerializesModels;
     private $inputs;
@@ -27,7 +27,7 @@ class SignupMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Solicitud de registro",
+            subject: "Registro Completo",
         );
     }
 
@@ -37,10 +37,8 @@ class SignupMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.signup',
-            with: [
-                'inputs' => $this->inputs
-            ]
+            markdown: 'mail.registerCompleted',
+            with: $this->inputs,
         );
     }
 

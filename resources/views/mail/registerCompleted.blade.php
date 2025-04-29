@@ -1,0 +1,38 @@
+<x-mail::message>
+  <img src="{{ asset('Logo.png') }}" alt="logo" class="img">
+  # Registro completado
+  
+  Correo: {{$email}}
+  Contraseña: {{$password}}
+  
+  
+  {{ config('app.name') }}
+
+</x-mail::message>
+<style>
+  .h1 {
+    font: normal normal normal 28px/33px Roboto;
+  }
+  .center {
+    text-align: center;
+  }
+  .p {
+    font: normal normal normal 14px/18px Roboto;
+  }
+  .btn {
+    background: #181818;
+    border: 1px solid #181818;
+    border-radius: 8px;
+    color: #fff;
+    padding: 16px 32px;
+    font: normal normal normal 16px/16px Roboto;
+  }
+  .logo, .footer p {
+    display: none;
+  }
+  .img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+  }
+</style>

@@ -30,7 +30,7 @@ class MagentoController extends Controller
         try {
             $res = $this->client->get(env('URL_MEDIC'), [
                 'auth' => $this->magentoAuth,
-                'query' => $request->only('email', 'cedula', 'telefono')
+                'query' => $request->only('email', 'cedula', 'telefono', 'nombre', 'apellidoPat', 'apellidoMat', 'tarjeta', 'idVitamedica', 'numeroEmpleado', 'rfc', 'origen')
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);

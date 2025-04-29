@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Mail\SignupMail;
+use App\Mail\{SignupMail, RegisterCompletedMail};
 
 class AuthController extends Controller
 {
@@ -155,6 +155,7 @@ class AuthController extends Controller
             $el['user_id'] = $instance->id;
             Specialization::create($el);
         }
+       //Mail::to($inputs['email'])->send(new RegisterCompletedMail($inputs));
 
         return response()->json();
     }
