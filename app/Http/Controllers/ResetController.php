@@ -70,7 +70,7 @@ class ResetController extends Controller
         } catch (ClientException | ServerException$e) {
             $response = $e->getResponse();
             $decodedRes = json_decode($response->getBody(), true);
-            return response()->json($decodedRes, $$response->getStatusCode());
+            return response()->json($decodedRes, $response->getStatusCode());
         }
     }
 }
