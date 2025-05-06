@@ -58,8 +58,8 @@ class ResetController extends Controller
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => [
                     'login' => $request->email,
