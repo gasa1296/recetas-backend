@@ -97,6 +97,7 @@ class MagentoController extends Controller
         try {
             $json = [
                 [
+                    'idCX' => $inputs['idCX'] ?? '',
                     "origen" => "Receta Medica Electronica",
                     "nombre" => $inputs['first_name'] ?? '',
                     "apellidoPaterno" => $inputs['last_name1'] ?? '',
@@ -142,9 +143,6 @@ class MagentoController extends Controller
                     }, $inputs['rooms'] ?? []),
                 ],
             ];
-            if (!empty($inputs['idCX'])) {
-                $json[0]['id'] = $inputs['idCX'];
-            }
             $res = $this->client->post(env('URL_REGISTER_CX'), [
                 'auth' => $this->magentoAuth,
                 'json' => $json
