@@ -1,5 +1,5 @@
 <x-mail::message>
-# Solicitura de registro  
+# Solicitud de acceso de médico para RME
 
 
 @foreach ($inputs as $key => $input)
