@@ -28,7 +28,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function () {
-    Route::post('register', 'register')->name('register');
+    Route::post('recregf2', 'register')->name('register');
+    Route::post('register', 'requestSignup')->name('request_register');
     Route::post('login', 'login')->name('login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/])->name('logout');
 });
@@ -47,6 +48,7 @@ Route::apiResource('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
     Route::post('request', 'request')->name('request');
     Route::post('reset', 'reset')->name('reset');
+    Route::post('request/magento', 'resetPasswordMagento')->name('resetPasswordMagento');
 });
 Route::controller(SEUSPrescriptionController::class)->prefix('receta')->name('public_prescription.')->group(function () {
     Route::get('', 'getByClient')->name('getByClient');

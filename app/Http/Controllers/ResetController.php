@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\{ClientException, ServerException};
 
 class ResetController extends Controller
 {
@@ -54,26 +53,24 @@ class ResetController extends Controller
             response()->json(['email' => __($status)], 400);
         }
     }
-    private function resetPasswordMagento(string $email)
+    public function resetPasswordMagento(Request $request)
     {
         try {
             $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
                 'auth' => [
-                    'rx_user_dev',
-                    'Farmacos2020dev'
+                    env('MAGENTO_USER'),
+                    env('MAGENTO_PASSWORD')
                 ],
                 'json' => [
-                    'login' => $email,
+                    'login' => $request->email,
                 ]
             ]);
             $decodedRes = json_decode($res->getBody(), true);
-            if ($decodedRes['success']) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (ClientException $e) {
-            return false;
+            return response()->json($decodedRes, $res->getStatusCode());
+        } catch (ClientException | ServerException$e) {
+            $response = $e->getResponse();
+            $decodedRes = json_decode($response->getBody(), true);
+            return response()->json($decodedRes, $response->getStatusCode());
         }
     }
 }

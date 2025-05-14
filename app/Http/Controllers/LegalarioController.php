@@ -356,6 +356,7 @@ class LegalarioController extends Controller
         $token = $res['data']['access_token'];
         $response = [];
         foreach (explode(';', $prescription->document_id) as $document) {
+            $medic = $prescription->medic;
             Log::info('LegalarioController@createSigner', [
                 'document_id' => $document,
                 'workflow' => true,
@@ -369,7 +370,6 @@ class LegalarioController extends Controller
                 ],
             ]);
             try {
-                $medic = $prescription->medic;
                 $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
                     'headers' => [
                         'Authorization' => "Bearer $token",
@@ -380,6 +380,7 @@ class LegalarioController extends Controller
                         'document_id' => $document,
                         'workflow' => true,
                         'use_whatsapp' => false,
+                        'send_invite' => false,
                         'signers' => [
                             [
                                 'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",

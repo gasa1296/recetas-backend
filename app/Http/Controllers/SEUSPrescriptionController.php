@@ -36,9 +36,12 @@ class SEUSPrescriptionController extends Controller
      */
     public function addFile(Request $request)
     {
-        $token = $request->bearerToken();
-        if ($token != env('PUBLIC_KEY', '')) {
-            return response()->json(['token' => 'token invalido'], 403);
+        if(env('PUBLIC_VAL', 0) > 0) {
+            $token = $request->bearerToken();
+            if ($token != env('PUBLIC_KEY', '')) {
+                Log::info('addfile',['error log', $request->header('Authorization'), env('PUBLIC_KEY', '')]);
+                return response()->json(['token' => 'token invalido'], 404);
+            }
         }
         $inputs = $request->all();
         $document_id = $inputs['document']['id'];
