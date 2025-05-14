@@ -110,32 +110,28 @@ class AuthController extends Controller
         }
         $inputs = $validator->safe()->all();
         $magento = new MagentoController();
+
+        // Check if the user already exists in Magento
         if (!$magento->verifyFESA($inputs['fesa'])) {
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
-        if (!empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+
+        // Create/update the user in CX
+        $res = $magento->CX($inputs);
+        if ($res->getStatusCode() >= 300) {
+            return $res;
+        }
+        $inputs['idCX'] = $res->getData(true)['idCX'];
+        $inputs['fesa'] = $inputs['idCX'];
+        
+        // Check if the user already exists in Magento
+        if (empty($inputs['clienteEcommerce'])) {
+            // Create the user in Magento
             $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
-            if ($res->getStatusCode() >= 300) {
-                return $res;
-            }
-        } elseif (empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->CX($inputs);
-            Log::debug('cx register', $res->getData(true));
-            if ($res->getStatusCode() >= 300) {
-                return $res;
-            }
-            $inputs['idCX'] = $res->getData(true)['idCX'];
-            $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
         }
-        if (empty($inputs['password'])) {
-            $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
-        }
-        $inputs['fesa'] = !empty($inputs['idCX']) ? $inputs['idCX'] : $inputs['fesa'];
         $instance = User::create($inputs);
 
         event(new Registered($instance));

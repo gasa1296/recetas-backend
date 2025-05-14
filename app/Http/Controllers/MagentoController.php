@@ -27,10 +27,17 @@ class MagentoController extends Controller
      */
     public function getMedic(Request $request): JsonResponse
     {
+        $inputs = $request->only('email', 'cedula', 'telefono', 'nombre', 'apellidoPat', 'apellidoMat', 'tarjeta', 'idVitamedica', 'numeroEmpleado', 'rfc', 'origen');
+        $inputsNew = [];
+        foreach ($inputs as $key => $value) {
+            if (!empty($value)) {
+                $inputsNew[$key] = strtolower($value);
+            }
+        }
         try {
             $res = $this->client->get(env('URL_MEDIC'), [
                 'auth' => $this->magentoAuth,
-                'query' => $request->only('email', 'cedula', 'telefono', 'nombre', 'apellidoPat', 'apellidoMat', 'tarjeta', 'idVitamedica', 'numeroEmpleado', 'rfc', 'origen')
+                'query' => $inputsNew
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
@@ -88,55 +95,59 @@ class MagentoController extends Controller
     public function CX(array $inputs): JsonResponse
     {
         try {
+            $json = [
+                [
+                    "origen" => "Receta Medica Electronica",
+                    "nombre" => $inputs['first_name'] ?? '',
+                    "apellidoPaterno" => $inputs['last_name1'] ?? '',
+                    "apellidoMaterno" => $inputs['last_name2'] ?? '',
+                    "canalInscripcion" => "Receta Medica Electronica",
+                    "correoElectronico" => $inputs['email'] ?? '',
+                    "sexo" => $this->setGender($inputs['gender']),
+                    "segmento" => "Mostrador",
+                    "unidadOperativa" => "FESA",
+                    "status" => "Activo",
+                    "tipo" => "Medico",
+                    "clienteEcommerce" => 'Si',
+                    'listaCedulas' => array_map(function ($instance) {
+                        return [
+                            'id' => $instance['id_ext'] ?? '',
+                            'cedulaProfesional' => $instance['identification'] ?? '',
+                            'especialidad' => $instance['name'] ?? '',
+                        ];
+                    }, $inputs['specializations'] ?? []),
+                    'listaTelefono' => array_map(function ($instance) {
+                        return [
+                            'id' => $instance['id_ext'] ?? '',
+                            'numeroTelefonico' => $instance['phone'] ?? '',
+                            'tipoDeUso' => 'Celular',
+                            'status' => 'Activo'
+                        ];
+                    }, json_decode($inputs['phone1'], true)),
+                    'listaDireccion' => array_map(function ($instance) {
+                        return [
+                            'id' => $instance['id_ext'] ?? '',
+                            "calle" => $instance['street'] ?? '',
+                            "numeroExterior" => $instance['n_exterior'] ?? '',
+                            "numeroInterior" => $instance['n_interior'] ?? '',
+                            "colonia" => $instance['colony'],
+                            "delegacionMunicipio" => $instance['delegation'] ?? '',
+                            "ciudad" => $instance['delegation'] ?? '',
+                            "estado" => $instance['state'] ?? '',
+                            "codigoPostal" => $instance['zip'] ?? '',
+                            "pais" => "MX",
+                            "tipo" => "Consultorio",
+                            "estatus" => "Activo"
+                        ];
+                    }, $inputs['rooms'] ?? []),
+                ],
+            ];
+            if (!empty($inputs['idCX'])) {
+                $json[0]['id'] = $inputs['idCX'];
+            }
             $res = $this->client->post(env('URL_REGISTER_CX'), [
                 'auth' => $this->magentoAuth,
-                'json' => [
-                    [
-                        "origen" => "Receta Medica Electronica",
-                        "nombre" => $inputs['first_name'] ?? '',
-                        "apellidoPaterno" => $inputs['last_name1'] ?? '',
-                        "apellidoMaterno" => $inputs['last_name2'] ?? '',
-                        "canalInscripcion" => "Receta Medica Electronica",
-                        "correoElectronico" => $inputs['email'] ?? '',
-                        "sexo" => $this->setGender($inputs['gender']),
-                        "segmento" => "Mostrador",
-                        "unidadOperativa" => "FESA",
-                        "status" => "Activo",
-                        "tipo" => "Medico",
-                        "clienteEcommerce" => 'Si',
-                        'listaCedulas' => array_map(function ($instance) {
-                            return [
-                                'id' => $instance['id_ext'] ?? '',
-                                'cedulaProfesional' => $instance['identification'] ?? '',
-                                'especialidad' => $instance['name'] ?? '',
-                            ];
-                        }, $inputs['specializations'] ?? []),
-                        'listaTelefono' => array_map(function ($instance) {
-                            return [
-                                'id' => $instance['id_ext'] ?? '',
-                                'numeroTelefonico' => $instance['phone'] ?? '',
-                                'tipoDeUso' => 'Celular',
-                                'status' => 'Activo'
-                            ];
-                        }, json_decode($inputs['phone1'], true)),
-                        'listaDireccion' => array_map(function ($instance) {
-                            return [
-                                'id' => $instance['id_ext'] ?? '',
-                                "calle" => $instance['street'] ?? '',
-                                "numeroExterior" => $instance['n_exterior'] ?? '',
-                                "numeroInterior" => $instance['n_interior'] ?? '',
-                                "colonia" => $instance['colony'],
-                                "delegacionMunicipio" => $instance['delegation'] ?? '',
-                                "ciudad" => $instance['delegation'] ?? '',
-                                "estado" => $instance['state'] ?? '',
-                                "codigoPostal" => $instance['zip'] ?? '',
-                                "pais" => "MX",
-                                "tipo" => "Consultorio",
-                                "estatus" => "Activo"
-                            ];
-                        }, $inputs['rooms'] ?? []),
-                    ],
-                ]
+                'json' => $json
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
