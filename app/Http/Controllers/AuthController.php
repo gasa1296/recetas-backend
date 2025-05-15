@@ -116,20 +116,15 @@ class AuthController extends Controller
             return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
         }
 
-        // Create/update the user in CX
-        if (!empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
-            $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
-            if ($res->getStatusCode() >= 300) {
-                return $res;
-            }
-        } elseif (empty($inputs['idCX']) && empty($inputs['clienteEcommerce'])) {
+        // Create/update the user in CX and Magento
+        if(empty($inputs['idCX'])) {
             $res = $magento->CX($inputs);
-            Log::debug('cx register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
+        }
+        if (empty($inputs['clienteEcommerce'])) {
             $res = $magento->store($inputs);
             Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
