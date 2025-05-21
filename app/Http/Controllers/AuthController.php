@@ -112,8 +112,10 @@ class AuthController extends Controller
         $magento = new MagentoController();
 
         // Check if the user already exists in Magento
-        if (!$magento->verifyFESA($inputs['fesa'])) {
-            return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
+        if($inputs['fesa'] != 0) {
+            if (!$magento->verifyFESA($inputs['fesa'])) {
+                return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
+            }
         }
 
         // Create/update the user in CX and Magento
@@ -126,7 +128,6 @@ class AuthController extends Controller
         }
         if (empty($inputs['clienteEcommerce'])) {
             $res = $magento->store($inputs);
-            Log::debug('magento register', $res->getData(true));
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
@@ -134,7 +135,7 @@ class AuthController extends Controller
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
-        $inputs['fesa'] = !empty($inputs['idCX']) ? $inputs['idCX'] : $inputs['fesa'];
+        $inputs['fesa'] = $inputs['idCX'];
         $instance = User::create($inputs);
 
         event(new Registered($instance));
