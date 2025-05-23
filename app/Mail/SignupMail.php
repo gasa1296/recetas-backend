@@ -39,12 +39,14 @@ class SignupMail extends Mailable
         return new Content(
             markdown: 'mail.signup',
             with: [
-                'Correo' => $this->inputs['email'],
-                'Nombre' => $this->inputs['name'],
-                'Apellidos' => $this->inputs['last_name'],
-                'Celular' => $this->inputs['phone'],
-                'Cedula' => $this->inputs['professional_id'],
-                'Especialiadad' => $this->inputs['specialization'],
+                'inputs' => [
+                    'Correo' => $this->inputs['email'],
+                    'Nombre' => $this->inputs['name'],
+                    'Apellidos' => $this->inputs['last_name'],
+                    'Celular' => $this->inputs['phone'],
+                    'Cedula' => $this->inputs['professional_id'],
+                    'Especialiadad' => $this->inputs['specialization'],
+                ]
             ]
         );
     }
