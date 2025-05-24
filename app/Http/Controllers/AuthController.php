@@ -23,11 +23,10 @@ class AuthController extends Controller
             'name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
             'phone' => ['required', 'string'],
-            'professional_id' => ['required', 'string', , 'unique:specializations,identification'],
+            'professional_id' => ['required', 'string', 'unique:specializations,identification'],
             'specialization' => ['required', 'string'],
         ], [
             'email.unique' => 'El correo electrónico ya está registrado, favor de dirigirse a iniciar sesión',
-
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
