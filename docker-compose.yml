@@ -1,0 +1,43 @@
+services:
+  backend:
+    build: .
+    container_name: recetas_backend
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app
+  db:
+    image: mysql:8.0
+    container_name: recetas_db
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: recetas
+      MYSQL_USER: recetas_db
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+volumes:
+  mysql_data:
+    name: mysql_data
