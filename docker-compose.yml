@@ -1,4 +1,20 @@
 services:
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: recetas_phpmyadmin
+    links:
+    - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ''
+    ports:
+      - 8081:80
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
   backend:
     build: .
     container_name: recetas_backend
@@ -19,7 +35,7 @@ services:
       watch:
         - action: sync+restart
           path: .
-          target: /app
+          target: /var/www/html
   db:
     image: mysql:8.0
     container_name: recetas_db
@@ -40,4 +56,4 @@ services:
       start_period: 30s
 volumes:
   mysql_data:
-    name: mysql_data
+    name: recetas_mysql_data
