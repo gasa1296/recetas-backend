@@ -20,11 +20,7 @@ services:
     container_name: recetas_backend
     restart: always
     ports:
-      - "8000:80"
-    volumes:
-      - .:/var/www/html
-      - /var/www/html/vendor
-      - /var/www/html/node_modules
+      - "80:80"
     depends_on:
       db:
         condition: service_healthy

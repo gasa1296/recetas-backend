@@ -27,7 +27,7 @@ class EquipmentTest extends TestCase
   {
     $response = $this->post('api/equipment', [
       "name" => fake()->word(),
-      'image' => UploadedFile::fake()->image('photo.jpg'),
+      'image' => UploadedFile::fake()->image('photo.png'),
     ]);
 
     $response->assertOk();
@@ -37,7 +37,7 @@ class EquipmentTest extends TestCase
     $instance = Equipment::factory()->create();
     $response = $this->put('api/equipment/' . $instance->id, [
       "name" => fake()->word(),
-      'image' => UploadedFile::fake()->image('photo.jpg'),
+      'image' => UploadedFile::fake()->image('photo.png'),
     ]);
 
     $response->assertOk();

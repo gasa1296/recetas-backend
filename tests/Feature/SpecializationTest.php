@@ -41,8 +41,8 @@ class SpecializationTest extends TestCase
                 ],
             ],
             'logo' => [
-                UploadedFile::fake()->image('photo.jpg'),
-                UploadedFile::fake()->image('photo.jpg'),
+                UploadedFile::fake()->image('photo.png'),
+                UploadedFile::fake()->image('photo.png'),
             ],
         ]);
 
@@ -55,7 +55,7 @@ class SpecializationTest extends TestCase
             "name" => fake()->words(3, true),
             "identification" => fake()->unique()->words(3, true),
             "university" => fake()->words(3, true),
-            "logo" => UploadedFile::fake()->image('photo.jpg'),
+            "logo" => UploadedFile::fake()->image('photo.png'),
         ]);
 
         $response->assertOk();

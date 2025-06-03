@@ -62,7 +62,7 @@ class PrescriptionTest extends TestCase
       'user_id' => $this->user->id,
       'room_id' => $this->user->rooms[0]->id,
       'patient_id' => Patient::factory()->create()->id,
-      'file' => UploadedFile::fake()->image('photo.jpg'),
+      'file' => UploadedFile::fake()->image('photo.png'),
       'status' => fake()->randomNumber(3),
       'medicaments' => [
         [
@@ -141,7 +141,7 @@ class PrescriptionTest extends TestCase
       'user_id' => $this->user->id,
       'room_id' => $this->user->rooms[0]->id,
       'patient_id' => Patient::factory()->create()->id,
-      'file' => UploadedFile::fake()->image('photo.jpg'),
+      'file' => UploadedFile::fake()->image('photo.png'),
       'status' => fake()->randomNumber(3),
     ]);
 

@@ -57,8 +57,8 @@ class RoomTest extends TestCase
                 ],
             ],
             'logo' => [
-                UploadedFile::fake()->image('photo.jpg'),
-                UploadedFile::fake()->image('photo.jpg'),
+                UploadedFile::fake()->image('photo.png'),
+                UploadedFile::fake()->image('photo.png'),
             ],
         ]);
 
@@ -78,7 +78,7 @@ class RoomTest extends TestCase
             "n_interior" => fake()->randomNumber(),
             "address" => fake()->address(),
             "phone" => fake()->phoneNumber(),
-            "logo" => UploadedFile::fake()->image('photo.jpg'),
+            "logo" => UploadedFile::fake()->image('photo.png'),
             'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
         ]);
 
