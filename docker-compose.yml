@@ -1,6 +1,6 @@
 services:
   phpmyadmin:
-    image: phpmyadmin
+    image: bitnami/phpmyadmin:5.2.2
     container_name: recetas_phpmyadmin
     links:
     - db
@@ -17,10 +17,11 @@ services:
         restart: true
   backend:
     build: .
+    image: bitnami/laravel:10
     container_name: recetas_backend
     restart: always
     ports:
-      - "80:80"
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -33,17 +34,17 @@ services:
           path: .
           target: /var/www/html
   db:
-    image: mysql:8.0
+    image: bitnami/mysql:8.0
     container_name: recetas_db
     restart: always
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/bitnami/mysql/data
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: recetas
       MYSQL_USER: recetas_db
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    ports:
-      - "3306:3306"
+      ALLOW_EMPTY_PASSWORD: yes
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
