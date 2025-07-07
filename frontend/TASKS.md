@@ -1,0 +1,3 @@
+- [ ] Replace placeholder images in Login and Register views with final assets.
+- [ ] Replace placeholder select in Register component with functional select.
+- [ ] Connect request service to the Register form for user creation.

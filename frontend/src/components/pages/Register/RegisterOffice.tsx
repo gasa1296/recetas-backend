@@ -9,6 +9,7 @@ import MexicoStates from "@/utils/constants/mexico-states.json";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { useRoomsStore } from "@/store/rooms";
 import { RoomArraySchema } from "./helper";
+import GenericNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/GenericNotFound";
 
 export default function RegisterOffice({ nextStep, backStep }: any) {
   const setForm3 = useRegisterStore((state) => state.setForm3);
@@ -116,6 +117,7 @@ export default function RegisterOffice({ nextStep, backStep }: any) {
           name: "state",
           required: true,
           type: "selectSearch",
+          NotFound: GenericNotFound,
           width: 50,
           options: MexicoStates,
           subFormKey: "state",

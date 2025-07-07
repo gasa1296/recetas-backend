@@ -9,6 +9,7 @@ import useCustomEffect from "@/hooks/useCustomEffect";
 import Loading from "@/components/Loading";
 import MexicoStates from "@/utils/constants/mexico-states.json";
 import { RoomArraySchema } from "@/components/pages/Register/helper";
+import GenericNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/GenericNotFound";
 export default function Offices() {
   const { rooms, GetRooms, loading, loadingUpdate, UpdateRooms } =
     useRoomsStore((state) => ({
@@ -117,6 +118,7 @@ export default function Offices() {
           name: "state",
           required: true,
           type: "selectSearch",
+          NotFound: GenericNotFound,
           width: 50,
           subFormKey: "state",
           options: MexicoStates,

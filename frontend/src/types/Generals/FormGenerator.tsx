@@ -50,6 +50,7 @@ export interface Field {
   max?: number;
   min?: number;
   isSubform?: number;
+  mayuscula?: boolean;
 }
 
 export interface FieldType {

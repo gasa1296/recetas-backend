@@ -13,8 +13,10 @@ export default function InputText({
   visible,
   watch,
   tooltip,
-  maxFile,
+  maxFile = 999,
   width = 100,
+  mayuscula = false,
+  minLength = 0,
 }: Field) {
   const values: any = watch();
 
@@ -46,7 +48,15 @@ export default function InputText({
         disabled={disabled}
         type="text"
         maxLength={maxFile}
+        minLength={minLength}
         {...register(name, { required })}
+        onChange={(e) => {
+          if (mayuscula) {
+            e.target.value = e.target.value.toUpperCase();
+          } else {
+            e.target.value = e.target.value.toLowerCase();
+          }
+        }}
         className={`w-full form-control my-2 text-[16px] m-0 p-3 rounded-md border-[#DBE2EA] border-2 focus:outline-none ${
           error && "border-red-400 "
         }`}
