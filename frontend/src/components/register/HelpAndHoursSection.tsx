@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { Phone, Clock, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import CallPhone from "@/assets/login/call-phone.png";
+import Clock from "@/assets/login/clock.png";
 export const HelpAndHoursSection = () => {
   return (
     <div className="flex flex-row md:flex-col col-span-6  xl:col-span-2">
@@ -9,7 +11,7 @@ export const HelpAndHoursSection = () => {
         <div className="flex justify-center mb-2">
           <div>
             <Image
-              src="/login/call-phone.png"
+              src={CallPhone}
               alt="Phone icon"
               width={80}
               height={80}
@@ -35,7 +37,7 @@ export const HelpAndHoursSection = () => {
         <div className="flex justify-center mb-2">
           <div>
             <Image
-              src="/login/clock.png"
+              src={Clock}
               alt="Phone icon"
               width={100}
               height={100}
