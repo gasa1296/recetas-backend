@@ -22,9 +22,10 @@ class PrescriptionTest extends TestCase
   public function setUp(): void
   {
     parent::setUp();
-    $this->user = User::factory()->create();
-    $this->room = ConsultingRoom::factory()->create(["user_id" => $this->user]);
-    Specialization::factory()->create(["user_id" => $this->user]);
+    $this->user = User::factory()
+      ->has(ConsultingRoom::factory()->count(1), 'rooms')
+      ->has(Specialization::factory()->count(1), 'specializations')
+      ->create();
     Sanctum::actingAs($this->user, ['*']);
 
   }
@@ -59,9 +60,9 @@ class PrescriptionTest extends TestCase
       'diet' => fake()->words(10, true),
       'add' => fake()->words(10, true),
       'user_id' => $this->user->id,
-      'room_id' => $this->room->id,
+      'room_id' => $this->user->rooms[0]->id,
       'patient_id' => Patient::factory()->create()->id,
-      'file' => UploadedFile::fake()->image('photo.jpg'),
+      'file' => UploadedFile::fake()->image('photo.png'),
       'status' => fake()->randomNumber(3),
       'medicaments' => [
         [
@@ -124,7 +125,7 @@ class PrescriptionTest extends TestCase
   {
     $instance = Prescription::factory()->create([
       "user_id" => $this->user,
-      'room_id' => $this->room->id,
+      'room_id' => $this->user->rooms[0]->id,
     ]);
     $response = $this->put('api/prescription/' . $instance->id, [
       'temp' => fake()->randomFloat(2, 20, 40),
@@ -138,9 +139,9 @@ class PrescriptionTest extends TestCase
       'diet' => fake()->words(10, true),
       'add' => fake()->words(10, true),
       'user_id' => $this->user->id,
-      'room_id' => $this->room->id,
+      'room_id' => $this->user->rooms[0]->id,
       'patient_id' => Patient::factory()->create()->id,
-      'file' => UploadedFile::fake()->image('photo.jpg'),
+      'file' => UploadedFile::fake()->image('photo.png'),
       'status' => fake()->randomNumber(3),
     ]);
 
@@ -150,7 +151,7 @@ class PrescriptionTest extends TestCase
   {
     $instance = Prescription::factory()->create([
       "user_id" => $this->user,
-      'room_id' => $this->room->id,
+      'room_id' => $this->user->rooms[0]->id,
     ]);
     $response = $this->get('api/prescription/' . $instance->id);
 
@@ -158,12 +159,11 @@ class PrescriptionTest extends TestCase
   }
   public function test_list(): void
   {
-    Prescription::factory(10)->create([
+    Prescription::factory(30)->create([
       "user_id" => $this->user,
-      'room_id' => $this->room->id,
+      'room_id' => $this->user->rooms[0]->id,
     ]);
     $response = $this->get('api/prescription');
-
     $response->assertOk();
     $this->assertCount(10, $response->json()['data']);
   }

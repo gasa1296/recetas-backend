@@ -20,13 +20,13 @@ class PatientController extends Controller
             $operator = '+';
         }
         if (!empty($request->search)) {
-            $search = $request->search;
+            $search = strtoupper($request->search);
             $instances = Patient::where('user_id', '=', auth()->id())
                 ->where(function ($query) use ($operator, $search) {
-                    $query->where('first_name', 'LIKE', "%$search%")
-                        ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1"), 'LIKE', "%$search%")
-                        ->orWhere(\DB::raw("first_name $operator ' ' $operator last_name1 $operator ' ' $operator last_name2"), 'LIKE', "%$search%")
-                        ->orWhere('email', 'LIKE', "%$search%")
+                    $query->whereRaw('UPPER(patients.first_name) LIKE ' . "'%$search%'")
+                        ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) LIKE '%$search%'")
+                        ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) $operator ' ' $operator UPPER(patients.last_name2) LIKE '%$search%'")
+                        ->orWhereRaw("UPPER(patients.email) LIKE '%$search%'")
                         ->orWhere('phone1', 'LIKE', "%$search%")
                         ->orWhere('phone2', 'LIKE', "%$search%")
                         ->orWhere(function($query) use ($search) {

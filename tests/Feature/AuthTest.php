@@ -27,7 +27,7 @@ class AuthTest extends TestCase
     }
     public function test_register(): void
     {
-        $response = $this->post('api/auth/register', [
+        $response = $this->post('api/auth/recregf2', [
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
@@ -60,15 +60,15 @@ class AuthTest extends TestCase
                     'university' => fake()->words(3, true),
                 ]
             ],
-            'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
-            'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
+            'logo_room' => [UploadedFile::fake()->image('photo.png')],
+            'logo_spec' => [UploadedFile::fake()->image('photo.png')],
         ]);
         print_r($response->json());
         $response->assertOk();
     }
     public function test_failRegisterByFesa(): void
     {
-        $response = $this->post('api/auth/register', [
+        $response = $this->post('api/auth/recregf2', [
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
@@ -100,8 +100,8 @@ class AuthTest extends TestCase
                     'university' => fake()->words(3, true),
                 ]
             ],
-            'logo_room' => [UploadedFile::fake()->image('photo.jpg')],
-            'logo_spec' => [UploadedFile::fake()->image('photo.jpg')],
+            'logo_room' => [UploadedFile::fake()->image('photo.png')],
+            'logo_spec' => [UploadedFile::fake()->image('photo.png')],
         ]);
         $response->assertStatus(400);
     }

@@ -1,9 +1,11 @@
 <x-mail::message>
-# Solicitud de acceso de médico para RME
+# Solicitud de acceso de mï¿½dico para RME
 
 
 @foreach ($inputs as $key => $input)
-    <p>{{$key}}: {{$input}}</p>
+    {{$key}}: {{$input}}
+
+    
 @endforeach  
 
 

@@ -1,0 +1,56 @@
+services:
+  phpmyadmin:
+    image: bitnami/phpmyadmin:5.2.2
+    container_name: recetas_phpmyadmin
+    links:
+    - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ''
+    ports:
+      - 8081:80
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+  backend:
+    build: .
+    image: bitnami/laravel:10
+    container_name: recetas_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /var/www/html
+  db:
+    image: bitnami/mysql:8.0
+    container_name: recetas_db
+    restart: always
+    volumes:
+      - mysql_data:/bitnami/mysql/data
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: recetas
+      MYSQL_USER: recetas_db
+      ALLOW_EMPTY_PASSWORD: yes
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+volumes:
+  mysql_data:
+    name: recetas_mysql_data
