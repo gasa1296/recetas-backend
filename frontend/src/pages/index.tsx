@@ -9,6 +9,7 @@ import {
   Loader2,
   UserCircle,
 } from "lucide-react";
+
 import Link from "next/link";
 import AuthDesignLayout from "@/components/Layouts/AuthDesignLayout";
 import { ILoginPayload } from "@/types/Store/Register";
@@ -19,6 +20,7 @@ import { usePacients } from "@/store/pacients";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import Medicos from "@/assets/login/Medicos.png";
 import { HelpAndHoursSection } from "@/components/register/HelpAndHoursSection";
 
 export default function LoginPage() {
@@ -90,7 +92,7 @@ export default function LoginPage() {
             <div className="flex items-center  gap-4 mb-4">
               <div className="">
                 <Image
-                  src="/login/Medicos.png"
+                  src={Medicos}
                   alt="Doctor"
                   width={300}
                   height={300}

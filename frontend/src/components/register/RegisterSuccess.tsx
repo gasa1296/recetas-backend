@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Home, Check } from "lucide-react";
 import Link from "next/link";
 import logo from "../../assets/LogoFESA.svg";
+import Exito from "@/assets/login/Exito.png";
 
 import Image from "next/image";
 
@@ -40,7 +41,7 @@ export default function RegistrationSuccess() {
       <div className="bg-[#CCEBC233] rounded-xl p-4 text-center relative">
         <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
           <Image
-            src="/login/Exito.png"
+            src={Exito}
             alt="Registro Exitoso"
             width={80}
             height={80}
