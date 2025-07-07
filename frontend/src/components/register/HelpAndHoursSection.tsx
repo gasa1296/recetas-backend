@@ -16,7 +16,6 @@ export const HelpAndHoursSection = () => {
               width={80}
               height={80}
               className="h-24 w-24 object-contain"
-              quality={100}
             />
           </div>
         </div>
@@ -42,7 +41,6 @@ export const HelpAndHoursSection = () => {
               width={100}
               height={100}
               className="h-24 w-24 object-contain"
-              quality={100}
             />
           </div>
         </div>

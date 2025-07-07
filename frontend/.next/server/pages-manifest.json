@@ -1,6 +1,5 @@
 {
   "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/custom-register": "pages/custom-register.html",
   "/dashboard": "pages/dashboard.html",
@@ -10,7 +9,8 @@
   "/dashboard/searchRecipes": "pages/dashboard/searchRecipes.html",
   "/forgotPassword": "pages/forgotPassword.html",
   "/": "pages/index.html",
-  "/register": "pages/register.html",
   "/recoverPassword": "pages/recoverPassword.html",
+  "/register": "pages/register.html",
+  "/_error": "pages/_error.js",
   "/404": "pages/404.html"
 }
