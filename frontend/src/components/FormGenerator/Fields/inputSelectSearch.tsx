@@ -15,6 +15,19 @@ export default function InputSelectSearch({
   ModalNotFound,
   NotFound,
 }: Field) {
+  console.log({
+    label,
+    name,
+    error,
+    options,
+    setValue,
+    customChange,
+    watch,
+    disabled,
+    width,
+    ModalNotFound,
+    NotFound,
+  });
   const values: any = watch();
   const [show, setShow] = React.useState(false);
   const [inputValue, setInputValue] = React.useState(values[name]);

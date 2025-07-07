@@ -1,5 +1,9 @@
 // authStore.ts
-import { autopopulateProfile, registerUser } from "@/services/auth";
+import {
+  autopopulateProfile,
+  autopopulateProfileByName,
+  registerUser,
+} from "@/services/auth";
 import {
   IForm1,
   IForm2,
@@ -19,7 +23,7 @@ type IRegisterStore = {
   form2: IForm2 | null;
   form3: IForm3 | null;
   enableSearch: boolean;
-
+  idCX: string | null;
   setClearForms: () => void;
 
   setForm1: (form: IForm1) => void;
@@ -32,6 +36,12 @@ type IRegisterStore = {
     password?: string,
     type?: string
   ) => Promise<any>;
+  handleAutoPopulateByName: (payload: {
+    nombre: string;
+    apellidoPat: string;
+    apellidoMat: string;
+  }) => Promise<any>;
+  setSelectedOption: (option: any) => void;
 };
 
 export const useRegisterStore = create<IRegisterStore>((set) => ({
@@ -39,6 +49,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
   form1: null,
   form2: null,
   form3: null,
+  idCX: null,
   errorMessage: false,
   enableSearch: false,
   loading: false,
@@ -67,6 +78,78 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
 
   setSuccess: (success: boolean) => {
     set({ success });
+  },
+
+  setSelectedOption: (contact: any) => {
+    set({ loading: true, errorMessage: false });
+    try {
+      setTimeout(() => {
+        const user = {
+          first_name: contact.datosGenerales.nombre,
+          last_name1: contact.datosGenerales.apellidoPaterno,
+          last_name2: contact.datosGenerales.apellidoMaterno,
+          email:
+            contact.selectedEmail ||
+            contact.listaCorreoElectronico[0].correroElectronico,
+          gender: contact.datosGenerales.sexo === "Masculino" ? "M" : "F",
+          phone1:
+            contact.listaTelefonos &&
+            contact.listaTelefonos.map(
+              (tlf: any) => tlf.telefono.NumeroTelefonico
+            ),
+          phone2: "",
+          fesa: "",
+          password: "",
+          confirmPassword: "",
+        };
+
+        const cedulas =
+          contact.listaCedula?.map((cedula: any) => ({
+            name: cedula.especialidad || "",
+            identification: cedula.cedulaProfesional || "",
+            id_ext: cedula.ID || "",
+          })) || null;
+
+        const direcciones =
+          contact.listaDireccion?.map((direccion: any) => ({
+            name: "",
+            zip: direccion.direccion.codigoPostal || "",
+            street: direccion.direccion.calle || "",
+            colony: direccion.direccion.colonia || "",
+            state: direccion.direccion.estado || "",
+            delegation: direccion.direccion.delgacionMunicipio || "",
+            n_exterior: direccion.direccion.numeroExterior || "",
+            n_interior: direccion.direccion.numeroInterior || "",
+            address:
+              direccion.direccion.calle +
+              " " +
+              direccion.direccion.numeroExterior,
+            phone: "",
+            id_ext: direccion.direccion.id_externo || "",
+          })) || null;
+
+        toast.success(`Médico seleccionado!`);
+
+        console.log(user);
+        console.log(cedulas);
+        console.log(direcciones);
+        set({
+          loading: false,
+          idCX: contact.datosGenerales.idExterno,
+          form1: user,
+          form2: { specializations: cedulas },
+          form3: { rooms: direcciones },
+          enableSearch:
+            contact.datosGenerales.clienteEcommerce === "No" &&
+            contact.datosGenerales.medicoCalificado === "No"
+              ? true
+              : false,
+        });
+      }, 300);
+    } catch (error) {
+      toast.error("Error al seleccionar el médico");
+      set({ loading: false });
+    }
   },
 
   handleSubmit: async (registerPayload: IRegisterPayload) => {
@@ -118,6 +201,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
         toast.error(`Médico no encontrado ${type ? `por ${type}` : ""}!`);
         set({
           loading: false,
+          idCX: null,
           form1:
             type === "email"
               ? {
@@ -153,7 +237,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
               (tlf: any) => tlf.telefono.NumeroTelefonico
             ),
           phone2: "",
-          fesa: "",
+          fesa: "0",
           password: password || "",
           confirmPassword: password || "",
         };
@@ -189,6 +273,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
 
         set({
           loading: false,
+          idCX: contact.datosGenerales.idExterno,
           form1: user,
           form2: { specializations: cedulas },
           form3: { rooms: direcciones },
@@ -198,6 +283,110 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
       }, 1000);
 
       return true;
+    } catch (error: any) {
+      const message = getRequestError(error);
+      toast.error(message);
+      set({ error: message, loading: false, enableSearch: false, form1: null });
+    }
+  },
+
+  handleAutoPopulateByName: async (payload: {
+    nombre: string;
+    apellidoPat: string;
+    apellidoMat: string;
+  }) => {
+    set({ loading: true });
+    try {
+      const result = await autopopulateProfileByName(payload);
+
+      if (!result.data.results || result?.data?.contacts?.length >= 1) {
+        if (result?.data?.contacts?.length >= 1) {
+          toast.success(
+            "Médicos encontrado, por favor seleccione el médico correcto"
+          );
+        } else {
+          toast.error(`Médico no encontrado!`);
+        }
+
+        set({
+          loading: false,
+          idCX: null,
+          form1: {
+            email: "",
+            password: "",
+            confirmPassword: "",
+            phone1: "",
+            phone2: "",
+            gender: "",
+            fesa: "",
+            first_name: payload.nombre,
+            last_name1: payload.apellidoPat,
+            last_name2: payload.apellidoMat,
+          },
+
+          enableSearch: false,
+        });
+
+        return result?.data?.contacts || [];
+      }
+      setTimeout(() => {
+        const contact = result.data.contacts[0] || null;
+
+        const user = {
+          first_name: contact.datosGenerales.nombre,
+          last_name1: contact.datosGenerales.apellidoPaterno,
+          last_name2: contact.datosGenerales.apellidoMaterno,
+          email: contact.listaCorreoElectronico[0].correroElectronico,
+          gender: contact.datosGenerales.sexo === "Masculino" ? "M" : "F",
+          phone1:
+            contact.listaTelefonos &&
+            contact.listaTelefonos.map(
+              (tlf: any) => tlf.telefono.NumeroTelefonico
+            ),
+          phone2: "",
+          fesa: "",
+          password: "",
+          confirmPassword: "",
+        };
+
+        const cedulas =
+          contact.listaCedula?.map((cedula: any) => ({
+            name: cedula.especialidad || "",
+            identification: cedula.cedulaProfesional || "",
+            id_ext: cedula.ID || "",
+          })) || null;
+
+        const direcciones =
+          contact.listaDireccion?.map((direccion: any) => ({
+            name: "",
+            zip: direccion.direccion.codigoPostal || "",
+            street: direccion.direccion.calle || "",
+            colony: direccion.direccion.colonia || "",
+            state: direccion.direccion.estado || "",
+            delegation: direccion.direccion.delgacionMunicipio || "",
+            n_exterior: direccion.direccion.numeroExterior || "",
+            n_interior: direccion.direccion.numeroInterior || "",
+            address:
+              direccion.direccion.calle +
+              " " +
+              direccion.direccion.numeroExterior,
+            phone: "",
+            id_ext: direccion.direccion.id_externo || "",
+          })) || null;
+
+        toast.success(`Médico encontrado satisfactoriamente !`);
+        set({
+          loading: false,
+          idCX: contact.datosGenerales.idExterno,
+          form1: user,
+          form2: { specializations: cedulas },
+          form3: { rooms: direcciones },
+          enableSearch:
+            contact.datosGenerales.medicoVisitable !== "No" ? false : true,
+        });
+      }, 1000);
+
+      return result.data.contacts;
     } catch (error: any) {
       const message = getRequestError(error);
       toast.error(message);

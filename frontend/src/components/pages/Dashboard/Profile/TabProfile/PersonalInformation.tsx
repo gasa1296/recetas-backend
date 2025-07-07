@@ -70,7 +70,7 @@ export default function PersonalInformation({ nextStep, backStep }: any) {
         { label: "Indefinido", value: "I" },
       ],
       width: 50,
-      default: user?.gender || "",
+      default: user?.gender || "M",
     },
 
     {

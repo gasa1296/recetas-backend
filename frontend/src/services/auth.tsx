@@ -1,4 +1,5 @@
 import {
+  IActivatePayload,
   IForgotPayload,
   ILoginPayload,
   IRecoverPayload,
@@ -78,7 +79,7 @@ export const registerUser = (registerPayload: any) => {
     });
   }
 
-  return axios.post(baseUrl + `/api/auth/register`, formData, {
+  return axios.post(baseUrl + `/api/auth/recregf2`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -109,11 +110,27 @@ export const autopopulateProfile = (search: string) => {
   return axios.post(baseUrl + "/api/auth/medic", requestBody);
 };
 
+export const autopopulateProfileByName = (payload: {
+  nombre: string;
+  apellidoPat: string;
+  apellidoMat: string;
+}) => {
+  return axios.post(baseUrl + "/api/auth/medic", payload);
+};
+
 export const updateProfile = (profilePayload: IRegisterPayload) => {
   return Api({
     endpoint: `/profile`,
     method: "PUT",
     _data: profilePayload,
+  });
+};
+
+export const activateProfile = (activatePayload: IActivatePayload) => {
+  return Api({
+    endpoint: `/auth/register`,
+    method: "POST",
+    _data: activatePayload,
   });
 };
 
@@ -141,7 +158,7 @@ export const verifyUser = (id: string, hash: string) => {
 
 export const forgotPassword = (forgotPayload: IForgotPayload) => {
   return Api({
-    endpoint: `/password/request`,
+    endpoint: `/password/request/magento`,
     method: "POST",
     _data: forgotPayload,
   });

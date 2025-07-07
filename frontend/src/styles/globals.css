@@ -372,7 +372,6 @@ th {
 ::after {
   box-sizing: border-box;
   border-style: solid;
-  border-radius: 5px !important;
 
   border-color: #e5e7eb;
 }

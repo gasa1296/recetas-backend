@@ -63,6 +63,15 @@ export interface IRegisterPayload
     IForm3,
     ExternalClient {}
 
+export interface IActivatePayload {
+  name: string | null;
+  last_name: string | null;
+  email: string | null;
+  phone: string | null;
+  professional_id: string | null;
+  specialization: string | null;
+}
+
 export interface ILoginPayload {
   email: string | null;
   password: string | null;

@@ -95,7 +95,7 @@ export default function Nav({ setScreen }: any) {
               Bienvenido
             </p>
             <p className="text-[#1A1A1A] text-[20px] font-bold ">
-              Dr. {user?.first_name} {user?.last_name1}
+              Dr. {user?.first_name || user?.name} {user?.last_name1}
             </p>
           </div>
 
