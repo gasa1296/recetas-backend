@@ -97,6 +97,7 @@ export default function LoginPage() {
                   width={300}
                   height={300}
                   className=" h-16 w-16"
+                  unoptimized
                 />
               </div>
               <div>

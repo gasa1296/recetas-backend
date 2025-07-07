@@ -15,6 +15,7 @@ export const RegistrationCard = () => {
             width={460}
             height={251}
             className=" h-[240px] w-auto object-contain absolute top-10 left-0 right-0 mx-auto"
+            unoptimized
           />
         </div>
         <div className="p-6 pt-20">
@@ -25,6 +26,7 @@ export const RegistrationCard = () => {
               width={24}
               height={24}
               className=" h-7 w-7"
+              unoptimized
             />
             Ingresa con tu cuenta de médico
           </div>

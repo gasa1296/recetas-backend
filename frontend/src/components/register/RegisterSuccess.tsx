@@ -46,6 +46,7 @@ export default function RegistrationSuccess() {
             width={80}
             height={80}
             className="inline-flex"
+            unoptimized
           />
         </div>
         <h2 className="text-2xl text-[#003480] font-bold mt-4 mb-2">
