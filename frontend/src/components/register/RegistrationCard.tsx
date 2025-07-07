@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import Factura2 from "@/assets/login/Factura-2.png";
+import Wrapper from "@/assets/login/Wrapper.png";
 
 export const RegistrationCard = () => {
   return (
@@ -8,7 +10,7 @@ export const RegistrationCard = () => {
       <div className="bg-[white] rounded-lg overflow-hidden shadow-sm">
         <div className="bg-gradient-to-tr  from-[#0091FF] to-[#0041B8] h-[240px] relative">
           <Image
-            src="/login/Factura-2.png"
+            src={Factura2}
             alt="Medical equipment"
             width={460}
             height={251}
@@ -18,7 +20,7 @@ export const RegistrationCard = () => {
         <div className="p-6 pt-20">
           <div className="flex items-center gap-2 text-[#847FCB] font-bold text-xl mb-4">
             <Image
-              src="/login/Wrapper.png"
+              src={Wrapper}
               alt="Medical equipment"
               width={24}
               height={24}
