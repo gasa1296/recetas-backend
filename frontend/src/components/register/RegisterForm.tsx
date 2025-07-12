@@ -97,7 +97,7 @@ export default function RegisterForm({
                 "linear-gradient(93.54deg, #FFFFFF -32.76%, #C9B28D 22.94%, #847FCB 63.53%, #423F65 132.76%)",
             }}
           >
-            <strong>Registrate</strong> ahora
+            <strong>Regístrate</strong> ahora
           </p>
           <h2 className="text-black text-[40px] font-bold">
             <span className="bg-white rounded-xl p-2 mr-1 pl-3">
@@ -396,7 +396,7 @@ export default function RegisterForm({
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
-              Registrar como médico
+              Enviar solicitud
               <ChevronRight className="h-5 w-5" />
             </>
           )}
