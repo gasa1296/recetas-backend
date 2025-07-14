@@ -193,7 +193,7 @@ export default function LoginPage() {
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
                   <>
-                    Iniciar sesión como médico
+                    Ingresar
                     <ChevronRight className="h-5 w-5" />
                   </>
                 )}
@@ -209,7 +209,7 @@ export default function LoginPage() {
                 >
                   Olvidé mi contraseña
                 </button>
-                <div className="text-black">
+                <div className="text-black text-[16px]">
                   ¿Eres nuevo?{" "}
                   <Link href="/register" className="underline">
                     Crea tu cuenta aquí
