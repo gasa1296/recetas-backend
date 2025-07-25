@@ -22,34 +22,34 @@ class UserSeeder extends Seeder
             'last_name2' => 'admin',
             'gender' => fake()->randomElement(['M', 'F']),
             'fesa' => fake()->randomNumber(),
-            'email' => 'admin@admin.com',
+            'email' => 'gabriel@studio-8.co',
             'is_admin' => true,
             'email_verified_at' => now(),
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('DUWtXrzfveVmk4JhLxu6pM'),
         ]);
         User::create([
             'first_name' => 'admin',
             'name' => 'admin',
             'last_name1' => 'admin',
             'last_name2' => 'admin',
-            'gender' => 'M',
+            'gender' => fake()->randomElement(['M', 'F']),
             'fesa' => fake()->randomNumber(),
             'email' => 'dan@studio-8.co',
             'is_admin' => true,
             'email_verified_at' => now(),
-            'password' => Hash::make('1234567890'),
+            'password' => Hash::make('vqFYNMyn7fDU3HJcPj5Qm2'),
         ]);
         User::create([
             'first_name' => 'admin',
             'name' => 'admin',
             'last_name1' => 'admin',
             'last_name2' => 'admin',
-            'gender' => 'M',
+            'gender' => fake()->randomElement(['M', 'F']),
             'fesa' => fake()->randomNumber(),
             'email' => 'victor.hernandez@fanafesa.com',
             'is_admin' => true,
             'email_verified_at' => now(),
-            'password' => Hash::make('1234567890'),
+            'password' => Hash::make('vHjqFPr9b4AQpyTausX7kd'),
         ]);
         User::factory(10)
             ->has(ConsultingRoom::factory()->count(3), 'rooms')

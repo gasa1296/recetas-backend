@@ -32,7 +32,6 @@ class PrescriptionResource extends JsonResource
             'patient' => $this->patient,
             'document_id' => $this->document_id,
             'medicaments' => PrescriptionMedicamentResource::collection($this->medicaments),
-            'equipment' => PrescriptionEquipmentResource::collection($this->equipment),
             'file' => $this->file,
             'status' => $this->status,
             'code' => $this->code,

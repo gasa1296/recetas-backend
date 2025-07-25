@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
 use Tests\TestCase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Hash;
 class PrescriptionPublicTest extends TestCase
 {
     private $prescription;

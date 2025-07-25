@@ -63,7 +63,6 @@ class AuthTest extends TestCase
             'logo_room' => [UploadedFile::fake()->image('photo.png')],
             'logo_spec' => [UploadedFile::fake()->image('photo.png')],
         ]);
-        print_r($response->json());
         $response->assertOk();
     }
     public function test_failRegisterByFesa(): void

@@ -19,9 +19,9 @@ class ProfileTest extends TestCase
         parent::setUp();
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
-        
+
     }
-    
+
     public function test_show(): void
     {
         $response = $this->get('api/profile');
@@ -48,7 +48,6 @@ class ProfileTest extends TestCase
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
         ]);
-        print_r($response->json());
         $response->assertOk();
     }
     public function test_delete(): void
