@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\CustomFormRequest;
 
-class UpdateUserRequest extends CustomFormRequest
+class UpdateRequest extends CustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

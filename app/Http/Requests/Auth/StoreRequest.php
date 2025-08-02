@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\CustomFormRequest;
 
-class RegisterRequest extends CustomFormRequest
+class StoreRequest extends CustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
