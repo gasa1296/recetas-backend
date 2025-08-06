@@ -11,7 +11,6 @@ class CXRepository implements CXrepositoryInterface
 {
     private array $magentoAuth;
     private array $medicamentAuth;
-    private string $magentoUrl;
     private Client $client;
     public function __construct()
     {
@@ -25,7 +24,6 @@ class CXRepository implements CXrepositoryInterface
         ];
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
-
     public function CX(array $inputs): JsonResponse
     {
         try {
@@ -87,7 +85,6 @@ class CXRepository implements CXrepositoryInterface
             return response()->json(json_decode($e->getResponse()->getBody(), true) + ['CX'], $e->getResponse()->getStatusCode());
         }
     }
-
     public function medicAffiliation(array $inputs): JsonResponse
     {
         try {
@@ -106,13 +103,11 @@ class CXRepository implements CXrepositoryInterface
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
-
     public function verifyAffiliation(array $inputs): JsonResponse
     {
         // This method is not implemented in the original code, but it should handle the verification of the affiliation.
         return response()->json();
     }
-
     public function burnFesaCode(array $inputs): JsonResponse
     {
         try {
