@@ -12,17 +12,10 @@ use GuzzleHttp\Exception\{ClientException, ServerException};
 class MagentoController extends Controller
 {
     private $CXRepository;
-    private array $magentoAuth;
-    private string $magentoUrl;
     private Client $client;
     public function __construct(CXrepositoryInterface $CXRepository)
     {
         $this->CXRepository = $CXRepository;
-        $this->magentoUrl = env('MAGENTO_URL');
-        $this->magentoAuth = [
-            env('MAGENTO_USER'),
-            env('MAGENTO_PASSWORD')
-        ];
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
     /**
