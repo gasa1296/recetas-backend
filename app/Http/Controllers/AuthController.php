@@ -16,6 +16,7 @@ use App\Models\{
     ConsultingRoom,
     Specialization
 };
+use App\Repositories\Interfaces\CXrepositoryInterface;
 use App\Mail\{
     SignupMail,
     RegisterCompletedMail
@@ -28,6 +29,12 @@ use App\Http\Requests\Auth\{
 
 class AuthController extends Controller
 {
+    private $CXRepository;
+
+    public function __construct(CXrepositoryInterface $CXRepository)
+    {
+        $this->CXRepository = $CXRepository;
+    }
     /**
      * Env a solicitud de registro al administrador, con los datos del profesional
      * que se registra.
@@ -43,9 +50,10 @@ class AuthController extends Controller
     }
     public function login(Request $request): JsonResponse
     {
-        $instance = User::where('email', $request->email)->first();
+        $inputs = $request->only('email', 'password');
+        $instance = User::where('email', $request['email'])->first();
         if (empty($instance)) {
-            $magentoToken = (new MagentoController)->getToken($request);
+            $magentoToken = $this->CXRepository->getToken($inputs);
             if ($magentoToken->getStatusCode() < 300) {
                 return response()->json([
                     'recetasUser' => false,
@@ -61,7 +69,7 @@ class AuthController extends Controller
         if (Hash::check($request->password, $instance->password)) {
             return response()->json($okResponse);
         }
-        $magentoToken = (new MagentoController)->getToken($request);
+        $magentoToken = $this->CXRepository->getToken($inputs);
         if ($magentoToken->getStatusCode() < 300) {
             return response()->json($okResponse);
         }
@@ -74,25 +82,23 @@ class AuthController extends Controller
     public function register(StoreRequest $request): JsonResponse
     {
         $inputs = $request->validated();
-        $magento = new MagentoController();
-
         // Check if the user already exists in Magento
         if($inputs['fesa'] != 0) {
-            if (!$magento->verifyFESA($inputs['fesa'])) {
+            if (!$this->CXRepository->verifyFESA($inputs['fesa'])) {
                 return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
             }
         }
 
         // Create/update the user in CX and Magento
         if(empty($inputs['idCX'])) {
-            $res = $magento->CX($inputs);
+            $res = $this->CXRepository->CX($inputs);
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
             $inputs['idCX'] = $res->getData(true)['idCX'];
         }
         if (empty($inputs['clienteEcommerce'])) {
-            $res = $magento->store($inputs);
+            $res = $this->CXRepository->magentoStore($inputs);
             if ($res->getStatusCode() >= 300) {
                 return $res;
             }
@@ -101,6 +107,10 @@ class AuthController extends Controller
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
         $inputs['fesa'] = $inputs['idCX'];
+        if($this->CXRepository->verifyAffiliation($inputs)) {
+            $this->CXRepository->medicAffiliation($inputs);
+        }
+        $this->CXRepository->burnFesaCode($inputs);
         $instance = User::create($inputs);
 
         event(new Registered($instance));
@@ -147,9 +157,8 @@ class AuthController extends Controller
         $inputs['specializations'] = $instance->specializations->toArray();
         $inputs['rooms'] = $instance->rooms->toArray();
 
-        $magento = new MagentoController();
-        $magento->CX($inputs);
-        $magento->update($inputs);
+        $this->CXRepository->CX($inputs);
+        $this->CXRepository->magentoUpdate($inputs);
 
         return response()->json($instance);
     }
