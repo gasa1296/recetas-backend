@@ -80,9 +80,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'specialization' => SpecializationController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
-        'equipment' => EquipmentController::class,
         'prescription.medicament' => PrescriptionMedicamentController::class,
-        'prescription.equipment' => PrescriptionEquipmentController::class,
     ]);
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
@@ -95,5 +93,5 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::post('medicaments', 'getMedicaments')->name('medicaments');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
-    
+
 });
