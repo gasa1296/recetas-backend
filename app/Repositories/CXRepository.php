@@ -86,6 +86,25 @@ class CXRepository implements CXrepositoryInterface
             return response()->json(json_decode($e->getResponse()->getBody(), true) + ['CX'], $e->getResponse()->getStatusCode());
         }
     }
+    public function getMedic(array $inputs): JsonResponse
+    {
+        $inputsNew = [];
+        foreach ($inputs as $key => $value) {
+            if (!empty($value)) {
+                $inputsNew[$key] = strtolower($value);
+            }
+        }
+        try {
+            $res = $this->client->get(env('URL_MEDIC'), [
+                'auth' => $this->magentoAuth,
+                'query' => $inputsNew
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            return response()->json($decodedRes);
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
     public function medicAffiliation(array $inputs): JsonResponse
     {
         try {

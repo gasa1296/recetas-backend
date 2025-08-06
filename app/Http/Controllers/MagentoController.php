@@ -31,22 +31,7 @@ class MagentoController extends Controller
     public function getMedic(Request $request): JsonResponse
     {
         $inputs = $request->only('email', 'cedula', 'telefono', 'nombre', 'apellidoPat', 'apellidoMat', 'tarjeta', 'idVitamedica', 'numeroEmpleado', 'rfc', 'origen');
-        $inputsNew = [];
-        foreach ($inputs as $key => $value) {
-            if (!empty($value)) {
-                $inputsNew[$key] = strtolower($value);
-            }
-        }
-        try {
-            $res = $this->client->get(env('URL_MEDIC'), [
-                'auth' => $this->magentoAuth,
-                'query' => $inputsNew
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        return $this->CXRepository->getMedic($inputs);
     }
     public function getToken(Request $request): JsonResponse
     {
