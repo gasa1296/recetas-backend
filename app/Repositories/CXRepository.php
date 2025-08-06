@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
 use GuzzleHttp\Exception\{ClientException, ServerException};
 use App\Repositories\Interfaces\CXrepositoryInterface;
@@ -88,7 +89,7 @@ class CXRepository implements CXrepositoryInterface
     public function medicAffiliation(array $inputs): JsonResponse
     {
         try {
-            $res = $this->client->post(env('URL_MEDICAMENTS'), [
+            $res = $this->client->post(env('URL_AFFILIATION'), [
                 'auth' => $this->medicamentAuth,
                 'json' => [
                     "idPrograma" => "609",
@@ -99,19 +100,19 @@ class CXRepository implements CXrepositoryInterface
                 ]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException | ServerException | RequestException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
-    public function verifyAffiliation(array $inputs): JsonResponse
+    public function verifyAffiliation(array $inputs): bool
     {
         // This method is not implemented in the original code, but it should handle the verification of the affiliation.
-        return response()->json();
+        return true;
     }
     public function burnFesaCode(array $inputs): JsonResponse
     {
         try {
-            $res = $this->client->post(env('URL_MEDICAMENTS'), [
+            $res = $this->client->post(env('URL_BURN_FESA'), [
                 'auth' => $this->medicamentAuth,
                 'json' => [
                     "codigoMedico" => $inputs['fesa'],
@@ -136,7 +137,7 @@ class CXRepository implements CXrepositoryInterface
             } else {
                 return false;
             }
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             return false;
         }
     }
