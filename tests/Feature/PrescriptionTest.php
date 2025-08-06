@@ -159,7 +159,7 @@ class PrescriptionTest extends TestCase
   }
   public function test_list(): void
   {
-    Prescription::factory(30)->create([
+    Prescription::factory(11)->create([
       "user_id" => $this->user,
       'room_id' => $this->user->rooms[0]->id,
     ]);

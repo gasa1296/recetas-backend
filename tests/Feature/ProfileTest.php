@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -11,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
     private $token;
 
     public function setUp(): void

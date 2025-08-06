@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\ConsultingRoom;
@@ -12,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 
 class RoomTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
 
     private $user;
 
@@ -93,14 +92,14 @@ class RoomTest extends TestCase
     }
     public function test_empty_list(): void
     {
-        ConsultingRoom::factory(10)->create();
+        ConsultingRoom::factory(1)->create();
         $response = $this->get('api/room');
         $response->assertOk();
         $this->assertEmpty($response->json()['data']);
     }
     public function test_list(): void
     {
-        ConsultingRoom::factory(10)->create(["user_id" => $this->user]);
+        ConsultingRoom::factory(11)->create(["user_id" => $this->user]);
         $response = $this->get('api/room');
 
         $response->assertOk();

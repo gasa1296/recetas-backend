@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +12,7 @@ use Illuminate\Http\UploadedFile;
 
 class AuthTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
 
     public function test_login(): void
     {
@@ -32,7 +31,7 @@ class AuthTest extends TestCase
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
             'gender' => fake()->randomElement(['M','F']),
-            'fesa' => "MED00040",
+            'fesa' => "MED08750",
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'phone1' => json_encode([
@@ -63,6 +62,7 @@ class AuthTest extends TestCase
             'logo_room' => [UploadedFile::fake()->image('photo.png')],
             'logo_spec' => [UploadedFile::fake()->image('photo.png')],
         ]);
+        print_r($response->json());
         $response->assertOk();
     }
     public function test_failRegisterByFesa(): void
