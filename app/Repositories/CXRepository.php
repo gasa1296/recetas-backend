@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
@@ -236,6 +237,31 @@ class CXRepository implements CXrepositoryInterface
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
+    public function getUserByToken(string $token): JsonResponse
+    {
+        try {
+            $res = $this->client->get(env('URL_VER_MAGENTO_TOKEN'), [
+                'headers' => [
+                    'Authorization' => "Bearer $token",
+                ],
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            $instance = User::where('email', '=', $decodedRes['email'])->first();
+            if ($instance) {
+                return response()->json([
+                    'token' => $instance->createToken('recipe')->plainTextToken,
+                    'user' => $instance,
+                ]);
+            } else {
+                return response()->json([
+                    'recetasUser' => false,
+                    'magentoEmail' => $decodedRes['email']
+                ]);
+            }
         } catch (ClientException | ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }

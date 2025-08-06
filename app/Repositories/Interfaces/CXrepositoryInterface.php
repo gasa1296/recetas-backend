@@ -16,5 +16,6 @@ interface CXrepositoryInterface
     public function magentoStore(array $inputs): JsonResponse;
     public function magentoUpdate(array $inputs): JsonResponse;
     public function getToken(array $inputs): JsonResponse;
+    public function getUserByToken(string $token): JsonResponse;
 }
 

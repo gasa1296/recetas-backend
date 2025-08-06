@@ -40,28 +40,8 @@ class MagentoController extends Controller
     }
     public function getUser(Request $request): JsonResponse
     {
-        try {
-            $res = $this->client->get(env('URL_VER_MAGENTO_TOKEN'), [
-                'headers' => [
-                    'Authorization' => "Bearer $request->token",
-                ],
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-            $instance = User::where('email', '=', $decodedRes['email'])->first();
-            if ($instance) {
-                return response()->json([
-                    'token' => $instance->createToken('recipe')->plainTextToken,
-                    'user' => $instance,
-                ]);
-            } else {
-                return response()->json([
-                    'recetasUser' => false,
-                    'magentoEmail' => $decodedRes['email']
-                ]);
-            }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        $inputs = $request->only('token');
+        return $this->CXRepository->getUserByToken($inputs['token']);
     }
     public function getSpecialization(): JsonResponse
     {
