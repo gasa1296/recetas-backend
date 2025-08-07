@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
 use GuzzleHttp\Exception\{ClientException, ServerException};
 use App\Repositories\Interfaces\CXrepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class CXRepository implements CXrepositoryInterface
 {
@@ -25,6 +26,21 @@ class CXRepository implements CXrepositoryInterface
             env('MEDICAMENT_PASS')
         ];
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
+    }
+    private function catchError(callable $callback): JsonResponse
+    {
+        try {
+            return $callback();
+        } catch (ClientException | ServerException $e) {
+            $res = $e->getResponse();
+            $decodedRes = json_decode($res->getBody(), true);
+            $statusCode = $res->getStatusCode();
+            Log::error('CXRepository error: ' . $e->getMessage(), [
+                'response' => $decodedRes,
+                'status_code' => $statusCode,
+            ]);
+            return response()->json($decodedRes, $statusCode);
+        }
     }
     public function CX(array $inputs): JsonResponse
     {
@@ -95,20 +111,18 @@ class CXRepository implements CXrepositoryInterface
                 $inputsNew[$key] = strtolower($value);
             }
         }
-        try {
+        return $this->catchError(function () use ($inputsNew) {
             $res = $this->client->get(env('URL_MEDIC'), [
                 'auth' => $this->magentoAuth,
                 'query' => $inputsNew
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function medicAffiliation(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_AFFILIATION'), [
                 'auth' => $this->medicamentAuth,
                 'json' => [
@@ -120,18 +134,21 @@ class CXRepository implements CXrepositoryInterface
                 ]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException | RequestException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
-    public function verifyAffiliation(array $inputs): bool
-    {
-        // This method is not implemented in the original code, but it should handle the verification of the affiliation.
-        return true;
-    }
-    public function burnFesaCode(array $inputs): JsonResponse
+    public function verifyAffiliation(string $fesa): bool
     {
         try {
+            $res = $this->client->get(env('URL_BURN_FESA') . $fesa);
+            $decodedRes = json_decode($res->getBody(), true);
+            return $decodedRes['correcto'];
+        } catch (ClientException | ServerException $e) {
+            return false;
+        }
+    }
+    public function registerFesaCode(array $inputs): JsonResponse
+    {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_BURN_FESA'), [
                 'auth' => $this->medicamentAuth,
                 'json' => [
@@ -140,9 +157,7 @@ class CXRepository implements CXrepositoryInterface
                 ]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function verifyFESA(string $fesa): bool
     {
@@ -163,19 +178,17 @@ class CXRepository implements CXrepositoryInterface
     }
     public function getMedicaments(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_MEDICAMENTS'), [
                 'auth' => $this->medicamentAuth,
                 'json' => ['products' => $inputs['products']]
             ]);
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function magentoStore(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_REGISTER_MAGENTO'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
@@ -196,13 +209,11 @@ class CXRepository implements CXrepositoryInterface
             } else {
                 return response()->json($decodedRes, 400);
             }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['magento', 'req' => json_encode($inputs)], $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function magentoUpdate(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_UPDATE_MAGENTO'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
@@ -221,13 +232,11 @@ class CXRepository implements CXrepositoryInterface
             } else {
                 return response()->json($decodedRes, 400);
             }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function getToken(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_GEN_MAGENTO_TOKEN'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
@@ -237,13 +246,11 @@ class CXRepository implements CXrepositoryInterface
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function getUserByToken(string $token): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($token) {
             $res = $this->client->get(env('URL_VER_MAGENTO_TOKEN'), [
                 'headers' => [
                     'Authorization' => "Bearer $token",
@@ -262,9 +269,7 @@ class CXRepository implements CXrepositoryInterface
                     'magentoEmail' => $decodedRes['email']
                 ]);
             }
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
-        }
+        });
     }
     private function setGender($gender)
     {
