@@ -88,7 +88,7 @@ class AuthController extends Controller
                 return response()->json(['fesa' => 'Codigo de FESA invalido'], 400);
             }
         }
-
+        $fesa = $inputs['fesa'];
         // Create/update the user in CX and Magento
         if(empty($inputs['idCX'])) {
             $res = $this->CXRepository->CX($inputs);
@@ -107,10 +107,10 @@ class AuthController extends Controller
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
         $inputs['fesa'] = $inputs['idCX'];
-        if($this->CXRepository->verifyAffiliation($inputs)) {
+        if($this->CXRepository->verifyAffiliation($fesa)) {
             $this->CXRepository->medicAffiliation($inputs);
         }
-        $this->CXRepository->burnFesaCode($inputs);
+        $this->CXRepository->registerFesaCode($inputs);
         $instance = User::create($inputs);
 
         event(new Registered($instance));
