@@ -124,7 +124,7 @@ class CXRepository implements CXrepositoryInterface
     {
         return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_AFFILIATION'), [
-                'auth' => $this->medicamentAuth,
+                'auth' => $this->magentoAuth,
                 'json' => [
                     "idPrograma" => "609",
                     "idEmbajador" => $inputs['fesa'],
@@ -150,7 +150,7 @@ class CXRepository implements CXrepositoryInterface
     {
         return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_BURN_FESA'), [
-                'auth' => $this->medicamentAuth,
+                'auth' => $this->magentoAuth,
                 'json' => [
                     "codigoMedico" => $inputs['fesa'],
                     "correoElectronico" => $inputs['email'],
