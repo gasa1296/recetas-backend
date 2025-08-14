@@ -139,7 +139,7 @@ class CXRepository implements CXrepositoryInterface
     public function verifyAffiliation(string $fesa): bool
     {
         try {
-            $res = $this->client->get(env('URL_BURN_FESA') . $fesa);
+            $res = $this->client->get(env('URL_VERIFY_FESA') . $fesa);
             $decodedRes = json_decode($res->getBody(), true);
             return $decodedRes['correcto'];
         } catch (ClientException | ServerException $e) {
