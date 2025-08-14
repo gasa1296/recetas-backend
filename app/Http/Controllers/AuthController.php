@@ -24,6 +24,7 @@ use App\Mail\{
 use App\Http\Requests\Auth\{
     StoreRequest,
     SignUpRequest,
+    SignInRequest,
     UpdateRequest
 };
 
@@ -48,16 +49,16 @@ class AuthController extends Controller
         Mail::to(env('MAIL_SIGNUP_REPLY_TO'))->send(new SignupMail($inputs));
         return response()->json(['message' => 'Solicitud de registro enviada correctamente']);
     }
-    public function login(Request $request): JsonResponse
+    public function login(SignInRequest $request): JsonResponse
     {
-        $inputs = $request->only('email', 'password');
-        $instance = User::where('email', $request['email'])->first();
+        $inputs = $request->validated();
+        $instance = User::where('email', $inputs['email'])->first();
         if (empty($instance)) {
             $magentoToken = $this->CXRepository->getToken($inputs);
             if ($magentoToken->getStatusCode() < 300) {
                 return response()->json([
                     'recetasUser' => false,
-                    'magentoEmail' => $request->email
+                    'magentoEmail' => $inputs['email']
                 ]);
             }
             return response()->json([['email' => __('email incorrecto')]], 404);
@@ -66,7 +67,7 @@ class AuthController extends Controller
             'token' => $instance->createToken('recipe')->plainTextToken,
             'user' => $instance,
         ];
-        if (Hash::check($request->password, $instance->password)) {
+        if (Hash::check($inputs['password'], $instance->password)) {
             return response()->json($okResponse);
         }
         $magentoToken = $this->CXRepository->getToken($inputs);
