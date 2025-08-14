@@ -149,7 +149,7 @@ class CXRepository implements CXrepositoryInterface
     public function registerFesaCode(array $inputs): JsonResponse
     {
         return $this->catchError(function () use ($inputs) {
-            $res = $this->client->post(env('URL_BURN_FESA'), [
+            $res = $this->client->post(env('URL_REGISTER_FESA'), [
                 'auth' => $this->magentoAuth,
                 'json' => [
                     "codigoMedico" => $inputs['fesa'],
