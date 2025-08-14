@@ -108,9 +108,15 @@ class AuthController extends Controller
         }
         $inputs['fesa'] = $inputs['idCX'];
         if($this->CXRepository->verifyAffiliation($fesa)) {
-            $this->CXRepository->medicAffiliation($inputs);
+            $res = $this->CXRepository->medicAffiliation($inputs);
+            if ($res->getStatusCode() >= 300 || $res->getData(true)['codigo'] == 207) {
+                return $res;
+            }
         }
-        $this->CXRepository->registerFesaCode($inputs);
+        $res = $this->CXRepository->registerFesaCode($inputs);
+        if ($res->getStatusCode() >= 300 || $res->getData(true)['correcto'] == false) {
+            return $res;
+        }
         $instance = User::create($inputs);
 
         event(new Registered($instance));
