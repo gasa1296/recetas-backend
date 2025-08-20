@@ -26,6 +26,14 @@ class MagentoController extends Controller
         $inputs = $request->only('email', 'cedula', 'telefono', 'nombre', 'apellidoPat', 'apellidoMat', 'tarjeta', 'idVitamedica', 'numeroEmpleado', 'rfc', 'origen');
         return $this->CXRepository->getMedic($inputs);
     }
+    public function verifyFesa(Request $request): JsonResponse
+    {
+        $inputs = $request->only('fesa');
+        return response()->json([
+            'message' => 'Verification successful',
+            'data' => $this->CXRepository->verifyFesa($inputs['fesa'])
+        ]);
+    }
     public function getToken(Request $request): JsonResponse
     {
         $inputs = $request->only('email', 'password');

@@ -39,6 +39,7 @@ Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp
 });
 Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('medic', 'getMedic')->name('getMedic');
+    Route::post('verify', 'verifyFesa')->name('verifyFesa');
     Route::post('generateMagentoToken', 'getToken')->name('generateMagentoToken');
     Route::post('getUserByTokenMagento', 'getUser')->name('getUserByTokenMagento');
     Route::post('specializations', 'getSpecialization')->name('getSpecialization');

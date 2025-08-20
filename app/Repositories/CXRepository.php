@@ -38,6 +38,7 @@ class CXRepository implements CXrepositoryInterface
             Log::error('CXRepository error: ' . $e->getMessage(), [
                 'response' => $decodedRes,
                 'status_code' => $statusCode,
+                'backtrace' => debug_backtrace(),
             ]);
             return response()->json($decodedRes, $statusCode);
         }
