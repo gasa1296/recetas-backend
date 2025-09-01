@@ -8,16 +8,32 @@ import * as yup from "yup";
 import React from "react";
 import toast from "react-hot-toast";
 import { form1Schema } from "./helper";
+import ModalAutoPopulate from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/ModalAutoPopulate";
+import { autopopulateProfile } from "../../../services/auth";
 
 export default function PersonalData({ nextStep }: any) {
-  const setForm1 = useRegisterStore((state) => state.setForm1);
-  const { form1, loading, handleAutoPopulate, enableSearch } = useRegisterStore(
-    (state) => ({
-      form1: state.form1,
-      loading: state.loading,
-      enableSearch: state.enableSearch,
-      handleAutoPopulate: state.handleAutoPopulate,
-    })
+  const [customLoading, setCustomLoading] = React.useState(false);
+  const {
+    form1,
+    idCX,
+    loading,
+    handleAutoPopulateByName,
+    enableSearch,
+    setSelectedOption,
+    setForm1,
+  } = useRegisterStore((state) => ({
+    form1: state.form1,
+    idCX: state.idCX,
+    loading: state.loading,
+    enableSearch: state.enableSearch,
+    handleAutoPopulateByName: state.handleAutoPopulateByName,
+    setSelectedOption: state.setSelectedOption,
+    setForm1: state.setForm1,
+  }));
+
+  const [showModal, setShowModal] = React.useState(false);
+  const [autoPopulateOptions, setAutoPopulateOptions] = React.useState<any[]>(
+    []
   );
 
   const submitData = async (data: IRegisterPayload) => {
@@ -25,42 +41,83 @@ export default function PersonalData({ nextStep }: any) {
       return toast.error("Las contraseñas no coinciden");
     }
 
+    if (!idCX) {
+      setCustomLoading(true);
+      const result = await autopopulateProfile(data.email || "");
+      setCustomLoading(false);
+      if (result?.data?.contacts?.length >= 1) {
+        return toast.error(
+          "Se encontraron multiples resultados con este correo electrónico, por favor elige otro correo electrónico"
+        );
+      }
+    }
+
     nextStep();
   };
+
   const submitDataAutoPopulate = async (data: {
-    searchCedula: string;
-    searchEmail: string;
+    nombre: string;
+    apellidoPat: string;
+    apellidoMat: string;
   }) => {
-    if (!data.searchCedula && !data.searchEmail) {
-      return toast.error("Debe ingresar al menos un campo de busqueda");
+    try {
+      const result = await handleAutoPopulateByName(data);
+      if (result.length >= 1) {
+        const options = result
+          .filter((item: any) => item.datosGenerales.tipo === "Médico")
+          .map((item: any) => ({
+            label: `${item.datosGenerales.nombre} ${item.datosGenerales.apellidoPaterno} ${item.datosGenerales.apellidoMaterno}`,
+            value: item,
+            clienteEcommerce: item.datosGenerales.clienteEcommerce,
+            cedulas:
+              item.listaCedula
+                ?.filter((cedula: any) => cedula.cedulaProfesional)
+                .map((cedula: any) => cedula.cedulaProfesional)
+                .join(", ") || "",
+            email: item.listaCorreoElectronico
+              .filter((email: any) => email.correroElectronico)
+              .map((email: any) => email.correroElectronico),
+          }));
+        setAutoPopulateOptions(options);
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    let result = false;
+  };
 
-    if (data.searchCedula) {
-      result = await handleAutoPopulate(data.searchCedula, undefined, "cédula");
-    }
-
-    if (data.searchEmail && !result) {
-      result = await handleAutoPopulate(data.searchEmail, undefined, "email");
-    }
+  const handleSelectOption = (option: any) => {
+    console.log(option.value);
+    setSelectedOption(option.value);
   };
 
   const fieldsAutopulate: Field[] = [
     {
-      label: "Buscate por cédula",
-      name: "searchCedula",
+      label: "Nombre",
+      name: "nombre",
       type: "text",
       width: 100,
       default: "",
       required: true,
+      mayuscula: true,
     },
     {
-      label: "Buscate por email",
-      name: "searchEmail",
+      label: "Apellido Paterno",
+      name: "apellidoPat",
       type: "text",
-      width: 100,
+      width: 50,
       default: "",
       required: true,
+      mayuscula: true,
+    },
+    {
+      label: "Apellido Materno",
+      name: "apellidoMat",
+      type: "text",
+      width: 50,
+      default: "",
+      required: false,
+      mayuscula: true,
     },
   ];
   const fields: Field[] = [
@@ -72,6 +129,7 @@ export default function PersonalData({ nextStep }: any) {
       type: "text",
       width: 50,
       default: form1?.first_name ?? "",
+      mayuscula: true,
     },
     {
       label: "Apellido Paterno *",
@@ -81,6 +139,7 @@ export default function PersonalData({ nextStep }: any) {
       type: "text",
       width: 50,
       default: form1?.last_name1 ?? "",
+      mayuscula: true,
     },
     {
       label: "Apellido Materno *",
@@ -90,6 +149,7 @@ export default function PersonalData({ nextStep }: any) {
       type: "text",
       width: 50,
       default: form1?.last_name2 ?? "",
+      mayuscula: true,
     },
 
     {
@@ -113,7 +173,7 @@ export default function PersonalData({ nextStep }: any) {
         { label: "Indefinido", value: "I" },
       ],
       width: 50,
-      default: form1?.gender ?? "",
+      default: form1?.gender ?? "M",
     },
     {
       label: "Teléfono celular ",
@@ -150,6 +210,7 @@ export default function PersonalData({ nextStep }: any) {
       type: "password",
       width: 50,
       default: form1?.password ?? "",
+      minLength: 8,
     },
     {
       label: "Confirmar contraseña *",
@@ -158,6 +219,7 @@ export default function PersonalData({ nextStep }: any) {
       type: "password",
       width: 50,
       default: form1?.confirmPassword ?? "",
+      minLength: 8,
     },
   ];
 
@@ -171,7 +233,7 @@ export default function PersonalData({ nextStep }: any) {
   return (
     <section className="max-w-[1000px] mx-auto px-3 md:px-2">
       <h2 className="text-center text-[#1A1A1A] text-[24px] mt-5 font-medium">
-        Ingrese su cédula o correo electrónico para buscar su información
+        Ingrese su nombre y apellidos para buscar su información
       </h2>
 
       <FormGenerator
@@ -197,8 +259,15 @@ export default function PersonalData({ nextStep }: any) {
         schema={form1Schema}
         submitData={submitData}
         fields={fields}
-        loading={false}
+        loading={customLoading}
         buttonText="Continuar"
+      />
+
+      <ModalAutoPopulate
+        show={showModal}
+        closeModal={() => setShowModal(false)}
+        options={autoPopulateOptions}
+        onSelect={handleSelectOption}
       />
     </section>
   );

@@ -6,6 +6,7 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Loading from "../Loading";
 import { useRoomsStore } from "@/store/rooms";
 import useCustomEffect from "@/hooks/useCustomEffect";
+import AuthDesignLayout from "../Layouts/AuthDesignLayout";
 
 interface Props {
   children: JSX.Element;
@@ -17,7 +18,6 @@ export default function AuthWrapper({ children }: Props) {
   const RecoverUser = useAuthStore((state) => state.RecoverUser);
 
   const getRoomDesigns = useRoomsStore((state) => state.getRoomDesigns);
-  const roomDesigns = useRoomsStore((state) => state.roomDesigns);
 
   const router = useRouter();
 
@@ -34,14 +34,15 @@ export default function AuthWrapper({ children }: Props) {
 
     if (!token) {
       setActive(true);
-      return setTimeout(() => setLoading(false), 1000);
+      setLoading(false);
+      return;
     }
 
     const result = await RecoverUser(token || "", externalToken ? true : false);
-    if (result?.recetasUser === false) router.push("/register");
+    if (result?.recetasUser === false) router.push("/custom-register");
     else router.push("/dashboard");
 
-    setTimeout(() => setLoading(false), 1000);
+    setTimeout(() => setLoading(false), 200);
     setActive(true);
   };
 
@@ -59,11 +60,11 @@ export default function AuthWrapper({ children }: Props) {
     //eslint-disable-next-line
   }, [router.pathname, isAuth, active]);
 
-  if (loading)
+  if (loading || !active)
     return (
-      <AuthLayout>
+      <AuthDesignLayout>
         <Loading />
-      </AuthLayout>
+      </AuthDesignLayout>
     );
 
   return <>{children}</>;

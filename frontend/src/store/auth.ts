@@ -62,14 +62,21 @@ export const useAuthStore = create<AuthState>((set) => ({
         return result.data;
       }
 
-      const newToken = result.data.token;
+      let newToken = result.data.token;
 
-      await localStorage.setItem("sessionUser", JSON.stringify(result.data));
+      await localStorage.setItem(
+        "sessionUser",
+        JSON.stringify(result.data.user || result.data)
+      );
+
+      if (!newToken) newToken = await localStorage.getItem("sessionToken");
+
       await localStorage.setItem("sessionToken", newToken);
+
       set({
         isAuth: true,
         sessionToken: newToken,
-        user: result.data,
+        user: result.data.user || result.data,
       });
       useRoomsStore.getState().GetRooms();
       return {};
@@ -103,8 +110,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
       await localStorage.setItem("sessionToken", token);
       await localStorage.setItem("sessionUser", JSON.stringify(user));
-      useRoomsStore.getState().GetRooms();
-      useMedicamentStore.getState().SetPopularMedicaments([]);
+      await useRoomsStore.getState().GetRooms();
+      await useMedicamentStore.getState().SetPopularMedicaments([]);
       return response.data;
     } catch (error: any) {
       const message = getRequestErrorArray(error);

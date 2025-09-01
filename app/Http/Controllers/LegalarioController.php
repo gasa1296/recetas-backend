@@ -422,4 +422,27 @@ class LegalarioController extends Controller
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
+    public function getMedicamentsCode(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'descripcion' => ['required ', 'string'],
+            'hash' => ['required', 'string']
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $inputs = $validator->safe()->all();
+        try {
+            $res = $this->client->post(env('URL_MEDICAMENTSCODE'), [
+                'auth' => [
+                    env('MEDICAMENT_USER'),
+                    env('MEDICAMENT_PASS')
+                ],
+                'json' => $inputs
+            ]);
+            return response()->json(json_decode($res->getBody(), true));
+        } catch (ClientException | ServerException $e) {
+            return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
+        }
+    }
 }

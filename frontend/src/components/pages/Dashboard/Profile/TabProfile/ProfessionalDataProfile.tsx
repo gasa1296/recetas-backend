@@ -110,6 +110,7 @@ export default function ProfessionalDataProfile() {
           width: 50,
           subFormKey: "identification",
           default: specializations || "",
+          maxLength: 8,
         },
         {
           label: "Institución que otorga la licenciatura *",

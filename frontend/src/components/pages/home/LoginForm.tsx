@@ -25,7 +25,7 @@ export default function LoginForm() {
     const result = await Login(data);
     if (result) {
       if (result?.recetasUser === false) {
-        return router.push("/register");
+        return router.push("/custom-register");
       } else router.push("/dashboard");
 
       //Reset old data

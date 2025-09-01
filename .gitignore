@@ -30,6 +30,7 @@ yarn-error.log
 
 # next.js
 /frontend/out/
+/frontend/iisnode
 
 # production
 /frontend/build

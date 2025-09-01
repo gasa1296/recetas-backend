@@ -13,11 +13,16 @@ import { useSpecializationsStore } from "@/store/specializations";
 import useCustomEffect from "@/hooks/useCustomEffect";
 import ModalUniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/ModalUniversityNotFound";
 import UniversityNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/UniversityNotFound";
+import GenericNotFound from "@/components/FormGenerator/Components/InputSelectSearch/NoOptions/GenericNotFound";
+import { autopopulateProfile } from "../../../services/auth";
+import toast from "react-hot-toast";
 
 export default function ConfirmAccount({ nextStep, backStep }: any) {
-  const { form3, form2, form1, handleSubmit, loading, enableSearch } =
+  const [customLoading, setCustomLoading] = React.useState(false);
+  const { form3, form2, form1, idCX, handleSubmit, loading, enableSearch } =
     useRegisterStore((state) => ({
       form3: state.form3,
+      idCX: state.idCX,
       form2: state.form2,
       form1: state.form1,
       handleSubmit: state.handleSubmit,
@@ -41,6 +46,16 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
   }));
 
   const submitData = async (data: IRegisterPayload) => {
+    if (!idCX) {
+      setCustomLoading(true);
+      const result = await autopopulateProfile(data.email || "");
+      setCustomLoading(false);
+      if (result?.data?.contacts?.length >= 1) {
+        return toast.error(
+          "Se encontraron multiples resultados con este correo electrónico, por favor elige otro correo electrónico"
+        );
+      }
+    }
     const result = await handleSubmit(data);
 
     if (result) nextStep();
@@ -106,7 +121,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
         { label: "Indefinido", value: "I" },
       ],
       width: 50,
-      default: form1?.gender || "",
+      default: form1?.gender || "M",
     },
     {
       label: "Teléfono celular ",
@@ -143,6 +158,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       type: "password",
       width: 50,
       default: form1?.password || "",
+      minLength: 8,
     },
     {
       label: "Confirmar contraseña *",
@@ -151,6 +167,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
       type: "password",
       width: 50,
       default: form1?.confirmPassword || "",
+      minLength: 8,
     },
 
     {
@@ -213,6 +230,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           width: 50,
           subFormKey: "identification",
           default: form2?.specializations || "",
+          maxLength: 8,
         },
         {
           label: "Institución que otorga la licenciatura *",
@@ -343,6 +361,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
           name: "state",
           required: true,
           type: "selectSearch",
+          NotFound: GenericNotFound,
           width: 50,
           options: MexicoStates,
           subFormKey: "state",
@@ -465,7 +484,7 @@ export default function ConfirmAccount({ nextStep, backStep }: any) {
                     e.preventDefault();
                     handleSubmit();
                   }}
-                  disabled={loading}
+                  disabled={loading || customLoading}
                   className="bg-[#000000] p-3 disabled:opacity-40 text-[#EBF4F8] rounded-lg w-60 mx-3 block my-4"
                   type="submit"
                 >

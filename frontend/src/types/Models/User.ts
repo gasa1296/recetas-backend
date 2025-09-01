@@ -1,4 +1,5 @@
 export interface IUser {
+  name: string | null;
   first_name: string | null;
   last_name1: string | null;
   last_name2: string | null;

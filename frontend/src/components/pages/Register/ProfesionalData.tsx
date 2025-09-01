@@ -101,6 +101,7 @@ export default function ProfesionalData({ nextStep, backStep }: any) {
           width: 50,
           subFormKey: "identification",
           default: form2?.specializations || "",
+          maxFile: 8,
         },
         {
           label: "Institución que otorga la licenciatura *",
