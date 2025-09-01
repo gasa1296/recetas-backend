@@ -93,6 +93,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
 
     Route::controller(LegalarioController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::post('medicaments', 'getMedicaments')->name('medicaments');
+        Route::post('medicaments2', 'getMedicamentsCode')->name('medicaments2');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
     
