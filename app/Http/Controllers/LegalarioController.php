@@ -425,7 +425,7 @@ class LegalarioController extends Controller
     public function getMedicamentsCode(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'description' => ['required ', 'string'],
+            'descripcion' => ['required ', 'string'],
             'hash' => ['required', 'string']
         ]);
         if ($validator->fails()) {
