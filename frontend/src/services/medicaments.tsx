@@ -3,10 +3,11 @@ import { Api } from ".";
 import axios from "axios";
 
 export const getSearchExternalMedicament = (search: string) => {
-  return axios.post(
-    "https://w9gkg4xp3k.execute-api.us-east-1.amazonaws.com/Prod/api/preproductos",
-    { descripcion: search, hash: "initial" }
-  );
+  return Api({
+    endpoint: `prescription/medicaments2`,
+    method: "POST",
+    _data: { descripcion: search, hash: "initial" },
+  });
 };
 
 export const getMedicamentByCode = (productCode: string) => {

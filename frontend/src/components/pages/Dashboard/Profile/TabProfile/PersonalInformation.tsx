@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/auth";
 import { IUser } from "@/types/Models/User";
 import { form1ProfileSchema } from "@/components/pages/Register/helper";
 
-export default function PersonalInformation({ nextStep, backStep }: any) {
+export default function PersonalInformation() {
   const { user, UpdateProfile, loading } = useAuthStore((state) => ({
     loading: state.loading,
     user: state.user,
