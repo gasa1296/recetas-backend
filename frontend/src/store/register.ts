@@ -142,8 +142,8 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
           enableSearch:
             contact.datosGenerales.clienteEcommerce === "No" &&
             contact.datosGenerales.medicoCalificado === "No"
-              ? true
-              : false,
+              ? false
+              : true,
         });
       }, 300);
     } catch (error) {
@@ -386,7 +386,7 @@ export const useRegisterStore = create<IRegisterStore>((set) => ({
         });
       }, 1000);
 
-      return result.data.contacts;
+      return result.data.contacts || [];
     } catch (error: any) {
       const message = getRequestError(error);
       toast.error(message);

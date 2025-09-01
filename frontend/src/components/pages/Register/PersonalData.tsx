@@ -45,7 +45,7 @@ export default function PersonalData({ nextStep }: any) {
       setCustomLoading(true);
       const result = await autopopulateProfile(data.email || "");
       setCustomLoading(false);
-      if (result.data.contacts.length >= 1) {
+      if (result?.data?.contacts?.length >= 1) {
         return toast.error(
           "Se encontraron multiples resultados con este correo electrónico, por favor elige otro correo electrónico"
         );
