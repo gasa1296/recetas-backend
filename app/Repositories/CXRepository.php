@@ -43,9 +43,26 @@ class CXRepository implements CXrepositoryInterface
             return response()->json($decodedRes, $statusCode);
         }
     }
+    private function GenerateAffiliationToken(): string
+    {
+        return $this->catchError(function (): string  {
+            $res = $this->client->post(env('URL_MEDICAMENTS_LOGIN'), [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->GenerateAffiliationToken(),
+                ],
+                'json' => [
+                    "UserName" => env('MEDICAMENT_USER2'),
+                    "Password" => env('MEDICAMENT_PASS2'),
+                ]
+            ]);
+            $decodedRes = json_decode($res->getBody(), true);
+            if(!$decodedRes['correcto']) return '';
+            return $decodedRes['data']['token'];
+        });
+    }
     public function CX(array $inputs): JsonResponse
     {
-        try {
+        return $this->catchError(function () use ($inputs) {
             $json = [
                 [
                     'idCX' => $inputs['idCX'] ?? '',
@@ -100,9 +117,7 @@ class CXRepository implements CXrepositoryInterface
             ]);
             $decodedRes = json_decode($res->getBody(), true);
             return response()->json($decodedRes);
-        } catch (ClientException | ServerException $e) {
-            return response()->json(json_decode($e->getResponse()->getBody(), true) + ['CX'], $e->getResponse()->getStatusCode());
-        }
+        });
     }
     public function getMedic(array $inputs): JsonResponse
     {
@@ -151,7 +166,9 @@ class CXRepository implements CXrepositoryInterface
     {
         return $this->catchError(function () use ($inputs) {
             $res = $this->client->post(env('URL_REGISTER_FESA'), [
-                'auth' => $this->magentoAuth,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->GenerateAffiliationToken(),
+                ],
                 'json' => [
                     "codigoMedico" => $inputs['fesa'],
                     "correoElectronico" => $inputs['email'],
