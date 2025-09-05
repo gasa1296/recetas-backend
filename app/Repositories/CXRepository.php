@@ -77,7 +77,7 @@ class CXRepository implements CXrepositoryInterface
                     "unidadOperativa" => "FESA",
                     "status" => "Activo",
                     "tipo" => "Medico",
-                    "clienteEcommerce" => 'Si',
+                    "clienteEcommerce" => 'Sí',
                     'listaCedulas' => array_map(function ($instance) {
                         return [
                             'id' => $instance['id_ext'] ?? '',
