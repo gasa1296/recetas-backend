@@ -116,7 +116,8 @@ class AuthController extends Controller
         $instance = User::create($inputs);
 
         event(new Registered($instance));
-        foreach ($inputs['rooms'] ?? [] as $key => $el) {
+        $rooms = $inputs['rooms'] ?? [];
+        foreach ($rooms as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
                 $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id, 'public');
                 $el['logo'] = $file;
@@ -134,7 +135,10 @@ class AuthController extends Controller
         }
        //Mail::to($inputs['email'])->send(new RegisterCompletedMail($inputs));
 
-        return response()->json();
+        return response()->json([
+            'message' => 'Usuario registrado correctamente',
+            'fesa' => $fesa
+        ]);
     }
     /**
      * Display the specified resource.

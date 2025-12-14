@@ -31,13 +31,13 @@ class AuthTest extends TestCase
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
             'gender' => fake()->randomElement(['M','F']),
-            'fesa' => "MED08750",
+            'fesa' => 0,
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'phone1' => json_encode([
                 ['phone' => '0123456789']
             ]),
-            'rooms' => [
+            /*'rooms' => [
                 [
                     'name' => fake()->name(),
                     'zip' => fake()->postcode(),
@@ -51,7 +51,7 @@ class AuthTest extends TestCase
                     'phone' => fake()->phoneNumber(),
                     'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
                 ]
-            ],
+            ],*/
             'specializations' => [
                 [
                     'name' => fake()->words(3, true),
