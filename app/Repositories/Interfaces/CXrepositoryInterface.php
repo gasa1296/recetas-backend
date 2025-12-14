@@ -9,7 +9,7 @@ interface CXrepositoryInterface
     public function CX(array $inputs): JsonResponse;
      public function getMedic(array $inputs): JsonResponse;
     public function medicAffiliation(array $inputs): JsonResponse;
-    public function verifyAffiliation(string $fesa): bool;
+    public function verifyAffiliation(string $fesa): JsonResponse;
     public function registerFesaCode(array $inputs): JsonResponse;
     public function getMedicaments(array $inputs): JsonResponse;
     public function verifyFESA(string $fesa): bool;
