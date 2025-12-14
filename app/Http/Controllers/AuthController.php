@@ -116,7 +116,7 @@ class AuthController extends Controller
         $instance = User::create($inputs);
 
         event(new Registered($instance));
-        foreach ($inputs['rooms'] as $key => $el) {
+        foreach ($inputs['rooms'] ?? [] as $key => $el) {
             if (!empty($request->file('logo_room')[$key])) {
                 $file = $request->file('logo_room')[$key]->store('medics/' . $instance->id, 'public');
                 $el['logo'] = $file;
