@@ -107,17 +107,12 @@ class AuthController extends Controller
         if (empty($inputs['password'])) {
             $inputs['password'] = Hash::make(uuid_create(UUID_TYPE_RANDOM));
         }
+
+        $this->CXRepository->verifyAffiliation($inputs['idCX']);
+        $this->CXRepository->medicAffiliation($inputs);
+        $this->CXRepository->registerFesaCode($inputs);
+
         $inputs['fesa'] = $inputs['idCX'];
-        if($this->CXRepository->verifyAffiliation($inputs['idCX'])) {
-            $res = $this->CXRepository->medicAffiliation($inputs);
-            if ($res->getStatusCode() >= 300 || $res->getData(true)['codigo'] == 207) {
-                return $res;
-            }
-        }
-        $res = $this->CXRepository->registerFesaCode($inputs);
-        if ($res->getStatusCode() >= 300 || $res->getData(true)['correcto'] == false) {
-            return $res;
-        }
         $instance = User::create($inputs);
 
         event(new Registered($instance));
