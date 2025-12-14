@@ -31,7 +31,7 @@ class StoreRequest extends CustomFormRequest
             'phone2' => ['nullable', 'string'],
             'gender' => ['nullable', 'string'],
             'fesa' => ['required',],
-            'rooms' => ['required', 'array'],
+            'rooms' => ['nullable', 'array'],
             'specializations' => ['required', 'array'],
             'rooms.*.id_ext' => ['nullable'],
             'rooms.*.name' => ['nullable', 'string'],
