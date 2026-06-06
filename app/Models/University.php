@@ -7,15 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class University extends Model
 {
+    /** @use HasFactory<\Database\Factories\UniversityFactory> */
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'image',
-    ];
 }

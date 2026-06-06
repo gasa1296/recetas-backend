@@ -12,30 +12,34 @@ class PrescriptionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null;
+        return auth()->check();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule', 'array<mixed>', 'string>
      */
     public function rules(): array
     {
         return [
-            'temp' => ['nullable', 'numeric'],
-            'weight' => ['nullable ', 'numeric'],
-            'height' => ['nullable ', 'numeric'],
-            'pressure' => ['nullable ', 'string'],
-            'saturation' => ['nullable ', 'numeric'],
-            'ppm' => ['nullable ', 'numeric'],
-            'allergy' => ['nullable ', 'string'],
+            'temp' => ['required', 'numeric', 'min:0'],
+            'weight' => ['required', 'numeric', 'min:0'],
+            'height' => ['required', 'numeric', 'min:0'],
+            'pressure' => ['required', 'numeric', 'min:0'],
+            'saturation' => ['required', 'numeric', 'min:0'],
+            'ppm' => ['required', 'numeric', 'min:0'],
+            'allergy' => ['nullable', 'string'],
             'diagnostic' => ['nullable', 'string'],
-            'diet' => ['nullable ', 'string'],
-            'add' => ['nullable ', 'string'],
-            'medicaments' => ['nullable ', 'array'],
-            'room_id' => ['required ', Rule::exists('consulting_rooms')->where('user_id', $this->user()->id)],
-            'patient_id' => ['required ', Rule::exists('patients')->where('user_id', $this->user()->id)],
+            'diet' => ['nullable', 'string'],
+            'comments' => ['nullable', 'string'],
+            'medicament_data' => ['nullable', 'array'],
+            'medicament_data.*.id' => ['exists:medicaments,id'],
+            'medicament_data.*.dosage' => ['required', 'numeric', 'min:0'],
+            'medicament_data.*.frequency' => ['required', 'string'],
+            'medicament_data.*.duration' => ['required', 'string'],
+            'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
+            'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
         ];
     }
 }

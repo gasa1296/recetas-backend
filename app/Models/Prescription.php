@@ -4,70 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[Fillable([
+    'temp',
+    'weight',
+    'height',
+    'pressure',
+    'saturation',
+    'ppm',
+    'allergy',
+    'diagnostic',
+    'diet',
+    'comments',
+    'user_id',
+    'room_id',
+    'patient_id',
+    'status',
+])]
 class Prescription extends Model
 {
+    /** @use HasFactory<\Database\Factories\PrescriptionFactory> */
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'temp',
-        'weight',
-        'height',
-        'pressure',
-        'saturation',
-        'ppm',
-        'allergy',
-        'diagnostic',
-        'diet',
-        'add',
-        'add_med',
-        'client',
-        'user_id',
-        'room_id',
-        'patient_id',
-        'document_id',
-        'file',
-        'status',
-        'code',
-    ];
-
-    /**
-     * Get the medic of the prescription.
-     */
-    public function medic(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
-
-    /**
-     * Get the room of the prescription.
-     */
-    public function room(): BelongsTo
+    public function room()
     {
-        return $this->belongsTo(ConsultingRoom::class);
+        return $this->belongsTo(Room::class);
     }
-
-    /**
-     * Get the patient of the prescription.
-     */
-    public function patient(): BelongsTo
+    public function patient()
     {
         return $this->belongsTo(Patient::class);
     }
-
-    /**
-     * Get the medicaments of the prescription.
-     */
-    public function medicaments(): HasMany
+    public function specialty()
     {
-        return $this->hasMany(Medicament::class);
+        return $this->belongsTo(Specialty::class);
+    }
+    public function medicaments()
+    {
+        return $this->belongsToMany(Medicament::class, MedicamentPrescription::class)
+            ->withPivot('dose', 'frequency', 'duration');
     }
 }

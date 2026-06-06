@@ -4,46 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 
+#[Fillable([
+    'first_name',
+    'last_name1',
+    'last_name2',
+    'email',
+    'phone',
+    'gender',
+    'birth_date',
+    'user_id',
+])]
 class Patient extends Model
 {
+    /** @use HasFactory<\Database\Factories\PatientFactory> */
     use HasFactory, SoftDeletes;
-    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'id',
-        'first_name',
-        'last_name1',
-        'last_name2',
-        'phone',
-        'email',
-        'birth_date',
-        'user_id',
-        'gender',
-    ];
-
-    /**
-     * Get the prescriptions of the patient.
-     */
-    public function prescriptions(): HasMany
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function prescriptions()
     {
         return $this->hasMany(Prescription::class);
-    }
-
-    /**
-     * Get the medic of the prescription.
-     */
-    public function medic(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }
