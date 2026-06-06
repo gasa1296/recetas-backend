@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Patient\StoreRequest;
+use App\Http\Requests\Patient\UpdateRequest;
 use Validator;
 use App\Http\Resources\PatientResource;
 use Illuminate\Http\Request;
@@ -44,22 +46,9 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'first_name' => ['required', 'string'],
-            'last_name1' => ['nullable', 'string'],
-            'last_name2' => ['nullable', 'string'],
-            'email' => ['required', 'email'],
-            'phone1' => ['required', 'string'],
-            'phone2' => ['nullable', 'string'],
-            'gender' => ['nullable', 'string'],
-            'birth_date' => ['required', 'date'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $inputs = $validator->safe()->all();
+        $inputs = $request->validated();
         $inputs['user_id'] = auth()->id();
         $instance = Patient::create($inputs);
         return (new PatientResource($instance))->response();
@@ -79,25 +68,12 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $patient): JsonResponse
+    public function update(UpdateRequest $request, Patient $patient): JsonResponse
     {
         if ($patient->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $validator = Validator::make($request->all(), [
-            'first_name' => ['required', 'string'],
-            'last_name1' => ['nullable', 'string'],
-            'last_name2' => ['nullable', 'string'],
-            'email' => ['required', 'email'],
-            'phone1' => ['required', 'string'],
-            'phone2' => ['nullable', 'string'],
-            'gender' => ['nullable', 'string'],
-            'birth_date' => ['required', 'date'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $inputs = $validator->safe()->all();
+        $inputs = $request->validated();
         $patient->update($inputs);
         return (new PatientResource($patient))->response();
     }

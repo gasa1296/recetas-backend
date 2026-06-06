@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
-
+use App\{
+    Models\ConsultingRoom,
+    Http\Requests\Room\StoreRequest,
+    Http\Requests\Room\UpdateRequest,
+};
 class ConsultingRoomController extends Controller
 {
     /**
@@ -22,34 +25,10 @@ class ConsultingRoomController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
         $user = auth()->id();
-        $validator = Validator::make($request->all(), [
-            'data' => ['required', 'array'],
-            'data.*.id' => ['nullable', 'numeric'],
-            'data.*.name' => ['nullable', 'string'],
-            'data.*.zip' => ['required', 'string'],
-            'data.*.street' => ['required', 'string'],
-            'data.*.colony' => ['required', 'string'],
-            'data.*.state' => ['required', 'string'],
-            'data.*.delegation' => ['required', 'string'],
-            'data.*.n_exterior' => ['required',],
-            'data.*.n_interior' => ['nullable',],
-            'data.*.address' => ['nullable', 'string'],
-            'data.*.phone' => ['nullable', 'string'],
-            'data.*.design' => ['nullable', 'string'],
-            'data.*.fav' => ['nullable'],
-            'data.*.auto_email' => ['nullable'],
-            'data.*.auto_whatsapp' => ['nullable'],
-            'data.*.logo' => ['nullable', 'string'],
-            'logo' => ['nullable', 'array'],
-            'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $inputs = $validator->safe()->all();
+        $inputs = $request->validated();
 
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
@@ -88,32 +67,12 @@ class ConsultingRoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ConsultingRoom $room): JsonResponse
+    public function update(UpdateRequest $request, ConsultingRoom $room): JsonResponse
     {
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        $validator = Validator::make($request->all(), [
-            'name' => ['nullable', 'string'],
-            'zip' => ['required', 'string'],
-            'street' => ['required', 'string'],
-            'colony' => ['required', 'string'],
-            'state' => ['required', 'string'],
-            'delegation' => ['required', 'string'],
-            'n_exterior' => ['required',],
-            'n_interior' => ['nullable',],
-            'address' => ['nullable', 'string'],
-            'phone' => ['nullable', 'string'],
-            'fav' => ['nullable'],
-            'auto_email' => ['nullable'],
-            'auto_whatsapp' => ['nullable'],
-            'design' => ['nullable', 'string'],
-            'logo' => ['nullable', 'file', 'mimes:jpg,png'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $inputs = $validator->safe()->all();
+        $inputs = $request->validated();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
             if ($inputs['logo'] && !empty($room->logo)) {

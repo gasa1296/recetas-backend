@@ -39,6 +39,7 @@ Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp
 });
 Route::controller(MagentoController::class)->prefix('auth')->name('auth.')->group(function () {
     Route::post('medic', 'getMedic')->name('getMedic');
+    Route::post('verify', 'verifyFesa')->name('verifyFesa');
     Route::post('generateMagentoToken', 'getToken')->name('generateMagentoToken');
     Route::post('getUserByTokenMagento', 'getUser')->name('getUserByTokenMagento');
     Route::post('specializations', 'getSpecialization')->name('getSpecialization');
@@ -80,9 +81,7 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         'specialization' => SpecializationController::class,
         'patient' => PatientController::class,
         'prescription' => PrescriptionController::class,
-        'equipment' => EquipmentController::class,
         'prescription.medicament' => PrescriptionMedicamentController::class,
-        'prescription.equipment' => PrescriptionEquipmentController::class,
     ]);
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
         Route::get('{prescription}/email', 'sendEmailNotification')->name('email');
@@ -96,5 +95,5 @@ Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
         Route::post('medicaments2', 'getMedicamentsCode')->name('medicaments2');
         Route::get('{prescription}/sign', 'createSigner')->name('sign');
     });
-    
+
 });

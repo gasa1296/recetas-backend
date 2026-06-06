@@ -8,13 +8,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Prescription;
-use App\Models\Medicament;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
 class PrescriptionMedicamentTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
     private $user;
     private $room;
     private $prescription;
@@ -98,7 +96,7 @@ class PrescriptionMedicamentTest extends TestCase
     }
     public function test_list(): void
     {
-        PrescriptionMedicament::factory(10)->create([
+        PrescriptionMedicament::factory(11)->create([
             'prescription_id' => $this->prescription->id,
         ]);
         $prescription_id = $this->prescription->id;

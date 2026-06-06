@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Specialization;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
@@ -12,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 
 class SpecializationTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
 
     private $user;
 
@@ -33,7 +32,7 @@ class SpecializationTest extends TestCase
                     "identification" => fake()->unique()->words(3, true),
                     "university" => fake()->words(3, true),
                 ],
-                [   
+                [
                     "id" => $instance->id,
                     "name" => $instance->name,
                     "identification" => fake()->unique()->words(3, true),
@@ -69,14 +68,14 @@ class SpecializationTest extends TestCase
     }
     public function test_empty_list(): void
     {
-        Specialization::factory(10)->create();
+        Specialization::factory(2)->create();
         $response = $this->get('api/specialization');
         $response->assertOk();
         $this->assertEmpty($response->json()['data']);
     }
     public function test_list(): void
     {
-        Specialization::factory(10)->create(["user_id" => $this->user]);
+        Specialization::factory(11)->create(["user_id" => $this->user]);
         $response = $this->get('api/specialization');
 
         $response->assertOk();

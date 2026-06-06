@@ -67,13 +67,6 @@ class Prescription extends Model
         return $this->hasMany(PrescriptionMedicament::class);
     }
     /**
-     * Get the equipment of the prescription.
-     */
-    public function equipment(): HasMany
-    {
-        return $this->hasMany(PrescriptionEquipment::class);
-    }
-    /**
      * Get the document of the prescription.
      */
     public function documents(): HasMany
