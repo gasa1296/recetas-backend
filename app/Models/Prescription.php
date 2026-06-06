@@ -68,14 +68,6 @@ class Prescription extends Model
      */
     public function medicaments(): HasMany
     {
-        return $this->hasMany(PrescriptionMedicament::class);
-    }
-
-    /**
-     * Get the document of the prescription.
-     */
-    public function documents(): HasMany
-    {
-        return $this->hasMany(Document::class);
+        return $this->hasMany(Medicament::class);
     }
 }

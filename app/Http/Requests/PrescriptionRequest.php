@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PrescriptionRequest extends FormRequest
 {
@@ -33,8 +34,8 @@ class PrescriptionRequest extends FormRequest
             'diet' => ['nullable ', 'string'],
             'add' => ['nullable ', 'string'],
             'medicaments' => ['nullable ', 'array'],
-            'room_id' => ['required ', 'numeric'],
-            'patient_id' => ['required ', 'numeric'],
+            'room_id' => ['required ', Rule::exists('consulting_rooms')->where('user_id', $this->user()->id)],
+            'patient_id' => ['required ', Rule::exists('patients')->where('user_id', $this->user()->id)],
         ];
     }
 }
