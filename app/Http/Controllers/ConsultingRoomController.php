@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ConsultingRoomRequest;
-use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +14,7 @@ class ConsultingRoomController extends Controller
     public function index(): JsonResponse
     {
         $user = auth()->user();
-        $rooms = $user->rooms()->paginate(10);  
+        $rooms = $user->rooms()->paginate(10);
 
         return response()->json($rooms);
     }
@@ -26,7 +25,7 @@ class ConsultingRoomController extends Controller
     public function store(ConsultingRoomRequest $request): JsonResponse
     {
         $user = auth()->user();
-        
+
         $inputs = $request->validated();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
@@ -54,7 +53,7 @@ class ConsultingRoomController extends Controller
     {
         $user = auth()->user();
         $room = $user->rooms()->findOrFail($room);
-        
+
         $inputs = $request->validated();
         if ($request->file('logo')) {
             if (! empty($room->logo)) {

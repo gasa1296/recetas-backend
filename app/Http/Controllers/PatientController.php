@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientRequest;
 use App\Http\Resources\PatientResource;
-use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -27,9 +26,7 @@ class PatientController extends Controller
             $search = strtoupper($request->search);
             $patients = $patients->where('user_id', '=', auth()->id())
                 ->where(function ($query) use ($operator, $search) {
-                    $query->whereRaw('UPPER(patients.first_name) LIKE '."'%$search%'")
-                        ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) LIKE '%$search%'")
-                        ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) $operator ' ' $operator UPPER(patients.last_name2) LIKE '%$search%'")
+                    $query->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) $operator ' ' $operator UPPER(patients.last_name2) LIKE '%$search%'")
                         ->orWhereRaw("UPPER(patients.email) LIKE '%$search%'")
                         ->orWhere(function ($query) use ($search) {
                             $query->whereHas('prescriptions', function ($query) use ($search) {
@@ -50,7 +47,7 @@ class PatientController extends Controller
     public function store(PatientRequest $request): JsonResponse
     {
         $user = auth()->user();
-        
+
         $inputs = $request->validated();
         $patient = $user->patients()->create($inputs);
 

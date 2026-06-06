@@ -40,7 +40,7 @@ Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.'
     Route::get('designs', 'getFormats')->name('designs');
 });
 
-Route::middleware(['auth:sanctum',/*'verified'*/])->group(function () {
+Route::middleware(['auth:sanctum'/*'verified'*/])->group(function () {
 
     Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
         Route::get('verify/{id}', 'verify')->name('verify');

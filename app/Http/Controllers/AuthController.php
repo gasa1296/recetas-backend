@@ -5,15 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateRequest;
-use App\Models\ConsultingRoom;
-use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{
-    Hash,
-};
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {

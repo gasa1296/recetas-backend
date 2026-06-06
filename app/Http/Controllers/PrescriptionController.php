@@ -23,15 +23,31 @@ class PrescriptionController extends Controller
         return PrescriptionResource::collection($prescriptions->paginate(10))->response();
     }
 
+    public function indexByPatient(int $patient): JsonResponse
+    {
+        $user = auth()->user();
+        $prescriptions = $user->prescriptions()->with(['patient', 'room'])->where('patient_id', $patient)->orderByDesc('created_at');
+
+        return PrescriptionResource::collection($prescriptions->paginate(10))->response();
+    }
+
+    public function indexByRoom(int $room): JsonResponse
+    {
+        $user = auth()->user();
+        $prescriptions = $user->prescriptions()->with(['patient', 'room'])->where('room_id', $room)->orderByDesc('created_at');
+
+        return PrescriptionResource::collection($prescriptions->paginate(10))->response();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
         $inputs = $request->validated();
-        
+
         $inputs['code'] = strtoupper(base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36));
-        
+
         $user = auth()->user();
         $prescription = $user->prescriptions()->create($inputs);
 
@@ -45,7 +61,7 @@ class PrescriptionController extends Controller
      */
     public function show(int $prescription): JsonResponse
     {
-        
+
         $user = auth()->user();
         $prescription = $user->prescriptions()->with(['patient', 'room'])->findOrFail($prescription);
 

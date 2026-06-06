@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Specialization;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\SpecializationRequest;
+use App\Models\Specialization;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
-use Validator;
 
 class SpecializationController extends Controller
 {
@@ -28,7 +26,7 @@ class SpecializationController extends Controller
     public function store(SpecializationRequest $request): JsonResponse
     {
         $user = auth()->user();
-        
+
         $inputs = $request->validated();
         if ($request->file('logo')) {
             $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
@@ -76,7 +74,7 @@ class SpecializationController extends Controller
     {
         $user = auth()->user();
         $specialization = $user->specializations()->findOrFail($specialization);
-        
+
         if (! empty($specialization->logo)) {
             Storage::delete($specialization->logo);
         }
