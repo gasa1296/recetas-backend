@@ -31,6 +31,7 @@ class PrescriptionMedicament extends Model
         'salt',
         'prescription_id',
     ];
+
     /**
      * Get the prescription of the medicament.
      */

@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\{ClientException, ServerException};
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class ResetController extends Controller
 {
     private Client $client;
+
     public function __construct()
     {
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
+
     public function request(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -27,8 +30,10 @@ class ResetController extends Controller
         if ($status !== Password::RESET_LINK_SENT) {
             response()->json(['email' => __($status)], 400);
         }
+
         return response()->json();
     }
+
     public function reset(Request $request)
     {
         $request->validate([
@@ -41,7 +46,7 @@ class ResetController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ]);
 
                 $user->save();
@@ -53,23 +58,26 @@ class ResetController extends Controller
             response()->json(['email' => __($status)], 400);
         }
     }
+
     public function resetPasswordMagento(Request $request)
     {
         try {
-            $res = $this->client->post(env('MAGENTO_URL') . '/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
+            $res = $this->client->post(env('MAGENTO_URL').'/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
                 'auth' => [
                     env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD')
+                    env('MAGENTO_PASSWORD'),
                 ],
                 'json' => [
                     'login' => $request->email,
-                ]
+                ],
             ]);
             $decodedRes = json_decode($res->getBody(), true);
+
             return response()->json($decodedRes, $res->getStatusCode());
-        } catch (ClientException | ServerException$e) {
+        } catch (ClientException|ServerException$e) {
             $response = $e->getResponse();
             $decodedRes = json_decode($response->getBody(), true);
+
             return response()->json($decodedRes, $response->getStatusCode());
         }
     }

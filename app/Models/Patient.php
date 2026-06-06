@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class Patient extends Model
@@ -31,6 +31,7 @@ class Patient extends Model
         'user_id',
         'gender',
     ];
+
     /**
      * Get the prescriptions of the patient.
      */
@@ -38,6 +39,7 @@ class Patient extends Model
     {
         return $this->hasMany(Prescription::class);
     }
+
     /**
      * Get the medic of the prescription.
      */

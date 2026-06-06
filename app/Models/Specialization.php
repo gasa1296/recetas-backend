@@ -22,6 +22,7 @@ class Specialization extends Model
         'logo',
         'user_id',
     ];
+
     /**
      * Get the medic of the room.
      */

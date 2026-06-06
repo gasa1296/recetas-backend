@@ -3,10 +3,10 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
                     'message' => 'Para comenzar, es importante que verifiques tu cuenta haciendo clic en el boton a continuacion',
                     'title' => 'Verificacion de usuario',
                     'url' => $url,
-                    'button' => 'Verificar cuenta'
+                    'button' => 'Verificar cuenta',
                 ]);
         });
         ResetPassword::toMailUsing(function ($notifiable, $token) {
@@ -40,8 +40,8 @@ class AuthServiceProvider extends ServiceProvider
                 ->markdown('mail.email', [
                     'message' => 'Recibimos una solicitud para restablecer la contraseña de su cuenta. Si realizó esta solicitud, haga clic en el siguiente enlace para cambiar su contraseña:',
                     'title' => 'Restablecer contraseña',
-                    'url' => env('FRONT_URL', 'http://localhost') . '/recoverPassword?token='. $token . '&email=' . $notifiable->getEmailForPasswordReset(),
-                    'button' => 'Restablecer contraseña'
+                    'url' => env('FRONT_URL', 'http://localhost').'/recoverPassword?token='.$token.'&email='.$notifiable->getEmailForPasswordReset(),
+                    'button' => 'Restablecer contraseña',
                 ]);
         });
     }

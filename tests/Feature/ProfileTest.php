@@ -2,15 +2,16 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
-use Laravel\Sanctum\Sanctum;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
     use WithFaker;
+
     private $token;
 
     public function setUp(): void
@@ -26,11 +27,13 @@ class ProfileTest extends TestCase
         $response = $this->get('api/profile');
         $response->assertOk();
     }
+
     public function test_not_update(): void
     {
         $response = $this->put('api/profile');
         $response->assertBadRequest();
     }
+
     public function test_update(): void
     {
 
@@ -39,7 +42,7 @@ class ProfileTest extends TestCase
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
             'phone1' => json_encode([
-                ['phone' => '0123456789']
+                ['phone' => '0123456789'],
             ]),
             'phone2' => fake()->phoneNumber(),
             'gender' => fake()->randomElement(['M', 'F']),
@@ -49,6 +52,7 @@ class ProfileTest extends TestCase
         ]);
         $response->assertOk();
     }
+
     public function test_delete(): void
     {
         $response = $this->delete('api/profile');

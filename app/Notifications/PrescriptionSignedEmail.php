@@ -2,9 +2,10 @@
 
 namespace App\Notifications;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\{ServerException, ClientException};
 use App\Models\Prescription;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -12,7 +13,9 @@ use Illuminate\Notifications\Notification;
 class PrescriptionSignedEmail extends Notification
 {
     use Queueable;
+
     private Prescription $prescription;
+
     private array $fileData;
 
     /**
@@ -41,14 +44,16 @@ class PrescriptionSignedEmail extends Notification
     {
         $email = (new MailMessage)->markdown('mail.prescription', [
             'prescription' => $this->prescription,
-            'base_url' => env('APP_URL', '') . '/storage/',
-            'link' => $this->generateLink()
-        ])->subject('Receta médica electrónica ' . $this->prescription->code);
+            'base_url' => env('APP_URL', '').'/storage/',
+            'link' => $this->generateLink(),
+        ])->subject('Receta médica electrónica '.$this->prescription->code);
         foreach ($this->fileData as $key => $file) {
             $email = $email->attachData($file, "$key.pdf");
         }
+
         return $email;
     }
+
     public function toWhatsApp(object $notifiable)
     {
         /* return (new WhatsAppMessage)
@@ -68,35 +73,36 @@ class PrescriptionSignedEmail extends Notification
         ];
     }
 
-    private function generateLink() {
+    private function generateLink()
+    {
         $client = new Client([
-            'verify' => env('VERIFY_FILE', false)
+            'verify' => env('VERIFY_FILE', false),
         ]);
         try {
-            $res = $client->post(env('URL_LINK', '') .'/api/fesa-auth/Auth/AuthWebhook', [
+            $res = $client->post(env('URL_LINK', '').'/api/fesa-auth/Auth/AuthWebhook', [
                 'json' => [
                     'UserName' => env('USR_LINK', ''),
-                    'Password' => env('PASS_LINK', '')
-                ]
+                    'Password' => env('PASS_LINK', ''),
+                ],
             ]);
 
             $resBody = json_decode($res->getBody(), true);
             $token = $resBody['data']['token'];
 
-
-            $res = $client->post(env('URL_LINK', '') .'/api/webhook/Recetas/CrearShortUrl', [
+            $res = $client->post(env('URL_LINK', '').'/api/webhook/Recetas/CrearShortUrl', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                 ],
                 'json' => [
-                    'idFolio' => $this->prescription->code
-                ]
+                    'idFolio' => $this->prescription->code,
+                ],
             ]);
 
             $resBody = json_decode($res->getBody(), true);
+
             return $resBody['data']['shortLink'];
-        } catch (ClientException | ServerException $e) {
-            return 'error ' . $e->getMessage();
+        } catch (ClientException|ServerException $e) {
+            return 'error '.$e->getMessage();
         }
 
     }

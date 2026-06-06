@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'fesa' => $this->fesa,
             'email' => $this->email,
-            'specialization' => $this->specializations->first()
+            'specialization' => $this->specializations->first(),
         ];
     }
 }

@@ -2,30 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Document;
-use App\Notifications\PrescriptionSignedEmail;
-use Validator;
 use App\Http\Resources\PrescriptionResource;
+use App\Models\Document;
 use App\Models\Prescription;
+use App\Notifications\PrescriptionSignedEmail;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 use ZipArchive;
-use Carbon\Carbon;
-
 
 class PrescriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
      * @todo add search
      */
     public function index(): JsonResponse
     {
         $qs = Prescription::where('user_id', auth()->id())
             ->orderBy('id', 'desc');
+
         return PrescriptionResource::collection($qs->paginate(10))->response();
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -83,8 +85,10 @@ class PrescriptionController extends Controller
         }
         $inputs2 = $validator->safe()->all();
         $instance->medicaments()->createMany($inputs2);
+
         return $this->storeExtra($instance);
     }
+
     /**
      * Display the specified resource.
      */
@@ -92,6 +96,7 @@ class PrescriptionController extends Controller
     {
         return (new PrescriptionResource($prescription))->response();
     }
+
     /**
      * Update the specified resource in storage.
      */
@@ -120,8 +125,10 @@ class PrescriptionController extends Controller
         }
         $inputs = $validator->safe()->all();
         $prescription->update($inputs);
+
         return (new PrescriptionResource($prescription))->response();
     }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -131,8 +138,10 @@ class PrescriptionController extends Controller
             return response()->json([], 404);
         }
         $prescription->delete();
+
         return response()->json();
     }
+
     /**
      * Send email notification to patient.
      */
@@ -149,22 +158,23 @@ class PrescriptionController extends Controller
                 $fileData = Storage::get($dir);
                 if ($fileData) {
                     $data[$document] = $fileData;
+
                     continue;
                 }
                 $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
                 $zip = new ZipArchive;
-                $status = $zip->open(base_path() . $dir);
+                $status = $zip->open(base_path().$dir);
                 if ($status !== true) {
                     return response()->json([
                         'file' => 'archivo no encontrado 1',
-                        'document_id' => $document
+                        'document_id' => $document,
                     ], 500);
                 }
                 $fileData = $zip->getFromName('signed_receta.pdf');
                 if ($fileData === false) {
                     return response()->json([
                         'file' => 'archivo no encontrado 2',
-                        'document_id' => $document
+                        'document_id' => $document,
                     ], 500);
                 }
                 $data[$document] = $fileData;
@@ -173,8 +183,10 @@ class PrescriptionController extends Controller
         } else {
             return response()->json(['prescription' => 'receta no valida para enviar por correo']);
         }
+
         return response()->json();
     }
+
     /**
      * Download precription file
      */
@@ -183,8 +195,9 @@ class PrescriptionController extends Controller
         $fileName = "$prescription->id-$request->document_id";
         $medic = $prescription->user_id;
         $errors = $this->verifyPrescription($prescription->medicaments);
-        if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
+        if (! empty($errors) || ! empty(json_decode($prescription->add_med, true))) {
             $dir = "medics/$medic/prescriptions/$fileName.pdf";
+
             return Storage::download($dir, 'receta.pdf');
         } else {
             $dir = "medics/$medic/prescriptions/$fileName.pdf";
@@ -193,7 +206,7 @@ class PrescriptionController extends Controller
             }
             $zip = new ZipArchive;
             $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
-            $status = $zip->open(base_path() . $dir);
+            $status = $zip->open(base_path().$dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -201,11 +214,13 @@ class PrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
+
             return response()->streamDownload(function () use ($fileData) {
                 echo $fileData;
             }, 'receta.pdf');
         }
     }
+
     /**
      * Verify if prescription can be sended or signed
      */
@@ -217,8 +232,10 @@ class PrescriptionController extends Controller
                 $errors[$medicament->medicament_id] = 'grupo no valido para enviar receta';
             }
         }
+
         return $errors;
     }
+
     private function storeExtra(Prescription $instance): JsonResponse
     {
         $legalario = new LegalarioController();
@@ -231,15 +248,15 @@ class PrescriptionController extends Controller
         $documentData = $document->getData(true);
         $instance->document_id = implode(';', $documentData);
         $errors = $this->verifyPrescription($instance->medicaments);
-        $validation = !empty($errors) || !empty(json_decode($instance->add_med, true));
+        $validation = ! empty($errors) || ! empty(json_decode($instance->add_med, true));
         if ($validation) {
             $instance->status = 5;
-            $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
+            $instance->file = env('APP_URL').'/api/receta/'.$instance->code.'/file';
         }
         foreach ($documentData as $document_id) {
             Document::create([
                 'id' => $document_id,
-                'prescription_id' => $instance->id
+                'prescription_id' => $instance->id,
             ]);
             if ($validation) {
                 $file = $legalario->saveFile($document_id);
@@ -248,14 +265,16 @@ class PrescriptionController extends Controller
                 }
                 $fileData = $file->getData(true);
                 $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
-                if (!Storage::put($dir, base64_decode($fileData['data']['document']))) {
+                if (! Storage::put($dir, base64_decode($fileData['data']['document']))) {
                     return response()->json('Error guardando archivo', 500);
                 }
             }
         }
         $instance->save();
+
         return (new PrescriptionResource($instance))->response();
     }
+
     /**
      * Display a listing of the resource by client.
      */
@@ -269,11 +288,12 @@ class PrescriptionController extends Controller
         $instance = $doc->prescription;
 
         $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.pdf";
-        if (!Storage::put($dir, base64_decode($inputs['file']))) {
+        if (! Storage::put($dir, base64_decode($inputs['file']))) {
             return response()->json('Error guardando archivo', 500);
         }
-        $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
+        $instance->file = env('APP_URL').'/api/receta/'.$instance->code.'/file';
         $instance->save();
+
         return (new PrescriptionResource($instance))->response();
     }
 }

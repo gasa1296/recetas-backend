@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('gender');
             $table->date('birth_date');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

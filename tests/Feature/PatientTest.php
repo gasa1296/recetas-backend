@@ -2,14 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\{
-    User,
-    Patient,
-    Prescription
-};
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class PatientTest extends TestCase
 {
@@ -24,42 +21,46 @@ class PatientTest extends TestCase
         Sanctum::actingAs($this->user, ['*']);
 
     }
+
     public function test_insert(): void
     {
         $response = $this->post('api/patient', [
-            "first_name" => fake()->firstName(),
-            "last_name1" => fake()->lastName(),
-            "last_name2" => fake()->lastName(),
-            "email" => fake()->email(),
-            "phone1" => fake()->phoneNumber(),
-            "phone2" => fake()->phoneNumber(),
-            "birth_date" => fake()->date(),
+            'first_name' => fake()->firstName(),
+            'last_name1' => fake()->lastName(),
+            'last_name2' => fake()->lastName(),
+            'email' => fake()->email(),
+            'phone1' => fake()->phoneNumber(),
+            'phone2' => fake()->phoneNumber(),
+            'birth_date' => fake()->date(),
             'gender' => fake()->randomElement(['M', 'F']),
         ]);
 
         $response->assertStatus(201);
     }
+
     public function test_update(): void
     {
         $instance = Patient::factory()->create(['user_id' => $this->user->id]);
-        $response = $this->put('api/patient/' . $instance->id, [
-            "first_name" => fake()->firstName(),
-            "last_name1" => fake()->lastName(),
-            "last_name2" => fake()->lastName(),
-            "email" => fake()->email(),
-            "phone1" => fake()->phoneNumber(),
-            "phone2" => fake()->phoneNumber(),
-            "birth_date" => fake()->date(),
+        $response = $this->put('api/patient/'.$instance->id, [
+            'first_name' => fake()->firstName(),
+            'last_name1' => fake()->lastName(),
+            'last_name2' => fake()->lastName(),
+            'email' => fake()->email(),
+            'phone1' => fake()->phoneNumber(),
+            'phone2' => fake()->phoneNumber(),
+            'birth_date' => fake()->date(),
             'gender' => fake()->randomElement(['M', 'F']),
         ]);
         $response->assertOk();
     }
+
     public function test_show(): void
     {
         $instance = Patient::factory()->create(['user_id' => $this->user->id]);
-        $response = $this->get('api/patient/' . $instance->id);
+        $response = $this->get('api/patient/'.$instance->id);
         $response->assertOk();
     }
+
     public function test_list(): void
     {
         Patient::factory(11)->create(['user_id' => $this->user->id]);
@@ -67,6 +68,7 @@ class PatientTest extends TestCase
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
     }
+
     public function test_search(): void
     {
         Patient::factory(20)

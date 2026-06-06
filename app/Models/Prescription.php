@@ -38,6 +38,7 @@ class Prescription extends Model
         'status',
         'code',
     ];
+
     /**
      * Get the medic of the prescription.
      */
@@ -45,6 +46,7 @@ class Prescription extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     /**
      * Get the room of the prescription.
      */
@@ -52,6 +54,7 @@ class Prescription extends Model
     {
         return $this->belongsTo(ConsultingRoom::class);
     }
+
     /**
      * Get the patient of the prescription.
      */
@@ -59,6 +62,7 @@ class Prescription extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+
     /**
      * Get the medicaments of the prescription.
      */
@@ -66,6 +70,7 @@ class Prescription extends Model
     {
         return $this->hasMany(PrescriptionMedicament::class);
     }
+
     /**
      * Get the document of the prescription.
      */

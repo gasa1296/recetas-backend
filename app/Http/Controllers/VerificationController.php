@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
     public function verify($user_id, Request $request)
     {
-        if (!$request->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             //temporal url
-            return redirect()->to(env('FRONT_URL', 'http://localhost') . '?msg=Invalid/Expired url provided.');
+            return redirect()->to(env('FRONT_URL', 'http://localhost').'?msg=Invalid/Expired url provided.');
         }
 
         $user = User::findOrFail($user_id);
 
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
+
         //temporal url
         return redirect()->to(env('FRONT_URL', 'http://localhost'));
     }
+
     public function resend()
     {
         if (auth()->user()->hasVerifiedEmail()) {
-            return response()->json(["msg" => "Email already verified."], 400);
+            return response()->json(['msg' => 'Email already verified.'], 400);
         }
 
         auth()->user()->sendEmailVerificationNotification();
 
-        return response()->json(["msg" => "Email verification link sent on your email id"]);
+        return response()->json(['msg' => 'Email verification link sent on your email id']);
     }
+
     public function notice(): JsonResponse
     {
         return response()->json(['user' => __('usuario no verificado')]);

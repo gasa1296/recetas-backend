@@ -30,6 +30,7 @@ class SignUpRequest extends CustomFormRequest
             'specialization' => ['required', 'string'],
         ];
     }
+
     public function messages(): array
     {
         return [

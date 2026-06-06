@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\QueryException;
-use Validator;
 use App\Models\Specialization;
-use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 
 class SpecializationController extends Controller
 {
@@ -16,7 +16,8 @@ class SpecializationController extends Controller
      */
     public function index(): JsonResponse
     {
-        $instances = Specialization::where("user_id", auth()->id());
+        $instances = Specialization::where('user_id', auth()->id());
+
         return response()->json($instances->paginate(10));
     }
 
@@ -45,8 +46,8 @@ class SpecializationController extends Controller
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
             try {
-                if (!empty($request->file('logo')[$key])) {
-                    $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user, 'public');
+                if (! empty($request->file('logo')[$key])) {
+                    $el['logo'] = $request->file('logo')[$key]->store('medics/'.$user, 'public');
                 }
                 if (empty($el['id'])) {
                     $el['user_id'] = $user;
@@ -62,10 +63,11 @@ class SpecializationController extends Controller
                     $instance->update($el);
                 }
             } catch (QueryException $e) {
-                return response()->json(['university.' . $key => 'Cedula profesional en uso'], 400);
+                return response()->json(['university.'.$key => 'Cedula profesional en uso'], 400);
             }
             array_push($instances, $instance);
         }
+
         return response()->json($instances);
     }
 
@@ -77,6 +79,7 @@ class SpecializationController extends Controller
         if ($specialization->user_id != auth()->id()) {
             return response()->json([], 404);
         }
+
         return response()->json($specialization);
     }
 
@@ -99,12 +102,13 @@ class SpecializationController extends Controller
         }
         $inputs = $validator->safe()->all();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
-            if ($inputs['logo'] && !empty($specialization->logo)) {
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
+            if ($inputs['logo'] && ! empty($specialization->logo)) {
                 Storage::delete($specialization->logo);
             }
         }
         $specialization->update($inputs);
+
         return response()->json($specialization);
     }
 
@@ -116,10 +120,11 @@ class SpecializationController extends Controller
         if ($specialization->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        if (!empty($specialization->logo)) {
+        if (! empty($specialization->logo)) {
             Storage::delete($specialization->logo);
         }
         $specialization->delete();
+
         return response()->json();
     }
 }

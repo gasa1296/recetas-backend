@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Medicament;
 use App\Models\Prescription;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class PrescriptionMedicamentFactory extends Factory
             'way' => fake()->words(10, true),
             'frequency' => fake()->word(),
             'duration' => fake()->word(),
-            "quantity" => fake()->randomDigit(),
+            'quantity' => fake()->randomDigit(),
             'medicament_id' => fake()->randomNumber(),
             'name' => fake()->word(),
             'type' => fake()->word(),

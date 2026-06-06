@@ -4,22 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PrescriptionResource;
 use App\Models\Document;
-use Illuminate\Http\{Request, Response};
-use ZipArchive;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use App\Models\Prescription;
-use GuzzleHttp\Client;
-use Validator;
 use App\Notifications\PrescriptionSignedEmail;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Validator;
+use ZipArchive;
 
 class SEUSPrescriptionController extends Controller
 {
     private Client $client;
+
     public function __construct()
     {
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
+
     /**
      * Display the specified resource.
      */
@@ -29,17 +31,20 @@ class SEUSPrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
+
         return (new PrescriptionResource($prescription))->response();
     }
+
     /**
      * Display a listing of the resource by client.
      */
     public function addFile(Request $request)
     {
-        if(env('PUBLIC_VAL', 0) > 0) {
+        if (env('PUBLIC_VAL', 0) > 0) {
             $token = $request->bearerToken();
             if ($token != env('PUBLIC_KEY', '')) {
-                Log::info('addfile',['error log', $request->header('Authorization'), env('PUBLIC_KEY', '')]);
+                Log::info('addfile', ['error log', $request->header('Authorization'), env('PUBLIC_KEY', '')]);
+
                 return response()->json(['token' => 'token invalido'], 404);
             }
         }
@@ -55,33 +60,35 @@ class SEUSPrescriptionController extends Controller
         $instance = $doc->prescription;
 
         $dir = "medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
-        if (!Storage::put($dir, base64_decode($inputs['zip']))) {
+        if (! Storage::put($dir, base64_decode($inputs['zip']))) {
             return response()->json('Error guardando archivo', 500);
         }
-        $instance->file = env('APP_URL') . '/api/receta/' . $instance->code . '/file';
+        $instance->file = env('APP_URL').'/api/receta/'.$instance->code.'/file';
         $instance->save();
         if ($instance->auto_email) {
             $dir = "/storage/app/medics/$instance->user_id/prescriptions/$instance->id-$document_id.zip";
             $zip = new ZipArchive;
-            $status = $zip->open(base_path() . $dir);
+            $status = $zip->open(base_path().$dir);
             if ($status !== true) {
                 return response()->json([
                     'file' => 'archivo no encontrado 1',
-                    'document_id' => $document_id
+                    'document_id' => $document_id,
                 ], 500);
             }
             $fileData = $zip->getFromName('signed_receta.pdf');
             if ($fileData === false) {
                 return response()->json([
                     'file' => 'archivo no encontrado 2',
-                    'document_id' => $document_id
+                    'document_id' => $document_id,
                 ], 500);
             }
             $data[$document_id] = $fileData;
             $instance->patient->notify(new PrescriptionSignedEmail($instance, $data));
         }
+
         return (new PrescriptionResource($instance))->response();
     }
+
     /**
      * Update the specified resource in storage.
      */
@@ -91,7 +98,7 @@ class SEUSPrescriptionController extends Controller
         if ($token != env('PUBLIC_KEY', '')) {
             return response()->json(['token' => 'token invalido'], 403);
         }
-        if (!empty($prescription->client)) {
+        if (! empty($prescription->client)) {
             return response()->json(['client' => 'Ya tiene cliente'], 400);
         }
         $validator = Validator::make($request->all(), [
@@ -102,8 +109,10 @@ class SEUSPrescriptionController extends Controller
         }
         $inputs = $validator->safe()->only('client');
         $prescription->update($inputs);
+
         return (new PrescriptionResource($prescription))->response();
     }
+
     /**
      * Download precription file
      */
@@ -119,21 +128,21 @@ class SEUSPrescriptionController extends Controller
         }
         $fileName = "$prescription->id-$document";
         $dir = "medics/$medic/prescriptions/$fileName.pdf";
-        if (!empty($errors) || !empty(json_decode($prescription->add_med, true))) {
+        if (! empty($errors) || ! empty(json_decode($prescription->add_med, true))) {
             return Storage::response($dir, 'receta.pdf', [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="receta.pdf"'
+                'Content-Disposition' => 'inline; filename="receta.pdf"',
             ]);
         } else {
             if (Storage::disk('local')->exists($dir)) {
                 return Storage::response($dir, 'receta.pdf', [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="receta.pdf"'
+                    'Content-Disposition' => 'inline; filename="receta.pdf"',
                 ]);
             }
             $zip = new ZipArchive;
             $dir = "/storage/app/medics/$medic/prescriptions/$fileName.zip";
-            $status = $zip->open(base_path() . $dir);
+            $status = $zip->open(base_path().$dir);
             if ($status !== true) {
                 return response()->json('error al obtener archivo 1', 500);
             }
@@ -141,14 +150,16 @@ class SEUSPrescriptionController extends Controller
             if ($fileData === false) {
                 return response()->json('error al obtener archivo 2', 500);
             }
+
             return response()->stream(function () use ($fileData) {
                 echo $fileData;
             }, 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="receta.pdf"'
+                'Content-Disposition' => 'inline; filename="receta.pdf"',
             ]);
         }
     }
+
     /**
      * Display a listing of the resource by client.
      */
@@ -165,8 +176,10 @@ class SEUSPrescriptionController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->only('client');
+
         return PrescriptionResource::collection(Prescription::where('client', $inputs['client'])->paginate(10))->response();
     }
+
     /**
      * Display a listing of the resource by client.
      */
@@ -187,11 +200,12 @@ class SEUSPrescriptionController extends Controller
         $inputs = $validator->safe()->all();
         foreach ($prescription->medicaments as $medicament) {
             $med_id = $medicament->medicament_id;
-            if (!empty($inputs[$med_id])) {
+            if (! empty($inputs[$med_id])) {
                 $medicament->quantity_exp += $inputs[$med_id]['total_exp'];
                 if ($medicament->group == 'RESTRICCION ANTIBIOTICOS') {
                     if ($medicament->quantity_exp > $medicament->quantity) {
-                        $errors[$med_id . '.total_exp'] = 'No se puede expedir mas de lo recetado';
+                        $errors[$med_id.'.total_exp'] = 'No se puede expedir mas de lo recetado';
+
                         continue;
                     }
                     if ($medicament->quantity_exp == $medicament->quantity) {
@@ -200,10 +214,10 @@ class SEUSPrescriptionController extends Controller
                 }
             }
         }
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             return response()->json($errors, 400);
         }
-        if (!empty($completeds) && $prescription->medicaments->count() == count($completeds)) {
+        if (! empty($completeds) && $prescription->medicaments->count() == count($completeds)) {
             $prescription->status = 2;
         } else {
             $prescription->status = 1;

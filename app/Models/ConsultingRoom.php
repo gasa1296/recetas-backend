@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConsultingRoom extends Model
 {
@@ -31,10 +30,11 @@ class ConsultingRoom extends Model
         'logo',
         'design',
         'fav',
-        'auto_email', 
+        'auto_email',
         'auto_whatsapp',
         'user_id',
     ];
+
     /**
      * Get the medic of the room.
      */

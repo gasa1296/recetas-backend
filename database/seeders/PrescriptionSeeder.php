@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PrescriptionSeeder extends Seeder

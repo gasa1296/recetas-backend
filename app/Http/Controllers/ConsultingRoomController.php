@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
-use Illuminate\Http\Request;
+use App\Http\Requests\Room\StoreRequest;
+use App\Http\Requests\Room\UpdateRequest;
+use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
-use App\{
-    Models\ConsultingRoom,
-    Http\Requests\Room\StoreRequest,
-    Http\Requests\Room\UpdateRequest,
-};
+
 class ConsultingRoomController extends Controller
 {
     /**
@@ -18,7 +15,8 @@ class ConsultingRoomController extends Controller
      */
     public function index(): JsonResponse
     {
-        $instances = ConsultingRoom::where("user_id", auth()->id());
+        $instances = ConsultingRoom::where('user_id', auth()->id());
+
         return response()->json($instances->paginate(10));
     }
 
@@ -32,8 +30,8 @@ class ConsultingRoomController extends Controller
 
         $instances = [];
         foreach ($inputs['data'] as $key => $el) {
-            if (!empty($request->file('logo')[$key])) {
-                $el['logo'] = $request->file('logo')[$key]->store('medics/' . $user, 'public');
+            if (! empty($request->file('logo')[$key])) {
+                $el['logo'] = $request->file('logo')[$key]->store('medics/'.$user, 'public');
             }
             if (empty($el['id'])) {
                 $el['user_id'] = $user;
@@ -50,6 +48,7 @@ class ConsultingRoomController extends Controller
             }
             array_push($instances, $instance);
         }
+
         return response()->json($instances);
     }
 
@@ -61,6 +60,7 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
+
         return response()->json($room);
     }
 
@@ -74,12 +74,13 @@ class ConsultingRoomController extends Controller
         }
         $inputs = $request->validated();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/' . auth()->id(), 'public');
-            if ($inputs['logo'] && !empty($room->logo)) {
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
+            if ($inputs['logo'] && ! empty($room->logo)) {
                 Storage::delete($room->logo);
             }
         }
         $room->update($inputs);
+
         return response()->json($room);
     }
 
@@ -91,12 +92,14 @@ class ConsultingRoomController extends Controller
         if ($room->user_id != auth()->id()) {
             return response()->json([], 404);
         }
-        if (!empty($room->logo)) {
+        if (! empty($room->logo)) {
             Storage::delete($room->logo);
         }
         $room->delete();
+
         return response()->json();
     }
+
     public function getFormats(): JsonResponse
     {
         return response()->json([0 => env('F1'), 1 => env('F2'), '2' => env('F3')]);

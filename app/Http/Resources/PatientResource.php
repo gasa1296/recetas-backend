@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use App\Models\Prescription;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PatientResource extends JsonResource
@@ -15,7 +14,7 @@ class PatientResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        
+
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -26,7 +25,7 @@ class PatientResource extends JsonResource
             'phone2' => $this->phone2,
             'birth_date' => $this->birth_date,
             'gender' => $this->gender,
-            'prescriptions' => PrescriptionResource::collection($this->prescriptions)
+            'prescriptions' => PrescriptionResource::collection($this->prescriptions),
         ];
     }
 }

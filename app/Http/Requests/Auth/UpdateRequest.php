@@ -30,7 +30,7 @@ class UpdateRequest extends CustomFormRequest
             'phone1' => ['nullable', 'json'],
             'phone2' => ['nullable', 'string'],
             'gender' => ['nullable', 'string'],
-            'fesa' => ['required',],
+            'fesa' => ['required'],
         ];
     }
 }

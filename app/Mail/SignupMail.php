@@ -3,14 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\{Content, Address, Envelope};
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class SignupMail extends Mailable
 {
     use Queueable, SerializesModels;
+
     private $inputs;
 
     /**
@@ -27,7 +28,7 @@ class SignupMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Solicitud de registro",
+            subject: 'Solicitud de registro',
         );
     }
 
@@ -46,7 +47,7 @@ class SignupMail extends Mailable
                     'Celular' => $this->inputs['phone'],
                     'Cedula' => $this->inputs['professional_id'],
                     'Especialiadad' => $this->inputs['specialization'],
-                ]
+                ],
             ]
         );
     }

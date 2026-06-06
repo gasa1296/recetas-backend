@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,18 +18,18 @@ class ConsultingRoomFactory extends Factory
     public function definition(): array
     {
         return [
-            "name"=> fake()->name(),
-            "zip" => fake()->postcode(),
-            "street" => fake()->streetAddress(),
-            "colony" => fake()->city(),
-            "state" => fake()->city(),
-            "delegation" => fake()->city(),
-            "n_exterior" => fake()->randomNumber(),
-            "n_interior" => fake()->randomNumber(),
-            "address" => fake()->address(),
-            "phone" => fake()->phoneNumber(),
-            "logo" => fake()->imageUrl(),
-            "design" => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
+            'name' => fake()->name(),
+            'zip' => fake()->postcode(),
+            'street' => fake()->streetAddress(),
+            'colony' => fake()->city(),
+            'state' => fake()->city(),
+            'delegation' => fake()->city(),
+            'n_exterior' => fake()->randomNumber(),
+            'n_interior' => fake()->randomNumber(),
+            'address' => fake()->address(),
+            'phone' => fake()->phoneNumber(),
+            'logo' => fake()->imageUrl(),
+            'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
             'user_id' => User::factory()->create()->id,
 
         ];

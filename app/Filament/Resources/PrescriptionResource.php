@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrescriptionResource\Pages;
-use App\Filament\Resources\PrescriptionResource\RelationManagers;
 use App\Models\Prescription;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -175,14 +174,14 @@ class PrescriptionResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             PrescriptionResource\RelationManagers\MedicamentsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -190,8 +189,8 @@ class PrescriptionResource extends Resource
             'create' => Pages\CreatePrescription::route('/create'),
             'edit' => Pages\EditPrescription::route('/{record}/edit'),
         ];
-    }    
-    
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

@@ -1,19 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\ConsultingRoomController;
 use App\Http\Controllers\LegalarioController;
 use App\Http\Controllers\MagentoController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
-use App\Http\Controllers\PrescriptionEquipmentController;
 use App\Http\Controllers\PrescriptionMedicamentController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SEUSPrescriptionController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\ConsultingRoomController;
-use App\Http\Controllers\PatientController;
 use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +29,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     Route::post('recregf2', 'register')->name('register');
     Route::post('register', 'requestSignup')->name('request_register');
     Route::post('login', 'login')->name('login');
-    Route::delete('logout', 'logout')->middleware(['auth:sanctum', /*'verified'*/])->name('logout');
+    Route::delete('logout', 'logout')->middleware(['auth:sanctum'/*'verified'*/])->name('logout');
 });
 Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp.')->group(function () {
     Route::get('templates', 'getTemplates')->name('templates');
@@ -63,7 +61,7 @@ Route::controller(ConsultingRoomController::class)->prefix('room')->name('room.'
     Route::get('designs', 'getFormats')->name('designs');
 });
 
-Route::middleware(['auth:sanctum', /*'verified'*/])->group(function () {
+Route::middleware(['auth:sanctum'/*'verified'*/])->group(function () {
 
     Route::controller(VerificationController::class)->prefix('verification')->name('verification.')->group(function () {
         Route::get('verify/{id}', 'verify')->name('verify');

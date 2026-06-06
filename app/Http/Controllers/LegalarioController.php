@@ -2,46 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Exception\{ServerException, ClientException};
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use Milon\Barcode\DNS1D;
 use App\Models\Prescription;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\{Storage, Log};
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Milon\Barcode\DNS1D;
 use Validator;
-
 
 class LegalarioController extends Controller
 {
     private Client $client;
+
     private string $token;
+
     public function __construct()
     {
         $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
     }
+
     /**
      * Login to legalario
      */
     private function legalarioLogin(): array
     {
         try {
-            $res = $this->client->post(env('LEGALARIO_URL') . '/auth/login', [
+            $res = $this->client->post(env('LEGALARIO_URL').'/auth/login', [
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'form_params' => [
                     'email' => env('LEGALARIO_USER', ''),
                     'password' => env('LEGALARIO_PASSWORD', ''),
-                ]
+                ],
             ]);
+
             return json_decode($res->getBody(), true);
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
+
     /**
      * Get Legalario bearer token
      */
@@ -52,23 +58,25 @@ class LegalarioController extends Controller
             return $res;
         }
         try {
-            $res = $this->client->post(env('LEGALARIO_URL') . '/auth/token', [
+            $res = $this->client->post(env('LEGALARIO_URL').'/auth/token', [
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'form_params' => [
                     'client_id' => $res['data']['client_id'],
                     'client_secret' => $res['data']['client_secret'],
                     'grant_type' => $res['data']['grant_type'],
                     'scope' => $res['data']['scopes'],
-                ]
+                ],
             ]);
+
             return json_decode($res->getBody(), true);
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return json_decode($e->getResponse()->getBody(), true);
         }
     }
+
     /**
      * Add document id to prescription
      */
@@ -84,8 +92,10 @@ class LegalarioController extends Controller
                 array_push($responseData, $res->getData(true)['data']['id']);
             }
         }
+
         return response()->json($responseData);
     }
+
     private function requestDocument(Prescription $prescription, array $medicaments)
     {
         $res = $this->legalarioToken();
@@ -99,7 +109,7 @@ class LegalarioController extends Controller
         $phones = json_decode($medic->phone1, true);
         $esp = $medic->specializations->first();
         $esp_logo = '';
-        if (!empty($esp->logo)) {
+        if (! empty($esp->logo)) {
             if (str_contains($esp->logo, 'http')) {
                 $esp_logo = base64_encode(@file_get_contents($esp->logo) ?: '');
             } else {
@@ -108,11 +118,11 @@ class LegalarioController extends Controller
         }
         try {
             $date = new Carbon($prescription->created_at);
-            $res = $this->client->post(env('LEGALARIO_URL') . '/v2/documents', [
+            $res = $this->client->post(env('LEGALARIO_URL').'/v2/documents', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
                     'name' => 'Receta',
@@ -124,103 +134,103 @@ class LegalarioController extends Controller
                                 'key' => 1,
                                 'name' => 'name',
                                 'value' => "$medic->first_name $medic->last_name1 $medic->last_name2",
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 2,
                                 'name' => 'identification',
                                 'value' => implode(
-                                    ",",
+                                    ',',
                                     array_map(function ($spec) {
                                         return "$spec[name] Céd prof: $spec[identification]";
                                     }, $medic->specializations->toArray())
                                 ),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 3,
                                 'name' => 'id',
                                 'value' => $prescription->code,
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 4,
                                 'name' => 'date',
                                 'value' => $date->format('d/m/Y'),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 5,
                                 'name' => 'time',
                                 'value' => $date->format('H:i'),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 6,
                                 'name' => 'patient name',
                                 'value' => "$patient->first_name $patient->last_name1 $patient->last_name2",
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 7,
                                 'name' => 'birth date',
                                 'value' => Carbon::createFromFormat('Y-m-d', $patient->birth_date)->format('d/m/Y'),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 8,
                                 'name' => 'weight',
                                 'value' => $prescription->weight ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 9,
                                 'name' => 'height',
                                 'value' => $prescription->height ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 10,
                                 'name' => 'temp',
                                 'value' => $prescription->temp ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 11,
                                 'name' => 'saturation',
                                 'value' => $prescription->saturation ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 12,
                                 'name' => 'pressure',
                                 'value' => $prescription->pressure ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 13,
                                 'name' => 'ppm',
                                 'value' => $prescription->ppm ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 14,
                                 'name' => 'diagnostic',
                                 'value' => $prescription->diagnostic ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
@@ -229,7 +239,7 @@ class LegalarioController extends Controller
                                 'value' => implode(
                                     "\n",
                                     array_map(function ($key, $medicament) {
-                                        if (!empty($medicament['indications'])) {
+                                        if (! empty($medicament['indications'])) {
                                             return "$medicament[name] \n $medicament[indications] \n";
                                         } elseif (empty($medicament['name'])) {
                                             return $medicament;
@@ -238,80 +248,82 @@ class LegalarioController extends Controller
                                         }
                                     }, array_keys($medicaments), $medicaments)
                                 ),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 16,
                                 'name' => 'room',
                                 'value' => $room->name ?: '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 17,
                                 'name' => 'address',
                                 'value' => "$room->street, $room->n_exterior, $room->n_interior, $room->colony, $room->zip, $room->delegation, $room->state",
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 18,
                                 'name' => 'phone',
                                 'value' => empty($phones) ? '' : $phones[0]['phone'],
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 19,
                                 'name' => 'email',
                                 'value' => $medic->email,
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 20,
                                 'name' => 'specializations',
                                 'value' => $medic->specializations->first()?->name ?? '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 21,
                                 'name' => 'university',
                                 'value' => $medic->specializations->first()?->university ?? '',
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 1001,
                                 'name' => 'IMAGEN_CLIENTE_UNIVERSIDAD',
                                 'value' => $esp_logo,
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 1002,
                                 'name' => 'IMAGEN_CLIENTE_HOSPITAL',
                                 'value' => empty($room->logo) ? '' : base64_encode(Storage::disk('public')->get($room->logo)),
-                            ]
+                            ],
                         ],
                         [
                             [
                                 'key' => 1003,
                                 'name' => 'IMAGEN_CLIENTE_BARRAS',
                                 'value' => (new DNS1D())->getBarcodePNG($prescription->code, 'C128'),
-                            ]
+                            ],
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]);
+
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
 
     }
+
     public function saveFile(string $document_id): JsonResponse
     {
         $res = $this->legalarioToken();
@@ -320,33 +332,35 @@ class LegalarioController extends Controller
         }
         $token = $res['data']['access_token'];
         try {
-            $res = $this->client->get(env('LEGALARIO_URL') . '/v2/documents/download', [
+            $res = $this->client->get(env('LEGALARIO_URL').'/v2/documents/download', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                     'Content-Type' => 'application/json',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ],
                 'json' => [
                     'document_id' => $document_id,
-                    "document_type" => 'Documento sin firmas',
-                    "format" => "Base64",
-                ]
+                    'document_type' => 'Documento sin firmas',
+                    'format' => 'Base64',
+                ],
             ]);
+
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
+
     /**
      * Create and return prescription signers
      */
     public function createSigner(Prescription $prescription): JsonResponse
     {
         $errors = (new PrescriptionController)->verifyPrescription($prescription->medicaments);
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             return response()->json($errors, 400);
         }
-        if (!empty($prescription->file)) {
+        if (! empty($prescription->file)) {
             return response()->json(['prescription' => 'receta ya fue firmada previamente'], 400);
         }
         $res = $this->legalarioToken();
@@ -365,16 +379,16 @@ class LegalarioController extends Controller
                     [
                         'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
                         'email' => $medic->email,
-                        'type' => 'MEDICO'
-                    ]
+                        'type' => 'MEDICO',
+                    ],
                 ],
             ]);
             try {
-                $res = $this->client->post(env('LEGALARIO_URL') . '/v2/signers', [
+                $res = $this->client->post(env('LEGALARIO_URL').'/v2/signers', [
                     'headers' => [
                         'Authorization' => "Bearer $token",
                         'Content-Type' => 'application/json',
-                        'Accept' => 'application/json'
+                        'Accept' => 'application/json',
                     ],
                     'json' => [
                         'document_id' => $document,
@@ -385,21 +399,23 @@ class LegalarioController extends Controller
                             [
                                 'fullname' => "$medic->first_name $medic->last_name1 $medic->last_name2",
                                 'email' => $medic->email,
-                                'type' => 'MEDICO'
-                            ]
+                                'type' => 'MEDICO',
+                            ],
                         ],
-                    ]
+                    ],
                 ]);
                 $resBody = json_decode($res->getBody(), true);
                 array_push($response, $resBody);
-            } catch (ClientException | ServerException $e) {
+            } catch (ClientException|ServerException $e) {
                 $resBody = json_decode($e->getResponse()->getBody(), true);
                 array_push($response, $resBody);
             }
         }
         Log::info('LegalarioController@createSigner', $response);
+
         return response()->json($response);
     }
+
     public function getMedicaments(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -413,20 +429,22 @@ class LegalarioController extends Controller
             $res = $this->client->post(env('URL_MEDICAMENTS'), [
                 'auth' => [
                     env('MEDICAMENT_USER'),
-                    env('MEDICAMENT_PASS')
+                    env('MEDICAMENT_PASS'),
                 ],
-                'json' => ['products' => $inputs['products']]
+                'json' => ['products' => $inputs['products']],
             ]);
+
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }
+
     public function getMedicamentsCode(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'descripcion' => ['required ', 'string'],
-            'hash' => ['required', 'string']
+            'hash' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -436,12 +454,13 @@ class LegalarioController extends Controller
             $res = $this->client->post(env('URL_MEDICAMENTSCODE'), [
                 'auth' => [
                     env('MEDICAMENT_USER'),
-                    env('MEDICAMENT_PASS')
+                    env('MEDICAMENT_PASS'),
                 ],
-                'json' => $inputs
+                'json' => $inputs,
             ]);
+
             return response()->json(json_decode($res->getBody(), true));
-        } catch (ClientException | ServerException $e) {
+        } catch (ClientException|ServerException $e) {
             return response()->json(json_decode($e->getResponse()->getBody(), true), $e->getResponse()->getStatusCode());
         }
     }

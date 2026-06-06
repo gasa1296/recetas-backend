@@ -3,18 +3,21 @@
 namespace Tests\Feature;
 
 use App\Models\ConsultingRoom;
-use App\Models\PrescriptionMedicament;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Prescription;
+use App\Models\PrescriptionMedicament;
+use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class PrescriptionMedicamentTest extends TestCase
 {
     use WithFaker;
+
     private $user;
+
     private $room;
+
     private $prescription;
 
     public function setUp(): void
@@ -29,6 +32,7 @@ class PrescriptionMedicamentTest extends TestCase
         Sanctum::actingAs($this->user, ['*']);
 
     }
+
     public function test_insert(): void
     {
         $instance = Prescription::factory()->create([
@@ -37,10 +41,10 @@ class PrescriptionMedicamentTest extends TestCase
         ]);
         $response = $this->post("api/prescription/$instance->id/medicament", [
             [
-                'dose' => fake()->randomDigit() . fake()->word(),
+                'dose' => fake()->randomDigit().fake()->word(),
                 'way' => fake()->words(10, true),
-                'frequency' => fake()->randomNumber() . fake()->word(),
-                'duration' => fake()->randomNumber() . fake()->word(),
+                'frequency' => fake()->randomNumber().fake()->word(),
+                'duration' => fake()->randomNumber().fake()->word(),
                 'quantity' => fake()->randomDigit(),
                 'name' => fake()->word(),
                 'type' => fake()->word(),
@@ -50,10 +54,10 @@ class PrescriptionMedicamentTest extends TestCase
                 'medicament_id' => fake()->randomNumber(),
             ],
             [
-                'dose' => fake()->randomDigit() . fake()->word(),
+                'dose' => fake()->randomDigit().fake()->word(),
                 'way' => fake()->words(10, true),
-                'frequency' => fake()->randomNumber() . fake()->word(),
-                'duration' => fake()->randomNumber() . fake()->word(),
+                'frequency' => fake()->randomNumber().fake()->word(),
+                'duration' => fake()->randomNumber().fake()->word(),
                 'quantity' => fake()->randomDigit(),
                 'name' => fake()->word(),
                 'type' => fake()->word(),
@@ -66,16 +70,17 @@ class PrescriptionMedicamentTest extends TestCase
         $response->assertOk();
         $this->assertCount(2, $response->json());
     }
+
     public function test_update(): void
     {
         $instance = PrescriptionMedicament::factory()->create([
             'prescription_id' => $this->prescription->id,
         ]);
         $response = $this->put("api/prescription/$instance->prescription_id/medicament/$instance->medicament_id", [
-            'dose' => fake()->randomDigit() . fake()->word(),
+            'dose' => fake()->randomDigit().fake()->word(),
             'way' => fake()->words(10, true),
-            'frequency' => fake()->randomNumber() . fake()->word(),
-            'duration' => fake()->randomNumber() . fake()->word(),
+            'frequency' => fake()->randomNumber().fake()->word(),
+            'duration' => fake()->randomNumber().fake()->word(),
             'quantity' => fake()->randomDigit(),
             'name' => fake()->word(),
             'type' => fake()->word(),
@@ -85,6 +90,7 @@ class PrescriptionMedicamentTest extends TestCase
         ]);
         $response->assertOk();
     }
+
     public function test_show(): void
     {
         $instance = PrescriptionMedicament::factory()->create([
@@ -94,6 +100,7 @@ class PrescriptionMedicamentTest extends TestCase
 
         $response->assertOk();
     }
+
     public function test_list(): void
     {
         PrescriptionMedicament::factory(11)->create([
@@ -105,6 +112,7 @@ class PrescriptionMedicamentTest extends TestCase
         $response->assertOk();
         $this->assertCount(10, $response->json()['data']);
     }
+
     public function test_delete(): void
     {
         $instance = PrescriptionMedicament::factory()->create([

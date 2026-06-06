@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
@@ -19,23 +18,24 @@ class AuthTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('api/auth/login', [
-            'email'=> $user->email,
-            'password'=> 'password',
+            'email' => $user->email,
+            'password' => 'password',
         ]);
         $response->assertOk();
     }
+
     public function test_register(): void
     {
         $response = $this->post('api/auth/recregf2', [
             'first_name' => fake()->firstName(),
             'last_name1' => fake()->lastName(),
             'last_name2' => fake()->lastName(),
-            'gender' => fake()->randomElement(['M','F']),
+            'gender' => fake()->randomElement(['M', 'F']),
             'fesa' => 0,
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'phone1' => json_encode([
-                ['phone' => '0123456789']
+                ['phone' => '0123456789'],
             ]),
             /*'rooms' => [
                 [
@@ -57,7 +57,7 @@ class AuthTest extends TestCase
                     'name' => fake()->words(3, true),
                     'identification' => fake()->unique()->words(3, true),
                     'university' => fake()->words(3, true),
-                ]
+                ],
             ],
             'logo_room' => [UploadedFile::fake()->image('photo.png')],
             'logo_spec' => [UploadedFile::fake()->image('photo.png')],
@@ -65,6 +65,7 @@ class AuthTest extends TestCase
         print_r($response->json());
         $response->assertOk();
     }
+
     public function test_failRegisterByFesa(): void
     {
         $response = $this->post('api/auth/recregf2', [
@@ -90,20 +91,21 @@ class AuthTest extends TestCase
                     'address' => fake()->address(),
                     'phone' => fake()->phoneNumber(),
                     'design' => fake()->randomElement([env('F1'), env('F2'), env('F3')]),
-                ]
+                ],
             ],
             'specializations' => [
                 [
                     'name' => fake()->words(3, true),
                     'identification' => fake()->unique()->words(3, true),
                     'university' => fake()->words(3, true),
-                ]
+                ],
             ],
             'logo_room' => [UploadedFile::fake()->image('photo.png')],
             'logo_spec' => [UploadedFile::fake()->image('photo.png')],
         ]);
         $response->assertStatus(400);
     }
+
     public function test_logout(): void
     {
         $user = User::factory()->create();

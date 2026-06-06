@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
-use App\Models\Medicament;
 use App\Models\Prescription;
 use App\Models\PrescriptionMedicament;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Validator;
 
 /**
  * @todo modify all routes without medicaments model
@@ -23,6 +22,7 @@ class PrescriptionMedicamentController extends Controller
             return response()->json([], 404);
         }
         $instances = $prescription->medicaments();
+
         return response()->json($instances->paginate(10));
     }
 
@@ -50,6 +50,7 @@ class PrescriptionMedicamentController extends Controller
         }
         $inputs = $validator->safe()->all();
         $instance = $prescription->medicaments()->createMany($inputs);
+
         return response()->json($instance);
     }
 
@@ -58,11 +59,11 @@ class PrescriptionMedicamentController extends Controller
      */
     public function show(Prescription $prescription, int $medicament): JsonResponse
     {
-        $instance = PrescriptionMedicament
-            ::whereRelation("prescription", "user_id", auth()->id())
-            ->where('prescription_id', $prescription->id)
-            ->where('medicament_id', $medicament)
-            ->firstOrFail();
+        $instance = PrescriptionMedicament::whereRelation('prescription', 'user_id', auth()->id())
+                ->where('prescription_id', $prescription->id)
+                ->where('medicament_id', $medicament)
+                ->firstOrFail();
+
         return response()->json($instance);
     }
 
@@ -88,11 +89,11 @@ class PrescriptionMedicamentController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $inputs = $validator->safe()->all();
-        $instance = PrescriptionMedicament
-            ::whereRelation("prescription", "user_id", auth()->id())
-            ->where('prescription_id', $prescription->id)
-            ->where('medicament_id', $medicament);
+        $instance = PrescriptionMedicament::whereRelation('prescription', 'user_id', auth()->id())
+                ->where('prescription_id', $prescription->id)
+                ->where('medicament_id', $medicament);
         $instance->update($inputs);
+
         return response()->json($instance);
     }
 
@@ -101,18 +102,20 @@ class PrescriptionMedicamentController extends Controller
      */
     public function destroy(Prescription $prescription, int $medicament): JsonResponse
     {
-        $instance = PrescriptionMedicament
-            ::whereRelation("prescription", "user_id", auth()->id())
-            ->where('prescription_id', $prescription->id)
-            ->where('medicament_id', $medicament)
-            ->delete();
+        $instance = PrescriptionMedicament::whereRelation('prescription', 'user_id', auth()->id())
+                ->where('prescription_id', $prescription->id)
+                ->where('medicament_id', $medicament)
+                ->delete();
+
         return response()->json();
     }
+
     public function mostUsed(): JsonResponse
     {
         $instances = PrescriptionMedicament::select('name')->groupBy('name')
             ->whereIn('prescription_id', Prescription::select('id')->where('user_id', auth()->id()))
             ->orderByRaw('COUNT(name) DESC')->limit(10);
+
         return response()->json($instances->get());
     }
 }
