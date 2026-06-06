@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Patient\StoreRequest;
-use App\Http\Requests\Patient\UpdateRequest;
+use App\Http\Requests\PatientRequest;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
@@ -16,20 +15,22 @@ class PatientController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $user = auth()->user();
+        $patients = $user->patients();
+
+        // TODO: search by name, email, phone, prescription code
         $operator = '||';
-        if (env('DB_CONNECTION') == 'sqlsrv') {
+        if (config('database.default') == 'sqlsrv') {
             $operator = '+';
         }
         if (! empty($request->search)) {
             $search = strtoupper($request->search);
-            $instances = Patient::where('user_id', '=', auth()->id())
+            $patients = $patients->where('user_id', '=', auth()->id())
                 ->where(function ($query) use ($operator, $search) {
                     $query->whereRaw('UPPER(patients.first_name) LIKE '."'%$search%'")
                         ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) LIKE '%$search%'")
                         ->orWhereRaw("UPPER(patients.first_name) $operator ' ' $operator UPPER(patients.last_name1) $operator ' ' $operator UPPER(patients.last_name2) LIKE '%$search%'")
                         ->orWhereRaw("UPPER(patients.email) LIKE '%$search%'")
-                        ->orWhere('phone1', 'LIKE', "%$search%")
-                        ->orWhere('phone2', 'LIKE', "%$search%")
                         ->orWhere(function ($query) use ($search) {
                             $query->whereHas('prescriptions', function ($query) use ($search) {
                                 $query->where('code', '=', strtoupper($search));
@@ -37,32 +38,32 @@ class PatientController extends Controller
                         });
                 });
 
-            return PatientResource::collection($instances->paginate(10))->response();
+            return PatientResource::collection($patients->paginate(10))->response();
         } else {
-            return PatientResource::collection(Patient::where('user_id', '=', auth()->id())->paginate(10))->response();
+            return PatientResource::collection($patients->paginate(10))->response();
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): JsonResponse
+    public function store(PatientRequest $request): JsonResponse
     {
+        $user = auth()->user();
+        
         $inputs = $request->validated();
-        $inputs['user_id'] = auth()->id();
-        $instance = Patient::create($inputs);
+        $patient = $user->patients()->create($inputs);
 
-        return (new PatientResource($instance))->response();
+        return (new PatientResource($patient))->response();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient): JsonResponse
+    public function show(int $patient): JsonResponse
     {
-        if ($patient->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $patient = $user->patients()->findOrFail($patient);
 
         return (new PatientResource($patient))->response();
     }
@@ -70,11 +71,11 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Patient $patient): JsonResponse
+    public function update(PatientRequest $request, int $patient): JsonResponse
     {
-        if ($patient->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $patient = $user->patients()->findOrFail($patient);
+
         $inputs = $request->validated();
         $patient->update($inputs);
 
@@ -84,11 +85,10 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient): JsonResponse
+    public function destroy(int $patient): JsonResponse
     {
-        if ($patient->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $patient = $user->patients()->findOrFail($patient);
         $patient->delete();
 
         return response()->json();

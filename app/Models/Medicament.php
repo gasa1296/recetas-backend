@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PrescriptionMedicament extends Model
+class Medicament extends Model
 {
     use HasFactory;
 
@@ -23,13 +23,11 @@ class PrescriptionMedicament extends Model
         'duration',
         'quantity',
         'quantity_exp',
-        'medicament_id',
         'name',
         'type',
         'family',
         'group',
         'salt',
-        'prescription_id',
     ];
 
     /**

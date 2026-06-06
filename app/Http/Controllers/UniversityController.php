@@ -6,10 +6,7 @@ use App\Models\University;
 
 class UniversityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __invoke()
     {
         return response()->json(University::all());
     }

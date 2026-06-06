@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Room;
+namespace App\Http\Requests;
 
-use App\Http\Requests\CustomFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends CustomFormRequest
+class ConsultingRoomRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -22,20 +22,19 @@ class UpdateRequest extends CustomFormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'string'],
+            'name' => ['required', 'string'],
             'zip' => ['required', 'string'],
             'street' => ['required', 'string'],
             'colony' => ['required', 'string'],
             'state' => ['required', 'string'],
             'delegation' => ['required', 'string'],
             'n_exterior' => ['required'],
-            'n_interior' => ['nullable'],
-            'address' => ['nullable', 'string'],
-            'phone' => ['nullable', 'string'],
-            'fav' => ['nullable'],
-            'auto_email' => ['nullable'],
-            'auto_whatsapp' => ['nullable'],
-            'design' => ['nullable', 'string'],
+            'n_interior' => ['required'],
+            'address' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'fav' => ['nullable', 'boolean'],
+            'auto_email' => ['nullable', 'boolean'],
+            'auto_whatsapp' => ['nullable', 'boolean'],
             'logo' => ['nullable', 'file', 'mimes:jpg,png'],
         ];
     }

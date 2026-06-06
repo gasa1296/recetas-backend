@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Room\StoreRequest;
-use App\Http\Requests\Room\UpdateRequest;
+use App\Http\Requests\ConsultingRoomRequest;
 use App\Models\ConsultingRoom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -15,51 +14,35 @@ class ConsultingRoomController extends Controller
      */
     public function index(): JsonResponse
     {
-        $instances = ConsultingRoom::where('user_id', auth()->id());
+        $user = auth()->user();
+        $rooms = $user->rooms()->paginate(10);  
 
-        return response()->json($instances->paginate(10));
+        return response()->json($rooms);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): JsonResponse
+    public function store(ConsultingRoomRequest $request): JsonResponse
     {
-        $user = auth()->id();
+        $user = auth()->user();
+        
         $inputs = $request->validated();
-
-        $instances = [];
-        foreach ($inputs['data'] as $key => $el) {
-            if (! empty($request->file('logo')[$key])) {
-                $el['logo'] = $request->file('logo')[$key]->store('medics/'.$user, 'public');
-            }
-            if (empty($el['id'])) {
-                $el['user_id'] = $user;
-                $instance = ConsultingRoom::create($el);
-            } else {
-                $instance = ConsultingRoom::where('id', $el['id'])
-                    ->where('user_id', auth()->id())
-                    ->firstOrFail();
-                if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
-                    Storage::disk('public')->delete($instance->logo ?: '');
-                    $el['file'] = '';
-                }
-                $instance->update($el);
-            }
-            array_push($instances, $instance);
+        if ($request->file('logo')) {
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
         }
+        $room = $user->rooms()->create($inputs);
 
-        return response()->json($instances);
+        return response()->json($room);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ConsultingRoom $room): JsonResponse
+    public function show(int $room): JsonResponse
     {
-        if ($room->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $room = $user->rooms()->findOrFail($room);
 
         return response()->json($room);
     }
@@ -67,17 +50,17 @@ class ConsultingRoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ConsultingRoom $room): JsonResponse
+    public function update(ConsultingRoomRequest $request, int $room): JsonResponse
     {
-        if ($room->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $room = $user->rooms()->findOrFail($room);
+        
         $inputs = $request->validated();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
-            if ($inputs['logo'] && ! empty($room->logo)) {
+            if (! empty($room->logo)) {
                 Storage::delete($room->logo);
             }
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
         }
         $room->update($inputs);
 
@@ -87,21 +70,15 @@ class ConsultingRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ConsultingRoom $room): JsonResponse
+    public function destroy(int $room): JsonResponse
     {
-        if ($room->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $room = $user->rooms()->findOrFail($room);
         if (! empty($room->logo)) {
             Storage::delete($room->logo);
         }
         $room->delete();
 
         return response()->json();
-    }
-
-    public function getFormats(): JsonResponse
-    {
-        return response()->json([0 => env('F1'), 1 => env('F2'), '2' => env('F3')]);
     }
 }

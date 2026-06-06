@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Specialization;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\SpecializationRequest;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 
@@ -16,69 +16,35 @@ class SpecializationController extends Controller
      */
     public function index(): JsonResponse
     {
-        $instances = Specialization::where('user_id', auth()->id());
+        $user = auth()->user();
+        $specializations = $user->specializations()->paginate(10);
 
-        return response()->json($instances->paginate(10));
+        return response()->json($specializations);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(SpecializationRequest $request): JsonResponse
     {
-        $user = auth()->id();
-        $validator = Validator::make($request->all(), [
-            'data' => ['required', 'array'],
-            'data.*.id' => ['nullable', 'numeric'],
-            'data.*.name' => ['required', 'string'],
-            'data.*.identification' => ['required'],
-            'data.*.university' => ['nullable', 'string'],
-            'data.*.logo' => ['nullable', 'string'],
-            'logo' => ['nullable', 'array'],
-            'logo.*' => ['nullable', 'file', 'mimes:jpg,png'],
-
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        $user = auth()->user();
+        
+        $inputs = $request->validated();
+        if ($request->file('logo')) {
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
         }
-        $inputs = $validator->safe()->all();
+        $specialization = $user->specializations()->create($inputs);
 
-        $instances = [];
-        foreach ($inputs['data'] as $key => $el) {
-            try {
-                if (! empty($request->file('logo')[$key])) {
-                    $el['logo'] = $request->file('logo')[$key]->store('medics/'.$user, 'public');
-                }
-                if (empty($el['id'])) {
-                    $el['user_id'] = $user;
-                    $instance = Specialization::create($el);
-                } else {
-                    $instance = Specialization::where('id', $el['id'])
-                        ->where('user_id', auth()->id())
-                        ->firstOrFail();
-                    if (empty($request->file('logo')[$key]) && empty($el['logo'])) {
-                        Storage::disk('public')->delete($instance->logo ?: '');
-                        $el['file'] = '';
-                    }
-                    $instance->update($el);
-                }
-            } catch (QueryException $e) {
-                return response()->json(['university.'.$key => 'Cedula profesional en uso'], 400);
-            }
-            array_push($instances, $instance);
-        }
-
-        return response()->json($instances);
+        return response()->json($specialization);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Specialization $specialization): JsonResponse
+    public function show(int $specialization): JsonResponse
     {
-        if ($specialization->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $specialization = $user->specializations()->findOrFail($specialization);
 
         return response()->json($specialization);
     }
@@ -86,26 +52,17 @@ class SpecializationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Specialization $specialization): JsonResponse
+    public function update(SpecializationRequest $request, int $specialization): JsonResponse
     {
-        if ($specialization->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string'],
-            'identification' => 'required',
-            'university' => ['nullable', 'string'],
-            'logo' => ['nullable', 'file'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $inputs = $validator->safe()->all();
+        $user = auth()->user();
+        $specialization = $user->specializations()->findOrFail($specialization);
+
+        $inputs = $request->validated();
         if ($request->file('logo')) {
-            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
-            if ($inputs['logo'] && ! empty($specialization->logo)) {
+            if (! empty($specialization->logo)) {
                 Storage::delete($specialization->logo);
             }
+            $inputs['logo'] = $request->file('logo')->store('medics/'.auth()->id(), 'public');
         }
         $specialization->update($inputs);
 
@@ -117,9 +74,9 @@ class SpecializationController extends Controller
      */
     public function destroy(Specialization $specialization): JsonResponse
     {
-        if ($specialization->user_id != auth()->id()) {
-            return response()->json([], 404);
-        }
+        $user = auth()->user();
+        $specialization = $user->specializations()->findOrFail($specialization);
+        
         if (! empty($specialization->logo)) {
             Storage::delete($specialization->logo);
         }

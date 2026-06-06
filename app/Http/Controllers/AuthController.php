@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\SignInRequest;
-use App\Http\Requests\Auth\StoreRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateRequest;
 use App\Models\ConsultingRoom;
 use App\Models\Specialization;
 use App\Models\User;
-use App\Repositories\Interfaces\CXrepositoryInterface;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,14 +17,7 @@ use Illuminate\Support\Facades\{
 
 class AuthController extends Controller
 {
-    private $CXRepository;
-
-    public function __construct(CXrepositoryInterface $CXRepository)
-    {
-        $this->CXRepository = $CXRepository;
-    }
-
-    public function login(SignInRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         $inputs = $request->validated();
 
@@ -46,31 +38,13 @@ class AuthController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function register(StoreRequest $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
         $inputs = $request->validated();
 
         $user = User::create($inputs);
 
         event(new Registered($user));
-        $rooms = $inputs['rooms'] ?? [];
-        foreach ($rooms as $key => $el) {
-            if (! empty($request->file('logo_room')[$key])) {
-                $file = $request->file('logo_room')[$key]->store('medics/'.$user->id, 'public');
-                $el['logo'] = $file;
-            }
-            $el['user_id'] = $user->id;
-            ConsultingRoom::create($el);
-        }
-        foreach ($inputs['specializations'] as $key => $el) {
-            if (! empty($request->file('logo_spec')[$key])) {
-                $file = $request->file('logo_spec')[$key]->store('medics/'.$user->id, 'public');
-                $el['logo'] = $file;
-            }
-            $el['user_id'] = $user->id;
-            Specialization::create($el);
-        }
-        //Mail::to($inputs['email'])->send(new RegisterCompletedMail($inputs));
 
         return response()->json([
             'message' => 'Usuario registrado correctamente',

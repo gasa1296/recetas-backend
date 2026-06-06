@@ -22,9 +22,11 @@ return new class extends Migration
             $table->string('n_exterior');
             $table->string('n_interior')->nullable();
             $table->string('address')->nullable();
-            $table->string('phone')->nullable();
+            $table->json('phone')->nullable()   ;
+            $table->boolean('fav')->default(false);
+            $table->boolean('auto_email')->default(false);
+            $table->boolean('auto_whatsapp')->default(false);
             $table->string('logo')->nullable();
-            $table->string('design');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
             $table->timestamps();

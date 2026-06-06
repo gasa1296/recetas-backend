@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class PatientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -26,9 +26,8 @@ class UpdateRequest extends FormRequest
             'last_name1' => ['nullable', 'string'],
             'last_name2' => ['nullable', 'string'],
             'email' => ['required', 'email'],
-            'phone1' => ['required', 'string'],
-            'phone2' => ['nullable', 'string'],
-            'gender' => ['nullable', 'string'],
+            'phone' => ['required', 'string'],
+            'gender' => ['required', 'string'],
             'birth_date' => ['required', 'date'],
         ];
     }

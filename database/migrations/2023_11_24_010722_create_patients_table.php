@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
-            $table->string('last_name1');
+            $table->string('last_name1')->nullable();
             $table->string('last_name2')->nullable();
             $table->string('email');
-            $table->string('phone1')->nullable();
-            $table->string('phone2')->nullable();
+            $table->json('phone')->nullable();
             $table->string('gender');
             $table->date('birth_date');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
