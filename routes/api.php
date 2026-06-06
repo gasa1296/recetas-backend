@@ -8,7 +8,6 @@ use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,10 +24,6 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     //Route::post('register', 'register')->name('register');
     Route::post('login', 'login')->name('login');
     Route::delete('logout', 'logout')->middleware(['auth:sanctum'])->name('logout');
-});
-Route::controller(WhatsappController::class)->prefix('whatsapp')->name('whatsapp.')->group(function () {
-    Route::get('templates', 'getTemplates')->name('templates');
-    Route::get('send/{prescription}', 'sendMessage')->name('send');
 });
 Route::get('university', UniversityController::class);
 Route::controller(ResetController::class)->prefix('password')->name('password.')->group(function () {
@@ -53,8 +48,10 @@ Route::middleware(['auth:sanctum'/*'verified'*/])->group(function () {
         Route::delete('', 'destroy')->name('delete');
     });
     Route::controller(PrescriptionController::class)->prefix('prescription')->name('prescription.')->group(function () {
-        Route::get('', 'show')->name('show');
+        Route::get('', 'index')->name('index');
         Route::post('', 'store')->name('store');
+        Route::get('/patient/{patient}', 'indexByPatient')->name('indexByPatient');
+        Route::get('/room/{room}', 'indexByRoom')->name('indexByRoom');
         Route::get('/{prescription}', 'show')->name('show');
     });
     Route::apiResources([

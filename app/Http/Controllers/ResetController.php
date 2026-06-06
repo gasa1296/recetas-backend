@@ -2,46 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResetRequest;
+use App\Http\Requests\ResetRequestRequest;
 use App\Models\User;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class ResetController extends Controller
 {
-    private Client $client;
-
-    public function __construct()
+    public function request(ResetRequestRequest $request)
     {
-        $this->client = new Client(['verify' => env('VERIFY_FILE', false)]);
-    }
+        ResetPasswordNotification::createUrlUsing(function ($notifiable, $token) {
+            $frontend = config('frontend.frontend_url') ?: config('app.url');
 
-    public function request(Request $request)
-    {
-        $request->validate(['email' => 'required|email']);
+            return rtrim($frontend, '/').'/reset-password?token='.$token.'&email='.urlencode($notifiable->getEmailForPasswordReset());
+        });
 
         $status = Password::sendResetLink(
             $request->only('email')
         );
         if ($status !== Password::RESET_LINK_SENT) {
-            response()->json(['email' => __($status)], 400);
+            return $this->error(__('messages.reset.link_sent_failed'), ['email' => __($status)], 400);
         }
 
-        return response()->json();
+        return $this->success(__('messages.reset.link_sent_success'));
     }
 
-    public function reset(Request $request)
+    public function reset(ResetRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
@@ -55,30 +45,11 @@ class ResetController extends Controller
             }
         );
         if ($status !== Password::PASSWORD_RESET) {
-            response()->json(['email' => __($status)], 400);
+            return $this->error(__('messages.reset.failed'));
         }
-    }
+        $user = User::where('email', $request->email)->first();
+        $user->tokens()->delete();
 
-    public function resetPasswordMagento(Request $request)
-    {
-        try {
-            $res = $this->client->post(env('MAGENTO_URL').'/ic/api/integration/v1/flows/rest/RESETPASSWORDMAGENTO/1.0/app_resetpwd', [
-                'auth' => [
-                    env('MAGENTO_USER'),
-                    env('MAGENTO_PASSWORD'),
-                ],
-                'json' => [
-                    'login' => $request->email,
-                ],
-            ]);
-            $decodedRes = json_decode($res->getBody(), true);
-
-            return response()->json($decodedRes, $res->getStatusCode());
-        } catch (ClientException|ServerException$e) {
-            $response = $e->getResponse();
-            $decodedRes = json_decode($response->getBody(), true);
-
-            return response()->json($decodedRes, $response->getStatusCode());
-        }
+        return $this->success(__('messages.reset.success'));
     }
 }
