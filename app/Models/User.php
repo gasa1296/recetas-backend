@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'last_name2',
     'phone',
     'gender',
-    'fesa',
     'email',
     'password',
 ])]
@@ -38,6 +37,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'phone' => 'array',
         ];
     }
 
