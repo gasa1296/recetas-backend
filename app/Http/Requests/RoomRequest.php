@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoomRequest extends FormRequest
 {
+    use JsonValidationResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */

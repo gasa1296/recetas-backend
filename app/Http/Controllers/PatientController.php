@@ -18,7 +18,7 @@ class PatientController extends Controller
         if (! $request->has('search')) {
             $patients = $patients->paginate(10);
 
-            return $this->success(__('messages.operation_success'), new PatientResource($patients));
+            return $this->success(__('messages.operation_success'), PatientResource::collection($patients));
         }
 
         $search = $request->input('search');

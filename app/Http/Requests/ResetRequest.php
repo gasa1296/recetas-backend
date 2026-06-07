@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResetRequest extends FormRequest
 {
+    use JsonValidationResponse;
+
     public function authorize(): bool
     {
         return true;

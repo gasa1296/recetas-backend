@@ -30,6 +30,18 @@ class Room extends Model
     /** @use HasFactory<RoomFactory> */
     use HasFactory, SoftDeletes;
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'phone' => 'array',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
