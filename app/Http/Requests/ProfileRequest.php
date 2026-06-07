@@ -30,9 +30,9 @@ class ProfileRequest extends FormRequest
             'last_name1' => ['nullable', 'string'],
             'last_name2' => ['nullable', 'string'],
             'phone' => ['nullable', 'array'],
-            'phone.*' => ['string'],
+            'phone.*' => ['required_with:phone', 'string'],
             'gender' => ['required', 'string'],
-            'password' => ['string'],
+            'password' => ['nullable', 'string', 'confirmed'],
         ];
     }
 }

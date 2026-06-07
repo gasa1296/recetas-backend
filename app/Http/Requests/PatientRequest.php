@@ -31,7 +31,7 @@ class PatientRequest extends FormRequest
             'last_name2' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'array'],
-            'phone.*' => ['nullable', 'string'],
+            'phone.*' => ['required_with:phone', 'string'],
             'gender' => ['nullable', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date'],
         ];

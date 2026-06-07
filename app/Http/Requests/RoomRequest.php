@@ -36,7 +36,7 @@ class RoomRequest extends FormRequest
             'n_interior' => ['nullable', 'string'],
             'address' => ['required', 'string'],
             'phone' => ['required', 'array'],
-            'phone.*' => ['string'],
+            'phone.*' => ['required_with:phone', 'string'],
             'fav' => ['nullable', 'boolean'],
             'auto_email' => ['nullable', 'boolean'],
             'auto_whatsapp' => ['nullable', 'boolean'],
