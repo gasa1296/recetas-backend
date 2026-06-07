@@ -12,12 +12,18 @@ class VerificationController extends Controller
     {
         if (! $request->hasValidSignature()) {
             // temporal url
-            return $this->error(__('messages.verification.verification_expired'), 400);
+            return $this->error(
+                __('messages.verification.verification_expired'),
+                400,
+            );
         }
 
         $user = User::find($request->user_id);
         if (! $user) {
-            return $this->error(__('messages.verification.user_not_found'), 400);
+            return $this->error(
+                __('messages.verification.user_not_found'),
+                400,
+            );
         }
 
         if (! $user->hasVerifiedEmail()) {
@@ -25,21 +31,32 @@ class VerificationController extends Controller
         }
 
         // temporal url
-        return $this->success(__('messages.verification.verified_successfully'));
+        return $this->success(
+            __('messages.verification.verified_successfully'),
+        );
     }
 
     public function resend(Request $request)
     {
         $email = $request->get('email');
         if (! $email) {
-            return $this->error(__('messages.verification.email_required'), 400);
+            return $this->error(
+                __('messages.verification.email_required'),
+                400,
+            );
         }
         $user = User::where('email', $email)->first();
         if (! $user) {
-            return $this->error(__('messages.verification.user_not_found'), 400);
+            return $this->error(
+                __('messages.verification.user_not_found'),
+                400,
+            );
         }
         if ($user->hasVerifiedEmail()) {
-            return $this->error(__('messages.verification.already_verified'), 400);
+            return $this->error(
+                __('messages.verification.already_verified'),
+                400,
+            );
         }
 
         $user->sendEmailVerificationNotification();
@@ -49,6 +66,8 @@ class VerificationController extends Controller
 
     public function notice(): JsonResponse
     {
-        return response()->json(['user' => __('messages.verification.user_not_verified')]);
+        return response()->json([
+            'user' => __('messages.verification.user_not_verified'),
+        ]);
     }
 }

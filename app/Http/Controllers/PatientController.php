@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchRequest;
 use App\Http\Requests\PatientRequest;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PatientResource;
+use Illuminate\Http\JsonResponse;
 
 class PatientController extends Controller
 {
@@ -15,13 +15,16 @@ class PatientController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         $patients = auth()->user()->patients();
-        if (!$request->has('search')) {
+        if (! $request->has('search')) {
             $patients = $patients->paginate(10);
+
             return $this->success(data: new PatientResource($patients));
         }
 
         $search = $request->input('search');
-        $patients = $patients->whereLike('name', "%$search%", false)->paginate(10);
+        $patients = $patients
+            ->whereLike('name', "%$search%", false)
+            ->paginate(10);
 
         return $this->success(data: new PatientResource($patients));
     }

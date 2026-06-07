@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name1')->nullable();
             $table->string('last_name2')->nullable();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->json('phone')->nullable();
-            $table->string('gender');
-            $table->date('birth_date');
+            $table->string('gender')->nullable();
+            $table->date('birth_date')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();

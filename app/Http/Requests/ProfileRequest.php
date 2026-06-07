@@ -5,14 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        return auth()->user() !== null;
     }
 
     /**
@@ -23,14 +23,13 @@ class PatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name1' => ['nullable', 'string', 'max:255'],
-            'last_name2' => ['nullable', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'first_name' => ['required', 'string'],
+            'last_name1' => ['nullable', 'string'],
+            'last_name2' => ['nullable', 'string'],
             'phone' => ['nullable', 'array'],
-            'phone.*' => ['nullable', 'string'],
-            'gender' => ['nullable', 'string', 'max:255'],
-            'birth_date' => ['nullable', 'date'],
+            'phone.*' => ['string'],
+            'gender' => ['required', 'string'],
+            'password' => ['string'],
         ];
     }
 }

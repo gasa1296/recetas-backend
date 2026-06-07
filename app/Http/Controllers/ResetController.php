@@ -14,17 +14,26 @@ class ResetController extends Controller
 {
     public function request(ResetRequestRequest $request)
     {
-        ResetPasswordNotification::createUrlUsing(function ($notifiable, $token) {
+        ResetPasswordNotification::createUrlUsing(function (
+            $notifiable,
+            $token,
+        ) {
             $frontend = config('frontend.frontend_url') ?: config('app.url');
 
-            return rtrim($frontend, '/').'/reset-password?token='.$token.'&email='.urlencode($notifiable->getEmailForPasswordReset());
+            return rtrim($frontend, '/').
+                '/reset-password?token='.
+                $token.
+                '&email='.
+                urlencode($notifiable->getEmailForPasswordReset());
         });
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $status = Password::sendResetLink($request->only('email'));
         if ($status !== Password::RESET_LINK_SENT) {
-            return $this->error(__('messages.reset.link_sent_failed'), ['email' => __($status)], 400);
+            return $this->error(
+                __('messages.reset.link_sent_failed'),
+                ['email' => __($status)],
+                400,
+            );
         }
 
         return $this->success(__('messages.reset.link_sent_success'));
@@ -33,7 +42,12 @@ class ResetController extends Controller
     public function reset(ResetRequest $request)
     {
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            $request->only(
+                'email',
+                'password',
+                'password_confirmation',
+                'token',
+            ),
             function (User $user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -42,7 +56,7 @@ class ResetController extends Controller
                 $user->save();
 
                 event(new PasswordReset($user));
-            }
+            },
         );
         if ($status !== Password::PASSWORD_RESET) {
             return $this->error(__('messages.reset.failed'));

@@ -27,13 +27,13 @@ class PrescriptionResource extends JsonResource
             'comments' => $this->comments,
             'room' => $this->whenLoaded('room', new RoomResource($this->room)),
             'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
-            'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) =>[
-                    'id' => $medicament->id,
-                    'name' => $medicament->name,
-                    'dosage' => $medicament->pivot->dosage,
-                    'frequency' => $medicament->pivot->frequency,
-                    'duration' => $medicament->pivot->duration,
-                ])),
+            'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
+                'id' => $medicament->id,
+                'name' => $medicament->name,
+                'dosage' => $medicament->pivot->dosage,
+                'frequency' => $medicament->pivot->frequency,
+                'duration' => $medicament->pivot->duration,
+            ])),
             'status' => $this->status,
         ];
     }

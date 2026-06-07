@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('n_exterior');
             $table->string('n_interior')->nullable();
             $table->string('address')->nullable();
-            $table->json('phone')->nullable();
+            $table->json('phone');
             $table->boolean('fav')->default(false);
             $table->boolean('auto_email')->default(false);
             $table->boolean('auto_whatsapp')->default(false);

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchRequest;
 use App\Http\Requests\PrescriptionRequest;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionResource;
+use Illuminate\Http\JsonResponse;
 
 class PrescriptionController extends Controller
 {
@@ -15,13 +15,21 @@ class PrescriptionController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         $prescriptions = auth()->user()->prescriptions();
-        if (!$request->has('search')) {
+        if (! $request->has('search')) {
             $prescriptions = $prescriptions->paginate(10);
-            return $this->success(data: PrescriptionResource::collection($prescriptions));
+
+            return $this->success(
+                data: PrescriptionResource::collection($prescriptions),
+            );
         }
         $search = $request->input('search');
-        $prescriptions = $prescriptions->whereLike('description', "%$search%", false)->paginate(10);
-        return $this->success(data: PrescriptionResource::collection($prescriptions));
+        $prescriptions = $prescriptions
+            ->whereLike('description', "%$search%", false)
+            ->paginate(10);
+
+        return $this->success(
+            data: PrescriptionResource::collection($prescriptions),
+        );
     }
 
     /**
@@ -29,10 +37,18 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
-        $prescription = auth()->user()->prescriptions()->create($request->validated());
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->create($request->validated());
         $medicaments = $request->input('medicament_ids', []);
         $prescription->medicaments()->sync($medicaments);
-        return $this->success(data: new PrescriptionResource($prescription->load(['medicaments', 'patient', 'room'])));
+
+        return $this->success(
+            data: new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
     }
 
     /**
@@ -40,20 +56,39 @@ class PrescriptionController extends Controller
      */
     public function show(int $prescription): JsonResponse
     {
-        $prescription = auth()->user()->prescriptions()->findOrFail($prescription);
-        return $this->success(data: new PrescriptionResource($prescription->load(['medicaments', 'patient', 'room'])));
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->findOrFail($prescription);
+
+        return $this->success(
+            data: new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PrescriptionRequest $request, int $prescription): JsonResponse
-    {
-        $prescription = auth()->user()->prescriptions()->where('status', 'pending')->findOrFail($prescription);
+    public function update(
+        PrescriptionRequest $request,
+        int $prescription,
+    ): JsonResponse {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
         $prescription->update($request->validated());
         $medicaments = $request->input('medicament_ids', []);
         $prescription->medicaments()->sync($medicaments);
-        return $this->success(data: new PrescriptionResource($prescription->load(['medicaments', 'patient', 'room'])));
+
+        return $this->success(
+            data: new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
     }
 
     /**
@@ -61,8 +96,13 @@ class PrescriptionController extends Controller
      */
     public function destroy(int $prescription): JsonResponse
     {
-        $prescription = auth()->user()->prescriptions()->where('status', 'pending')->findOrFail($prescription);
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
         $prescription->delete();
+
         return $this->success();
     }
 }

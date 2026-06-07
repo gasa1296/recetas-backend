@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoomRequest;
-use Illuminate\Http\JsonResponse;
 use App\Http\Resources\RoomResource;
+use Illuminate\Http\JsonResponse;
 
 class RoomController extends Controller
 {
@@ -14,6 +14,7 @@ class RoomController extends Controller
     public function index(): JsonResponse
     {
         $rooms = auth()->user()->rooms()->paginate(10);
+
         return $this->success(data: RoomResource::collection($rooms));
     }
 
@@ -23,6 +24,7 @@ class RoomController extends Controller
     public function store(RoomRequest $request): JsonResponse
     {
         $room = auth()->user()->rooms()->create($request->validated());
+
         return $this->success(data: new RoomResource($room));
     }
 
@@ -32,6 +34,7 @@ class RoomController extends Controller
     public function show(int $room): JsonResponse
     {
         $room = auth()->user()->rooms()->findOrFail($room);
+
         return $this->success(data: new RoomResource($room));
     }
 
@@ -42,6 +45,7 @@ class RoomController extends Controller
     {
         $room = auth()->user()->rooms()->findOrFail($room);
         $room->update($request->validated());
+
         return $this->success(data: new RoomResource($room));
     }
 
@@ -52,6 +56,7 @@ class RoomController extends Controller
     {
         $room = auth()->user()->rooms()->findOrFail($room);
         $room->delete();
+
         return $this->success();
     }
 }

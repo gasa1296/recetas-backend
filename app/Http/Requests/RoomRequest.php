@@ -23,7 +23,20 @@ class RoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string'],
+            'zip' => ['required', 'string'],
+            'street' => ['required', 'string'],
+            'colony' => ['required', 'string'],
+            'state' => ['required', 'string'],
+            'delegation' => ['required', 'string'],
+            'n_exterior' => ['required', 'string'],
+            'n_interior' => ['nullable', 'string'],
+            'address' => ['required', 'string'],
+            'phone' => ['required', 'array'],
+            'phone.*' => ['string'],
+            'fav' => ['nullable', 'boolean'],
+            'auto_email' => ['nullable', 'boolean'],
+            'auto_whatsapp' => ['nullable', 'boolean'],
         ];
     }
 }

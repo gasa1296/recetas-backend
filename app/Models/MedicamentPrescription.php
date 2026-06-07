@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\PatientFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -16,13 +17,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class MedicamentPrescription extends Model
 {
-    /** @use HasFactory<\Database\Factories\PatientFactory> */
+    /** @use HasFactory<PatientFactory> */
     use HasFactory, SoftDeletes;
 
     public function medicament()
     {
         return $this->belongsTo(Medicament::class);
     }
+
     public function prescription()
     {
         return $this->belongsTo(Prescription::class);

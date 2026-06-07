@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Specialty;
 use App\Http\Requests\SpecialtyRequest;
-use Illuminate\Http\JsonResponse;
 use App\Http\Resources\SpecialtyResource;
+use Illuminate\Http\JsonResponse;
 
 class SpecialtyController extends Controller
 {
@@ -15,7 +14,10 @@ class SpecialtyController extends Controller
     public function index(): JsonResponse
     {
         $specialties = auth()->user()->specialties()->paginate(10);
-        return $this->success(data: SpecialtyResource::collection($specialties));
+
+        return $this->success(
+            data: SpecialtyResource::collection($specialties),
+        );
     }
 
     /**
@@ -23,7 +25,11 @@ class SpecialtyController extends Controller
      */
     public function store(SpecialtyRequest $request): JsonResponse
     {
-        $specialty = auth()->user()->specialties()->create($request->validated());
+        $specialty = auth()
+            ->user()
+            ->specialties()
+            ->create($request->validated());
+
         return $this->success(data: new SpecialtyResource($specialty));
     }
 
@@ -33,16 +39,20 @@ class SpecialtyController extends Controller
     public function show(int $specialty): JsonResponse
     {
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
+
         return $this->success(data: new SpecialtyResource($specialty));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(SpecialtyRequest $request, int $specialty): JsonResponse
-    {
+    public function update(
+        SpecialtyRequest $request,
+        int $specialty,
+    ): JsonResponse {
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
         $specialty->update($request->validated());
+
         return $this->success(data: new SpecialtyResource($specialty));
     }
 
@@ -53,6 +63,7 @@ class SpecialtyController extends Controller
     {
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
         $specialty->delete();
+
         return $this->success();
     }
 }
