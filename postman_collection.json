@@ -1,13 +1,12 @@
 {
   "info": {
+    "_postman_id": "f6f363ac-d591-49e8-895c-f80d96c47a72",
     "name": "Recetas API",
     "description": "Collection for Recetas API. Variables: {{API_URL}}, {{AUTH_TOKEN}}",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53449058",
+    "_collection_link": "https://go.postman.co/collection/53449058-f6f363ac-d591-49e8-895c-f80d96c47a72?source=collection_link"
   },
-  "variable": [
-    { "key": "API_URL", "value": "http://localhost:8000/api" },
-    { "key": "AUTH_TOKEN", "value": "" }
-  ],
   "item": [
     {
       "name": "Auth",
@@ -17,8 +16,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -26,26 +31,53 @@
             },
             "url": {
               "raw": "{{API_URL}}/auth/login",
-              "host": ["{{API_URL}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Logout",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/auth/logout",
-              "host": ["{{API_URL}}"],
-              "path": ["auth", "logout"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -57,8 +89,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -66,18 +104,30 @@
             },
             "url": {
               "raw": "{{API_URL}}/password/request",
-              "host": ["{{API_URL}}"],
-              "path": ["password", "request"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "password",
+                "request"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Reset Password",
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -85,10 +135,16 @@
             },
             "url": {
               "raw": "{{API_URL}}/password/reset",
-              "host": ["{{API_URL}}"],
-              "path": ["password", "reset"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "password",
+                "reset"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -100,29 +156,59 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/verification/verify?expires=1717000000&hash=abc123&id=1&signature=xyz789",
-              "host": ["{{API_URL}}"],
-              "path": ["verification", "verify"],
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "verification",
+                "verify"
+              ],
               "query": [
-                { "key": "expires", "value": "1717000000" },
-                { "key": "hash", "value": "abc123" },
-                { "key": "id", "value": "1" },
-                { "key": "signature", "value": "xyz789" }
+                {
+                  "key": "expires",
+                  "value": "1717000000"
+                },
+                {
+                  "key": "hash",
+                  "value": "abc123"
+                },
+                {
+                  "key": "id",
+                  "value": "1"
+                },
+                {
+                  "key": "signature",
+                  "value": "xyz789"
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Resend Verification",
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -130,10 +216,16 @@
             },
             "url": {
               "raw": "{{API_URL}}/verification/resend",
-              "host": ["{{API_URL}}"],
-              "path": ["verification", "resend"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "verification",
+                "resend"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -145,33 +237,66 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/universities?search=medicina",
-              "host": ["{{API_URL}}"],
-              "path": ["universities"],
+              "raw": "{{API_URL}}/universities",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "universities"
+              ],
               "query": [
-                { "key": "search", "value": "medicina", "disabled": true }
+                {
+                  "key": "search",
+                  "value": "medicina",
+                  "disabled": true
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show University",
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/universities/1",
-              "host": ["{{API_URL}}"],
-              "path": ["universities", "1"]
+              "raw": "{{API_URL}}/universities/:university_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "universities",
+                ":university_id"
+              ],
+              "variable": [
+                {
+                  "key": "university_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -181,27 +306,62 @@
         {
           "name": "Show Profile",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/profile",
-              "host": ["{{API_URL}}"],
-              "path": ["profile"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Profile",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -209,26 +369,51 @@
             },
             "url": {
               "raw": "{{API_URL}}/profile",
-              "host": ["{{API_URL}}"],
-              "path": ["profile"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Profile",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/profile",
-              "host": ["{{API_URL}}"],
-              "path": ["profile"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -238,37 +423,88 @@
         {
           "name": "List Medicaments",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/medicaments?search=paracetamol",
-              "host": ["{{API_URL}}"],
-              "path": ["medicaments"],
+              "raw": "{{API_URL}}/medicaments",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "medicaments"
+              ],
               "query": [
-                { "key": "search", "value": "paracetamol", "disabled": true }
+                {
+                  "key": "search",
+                  "value": "paracetamol",
+                  "disabled": true
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show Medicament",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/medicaments/1",
-              "host": ["{{API_URL}}"],
-              "path": ["medicaments", "1"]
+              "raw": "{{API_URL}}/medicaments/:medicament_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "medicaments",
+                ":medicament_id"
+              ],
+              "variable": [
+                {
+                  "key": "medicament_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -278,46 +514,112 @@
         {
           "name": "List Patients",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/patients?search=Juan",
-              "host": ["{{API_URL}}"],
-              "path": ["patients"],
+              "raw": "{{API_URL}}/patients",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients"
+              ],
               "query": [
-                { "key": "search", "value": "Juan", "disabled": true }
+                {
+                  "key": "search",
+                  "value": "Juan",
+                  "disabled": true
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show Patient",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/patients/1",
-              "host": ["{{API_URL}}"],
-              "path": ["patients", "1"]
+              "raw": "{{API_URL}}/patients/:patient_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Create Patient",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -325,46 +627,105 @@
             },
             "url": {
               "raw": "{{API_URL}}/patients",
-              "host": ["{{API_URL}}"],
-              "path": ["patients"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Patient",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"first_name\": \"María\",\n  \"last_name1\": \"García\",\n  \"last_name2\": \"López\",\n  \"email\": \"maria.nueva@example.com\",\n  \"phone\": [\"555-9999\", \"555-8888\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/patients/1",
-              "host": ["{{API_URL}}"],
-              "path": ["patients", "1"]
+              "raw": "{{API_URL}}/patients/:patient_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Patient",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/patients/1",
-              "host": ["{{API_URL}}"],
-              "path": ["patients", "1"]
+              "raw": "{{API_URL}}/patients/:patient_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -374,46 +735,112 @@
         {
           "name": "List Prescriptions",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/prescriptions?search=diagnóstico",
-              "host": ["{{API_URL}}"],
-              "path": ["prescriptions"],
+              "raw": "{{API_URL}}/prescriptions",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions"
+              ],
               "query": [
-                { "key": "search", "value": "diagnóstico", "disabled": true }
+                {
+                  "key": "search",
+                  "value": "diagnóstico",
+                  "disabled": true
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show Prescription",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/prescriptions/1",
-              "host": ["{{API_URL}}"],
-              "path": ["prescriptions", "1"]
+              "raw": "{{API_URL}}/prescriptions/:prescription_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Create Prescription",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -421,46 +848,99 @@
             },
             "url": {
               "raw": "{{API_URL}}/prescriptions",
-              "host": ["{{API_URL}}"],
-              "path": ["prescriptions"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Prescription",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"temp\": 37.0,\n  \"weight\": 71.0,\n  \"height\": 1.75,\n  \"pressure\": 118,\n  \"saturation\": 99,\n  \"ppm\": 70,\n  \"allergy\": \"Penicilina\",\n  \"diagnostic\": \"Infección respiratoria - mejora\",\n  \"diet\": \"Normal\",\n  \"comments\": \"Reducir dosis\",\n  \"medicament_data\": [\n    {\n      \"id\": 1,\n      \"dosage\": 250,\n      \"frequency\": \"Cada 12 horas\",\n      \"duration\": \"5 días\"\n    }\n  ],\n  \"room_id\": 1,\n  \"patient_id\": 1\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/prescriptions/1",
-              "host": ["{{API_URL}}"],
-              "path": ["prescriptions", "1"]
+              "raw": "{{API_URL}}/prescriptions/:prescription_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Prescription",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/prescriptions/1",
-              "host": ["{{API_URL}}"],
-              "path": ["prescriptions", "1"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                "1"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -470,43 +950,105 @@
         {
           "name": "List Rooms",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/rooms",
-              "host": ["{{API_URL}}"],
-              "path": ["rooms"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "rooms"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show Room",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/rooms/1",
-              "host": ["{{API_URL}}"],
-              "path": ["rooms", "1"]
+              "raw": "{{API_URL}}/rooms/:room_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "rooms",
+                ":room_id"
+              ],
+              "variable": [
+                {
+                  "key": "room_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Create Room",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -514,46 +1056,105 @@
             },
             "url": {
               "raw": "{{API_URL}}/rooms",
-              "host": ["{{API_URL}}"],
-              "path": ["rooms"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "rooms"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Room",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Consultorio 102\",\n  \"zip\": \"12345\",\n  \"street\": \"Av. Principal 456\",\n  \"colony\": \"Centro\",\n  \"state\": \"CDMX\",\n  \"delegation\": \"Cuauhtémoc\",\n  \"n_exterior\": \"456\",\n  \"n_interior\": \"B\",\n  \"address\": \"Av. Principal 456, Centro, CDMX\",\n  \"phone\": [\"555-3333\"],\n  \"fav\": false,\n  \"auto_email\": true,\n  \"auto_whatsapp\": true\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/rooms/1",
-              "host": ["{{API_URL}}"],
-              "path": ["rooms", "1"]
+              "raw": "{{API_URL}}/rooms/:room_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "rooms",
+                ":room_id"
+              ],
+              "variable": [
+                {
+                  "key": "room_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Room",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/rooms/1",
-              "host": ["{{API_URL}}"],
-              "path": ["rooms", "1"]
+              "raw": "{{API_URL}}/rooms/:room_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "rooms",
+                ":room_id"
+              ],
+              "variable": [
+                {
+                  "key": "room_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -563,43 +1164,105 @@
         {
           "name": "List Specialties",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
               "raw": "{{API_URL}}/specialties",
-              "host": ["{{API_URL}}"],
-              "path": ["specialties"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "specialties"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Show Specialty",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/specialties/1",
-              "host": ["{{API_URL}}"],
-              "path": ["specialties", "1"]
+              "raw": "{{API_URL}}/specialties/:specialty_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "specialties",
+                ":specialty_id"
+              ],
+              "variable": [
+                {
+                  "key": "specialty_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Create Specialty",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -607,48 +1270,141 @@
             },
             "url": {
               "raw": "{{API_URL}}/specialties",
-              "host": ["{{API_URL}}"],
-              "path": ["specialties"]
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "specialties"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Specialty",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Cardiología Intervencionista\",\n  \"identification\": \"CAR-002\",\n  \"university\": \"UNAM\"\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/specialties/1",
-              "host": ["{{API_URL}}"],
-              "path": ["specialties", "1"]
+              "raw": "{{API_URL}}/specialties/:specialty_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "specialties",
+                ":specialty_id"
+              ],
+              "variable": [
+                {
+                  "key": "specialty_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Specialty",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "url": {
-              "raw": "{{API_URL}}/specialties/1",
-              "host": ["{{API_URL}}"],
-              "path": ["specialties", "1"]
+              "raw": "{{API_URL}}/specialties/::specialty_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "specialties",
+                "::specialty_id"
+              ],
+              "variable": [
+                {
+                  "key": ":specialty_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_URL",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "AUTH_TOKEN",
+      "value": ""
     }
   ]
 }
