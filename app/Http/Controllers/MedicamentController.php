@@ -16,7 +16,7 @@ class MedicamentController extends Controller
         if (! $request->has('search')) {
             $medicaments = Medicament::paginate(10);
 
-            return $this->success(data: $medicaments);
+            return $this->success(__('messages.operation_success'), $medicaments);
         }
         $search = $request->input('search');
         $medicaments = Medicament::whereLike(
@@ -25,7 +25,7 @@ class MedicamentController extends Controller
             false,
         )->paginate(10);
 
-        return $this->success(data: $medicaments);
+        return $this->success(__('messages.operation_success'), $medicaments);
     }
 
     /**
@@ -33,6 +33,6 @@ class MedicamentController extends Controller
      */
     public function show(Medicament $medicament): JsonResponse
     {
-        return $this->success(data: $medicament);
+        return $this->success(__('messages.operation_success'), $medicament);
     }
 }

@@ -36,7 +36,7 @@ class ResetController extends Controller
             );
         }
 
-        return $this->success(__('messages.reset.link_sent_success'));
+        return $this->success(__('messages.operation_success'));
     }
 
     public function reset(ResetRequest $request)
@@ -64,6 +64,6 @@ class ResetController extends Controller
         $user = User::where('email', $request->email)->first();
         $user->tokens()->delete();
 
-        return $this->success(__('messages.reset.success'));
+        return $this->success(__('messages.operation_success'));
     }
 }

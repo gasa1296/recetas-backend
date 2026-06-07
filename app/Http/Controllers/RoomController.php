@@ -15,7 +15,10 @@ class RoomController extends Controller
     {
         $rooms = auth()->user()->rooms()->paginate(10);
 
-        return $this->success(data: RoomResource::collection($rooms));
+        return $this->success(
+            __('messages.operation_success'),
+            RoomResource::collection($rooms),
+        );
     }
 
     /**
@@ -25,7 +28,10 @@ class RoomController extends Controller
     {
         $room = auth()->user()->rooms()->create($request->validated());
 
-        return $this->success(data: new RoomResource($room));
+        return $this->success(
+            __('messages.operation_success'),
+            new RoomResource($room),
+        );
     }
 
     /**
@@ -35,7 +41,10 @@ class RoomController extends Controller
     {
         $room = auth()->user()->rooms()->findOrFail($room);
 
-        return $this->success(data: new RoomResource($room));
+        return $this->success(
+            __('messages.operation_success'),
+            new RoomResource($room),
+        );
     }
 
     /**
@@ -46,7 +55,10 @@ class RoomController extends Controller
         $room = auth()->user()->rooms()->findOrFail($room);
         $room->update($request->validated());
 
-        return $this->success(data: new RoomResource($room));
+        return $this->success(
+            __('messages.operation_success'),
+            new RoomResource($room),
+        );
     }
 
     /**
@@ -57,6 +69,6 @@ class RoomController extends Controller
         $room = auth()->user()->rooms()->findOrFail($room);
         $room->delete();
 
-        return $this->success();
+        return $this->success(__('messages.operation_success'));
     }
 }

@@ -21,9 +21,6 @@ class AuthController extends Controller
             );
         }
         $user = auth()->user();
-        if ($user->suspended_at) {
-            return $this->error(__('messages.auth.user_suspended'), [], 403);
-        }
         $user->load(['rooms', 'specialties']);
 
         return $this->success(

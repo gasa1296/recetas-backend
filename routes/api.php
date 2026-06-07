@@ -1,24 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
-
-
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)
     ->name('auth')
-    ->group(function() {
-        Route::post('/login', 'login');
-        Route::post('/logout', 'logout')->middleware('auth:sanctum');
+    ->group(function () {
+        Route::post('/auth/login', 'login');
+        Route::post('/auth/logout', 'logout')->middleware('auth:sanctum');
     });
 Route::controller(ResetController::class)
     ->name('password.')
@@ -35,16 +33,16 @@ Route::controller(VerificationController::class)
 
 Route::controller(UniversityController::class)
     ->name('universities.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/universities', 'index');
         Route::get('/universities/{university}', 'show');
     });
 
-Route::middleware('auth:sanctum')->name('profile')->group(function() {
+Route::middleware('auth:sanctum')->name('profile')->group(function () {
 
     Route::controller(ProfileController::class)
         ->name('profile.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/profile', 'index');
             Route::put('/profile', 'update');
             Route::delete('/profile', 'destroy');
@@ -52,14 +50,14 @@ Route::middleware('auth:sanctum')->name('profile')->group(function() {
 
     Route::controller(MedicamentController::class)
         ->name('medicaments.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/medicaments', 'index');
             Route::get('/medicaments/{medicament}', 'show');
         });
 
     Route::controller(PatientController::class)
         ->name('patients.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/patients', 'index');
             Route::get('/patients/{patient}', 'show');
             Route::post('/patients', 'store');
@@ -69,7 +67,7 @@ Route::middleware('auth:sanctum')->name('profile')->group(function() {
 
     Route::controller(PrescriptionController::class)
         ->name('prescriptions.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/prescriptions', 'index');
             Route::get('/prescriptions/{prescription}', 'show');
             Route::post('/prescriptions', 'store');
@@ -79,7 +77,7 @@ Route::middleware('auth:sanctum')->name('profile')->group(function() {
 
     Route::controller(RoomController::class)
         ->name('rooms.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/rooms', 'index');
             Route::get('/rooms/{room}', 'show');
             Route::post('/rooms', 'store');
@@ -89,7 +87,7 @@ Route::middleware('auth:sanctum')->name('profile')->group(function() {
 
     Route::controller(SpecialtyController::class)
         ->name('specialties.')
-        ->group(function() {
+        ->group(function () {
             Route::get('/specialties', 'index');
             Route::get('/specialties/{specialty}', 'show');
             Route::post('/specialties', 'store');

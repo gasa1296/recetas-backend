@@ -25,7 +25,10 @@ class UniversityController extends Controller
             false,
         )->get();
 
-        return $this->success(data: $universities);
+        return $this->success(
+            __('messages.operation_success'),
+            $universities,
+        );
     }
 
     /**
@@ -33,6 +36,9 @@ class UniversityController extends Controller
      */
     public function show(University $university): JsonResponse
     {
-        return $this->success(data: $university);
+        return $this->success(
+            __('messages.operation_success'),
+            $university,
+        );
     }
 }

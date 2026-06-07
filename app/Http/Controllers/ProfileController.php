@@ -14,7 +14,7 @@ class ProfileController extends Controller
         $user->load(['rooms', 'specialties']);
 
         return $this->success(
-            __('messages.auth.profile_retrieved_success'),
+            __('messages.operation_success'),
             new ProfileResource($user),
         );
     }
@@ -29,7 +29,7 @@ class ProfileController extends Controller
         $user->load(['rooms', 'specialties']);
 
         return $this->success(
-            __('messages.auth.influencer_update_success'),
+            __('messages.operation_success'),
             new ProfileResource($user),
         );
     }
@@ -40,7 +40,7 @@ class ProfileController extends Controller
         $user->delete();
 
         return $this->success(
-            __('messages.auth.influencer_deleted_success'),
+            __('messages.operation_success'),
             new ProfileResource($user),
         );
     }

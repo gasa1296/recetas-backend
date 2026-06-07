@@ -18,7 +18,7 @@ class PatientController extends Controller
         if (! $request->has('search')) {
             $patients = $patients->paginate(10);
 
-            return $this->success(data: new PatientResource($patients));
+            return $this->success(__('messages.operation_success'), new PatientResource($patients));
         }
 
         $search = $request->input('search');
@@ -26,7 +26,7 @@ class PatientController extends Controller
             ->whereLike('name', "%$search%", false)
             ->paginate(10);
 
-        return $this->success(data: new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
 
     /**
@@ -36,7 +36,7 @@ class PatientController extends Controller
     {
         $patients = auth()->user()->patients()->create($request->validated());
 
-        return $this->success(data: new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
 
     /**
@@ -46,7 +46,7 @@ class PatientController extends Controller
     {
         $patients = auth()->user()->patients()->findOrFail($patient);
 
-        return $this->success(data: new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
 
     /**
@@ -57,7 +57,7 @@ class PatientController extends Controller
         $patients = auth()->user()->patients()->findOrFail($patient);
         $patients->update($request->validated());
 
-        return $this->success(data: new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
 
     /**
@@ -68,6 +68,6 @@ class PatientController extends Controller
         $patients = auth()->user()->patients()->findOrFail($patient);
         $patients->delete();
 
-        return $this->success();
+        return $this->success(__('messages.operation_success'));
     }
 }

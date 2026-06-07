@@ -23,10 +23,10 @@ class PrescriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'temp' => ['nullabl', 'numeric', 'min:0'],
-            'weight' => ['nullabl', 'numeric', 'min:0'],
-            'height' => ['nullabl', 'numeric', 'min:0'],
-            'pressure' => ['nullabl', 'numeric', 'min:0'],
+            'temp' => ['nullable', 'numeric', 'min:0'],
+            'weight' => ['nullable', 'numeric', 'min:0'],
+            'height' => ['nullable', 'numeric', 'min:0'],
+            'pressure' => ['nullable', 'numeric', 'min:0'],
             'saturation' => ['nullable', 'numeric', 'min:0'],
             'ppm' => ['nullable', 'numeric', 'min:0'],
             'allergy' => ['nullable', 'string'],
@@ -41,5 +41,12 @@ class PrescriptionRequest extends FormRequest
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
         ];
+    }
+
+    protected function passedValidation()
+    {
+        $this->merge([
+            'status' => config('custom.prescription.pendiente'),
+        ]);
     }
 }

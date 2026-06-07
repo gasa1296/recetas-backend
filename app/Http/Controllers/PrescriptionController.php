@@ -19,7 +19,8 @@ class PrescriptionController extends Controller
             $prescriptions = $prescriptions->paginate(10);
 
             return $this->success(
-                data: PrescriptionResource::collection($prescriptions),
+                __('messages.operation_success'),
+                PrescriptionResource::collection($prescriptions),
             );
         }
         $search = $request->input('search');
@@ -28,7 +29,8 @@ class PrescriptionController extends Controller
             ->paginate(10);
 
         return $this->success(
-            data: PrescriptionResource::collection($prescriptions),
+            __('messages.operation_success'),
+            PrescriptionResource::collection($prescriptions),
         );
     }
 
@@ -45,7 +47,8 @@ class PrescriptionController extends Controller
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(
-            data: new PrescriptionResource(
+            __('messages.operation_success'),
+            new PrescriptionResource(
                 $prescription->load(['medicaments', 'patient', 'room']),
             ),
         );
@@ -62,7 +65,8 @@ class PrescriptionController extends Controller
             ->findOrFail($prescription);
 
         return $this->success(
-            data: new PrescriptionResource(
+            __('messages.operation_success'),
+            new PrescriptionResource(
                 $prescription->load(['medicaments', 'patient', 'room']),
             ),
         );
@@ -85,7 +89,8 @@ class PrescriptionController extends Controller
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(
-            data: new PrescriptionResource(
+            __('messages.operation_success'),
+            new PrescriptionResource(
                 $prescription->load(['medicaments', 'patient', 'room']),
             ),
         );
@@ -103,6 +108,8 @@ class PrescriptionController extends Controller
             ->findOrFail($prescription);
         $prescription->delete();
 
-        return $this->success();
+        return $this->success(
+            __('messages.operation_success'),
+        );
     }
 }

@@ -16,7 +16,8 @@ class SpecialtyController extends Controller
         $specialties = auth()->user()->specialties()->paginate(10);
 
         return $this->success(
-            data: SpecialtyResource::collection($specialties),
+            __('messages.operation_success'),
+            SpecialtyResource::collection($specialties),
         );
     }
 
@@ -30,7 +31,10 @@ class SpecialtyController extends Controller
             ->specialties()
             ->create($request->validated());
 
-        return $this->success(data: new SpecialtyResource($specialty));
+        return $this->success(
+            __('messages.operation_success'),
+            new SpecialtyResource($specialty),
+        );
     }
 
     /**
@@ -40,7 +44,10 @@ class SpecialtyController extends Controller
     {
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
 
-        return $this->success(data: new SpecialtyResource($specialty));
+        return $this->success(
+            __('messages.operation_success'),
+            new SpecialtyResource($specialty),
+        );
     }
 
     /**
@@ -53,7 +60,10 @@ class SpecialtyController extends Controller
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
         $specialty->update($request->validated());
 
-        return $this->success(data: new SpecialtyResource($specialty));
+        return $this->success(
+            __('messages.operation_success'),
+            new SpecialtyResource($specialty),
+        );
     }
 
     /**
@@ -64,6 +74,8 @@ class SpecialtyController extends Controller
         $specialty = auth()->user()->specialties()->findOrFail($specialty);
         $specialty->delete();
 
-        return $this->success();
+        return $this->success(
+            __('messages.operation_success'),
+        );
     }
 }

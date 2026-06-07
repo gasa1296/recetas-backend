@@ -11,47 +11,33 @@ class VerificationController extends Controller
     public function verify(Request $request)
     {
         if (! $request->hasValidSignature()) {
-            // temporal url
             return $this->error(
                 __('messages.verification.verification_expired'),
                 400,
             );
         }
 
-        $user = User::find($request->user_id);
-        if (! $user) {
-            return $this->error(
-                __('messages.verification.user_not_found'),
-                400,
-            );
-        }
+        $user = User::findOrFail($request->user_id);
 
         if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
 
-        // temporal url
         return $this->success(
-            __('messages.verification.verified_successfully'),
+            __('messages.operation_success'),
         );
     }
 
     public function resend(Request $request)
     {
-        $email = $request->get('email');
+        $email = $request->input('email');
         if (! $email) {
             return $this->error(
                 __('messages.verification.email_required'),
                 400,
             );
         }
-        $user = User::where('email', $email)->first();
-        if (! $user) {
-            return $this->error(
-                __('messages.verification.user_not_found'),
-                400,
-            );
-        }
+        $user = User::where('email', $email)->firstOrFail();
         if ($user->hasVerifiedEmail()) {
             return $this->error(
                 __('messages.verification.already_verified'),
