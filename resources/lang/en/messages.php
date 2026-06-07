@@ -2,6 +2,8 @@
 
 return [
     'operation_success' => 'Operation successful',
+    'operation_failed' => 'Operation failed',
+    'not_found' => 'Not found',
 
     'auth' => [
         'invalid_credentials' => 'Credentials are invalid',
