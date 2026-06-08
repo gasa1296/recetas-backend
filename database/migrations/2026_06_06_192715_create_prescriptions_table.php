@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('diet')->nullable();
             $table->text('comments')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('room_id')->constrained('consulting_rooms')->cascadeOnDelete();
+            $table->foreignId('room_id')->constrained('rooms')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
             $table->integer('status')->default(0);
             $table->timestamps(6);

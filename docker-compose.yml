@@ -2,6 +2,7 @@ services:
     app:
         build:
             args:
+                user: recetas
                 uid: 1000
             context: ./
             dockerfile: Dockerfile
@@ -15,6 +16,11 @@ services:
             # - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
+        healthcheck:
+            test: ["CMD", "php", "-r", "exit(0);"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
     db:
         image: mariadb:lts
         container_name: recetas-db
@@ -36,15 +42,20 @@ services:
         container_name: recetas-phpmyadmin
         restart: always
         environment:
-            PMA_HOST: mysql
+            PMA_HOST: db
             PMA_PORT: 3306
             PMA_USER: root
             PMA_PASSWORD: ''
         depends_on:
             db:
-                condition: service_healthy
+                condition: service_started
         networks:
             - recetas
+        healthcheck:
+            test: ["CMD", "php", "-r", "exit(0);"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
     nginx:
         image: nginx:alpine
         container_name: recetas-nginx
