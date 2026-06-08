@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Patient>
+ * @extends Factory<Patient>
  */
 class PatientFactory extends Factory
 {
@@ -18,15 +18,7 @@ class PatientFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name' => fake()->firstName(),
-            'last_name1' => fake()->lastName(),
-            'last_name2' => fake()->lastName(),
-            'email' => fake()->email(),
-            'phone1' => fake()->phoneNumber(),
-            'phone2' => fake()->phoneNumber(),
-            'birth_date' => fake()->date(),
-            'gender' => fake()->randomElement(['M', 'F']),
-            'user_id' => User::factory()->create()->id,
+            //
         ];
     }
 }
