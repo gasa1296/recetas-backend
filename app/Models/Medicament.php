@@ -2,39 +2,22 @@
 
 namespace App\Models;
 
+use Database\Factories\MedicamentFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[Fillable(['name'])]
 class Medicament extends Model
 {
-    use HasFactory;
+    /** @use HasFactory<MedicamentFactory> */
+    use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'add',
-        'dose',
-        'way',
-        'frequency',
-        'duration',
-        'quantity',
-        'quantity_exp',
-        'name',
-        'type',
-        'family',
-        'group',
-        'salt',
-    ];
-
-    /**
-     * Get the prescription of the medicament.
-     */
-    public function prescription(): BelongsTo
+    public function prescriptions(): BelongsToMany
     {
-        return $this->belongsTo(Prescription::class);
+        return $this->belongsToMany(Prescription::class, MedicamentPrescription::class)
+            ->withPivot('dosage', 'frequency', 'duration');
     }
 }

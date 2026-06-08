@@ -15,7 +15,6 @@ class PrescriptionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
             'temp' => $this->temp,
             'weight' => $this->weight,
             'height' => $this->height,
@@ -25,17 +24,17 @@ class PrescriptionResource extends JsonResource
             'allergy' => $this->allergy,
             'diagnostic' => $this->diagnostic,
             'diet' => $this->diet,
-            'add' => $this->add,
-            'medic' => new UserResource($this->medic),
-            'room' => $this->room,
-            'patient' => $this->patient,
-            'document_id' => $this->document_id,
-            'medicaments' => $this->medicaments,
-            'file' => $this->file,
+            'comments' => $this->comments,
+            'room' => $this->whenLoaded('room', new RoomResource($this->room)),
+            'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
+            'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
+                'id' => $medicament->id,
+                'name' => $medicament->name,
+                'dosage' => $medicament->pivot->dosage,
+                'frequency' => $medicament->pivot->frequency,
+                'duration' => $medicament->pivot->duration,
+            ])),
             'status' => $this->status,
-            'code' => $this->code,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
     }
 }
