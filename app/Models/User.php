@@ -7,10 +7,12 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
 
 #[Fillable([
     'first_name',
@@ -41,22 +43,22 @@ class User extends Authenticatable
         ];
     }
 
-    public function rooms()
+    public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);
     }
 
-    public function specialties()
+    public function specialties(): HasMany
     {
         return $this->hasMany(Specialty::class);
     }
 
-    public function patients()
+    public function patients(): HasMany
     {
         return $this->hasMany(Patient::class);
     }
 
-    public function prescriptions()
+    public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
     }

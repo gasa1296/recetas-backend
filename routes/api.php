@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->name('profile')->group(function () {
             Route::post('/prescriptions', 'store');
             Route::put('/prescriptions/{prescription}', 'update');
             Route::delete('/prescriptions/{prescription}', 'destroy');
+            Route::post('/prescriptions/{prescription}/finish', 'finishPrescription');
         });
 
     Route::controller(RoomController::class)

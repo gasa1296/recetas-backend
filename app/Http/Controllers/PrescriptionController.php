@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionResource;
+use App\Models\Prescription;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 
 class PrescriptionController extends Controller
@@ -111,5 +113,33 @@ class PrescriptionController extends Controller
         return $this->success(
             __('messages.operation_success'),
         );
+    }
+
+    public function finishPrescription(int $prescription): JsonResponse
+    {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
+        if (! $this->generatePDF($prescription)) {
+            return $this->error(__('messages.operation_failed'));
+        }
+        $prescription->update(['status' => 'finished']);
+
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
+    }
+
+    private function generatePDF(Prescription $prescription): bool
+    {
+        $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
+        $pdf = Pdf::loadView('pdf.prescription_model_1', ['prescription' => $prescription]);
+
+        return $prescription->handleUploadFile($pdf->output());
     }
 }
