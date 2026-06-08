@@ -85,4 +85,14 @@ class Prescription extends Model
             'filename' => $file->getClientOriginalName(),
         ]) ? true : false;
     }
+
+    public function getPrettyStatusAttribute(): string
+    {
+        return match ($this->status) {
+            'pending' => 'Pendiente',
+            'approved' => 'Aprobada',
+            'rejected' => 'Rechazada',
+            default => $this->status,
+        };
+    }
 }

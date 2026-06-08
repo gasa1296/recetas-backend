@@ -18,7 +18,10 @@ class UniversityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->company(),
+            'alpha_two_code' => fake()->randomLetter().fake()->randomLetter(),
+            'country' => fake()->country(),
+
         ];
     }
 }

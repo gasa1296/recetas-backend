@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Specialty;
+use App\Models\University;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,19 @@ class SpecialtyFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->words(rand(3, 8), true),
+            'identification' => strtoupper(fake()->bothify('???-?????')),
+            'university' => fake()->company(),
         ];
+    }
+
+    /**
+     * Indicate that the specialty should not have a university assigned.
+     */
+    public function withoutUniversity(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'university' => null,
+        ]);
     }
 }

@@ -14,16 +14,15 @@ class UniversityController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         if (! $request->has('search')) {
-            $universities = University::all();
-
-            return $this->success(data: $universities);
+            $universities = University::paginate(200);
+        } else {
+            $search = $request->input('search');
+            $universities = University::whereLike(
+                'name',
+                "%$search%",
+                false,
+            )->paginate(200);
         }
-        $search = $request->input('search');
-        $universities = University::whereLike(
-            'name',
-            "%$search%",
-            false,
-        )->get();
 
         return $this->success(
             __('messages.operation_success'),

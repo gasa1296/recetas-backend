@@ -16,6 +16,12 @@ services:
             # - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
+        environment:
+            DB_CONNECTION: mysql
+            DB_HOST: db
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: root
+            DB_PASSWORD: ''
         healthcheck:
             test: ["CMD", "php", "-r", "exit(0);"]
             interval: 10s
@@ -26,6 +32,8 @@ services:
         container_name: recetas-db
         restart: unless-stopped
         tty: true
+        ports:
+            - "3306:3306"
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_ROOT_USER: root

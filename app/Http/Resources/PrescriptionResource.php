@@ -34,7 +34,7 @@ class PrescriptionResource extends JsonResource
                 'frequency' => $medicament->pivot->frequency,
                 'duration' => $medicament->pivot->duration,
             ])),
-            'status' => $this->status,
+            'status' => $this->prettyStatus,
         ];
     }
 }

@@ -18,7 +18,17 @@ class PrescriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'temp' => fake()->randomFloat(1, 36, 42),
+            'weight' => fake()->randomFloat(1, 50, 120),
+            'height' => fake()->randomFloat(1, 150, 200),
+            'pressure' => fake()->word(),
+            'saturation' => fake()->word(),
+            'ppm' => fake()->word(),
+            'allergy' => fake()->sentence(),
+            'diagnostic' => fake()->paragraph(),
+            'diet' => fake()->sentence(),
+            'comments' => fake()->paragraph(),
+            'status' => 0,
         ];
     }
 }
