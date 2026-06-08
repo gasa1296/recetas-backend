@@ -1,20 +1,71 @@
 services:
-  backend:
-    build: .
-    container_name: recetas_backend
-    restart: always
-    ports:
-      - "8000:8000"
-    networks:
-      - universal_db
-    env_file:
-      - .env
-    develop:
-      watch:
-        - action: sync+restart
-          path: .
-          target: /app
+    app:
+        build:
+            args:
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: recetas
+        container_name: recetas-app
+        restart: unless-stopped
+        tty: true
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+            # - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - recetas
+    db:
+        image: mariadb:lts
+        container_name: recetas-db
+        restart: unless-stopped
+        tty: true
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_USER: root
+            MYSQL_PASSWORD: ''
+            MYSQL_ROOT_PASSWORD: ''
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        volumes:
+            - recetas_dbdata:/var/lib/mysql
+            # - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - recetas
+    phpmyadmin:
+        image: phpmyadmin:5.2
+        container_name: recetas-phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: ''
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - recetas
+    nginx:
+        image: nginx:alpine
+        container_name: recetas-nginx
+        restart: unless-stopped
+        depends_on:
+            app:
+                condition: service_healthy
+            phpmyadmin:
+                condition: service_healthy
+        tty: true
+        ports:
+            - 8000:80
+            - 8181:8181
+        volumes:
+            - ./:/var/www
+            - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            - recetas
 networks:
-  universal_db:
-    name: universal_db
-    external: true
+    recetas:
+        driver: bridge
+volumes:
+    recetas_dbdata:
+        driver: local

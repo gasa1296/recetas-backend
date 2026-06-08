@@ -8,11 +8,12 @@ use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 
 class ResetController extends Controller
 {
-    public function request(ResetRequestRequest $request)
+    public function request(ResetRequestRequest $request): JsonResponse
     {
         ResetPasswordNotification::createUrlUsing(function (
             $notifiable,
@@ -39,7 +40,7 @@ class ResetController extends Controller
         return $this->success(__('messages.operation_success'));
     }
 
-    public function reset(ResetRequest $request)
+    public function reset(ResetRequest $request): JsonResponse
     {
         $status = Password::reset(
             $request->only(
@@ -49,7 +50,7 @@ class ResetController extends Controller
                 'token',
             ),
             function (User $user, string $password) {
-                $user->forceFill([
+                $user->fill([
                     'password' => Hash::make($password),
                 ]);
 
