@@ -3,40 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PrescriptionRequest;
+use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionResource;
-use Carbon\Carbon;
+use App\Models\Prescription;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class PrescriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @todo add search
      */
-    public function index(): JsonResponse
+    public function index(SearchRequest $request): JsonResponse
     {
-        $user = auth()->user();
-        $prescriptions = $user->prescriptions()->with(['patient', 'room'])->orderByDesc('created_at');
+        $prescriptions = auth()->user()->prescriptions();
+        if (! $request->has('search')) {
+            $prescriptions = $prescriptions->paginate(10);
 
-        return PrescriptionResource::collection($prescriptions->paginate(10))->response();
-    }
+            return $this->success(
+                __('messages.operation_success'),
+                PrescriptionResource::collection($prescriptions),
+            );
+        }
+        $search = $request->input('search');
+        $prescriptions = $prescriptions
+            ->whereLike('description', "%$search%", false)
+            ->paginate(10);
 
-    public function indexByPatient(int $patient): JsonResponse
-    {
-        $user = auth()->user();
-        $prescriptions = $user->prescriptions()->with(['patient', 'room'])->where('patient_id', $patient)->orderByDesc('created_at');
-
-        return PrescriptionResource::collection($prescriptions->paginate(10))->response();
-    }
-
-    public function indexByRoom(int $room): JsonResponse
-    {
-        $user = auth()->user();
-        $prescriptions = $user->prescriptions()->with(['patient', 'room'])->where('room_id', $room)->orderByDesc('created_at');
-
-        return PrescriptionResource::collection($prescriptions->paginate(10))->response();
+        return $this->success(
+            __('messages.operation_success'),
+            PrescriptionResource::collection($prescriptions),
+        );
     }
 
     /**
@@ -44,16 +41,19 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
-        $inputs = $request->validated();
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->create($request->validated());
+        $medicaments = $request->input('medicament_ids', []);
+        $prescription->medicaments()->sync($medicaments);
 
-        $inputs['code'] = strtoupper(base_convert(Carbon::now()->getPreciseTimestamp(3), 10, 36));
-
-        $user = auth()->user();
-        $prescription = $user->prescriptions()->create($inputs);
-
-        //TODO: store medicaments in prescription_medicaments table if medicaments dont exist in medicaments table, create them and store the id in prescription_medicaments table, if exist only store the id in prescription_medicaments table, if medicaments exist in prescription_medicaments table update the record with new data
-        //TODO: handle generate PDF and send to patient
-        return (new PrescriptionResource($prescription))->response();
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
     }
 
     /**
@@ -61,10 +61,85 @@ class PrescriptionController extends Controller
      */
     public function show(int $prescription): JsonResponse
     {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->findOrFail($prescription);
 
-        $user = auth()->user();
-        $prescription = $user->prescriptions()->with(['patient', 'room'])->findOrFail($prescription);
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
+    }
 
-        return (new PrescriptionResource($prescription))->response();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(
+        PrescriptionRequest $request,
+        int $prescription,
+    ): JsonResponse {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
+        $prescription->update($request->validated());
+        $medicaments = $request->input('medicament_ids', []);
+        $prescription->medicaments()->sync($medicaments);
+
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $prescription): JsonResponse
+    {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
+        $prescription->delete();
+
+        return $this->success(
+            __('messages.operation_success'),
+        );
+    }
+
+    public function finishPrescription(int $prescription): JsonResponse
+    {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', 'pending')
+            ->findOrFail($prescription);
+        if (! $this->generatePDF($prescription)) {
+            return $this->error(__('messages.operation_failed'));
+        }
+        $prescription->update(['status' => 'finished']);
+
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room']),
+            ),
+        );
+    }
+
+    private function generatePDF(Prescription $prescription): bool
+    {
+        $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
+        $pdf = Pdf::loadView('pdf.prescription_model_1', ['prescription' => $prescription]);
+
+        return $prescription->handleUploadFile($pdf->output());
     }
 }

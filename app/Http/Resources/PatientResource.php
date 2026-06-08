@@ -14,7 +14,6 @@ class PatientResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -22,9 +21,8 @@ class PatientResource extends JsonResource
             'last_name2' => $this->last_name2,
             'email' => $this->email,
             'phone' => $this->phone,
-            'birth_date' => $this->birth_date,
             'gender' => $this->gender,
-            'prescriptions' => PrescriptionResource::collection($this->prescriptions),
+            'birth_date' => $this->birth_date,
         ];
     }
 }
