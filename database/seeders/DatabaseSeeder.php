@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             UniversitySeeder::class,
             MedicamentSeeder::class,
-        ]);
+        ] + (config('app.env') === 'testing' || config('app.env') === 'local' ? [
+            TestSeeder::class,
+        ] : []));
     }
 }

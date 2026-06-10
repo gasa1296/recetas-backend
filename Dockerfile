@@ -11,6 +11,8 @@ ARG uid
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    nodejs \
+    npm \
     libmcrypt-dev \
     libpng-dev \
     libonig-dev \
