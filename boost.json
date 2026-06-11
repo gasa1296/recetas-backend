@@ -1,7 +1,8 @@
 {
     "agents": [
+        "zed",
         "opencode",
-        "zed"
+        "copilot"
     ],
     "cloud": false,
     "guidelines": true,
