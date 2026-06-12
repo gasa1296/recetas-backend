@@ -59,10 +59,12 @@ services:
                 condition: service_healthy
         tty: true
         ports:
-            - 8000:80
+            - 80:80
+            - 443:443
         volumes:
             - ./:/var/www
             - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./docker-compose/nginx/certs/:/etc/nginx/certs:ro
         networks:
             - recetas
 networks:

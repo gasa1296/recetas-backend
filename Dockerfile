@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     nodejs \
     npm \
+    openssl \
     libmcrypt-dev \
     libpng-dev \
     libonig-dev \
