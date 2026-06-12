@@ -12,87 +12,101 @@ use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(AuthController::class)
-    ->name('auth.')
-    ->group(function () {
-        Route::post('/auth/login', 'login')->name('login');
-        Route::post('/auth/logout', 'logout')->name('logout')->middleware('auth:sanctum');
-    });
-Route::controller(ResetController::class)
-    ->name('password.')
-    ->group(function () {
-        Route::post('/password/request', 'request')->name('request');
-        Route::post('/password/reset', 'reset')->name('reset');
-    });
-Route::controller(VerificationController::class)
-    ->name('emailVerification.')
-    ->group(function () {
-        Route::get('/verification/verify', 'verify')->name('verify');
-        Route::post('/verification/resend', 'resend')->name('resend');
-    });
+(new class {
+    public function __construct() {
+        $this->authRoutes();
+        $this->publicRoutes();
+        $this->medicRoutes();
+    }
+    private function authRoutes() {
+        Route::controller(AuthController::class)
+            ->name('auth.')
+            ->group(function () {
+                Route::post('/auth/login', 'login')->name('login');
+                Route::post('/auth/logout', 'logout')->name('logout')->middleware('auth:sanctum');
+            });
+        Route::controller(ResetController::class)
+            ->name('password.')
+            ->group(function () {
+                Route::post('/password/request', 'request')->name('request');
+                Route::post('/password/reset', 'reset')->name('reset');
+            });
+        Route::controller(VerificationController::class)
+            ->name('emailVerification.')
+            ->group(function () {
+                Route::get('/verification/verify', 'verify')->name('verify');
+                Route::post('/verification/resend', 'resend')->name('resend');
+            });
+    }
+    private function publicRoutes() {
+        Route::controller(UniversityController::class)
+            ->name('universities.')
+            ->group(function () {
+                Route::get('/universities', 'index')->name('index');
+                Route::get('/universities/{university}', 'show')->name('show');
+            });
+    }
+    private function medicRoutes() {
+        Route::middleware('auth:sanctum')->name('profile')->group(function () {
 
-Route::controller(UniversityController::class)
-    ->name('universities.')
-    ->group(function () {
-        Route::get('/universities', 'index')->name('index');
-        Route::get('/universities/{university}', 'show')->name('show');
-    });
+            Route::controller(ProfileController::class)
+                ->name('profile.')
+                ->group(function () {
+                    Route::get('/profile', 'index')->name('index');
+                    Route::put('/profile', 'update')->name('update');
+                    Route::delete('/profile', 'destroy')->name('destroy');
+                });
 
-Route::middleware('auth:sanctum')->name('profile')->group(function () {
+            Route::controller(MedicamentController::class)
+                ->name('medicaments.')
+                ->group(function () {
+                    Route::get('/medicaments', 'index')->name('index');
+                    Route::get('/medicaments/{medicament}', 'show')->name('show');
+                });
 
-    Route::controller(ProfileController::class)
-        ->name('profile.')
-        ->group(function () {
-            Route::get('/profile', 'index')->name('index');
-            Route::put('/profile', 'update')->name('update');
-            Route::delete('/profile', 'destroy')->name('destroy');
+            Route::controller(PatientController::class)
+                ->name('patients.')
+                ->group(function () {
+                    Route::get('/patients', 'index')->name('index');
+                    Route::get('/patients/{patient}', 'show')->name('show');
+                    Route::post('/patients', 'store')->name('store');
+                    Route::put('/patients/{patient}', 'update')->name('update');
+                    Route::delete('/patients/{patient}', 'destroy')->name('destroy');
+                });
+
+            Route::controller(PrescriptionController::class)
+                ->name('prescriptions.')
+                ->group(function () {
+                    Route::get('/prescriptions', 'index')->name('index');
+                    Route::get('/prescriptions/{prescription}', 'show')->name('show');
+                    Route::post('/prescriptions', 'store')->name('store');
+                    Route::put('/prescriptions/{prescription}', 'update')->name('update');
+                    Route::delete('/prescriptions/{prescription}', 'destroy')->name('destroy');
+                    Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
+                });
+
+            Route::controller(RoomController::class)
+                ->name('rooms.')
+                ->group(function () {
+                    Route::get('/rooms', 'index')->name('index');
+                    Route::get('/rooms/{room}', 'show')->name('show');
+                    Route::post('/rooms', 'store')->name('store');
+                    Route::put('/rooms/{room}', 'update')->name('update');
+                    Route::delete('/rooms/{room}', 'destroy')->name('destroy');
+                });
+
+            Route::controller(SpecialtyController::class)
+                ->name('specialties.')
+                ->group(function () {
+                    Route::get('/specialties', 'index')->name('index');
+                    Route::get('/specialties/{specialty}', 'show')->name('show');
+                    Route::post('/specialties', 'store')->name('store');
+                    Route::put('/specialties/{specialty}', 'update')->name('update');
+                    Route::delete('/specialties/{specialty}', 'destroy')->name('destroy');
+                });
         });
-
-    Route::controller(MedicamentController::class)
-        ->name('medicaments.')
-        ->group(function () {
-            Route::get('/medicaments', 'index')->name('index');
-            Route::get('/medicaments/{medicament}', 'show')->name('show');
-        });
-
-    Route::controller(PatientController::class)
-        ->name('patients.')
-        ->group(function () {
-            Route::get('/patients', 'index')->name('index');
-            Route::get('/patients/{patient}', 'show')->name('show');
-            Route::post('/patients', 'store')->name('store');
-            Route::put('/patients/{patient}', 'update')->name('update');
-            Route::delete('/patients/{patient}', 'destroy')->name('destroy');
-        });
-
-    Route::controller(PrescriptionController::class)
-        ->name('prescriptions.')
-        ->group(function () {
-            Route::get('/prescriptions', 'index')->name('index');
-            Route::get('/prescriptions/{prescription}', 'show')->name('show');
-            Route::post('/prescriptions', 'store')->name('store');
-            Route::put('/prescriptions/{prescription}', 'update')->name('update');
-            Route::delete('/prescriptions/{prescription}', 'destroy')->name('destroy');
-            Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
-        });
-
-    Route::controller(RoomController::class)
-        ->name('rooms.')
-        ->group(function () {
-            Route::get('/rooms', 'index')->name('index');
-            Route::get('/rooms/{room}', 'show')->name('show');
-            Route::post('/rooms', 'store')->name('store');
-            Route::put('/rooms/{room}', 'update')->name('update');
-            Route::delete('/rooms/{room}', 'destroy')->name('destroy');
-        });
-
-    Route::controller(SpecialtyController::class)
-        ->name('specialties.')
-        ->group(function () {
-            Route::get('/specialties', 'index')->name('index');
-            Route::get('/specialties/{specialty}', 'show')->name('show');
-            Route::post('/specialties', 'store')->name('store');
-            Route::put('/specialties/{specialty}', 'update')->name('update');
-            Route::delete('/specialties/{specialty}', 'destroy')->name('destroy');
-        });
+    }
 });
+
+
+
