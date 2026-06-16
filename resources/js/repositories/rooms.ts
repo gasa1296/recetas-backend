@@ -1,6 +1,6 @@
 import type { AxiosResponse } from 'axios'
 import api from '../services/axios'
-import type { ApiResponse, Paginated, QueryParams, Room, RoomPayload } from '../types'
+import type { ApiResponse, QueryParams, Room } from '../types'
 
 export function listRooms(
   params?: QueryParams,
@@ -15,14 +15,14 @@ export function getRoom(
 }
 
 export function createRoom(
-  payload: RoomPayload,
+  payload: Room,
 ): Promise<AxiosResponse<ApiResponse<Room>>> {
   return api.post('/rooms', payload)
 }
 
 export function updateRoom(
   id: number | string,
-  payload: RoomPayload,
+  payload: Room,
 ): Promise<AxiosResponse<ApiResponse<Room>>> {
   return api.put(`/rooms/${id}`, payload)
 }

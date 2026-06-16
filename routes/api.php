@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GenderController;
+use App\Http\Controllers\GenericController;
 use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
@@ -46,7 +46,6 @@ use Illuminate\Support\Facades\Route;
 
     private function publicRoutes()
     {
-        Route::get('genders', GenderController::class)->name('genders.index');
         Route::controller(UniversityController::class)
             ->name('universities.')
             ->group(function () {
@@ -58,6 +57,12 @@ use Illuminate\Support\Facades\Route;
     private function medicRoutes()
     {
         Route::middleware('auth:sanctum')->name('profile')->group(function () {
+            Route::controller(GenericController::class)
+                ->name('generic.')
+                ->group(function () {
+                    Route::get('/genders', 'genders')->name('genders');
+                    Route::get('/prescription-status', 'prescriptionStatus')->name('prescription_status');
+                });
 
             Route::controller(ProfileController::class)
                 ->name('profile.')

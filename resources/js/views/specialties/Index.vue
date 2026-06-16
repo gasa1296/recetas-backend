@@ -34,27 +34,15 @@ onMounted(fetchSpecialties)
         </div>
         <div v-if="loading" class="text-center py-12 ">Loading...</div>
         <div v-else-if="specialties.length === 0" class="text-center py-12 ">No specialties found.</div>
-        <div v-else class="overflow-x-auto">
-            <table class="w-full bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <thead>
-                    <tr class="border-b border-gray-200 text-left">
-                        <th class="px-4 py-3 text-sm font-medium  ">Name</th>
-                        <th class="px-4 py-3 text-sm font-medium  ">Identification</th>
-                        <th class="px-4 py-3 text-sm font-medium  ">University</th>
-                        <th class="px-4 py-3"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="specialty in specialties" :key="specialty.id" class="border-b border-gray-100 last:border-0">
-                        <td class="px-4 py-3 text-gray-900 ">{{ specialty.name }}</td>
-                        <td class="px-4 py-3 text-gray-600 ">{{ specialty.identification }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <router-link :to="{ name: 'specialties.edit', params: { id: specialty.id } }" class="text-sm text-brand-primary hover:underline mr-3">Edit</router-link>
-                            <button @click="deleteSpecialty(specialty.id ?? 0)" class="text-sm text-red-600  hover:underline">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div v-for="specialty in specialties" :key="specialty.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 class="font-semibold text-brand-primary text-lg">{{ specialty.name }}</h3>
+                <p v-if="specialty.identification" class="text-sm   mt-1">{{ specialty.identification }}</p>
+                <div class="flex gap-2 mt-4">
+                    <router-link :to="{ name: 'specialties.edit', params: { id: specialty.id } }" class="text-sm text-brand-primary hover:underline">Edit</router-link>
+                    <button @click="deleteSpecialty(specialty.id ?? 0)" class="text-sm text-red-600  hover:underline">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>

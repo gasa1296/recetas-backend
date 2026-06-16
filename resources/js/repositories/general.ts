@@ -1,13 +1,11 @@
 import type { AxiosResponse } from 'axios'
 import api from '../services/axios'
-import type { ApiResponse, Gender, Paginated, QueryParams, University } from '../types'
+import type { ApiResponse, Gender } from '../types'
 
-export function listGenders(): Promise<AxiosResponse<ApiResponse<Gender[]>>> {
+export function listGenders(): Promise<AxiosResponse<ApiResponse<Object>>> {
   return api.get('/genders')
 }
 
-export function listUniversities(
-  params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<University>>>> {
-  return api.get('/universities', { params })
+export function listPrescriptionStatuses(): Promise<AxiosResponse<ApiResponse<Object>>> {
+  return api.get('/prescription-statuses')
 }

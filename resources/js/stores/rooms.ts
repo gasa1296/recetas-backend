@@ -7,7 +7,7 @@ import {
   listRooms,
   updateRoom,
 } from '../repositories/rooms'
-import type { Paginated, Room, RoomPayload } from '../types'
+import type { Room } from '../types'
 
 export const useRoomsStore = defineStore('rooms', () => {
   const items = ref<Room[]>([])
@@ -17,19 +17,19 @@ export const useRoomsStore = defineStore('rooms', () => {
     loading.value = true
     try {
       const { data } = await listRooms()
-      items.value = data.data.data
+      items.value = data.data
     } finally {
       loading.value = false
     }
   }
 
-  async function loadRoom(id: string | number) {
+  async function loadRoom(id: number) {
     return getRoom(id)
   }
 
   async function saveRoom(
-    id: string | number | undefined,
-    payload: RoomPayload,
+    id: number | undefined,
+    payload: Room,
   ) {
     if (id) {
       return updateRoom(id, payload)
@@ -38,7 +38,7 @@ export const useRoomsStore = defineStore('rooms', () => {
     return createRoom(payload)
   }
 
-  async function removeRoom(id: string | number) {
+  async function removeRoom(id: number) {
     await deleteRoom(id)
     items.value = items.value.filter((room) => room.id !== id)
   }

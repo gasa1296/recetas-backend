@@ -2,8 +2,11 @@
 
 return [
     'status' => [
-        '0' => 'pending',
-        '1' => 'finished',
-        '2' => 'cancelled',
+        '0' => 'draft',
+        '1' => 'active',
+        '2' => 'partially_dispensed',
+        '3'=> 'fully_dispensed',
+        '4' => 'expired',
+        '5'=> 'nulled',
     ],
 ];

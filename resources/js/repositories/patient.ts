@@ -3,14 +3,12 @@ import api from '../services/axios'
 import type {
   ApiResponse,
   Patient,
-  PatientPayload,
-  Paginated,
   QueryParams,
 } from '../types'
 
 export function listPatients(
   params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<Patient> | Patient[]>>> {
+): Promise<AxiosResponse<ApiResponse<Patient[]>>> {
   return api.get('/patients', { params })
 }
 
@@ -21,14 +19,14 @@ export function getPatient(
 }
 
 export function createPatient(
-  payload: PatientPayload,
+  payload: Patient,
 ): Promise<AxiosResponse<ApiResponse<Patient>>> {
   return api.post('/patients', payload)
 }
 
 export function updatePatient(
   id: number | string,
-  payload: PatientPayload,
+  payload: Patient,
 ): Promise<AxiosResponse<ApiResponse<Patient>>> {
   return api.put(`/patients/${id}`, payload)
 }

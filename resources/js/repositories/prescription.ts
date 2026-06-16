@@ -2,14 +2,13 @@ import type { AxiosResponse } from 'axios'
 import api from '../services/axios'
 import type {
   ApiResponse,
-  Paginated,
   Prescription,
   QueryParams,
 } from '../types'
 
 export function listPrescriptions(
   params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<Prescription> | Prescription[]>>> {
+): Promise<AxiosResponse<ApiResponse<Prescription[]>>> {
   return api.get('/prescriptions', { params })
 }
 
