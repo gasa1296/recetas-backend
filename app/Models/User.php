@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,8 +14,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 
 #[Fillable([
     'first_name',
@@ -43,10 +43,12 @@ class User extends Authenticatable implements FilamentUser
             'phone' => 'array',
         ];
     }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_admin;
     }
+
     public function getFilamentName(): string
     {
         return ($this->first_name ?? '').' '.($this->last_name1 ?? '').' '.($this->last_name2 ?? '');

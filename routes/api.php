@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GenderController;
 use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
@@ -10,16 +11,19 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\GenderController;
 use Illuminate\Support\Facades\Route;
 
-(new class {
-    public function __construct() {
+(new class
+{
+    public function __construct()
+    {
         $this->authRoutes();
         $this->publicRoutes();
         $this->medicRoutes();
     }
-    private function authRoutes() {
+
+    private function authRoutes()
+    {
         Route::controller(AuthController::class)
             ->name('auth.')
             ->group(function () {
@@ -39,7 +43,9 @@ use Illuminate\Support\Facades\Route;
                 Route::post('/verification/resend', 'resend')->name('resend');
             });
     }
-    private function publicRoutes() {
+
+    private function publicRoutes()
+    {
         Route::get('genders', GenderController::class)->name('genders.index');
         Route::controller(UniversityController::class)
             ->name('universities.')
@@ -48,7 +54,9 @@ use Illuminate\Support\Facades\Route;
                 Route::get('/universities/{university}', 'show')->name('show');
             });
     }
-    private function medicRoutes() {
+
+    private function medicRoutes()
+    {
         Route::middleware('auth:sanctum')->name('profile')->group(function () {
 
             Route::controller(ProfileController::class)
@@ -109,6 +117,3 @@ use Illuminate\Support\Facades\Route;
         });
     }
 });
-
-
-

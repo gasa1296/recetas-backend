@@ -24,7 +24,7 @@ class MedicamentSeeder extends Seeder
                 Medicament::insert(
                     array_map(fn (array $med) => [
                         'salt' => $med['salt'],
-                        'type'=> $med['type'],
+                        'type' => $med['type'],
                         'group' => $med['group'],
                     ], $chunk)
                 );

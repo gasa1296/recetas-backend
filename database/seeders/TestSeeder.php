@@ -13,7 +13,7 @@ class TestSeeder extends Seeder
      */
     public function run(): void
     {
-        
+
         User::factory()
             ->hasSpecialties(3, function (array $attributes, User $user) {
                 return [
@@ -29,7 +29,7 @@ class TestSeeder extends Seeder
                     // 'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
                 ];
             })->create([
-                'email'=> 'example@example.com',
+                'email' => 'example@example.com',
             ]);
         User::factory()
             ->hasSpecialties(3, function (array $attributes, User $user) {
