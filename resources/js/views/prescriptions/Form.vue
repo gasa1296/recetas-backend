@@ -43,10 +43,10 @@ onMounted(async () => {
         listSpecialties(),
         listMedicaments(),
     ])
-    patients.value = patRes.data.data.data
-    rooms.value = roomRes.data.data.data
-    specialties.value = specRes.data.data.data
-    medicaments.value = medRes.data.data.data
+    patients.value = patRes.data.data
+    rooms.value = roomRes.data.data
+    specialties.value = specRes.data.data
+    medicaments.value = medRes.data.data
 
     if (route.query.patient_id) {
         form.value.patient_id = String(route.query.patient_id)
@@ -190,39 +190,6 @@ async function handleSubmit() {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diet</label>
                     <textarea v-model="form.diet" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"></textarea>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Medicaments</h2>
-                    <button type="button" @click="addMedicament" class="text-sm px-3 py-1 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-md hover:bg-indigo-100 dark:hover:bg-indigo-900">
-                        + Add medicament
-                    </button>
-                </div>
-                <div v-for="(med, i) in form.medicament_data" :key="i" class="flex items-end gap-3 border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0">
-                    <div class="flex-1">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Medicament</label>
-                        <select v-model="med.medicament_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                            <option value="">Select</option>
-                            <option v-for="m in medicaments" :key="m.id" :value="m.id">{{ m.name }}</option>
-                        </select>
-                    </div>
-                    <div class="w-24">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Dosage</label>
-                        <input v-model="med.dosage" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
-                    </div>
-                    <div class="w-28">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Frequency</label>
-                        <input v-model="med.frequency" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
-                    </div>
-                    <div class="w-24">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Duration</label>
-                        <input v-model="med.duration" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
-                    </div>
-                    <button type="button" @click="removeMedicament(i)" class="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-400">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
                 </div>
             </div>
 

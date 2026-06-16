@@ -32,7 +32,7 @@ class ProfileRequest extends FormRequest
             'last_name2' => ['nullable', 'string'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
-            'gender' => ['required', 'string', Rule::in(array_values(config('custom.gender')))],
+            'gender' => ['required', 'string', Rule::in(array_keys(config('custom.gender')))],
             'password' => ['nullable', 'string', 'confirmed'],
         ];
     }

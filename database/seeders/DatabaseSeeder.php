@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+        $seeders = [
             AdminUserSeeder::class,
             UniversitySeeder::class,
             MedicamentSeeder::class,
-        ] + (config('app.env') === 'testing' || config('app.env') === 'local' ? [
-            TestSeeder::class,
-        ] : []));
+        ];
+        if (config('app.env') === 'local') {
+            $seeders[] = TestSeeder::class;
+        }
+        $this->call($seeders);
     }
 }

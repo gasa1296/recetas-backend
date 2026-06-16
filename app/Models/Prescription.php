@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 #[Fillable([
     'temp',
@@ -58,7 +59,7 @@ class Prescription extends Model
     public function medicaments(): BelongsToMany
     {
         return $this->belongsToMany(Medicament::class, MedicamentPrescription::class)
-            ->withPivot('dose', 'frequency', 'duration');
+            ->withPivot('dosage', 'frequency', 'duration');
     }
 
     /**
@@ -85,14 +86,10 @@ class Prescription extends Model
             'filename' => $file->getClientOriginalName(),
         ]) ? true : false;
     }
-
-    public function getPrettyStatusAttribute(): string
+    protected function prettyStatus(): Attribute
     {
-        return match ($this->status) {
-            'pending' => 'Pendiente',
-            'approved' => 'Aprobada',
-            'rejected' => 'Rechazada',
-            default => $this->status,
-        };
+        return Attribute::make(
+            get: fn () => config('custom.prescription.status.' . $this->status),
+        );
     }
 }

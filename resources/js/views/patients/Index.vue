@@ -9,7 +9,7 @@ const loading = ref(true)
 async function fetchPatients() {
     try {
         const { data } = await listPatients()
-        patients.value = data.data.data
+        patients.value = data.data
     } finally {
         loading.value = false
     }

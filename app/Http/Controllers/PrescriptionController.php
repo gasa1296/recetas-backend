@@ -84,7 +84,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.pending'))
+            ->where('status', config('custom.prescription.status.0'))
             ->findOrFail($prescription);
         $prescription->update($request->validated());
         $medicaments = $request->input('medicament_data', []);
@@ -106,7 +106,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.pending'))
+            ->where('status', config('custom.prescription.status.0'))
             ->findOrFail($prescription);
         $prescription->delete();
 
@@ -120,12 +120,12 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.pending'))
+            ->where('status', config('custom.prescription.status.0'))
             ->findOrFail($prescription);
         if (! $this->generatePDF($prescription)) {
             return $this->error(__('messages.operation_failed'));
         }
-        $prescription->update(['status' => config('custom.prescription.finished')]);
+        $prescription->update(['status' => config('custom.prescription.status.1')]);
 
         return $this->success(
             __('messages.operation_success'),
