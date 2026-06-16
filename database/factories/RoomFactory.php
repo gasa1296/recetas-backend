@@ -27,7 +27,7 @@ class RoomFactory extends Factory
             'n_exterior' => fake()->word(),
             'n_interior' => fake()->optional(false)->word(),
             'address' => fake()->optional(false)->sentence(),
-            'phone' => json_encode(fake()->phoneNumber()),
+            'phone' => [fake()->phoneNumber()],
             'fav' => false,
             'auto_email' => false,
             'auto_whatsapp' => false,
