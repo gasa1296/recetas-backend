@@ -63,7 +63,7 @@ async function handleSubmit() {
             await createPatient(form.value)
         }
         router.push({ name: 'patients.index' })
-    } catch (err-error) {
+    } catch (err) {
         error.value = (err as any).response?.data?.message || 'Failed to save patient'
     } finally {
         loading.value = false
