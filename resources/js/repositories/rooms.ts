@@ -4,7 +4,7 @@ import type { ApiResponse, Paginated, QueryParams, Room, RoomPayload } from '../
 
 export function listRooms(
   params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<Room>>>> {
+): Promise<AxiosResponse<ApiResponse<Room[]>>> {
   return api.get('/rooms', { params })
 }
 

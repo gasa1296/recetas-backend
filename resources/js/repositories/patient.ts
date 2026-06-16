@@ -10,7 +10,7 @@ import type {
 
 export function listPatients(
   params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<Patient>>>> {
+): Promise<AxiosResponse<ApiResponse<Paginated<Patient> | Patient[]>>> {
   return api.get('/patients', { params })
 }
 

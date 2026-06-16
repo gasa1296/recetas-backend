@@ -4,7 +4,7 @@ import type { ApiResponse, Medicament, Paginated, QueryParams } from '../types'
 
 export function listMedicaments(
   params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Paginated<Medicament>>>> {
+): Promise<AxiosResponse<ApiResponse<Paginated<Medicament> | Medicament[]>>> {
   return api.get('/medicaments', { params })
 }
 

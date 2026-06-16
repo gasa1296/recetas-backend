@@ -46,6 +46,7 @@ class PrescriptionController extends Controller
             ->prescriptions()
             ->create($request->validated());
         $medicaments = $request->input('medicament_data', []);
+        
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(

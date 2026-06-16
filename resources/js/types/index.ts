@@ -83,19 +83,23 @@ export type SpecialtyPayload = Omit<Specialty, 'id'>;
 
 export interface Medicament {
   id: number;
-  name: string;
+  salt: string;
+  type: string;
+  group: string;
 }
 
 export interface PrescriptionMedicament {
   id: number;
-  name: string;
+  salt: string;
+  type: string;
+  group: string;
   dosage: string;
   frequency: string;
   duration: string;
 }
 
 export interface PrescriptionMedicamentInput {
-  medicament_id: string | number;
+  id: number;
   dosage: string;
   frequency: string;
   duration: string;
@@ -117,7 +121,7 @@ export interface Prescription {
   diagnostic: string | null;
   diet: string | null;
   comments: string | null;
-  status: string;
+  status: number;
   pretty_status?: string;
   room?: Room;
   patient?: Patient;
@@ -139,7 +143,7 @@ export interface PrescriptionPayload {
   diagnostic: string;
   diet: string;
   comments: string;
-  medicament_data: PrescriptionMedicamentInput[];
+  medicaments: PrescriptionMedicamentInput[];
 }
 
 export interface Credentials {

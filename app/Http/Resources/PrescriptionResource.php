@@ -34,12 +34,15 @@ class PrescriptionResource extends JsonResource
             'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
             'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
                 'id' => $medicament->id,
-                'name' => $medicament->name,
+                'salt' => $medicament->salt,
+                'type' => $medicament->type,
+                'group' => $medicament->group,
                 'dosage' => $medicament->pivot->dosage,
                 'frequency' => $medicament->pivot->frequency,
                 'duration' => $medicament->pivot->duration,
             ])),
-            'status' => $this->prettyStatus,
+            'status' => $this->status,
+            'pretty_status' => $this->pretty_status,
         ];
     }
 }

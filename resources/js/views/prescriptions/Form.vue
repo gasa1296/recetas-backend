@@ -26,30 +26,84 @@ const form = ref<PrescriptionPayload>({
     diagnostic: '',
     diet: '',
     comments: '',
-    medicament_data: [],
+    medicaments: [],
 })
 
 const patients = ref<Patient[]>([])
 const rooms = ref<Room[]>([])
 const specialties = ref<Specialty[]>([])
-const medicaments = ref<Medicament[]>([])
 const loading = ref(false)
 const error = ref('')
+const patientSearch = ref('')
+const medicamentSearch = ref('')
+const showPatientDropdown = ref(false)
+const showMedicamentDropdown = ref(false)
+const patientResults = ref<Patient[]>([])
+const medicamentResults = ref<Medicament[]>([])
+
+
+async function onPatientInput() {
+    if (!patientSearch.value) {
+        patientResults.value = []
+        return
+    }
+    const { data } = await listPatients({ search: patientSearch.value })
+    if('data' in data.data) {
+        patientResults.value = data.data.data
+        return
+    } else {
+        patientResults.value = data.data
+    }
+}
+
+async function onMedicamentInput() {
+    if (!medicamentSearch.value) {
+        medicamentResults.value = []
+        return
+    }
+    const { data } = await listMedicaments({ search: medicamentSearch.value })
+    if('data' in data.data) {
+        medicamentResults.value = data.data.data
+        return
+    } else {
+        medicamentResults.value = data.data
+    }
+}
+
+function selectPatient(patient: Patient) {
+    form.value.patient_id = String(patient.id)
+    patientSearch.value = `${patient.first_name} ${patient.last_name1}`
+    showPatientDropdown.value = false
+}
+
+function selectSearchMedicament(med: Medicament) {
+    form.value.medicaments.push({ id: String(med.id), salt: med.salt, type: med.type, group: med.group, dosage: '', frequency: '', duration: '' })
+    medicamentSearch.value = ''
+    showMedicamentDropdown.value = false
+}
 
 onMounted(async () => {
-    const [patRes, roomRes, specRes, medRes] = await Promise.all([
-        listPatients(),
+    const [roomRes, specRes] = await Promise.all([
         listRooms(),
         listSpecialties(),
-        listMedicaments(),
     ])
-    patients.value = patRes.data.data
-    rooms.value = roomRes.data.data
-    specialties.value = specRes.data.data
-    medicaments.value = medRes.data.data
+    if('data' in roomRes.data) {
+        rooms.value = roomRes.data.data
+    } else {
+        rooms.value = roomRes.data
+    }
+    if('data' in specRes.data) {
+        specialties.value = specRes.data.data
+    } else {
+        specialties.value = specRes.data
+    }
 
     if (route.query.patient_id) {
         form.value.patient_id = String(route.query.patient_id)
+        const qp = patients.value.find((p) => p.id === Number(route.query.patient_id))
+        if (qp) {
+            patientSearch.value = `${qp.first_name} ${qp.last_name1}`
+        }
     }
 
             if (isEdit) {
@@ -69,22 +123,25 @@ onMounted(async () => {
                     patient_id: data.data.patient_id ?? '',
                     room_id: data.data.room_id ?? '',
                     specialty_id: data.data.specialty_id ?? '',
-                    medicament_data: (data.data.medicaments || []).map((m) => ({
-                        medicament_id: m.id,
+                    medicaments: (data.data.medicaments || []).map((m) => ({
+                        id: m.id,
+                        salt: m.salt,
+                        type: m.type,
+                        group: m.group,
                         dosage: m.dosage,
                         frequency: m.frequency,
                         duration: m.duration,
                     })),
                 }
+                const ep = patients.value.find((p) => p.id === Number(data.data.patient_id))
+                if (ep) {
+                    patientSearch.value = `${ep.first_name} ${ep.last_name1}`
+                }
             }
 })
 
-function addMedicament() {
-    form.value.medicament_data.push({ medicament_id: '', dosage: '', frequency: '', duration: '' })
-}
-
 function removeMedicament(index: number) {
-    form.value.medicament_data.splice(index, 1)
+    form.value.medicaments.splice(index, 1)
 }
 
 async function handleSubmit() {
@@ -93,8 +150,8 @@ async function handleSubmit() {
             try {
                 const payload = {
                     ...form.value,
-                    medicament_data: form.value.medicament_data.map((m) => ({
-                        medicament_id: m.medicament_id as string | number,
+                    medicaments: form.value.medicaments.map((m) => ({
+                        id: m.id,
                         dosage: m.dosage,
                         frequency: m.frequency,
                         duration: m.duration,
@@ -121,15 +178,33 @@ async function handleSubmit() {
             <div v-if="error" class="p-3 rounded-md bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm">{{ error }}</div>
 
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 space-y-4">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">References</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Patient *</label>
-                        <select v-model="form.patient_id" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                            <option value="">Select patient</option>
-                            <option v-for="p in patients" :key="p.id" :value="p.id">{{ p.first_name }} {{ p.last_name1 }}</option>
-                        </select>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Patient</h2>
+                <div class="relative">
+                    <input
+                        v-model="patientSearch"
+                        @input="onPatientInput"
+                        @focus="showPatientDropdown = true"
+                        @blur="showPatientDropdown = false"
+                        placeholder="Search patient by name..."
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    />
+                    <div v-if="showPatientDropdown && patientSearch" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        <div
+                            v-for="p in patientResults"
+                            :key="p.id"
+                            @mousedown="selectPatient(p)"
+                            class="px-3 py-2 cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-900/50 text-gray-900 dark:text-gray-100"
+                        >
+                            {{ p.first_name }} {{ p.last_name1 }}
+                        </div>
+                        <div v-if="patientResults.length === 0" class="px-3 py-2 text-gray-400">No patients found</div>
                     </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">References</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Room</label>
                         <select v-model="form.room_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
@@ -190,6 +265,51 @@ async function handleSubmit() {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diet</label>
                     <textarea v-model="form.diet" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"></textarea>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 space-y-4">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Medicaments</h2>
+                <div class="relative">
+                    <input
+                        v-model="medicamentSearch"
+                        @input="onMedicamentInput"
+                        @focus="showMedicamentDropdown = true"
+                        @blur="showMedicamentDropdown = false"
+                        placeholder="Search medicament to add..."
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    />
+                    <div v-if="showMedicamentDropdown && medicamentSearch" class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        <div
+                            v-for="m in medicamentResults"
+                            :key="m.id"
+                            @mousedown="selectSearchMedicament(m)"
+                            class="px-3 py-2 cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-900/50 text-gray-900 dark:text-gray-100"
+                        >
+                            {{ m.salt }}
+                        </div>
+                        <div v-if="medicamentResults.length === 0" class="px-3 py-2 text-gray-400">No medicaments found</div>
+                    </div>
+                </div>
+                <div v-for="(med, i) in form.medicaments" :key="i" class="flex items-end gap-3 border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0">
+                    <div class="flex-1">
+                        <p class="block text-lg font-bold text-gray-500 dark:text-gray-400 mb-1">{{ med.salt }}</p>
+                    </div>
+                    <div class="w-24">
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Dosage</label>
+                        <input v-model="med.dosage" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+                    </div>
+                    <div class="w-28">
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Frequency</label>
+                        <input v-model="med.frequency" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+                    </div>
+                    <div class="w-24">
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Duration</label>
+                        <input v-model="med.duration" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+                    </div>
+                    <button type="button" @click="removeMedicament(i)" class="p-2 text-red-500 hover:text-red-700 dark:hover:text-red-400">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
                 </div>
             </div>
 

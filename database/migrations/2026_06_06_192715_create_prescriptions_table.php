@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
-            $table->float('temp')->nullable();
-            $table->float('weight')->nullable();
-            $table->float('height')->nullable();
-            $table->string('pressure')->nullable();
-            $table->string('saturation')->nullable();
-            $table->string('ppm')->nullable();
+            $table->integer('temp')->nullable();
+            $table->integer('weight')->nullable();
+            $table->integer('height')->nullable();
+            $table->integer('pressure')->nullable();
+            $table->integer('saturation')->nullable();
+            $table->integer('ppm')->nullable();
             $table->text('allergy')->nullable();
             $table->text('diagnostic')->nullable();
             $table->text('diet')->nullable();

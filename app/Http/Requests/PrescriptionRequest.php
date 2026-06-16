@@ -36,11 +36,11 @@ class PrescriptionRequest extends FormRequest
             'diagnostic' => ['nullable', 'string'],
             'diet' => ['nullable', 'string'],
             'comments' => ['nullable', 'string'],
-            'medicament_data' => ['nullable', 'array'],
-            'medicament_data.*.id' => ['nullable', 'exists:medicaments,id'],
-            'medicament_data.*.dosage' => ['nullable', 'numeric', 'min:0'],
-            'medicament_data.*.frequency' => ['nullable', 'string'],
-            'medicament_data.*.duration' => ['nullable', 'string'],
+            'medicaments' => ['nullable', 'array'],
+            'medicaments.*.id' => ['nullable', 'exists:medicaments,id'],
+            'medicaments.*.dosage' => ['nullable', 'string'],
+            'medicaments.*.frequency' => ['nullable', 'string'],
+            'medicaments.*.duration' => ['nullable', 'string'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
         ];
@@ -48,6 +48,15 @@ class PrescriptionRequest extends FormRequest
 
     protected function passedValidation()
     {
+        $medicaments = $this->input('medicaments', []);
+        foreach ($medicaments as $medicament) {
+            $id = $medicament['id'];
+            $this->merge([
+                "medicament_data.{$id}.dosage" => $medicament['dosage'] ?? null,
+                "medicament_data.{$id}.frequency" => $medicament['frequency'] ?? null,
+                "medicament_data.{$id}.duration" => $medicament['duration'] ?? null,
+            ]);
+        }
         $this->merge([
             'status' => config('custom.prescription.status.0'),
         ]);

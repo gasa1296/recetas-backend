@@ -6,6 +6,8 @@ use App\Http\Requests\PatientRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PatientResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PatientController extends Controller
 {
@@ -23,10 +25,13 @@ class PatientController extends Controller
 
         $search = $request->input('search');
         $patients = $patients
-            ->whereLike('name', "%$search%", false)
+            ->where(function ($query) use ($search) {
+                $query->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            })
             ->paginate(10);
 
-        return $this->success(__('messages.operation_success'), new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), PatientResource::collection($patients));
     }
 
     /**

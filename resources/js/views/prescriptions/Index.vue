@@ -58,14 +58,14 @@ onMounted(fetchPrescriptions)
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ p.room?.name }}</td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ p.specialty?.name }}</td>
                         <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="p.status === '1' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="p.status === 1 ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'">
                                 {{ p.pretty_status || p.status }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs truncate">{{ p.diagnostic }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
-                            <router-link v-if="p.status === '0'" :to="{ name: 'prescriptions.edit', params: { id: p.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mr-3">Edit</router-link>
-                            <button v-if="p.status !== '1'" @click="finishPrescription(p.id)" class="text-sm text-green-600 dark:text-green-400 hover:underline mr-3">Finish</button>
+                            <router-link v-if="p.status === 0" :to="{ name: 'prescriptions.edit', params: { id: p.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mr-3">Edit</router-link>
+                            <button v-if="p.status !== 1" @click="finishPrescription(p.id)" class="text-sm text-green-600 dark:text-green-400 hover:underline mr-3">Finish</button>
                             <button @click="deletePrescription(p.id)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
                         </td>
                     </tr>

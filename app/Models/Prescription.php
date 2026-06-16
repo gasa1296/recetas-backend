@@ -92,4 +92,47 @@ class Prescription extends Model
             get: fn () => config('custom.prescription.status.' . $this->status),
         );
     }
+    /**
+     * Generic percent attribute helper.
+     * Stores values as integer (value * 100) and exposes as float (value / 100).
+     */
+    protected function percent(string $name): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value) => is_null($value) ? null : $value / 100,
+            set: fn (mixed $value) => is_null($value) ? null : (int) round($value * 100),
+        );
+    }
+
+    protected function saturation(): Attribute
+    {
+        return $this->percent('saturation');
+    }
+
+    protected function ppm(): Attribute
+    {
+        return $this->percent('ppm');
+    }
+
+    protected function temp(): Attribute
+    {
+        return $this->percent('temp');
+    }
+
+    protected function weight(): Attribute
+    {
+        return $this->percent('weight');
+    }
+
+    protected function height(): Attribute
+    {
+        return $this->percent('height');
+    }
+
+    protected function pressure(): Attribute
+    {
+        return $this->percent('pressure');
+    }
+    
+
 }
