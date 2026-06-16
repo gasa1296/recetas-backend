@@ -32,6 +32,9 @@ yarn-error.log
 /.vscode
 /.zed
 /.agents
+/.opencode
+
+AGENTS.md
 .github
 .boost.json
 
