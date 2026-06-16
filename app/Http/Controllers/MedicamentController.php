@@ -20,7 +20,7 @@ class MedicamentController extends Controller
         }
         $search = $request->input('search');
         $medicaments = Medicament::whereLike(
-            'name',
+            'salt',
             "%$search%",
             false,
         )->paginate(10);

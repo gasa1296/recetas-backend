@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class UniversitySeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $universities = json_decode(
