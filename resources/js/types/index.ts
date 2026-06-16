@@ -4,16 +4,9 @@ export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
-}
-
-export interface Paginated<T> {
-  data: T[];
   meta?: unknown;
   links?: unknown;
 }
-
-export type ResourceResponse<T> = ApiResponse<T>;
-export type PaginatedResourceResponse<T> = ApiResponse<Paginated<T>>;
 
 export type Gender = string;
 
@@ -25,35 +18,29 @@ export interface University {
 }
 
 export interface Patient {
-  id: number;
+  id?: number;
   first_name: string;
   last_name1: string;
   last_name2: string;
   email: string;
-  phone: string | string[];
+  phone?: string[];
   gender: string;
   birth_date: string | null;
 }
-
-export type PatientPayload = Omit<Patient, 'id'>;
-export type PatientForm = Omit<PatientPayload, 'phone'> & { phone: string[] };
 
 export interface Profile {
   first_name: string;
   last_name1: string;
   last_name2: string;
   email: string;
-  phone: string | string[];
+  phone: string[];
   gender: string;
   rooms?: Room[];
   specialties?: Specialty[];
 }
 
-export type ProfilePayload = Omit<Profile, 'rooms' | 'specialties'>;
-export type ProfileForm = Omit<ProfilePayload, 'phone'> & { phone: string[] };
-
 export interface Room {
-  id: number;
+  id?: number;
   name: string;
   zip: string;
   street: string;
@@ -63,23 +50,17 @@ export interface Room {
   n_exterior: string;
   n_interior: string;
   address?: string;
-  phone: string | string[];
+  phone: string[];
   fav: boolean;
   auto_email: boolean;
   auto_whatsapp: boolean;
 }
 
-export type RoomPayload = Omit<Room, 'id' | 'address'>;
-export type RoomForm = Omit<RoomPayload, 'phone'> & { phone: string[] };
-
 export interface Specialty {
-  id: number;
+  id?: number;
   name: string;
   identification: string;
-  university: string;
 }
-
-export type SpecialtyPayload = Omit<Specialty, 'id'>;
 
 export interface Medicament {
   id: number;
@@ -90,27 +71,19 @@ export interface Medicament {
 
 export interface PrescriptionMedicament {
   id: number;
-  salt: string;
-  type: string;
-  group: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
-}
-
-export interface PrescriptionMedicamentInput {
-  id: number;
+  salt?: string;
+  type?: string;
+  group?: string;
   dosage: string;
   frequency: string;
   duration: string;
 }
 
 export interface Prescription {
-  id: number;
-  user_id: number;
-  patient_id: number;
-  room_id: number;
-  specialty_id: number;
+  id?: number;
+  patient_id?: number;
+  room_id?: number;
+  specialty_id?: number;
   temp: string | null;
   weight: string | null;
   height: string | null;
@@ -121,29 +94,12 @@ export interface Prescription {
   diagnostic: string | null;
   diet: string | null;
   comments: string | null;
-  status: number;
+  status?: number;
   pretty_status?: string;
   room?: Room;
   patient?: Patient;
   specialty?: Specialty;
   medicaments?: PrescriptionMedicament[];
-}
-
-export interface PrescriptionPayload {
-  patient_id: string | number;
-  room_id: string | number;
-  specialty_id: string | number;
-  temp: string;
-  weight: string;
-  height: string;
-  pressure: string;
-  saturation: string;
-  ppm: string;
-  allergy: string;
-  diagnostic: string;
-  diet: string;
-  comments: string;
-  medicaments: PrescriptionMedicamentInput[];
 }
 
 export interface Credentials {

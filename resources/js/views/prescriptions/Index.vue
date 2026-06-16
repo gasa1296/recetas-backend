@@ -65,8 +65,8 @@ onMounted(fetchPrescriptions)
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs truncate">{{ p.diagnostic }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
                             <router-link v-if="p.status === 0" :to="{ name: 'prescriptions.edit', params: { id: p.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mr-3">Edit</router-link>
-                            <button v-if="p.status !== 1" @click="finishPrescription(p.id)" class="text-sm text-green-600 dark:text-green-400 hover:underline mr-3">Finish</button>
-                            <button @click="deletePrescription(p.id)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button v-if="p.status !== 1" @click="finishPrescription(p.id ?? 0)" class="text-sm text-green-600 dark:text-green-400 hover:underline mr-3">Finish</button>
+                            <button @click="deletePrescription(p.id ?? 0)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
                         </td>
                     </tr>
                 </tbody>

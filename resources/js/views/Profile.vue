@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import { listGenders } from '../repositories/general'
 
 const auth = useAuthStore()
-import type { Gender, Profile } from '../types'
+import type { Profile } from '../types'
 
-const genders = ref<Gender[]>([])
 const form = ref<Profile>({
     first_name: '',
     last_name1: '',
@@ -20,20 +18,13 @@ const success = ref('')
 const error = ref('')
 
 onMounted(async () => {
-    try {
-        const { data } = await listGenders()
-        genders.value = data.data
-    } catch {}
-
     if (auth.user) {
-        const user = { ...auth.user }
-        user.phone = Array.isArray(user.phone) ? user.phone : (user.phone ? [user.phone] : [])
-        form.value = user
+        form.value = { ...auth.user }
     }
 })
 
 function addPhone() {
-    form.value.phone.push('')
+    form.value.phone?.push('')
 }
 
 function removePhone(index: number) {
@@ -98,13 +89,6 @@ async function handleUpdate() {
                         </div>
                         <button type="button" @click="addPhone" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">+ Add phone</button>
                     </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gender</label>
-                    <select v-model="form.gender" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                        <option value="">Select</option>
-                        <option v-for="gender in genders" :key="gender" :value="gender">{{ gender }}</option>
-                    </select>
                 </div>
             </div>
             <div class="pt-4">

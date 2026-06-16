@@ -4,7 +4,6 @@ import type {
   ApiResponse,
   Paginated,
   Prescription,
-  PrescriptionPayload,
   QueryParams,
 } from '../types'
 
@@ -21,14 +20,14 @@ export function getPrescription(
 }
 
 export function createPrescription(
-  payload: PrescriptionPayload,
+  payload: Prescription,
 ): Promise<AxiosResponse<ApiResponse<Prescription>>> {
   return api.post('/prescriptions', payload)
 }
 
 export function updatePrescription(
   id: number | string,
-  payload: PrescriptionPayload,
+  payload: Prescription,
 ): Promise<AxiosResponse<ApiResponse<Prescription>>> {
   return api.put(`/prescriptions/${id}`, payload)
 }

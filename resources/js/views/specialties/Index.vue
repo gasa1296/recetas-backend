@@ -9,7 +9,7 @@ const loading = ref(true)
 async function fetchSpecialties() {
     try {
         const { data } = await listSpecialties()
-        specialties.value = data.data.data
+        specialties.value = data.data
     } finally {
         loading.value = false
     }
@@ -48,10 +48,9 @@ onMounted(fetchSpecialties)
                     <tr v-for="specialty in specialties" :key="specialty.id" class="border-b border-gray-100 dark:border-gray-800 last:border-0">
                         <td class="px-4 py-3 text-gray-900 dark:text-gray-100">{{ specialty.name }}</td>
                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ specialty.identification }}</td>
-                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ specialty.university }}</td>
                         <td class="px-4 py-3 text-right">
                             <router-link :to="{ name: 'specialties.edit', params: { id: specialty.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline mr-3">Edit</router-link>
-                            <button @click="deleteSpecialty(specialty.id)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button @click="deleteSpecialty(specialty.id ?? 0)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
                         </td>
                     </tr>
                 </tbody>

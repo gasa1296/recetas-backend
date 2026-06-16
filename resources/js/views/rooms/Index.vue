@@ -41,7 +41,7 @@ onMounted(fetchRooms)
                 <p v-if="room.phone" class="text-sm text-gray-500 dark:text-gray-800">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>
                 <div class="flex gap-2 mt-4">
                     <router-link :to="{ name: 'rooms.edit', params: { id: room.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Edit</router-link>
-                    <button @click="deleteRoom(room.id)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                    <button @click="deleteRoom(room.id ?? 0)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
                 </div>
             </div>
         </div>

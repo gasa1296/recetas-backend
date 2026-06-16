@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PatientRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PatientResource;
+use App\Http\Resources\PatientCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Patient;
 
 class PatientController extends Controller
 {
@@ -16,22 +17,14 @@ class PatientController extends Controller
      */
     public function index(SearchRequest $request): JsonResponse
     {
-        $patients = auth()->user()->patients();
-        if (! $request->has('search')) {
-            $patients = $patients->paginate(10);
-
-            return $this->success(__('messages.operation_success'), PatientResource::collection($patients));
+        $patients = Patient::orderBy('created_at', 'desc');
+        
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $patients = $patients->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
         }
 
-        $search = $request->input('search');
-        $patients = $patients
-            ->where(function ($query) use ($search) {
-                $query->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%");
-            })
-            ->paginate(10);
-
-        return $this->success(__('messages.operation_success'), PatientResource::collection($patients));
+        return (new PatientCollection($patients->paginate(10)))->response();
     }
 
     /**

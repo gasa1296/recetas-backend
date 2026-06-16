@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionResource;
+use App\Http\Resources\PrescriptionCollection;
 use App\Models\Prescription;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -16,24 +17,14 @@ class PrescriptionController extends Controller
      */
     public function index(SearchRequest $request): JsonResponse
     {
-        $prescriptions = auth()->user()->prescriptions();
-        if (! $request->has('search')) {
-            $prescriptions = $prescriptions->paginate(10);
-
-            return $this->success(
-                __('messages.operation_success'),
-                PrescriptionResource::collection($prescriptions),
-            );
+        $prescriptions = auth()->user()->prescriptions()->orderBy('created_at', 'desc');
+        
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $prescriptions = $prescriptions->whereLike('description', "%$search%", false);
         }
-        $search = $request->input('search');
-        $prescriptions = $prescriptions
-            ->whereLike('description', "%$search%", false)
-            ->paginate(10);
 
-        return $this->success(
-            __('messages.operation_success'),
-            PrescriptionResource::collection($prescriptions),
-        );
+        return (new PrescriptionCollection($prescriptions->paginate(10)))->response();
     }
 
     /**

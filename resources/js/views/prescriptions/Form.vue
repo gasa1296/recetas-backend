@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Medicament, Patient, PrescriptionPayload, Room, Specialty } from '../../types'
+import type { Medicament, Patient, Room, Specialty, Prescription } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { listPatients } from '../../repositories/patient'
@@ -12,10 +12,7 @@ const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref<PrescriptionPayload>({
-    patient_id: '',
-    room_id: '',
-    specialty_id: '',
+const form = ref<Prescription>({
     temp: '',
     weight: '',
     height: '',
@@ -71,13 +68,13 @@ async function onMedicamentInput() {
 }
 
 function selectPatient(patient: Patient) {
-    form.value.patient_id = String(patient.id)
+    form.value.patient_id = patient.id
     patientSearch.value = `${patient.first_name} ${patient.last_name1}`
     showPatientDropdown.value = false
 }
 
 function selectSearchMedicament(med: Medicament) {
-    form.value.medicaments.push({ id: String(med.id), salt: med.salt, type: med.type, group: med.group, dosage: '', frequency: '', duration: '' })
+    form.value.medicaments?.push({ id: med.id, salt: med.salt, type: med.type, group: med.group, dosage: '', frequency: '', duration: '' })
     medicamentSearch.value = ''
     showMedicamentDropdown.value = false
 }
@@ -98,69 +95,28 @@ onMounted(async () => {
         specialties.value = specRes.data
     }
 
-    if (route.query.patient_id) {
-        form.value.patient_id = String(route.query.patient_id)
-        const qp = patients.value.find((p) => p.id === Number(route.query.patient_id))
-        if (qp) {
-            patientSearch.value = `${qp.first_name} ${qp.last_name1}`
+    if (isEdit) {
+        const { data } = await getPrescription(route.params.id as string)
+        form.value = {...data.data}
+        const ep = patients.value.find((p) => p.id === Number(data.data.patient_id))
+        if (ep) {
+            patientSearch.value = `${ep.first_name} ${ep.last_name1}`
         }
     }
-
-            if (isEdit) {
-                const { data } = await getPrescription(route.params.id as string)
-                form.value = {
-                    ...data.data,
-                    temp: data.data.temp ?? '',
-                    weight: data.data.weight ?? '',
-                    height: data.data.height ?? '',
-                    pressure: data.data.pressure ?? '',
-                    saturation: data.data.saturation ?? '',
-                    ppm: data.data.ppm ?? '',
-                    allergy: data.data.allergy ?? '',
-                    diagnostic: data.data.diagnostic ?? '',
-                    diet: data.data.diet ?? '',
-                    comments: data.data.comments ?? '',
-                    patient_id: data.data.patient_id ?? '',
-                    room_id: data.data.room_id ?? '',
-                    specialty_id: data.data.specialty_id ?? '',
-                    medicaments: (data.data.medicaments || []).map((m) => ({
-                        id: m.id,
-                        salt: m.salt,
-                        type: m.type,
-                        group: m.group,
-                        dosage: m.dosage,
-                        frequency: m.frequency,
-                        duration: m.duration,
-                    })),
-                }
-                const ep = patients.value.find((p) => p.id === Number(data.data.patient_id))
-                if (ep) {
-                    patientSearch.value = `${ep.first_name} ${ep.last_name1}`
-                }
-            }
 })
 
 function removeMedicament(index: number) {
-    form.value.medicaments.splice(index, 1)
+    form.value.medicaments?.splice(index, 1)
 }
 
 async function handleSubmit() {
     loading.value = true
     error.value = ''
             try {
-                const payload = {
-                    ...form.value,
-                    medicaments: form.value.medicaments.map((m) => ({
-                        id: m.id,
-                        dosage: m.dosage,
-                        frequency: m.frequency,
-                        duration: m.duration,
-                    })),
-                }
                 if (isEdit) {
-                    await updatePrescription(route.params.id as string, payload)
+                    await updatePrescription(route.params.id as string, form.value)
                 } else {
-                    await createPrescription(payload)
+                    await createPrescription(form.value)
                 }
                 router.push({ name: 'prescriptions.index' })
             } catch (err) {

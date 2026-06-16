@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { Room, RoomPayload } from '../../types'
-import type { RoomForm } from '../../types'
+import type { Room } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { getRoom, createRoom, updateRoom } from '../../repositories/rooms'
@@ -9,7 +8,7 @@ const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref<RoomForm>({
+const form = ref<Room>({
     name: '',
     zip: '',
     street: '',
@@ -30,18 +29,16 @@ onMounted(async () => {
     if (isEdit) {
         const id = parseInt(route.params.id as string)
         const { data } = await getRoom(id)
-        const room = { ...data.data }
-        room.phone = Array.isArray(room.phone) ? room.phone : (room.phone ? [room.phone] : [])
-        form.value = room
+        form.value = { ...data.data }
     }
 })
 
 function addPhone() {
-    form.value.phone.push('')
+    form.value.phone?.push('')
 }
 
 function removePhone(index: number) {
-    form.value.phone.splice(index, 1)
+    form.value.phone?.splice(index, 1)
 }
 
 async function handleSubmit() {

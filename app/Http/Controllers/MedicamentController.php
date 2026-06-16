@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SearchRequest;
 use App\Models\Medicament;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\MedicamentCollection;
 
 class MedicamentController extends Controller
 {
@@ -16,7 +17,7 @@ class MedicamentController extends Controller
         if (! $request->has('search')) {
             $medicaments = Medicament::paginate(10);
 
-            return $this->success(__('messages.operation_success'), $medicaments);
+            return (new MedicamentCollection($medicaments))->response();
         }
         $search = $request->input('search');
         $medicaments = Medicament::whereLike(
@@ -25,7 +26,7 @@ class MedicamentController extends Controller
             false,
         )->paginate(10);
 
-        return $this->success(__('messages.operation_success'), $medicaments);
+        return (new MedicamentCollection($medicaments))->response();
     }
 
     /**

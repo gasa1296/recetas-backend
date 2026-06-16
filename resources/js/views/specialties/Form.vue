@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import type { SpecialtyPayload, University } from '../../types'
+import type { Specialty } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { listUniversities } from '../../repositories/general'
 import { getSpecialty, createSpecialty, updateSpecialty } from '../../repositories/specialty'
 
 const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref<SpecialtyPayload>({
+const form = ref<Specialty>({
     name: '',
     identification: '',
-    university: '',
 })
-const universities = ref<University[]>([])
 const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
-    try {
-        const { data } = await listUniversities()
-        universities.value = data.data.data
-    } catch {}
     if (isEdit) {
         const id = parseInt(route.params.id as string)
         const { data } = await getSpecialty(id)
@@ -61,13 +54,6 @@ async function handleSubmit() {
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Identification *</label>
                 <input v-model="form.identification" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">University</label>
-                <select v-model="form.university" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                    <option value="">Select university</option>
-                    <option v-for="u in universities" :key="u.alpha_two_code" :value="u.name">{{ u.name }}</option>
-                </select>
             </div>
             <div class="pt-4 flex gap-3">
                 <button type="submit" :disabled="loading" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors disabled:opacity-50">
