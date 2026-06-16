@@ -15,25 +15,25 @@ const cards = [
 </script>
 
 <template>
-    <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+    <div class="max-w-6xl">
+        <h1 class="text-2xl font-bold text-brand-primary mb-2">
             Welcome, {{ auth.user?.first_name }} {{ auth.user?.last_name1 }}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mb-8">Select a module to get started</p>
+        <p class="text-slate-600 mb-8">Select a module to get started</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
                 v-for="card in cards"
                 :key="card.name"
                 @click="router.push(card.href)"
-                class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+                class="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-brand-accent transition-shadow cursor-pointer"
             >
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" :class="card.color">
                         {{ card.icon }}
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ card.name }}</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ card.description }}</p>
+                        <h3 class="font-semibold text-brand-primary">{{ card.name }}</h3>
+                        <p class="text-sm text-slate-600">{{ card.description }}</p>
                     </div>
                 </div>
             </div>

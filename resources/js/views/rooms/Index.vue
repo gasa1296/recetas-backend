@@ -27,21 +27,21 @@ onMounted(fetchRooms)
 <template>
     <div>
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Rooms</h1>
-            <router-link :to="{ name: 'rooms.create' }" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors">
+            <h1 class="text-2xl font-bold text-brand-primary">Rooms</h1>
+            <router-link :to="{ name: 'rooms.create' }" class="px-4 py-2 bg-brand-primary hover:bg-slate-800 text-white font-medium rounded-md transition-colors">
                 Create Room
             </router-link>
         </div>
-        <div v-if="loading" class="text-center py-12 text-gray-500">Loading...</div>
-        <div v-else-if="rooms.length === 0" class="text-center py-12 text-gray-500">No rooms found.</div>
+        <div v-if="loading" class="text-center py-12 ">Loading...</div>
+        <div v-else-if="rooms.length === 0" class="text-center py-12 ">No rooms found.</div>
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="room in rooms" :key="room.id" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5">
-                <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-lg">{{ room.name }}</h3>
-                <p v-if="room.address" class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ room.address }}</p>
-                <p v-if="room.phone" class="text-sm text-gray-500 dark:text-gray-800">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>
+            <div v-for="room in rooms" :key="room.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 class="font-semibold text-brand-primary text-lg">{{ room.name }}</h3>
+                <p v-if="room.address" class="text-sm   mt-1">{{ room.address }}</p>
+                <p v-if="room.phone" class="text-sm">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>
                 <div class="flex gap-2 mt-4">
-                    <router-link :to="{ name: 'rooms.edit', params: { id: room.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Edit</router-link>
-                    <button @click="deleteRoom(room.id ?? 0)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                    <router-link :to="{ name: 'rooms.edit', params: { id: room.id } }" class="text-sm text-brand-primary hover:underline">Edit</router-link>
+                    <button @click="deleteRoom(room.id ?? 0)" class="text-sm text-red-600  hover:underline">Delete</button>
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.ts'])
 </head>
-<body class="antialiased bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+<body class="antialiased bg-gray-50 text-gray-900">
     <div id="app"></div>
 </body>
 </html>
