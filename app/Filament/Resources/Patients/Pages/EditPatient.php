@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\Patients\Pages;
 
-use App\Filament\Resources\Patients\PatientsResource;
+use App\Filament\Resources\Patients\PatientResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditPatients extends EditRecord
+class EditPatient extends EditRecord
 {
-    protected static string $resource = PatientsResource::class;
+    protected static string $resource = PatientResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['name'])]
 class Medicament extends Model
 {
     /** @use HasFactory<MedicamentFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     public function prescriptions(): BelongsToMany
     {
