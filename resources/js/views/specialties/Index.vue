@@ -1,24 +1,12 @@
 <script setup lang="ts">
-import type { Specialty } from '../../types'
-import { ref, onMounted } from 'vue'
-import { listSpecialties, deleteSpecialty as deleteSpecialtyRequest } from '../../repositories/specialty'
+import { onMounted } from 'vue'
+import { useSpecialtiesStore } from '../../stores/specialties'
 
-const specialties = ref<Specialty[]>([])
-const loading = ref(true)
-
-async function fetchSpecialties() {
-    try {
-        const { data } = await listSpecialties()
-        specialties.value = data.data
-    } finally {
-        loading.value = false
-    }
-}
+const { items, loading, fetchSpecialties, removeSpecialty } = useSpecialtiesStore()
 
 async function deleteSpecialty(id: number) {
     if (!confirm('Are you sure?')) return
-    await deleteSpecialtyRequest(id)
-    specialties.value = specialties.value.filter((s) => s.id !== id)
+    await removeSpecialty(id)
 }
 
 onMounted(fetchSpecialties)
@@ -33,9 +21,9 @@ onMounted(fetchSpecialties)
             </router-link>
         </div>
         <div v-if="loading" class="text-center py-12 ">Loading...</div>
-        <div v-else-if="specialties.length === 0" class="text-center py-12 ">No specialties found.</div>
+        <div v-else-if="items.length === 0" class="text-center py-12 ">No specialties found.</div>
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="specialty in specialties" :key="specialty.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+            <div v-for="specialty in items" :key="specialty.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                 <h3 class="font-semibold text-brand-primary text-lg">{{ specialty.name }}</h3>
                 <p v-if="specialty.identification" class="text-sm   mt-1">{{ specialty.identification }}</p>
                 <div class="flex gap-2 mt-4">

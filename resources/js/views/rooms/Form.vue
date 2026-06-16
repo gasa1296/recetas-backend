@@ -2,7 +2,9 @@
 import type { Room } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { getRoom, createRoom, updateRoom } from '../../repositories/rooms'
+import { useRoomsStore } from '../../stores/rooms'
+
+const { loading, loadRoom, saveRoom } = useRoomsStore()
 
 const router = useRouter()
 const route = useRoute()
@@ -22,13 +24,12 @@ const form = ref<Room>({
     auto_email: false,
     auto_whatsapp: false,
 })
-const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
     if (isEdit) {
         const id = parseInt(route.params.id as string)
-        const { data } = await getRoom(id)
+        const { data } = await loadRoom(id)
         form.value = { ...data.data }
     }
 })
@@ -42,20 +43,14 @@ function removePhone(index: number) {
 }
 
 async function handleSubmit() {
-    loading.value = true
     error.value = ''
+    const id = route.params.id ? parseInt(route.params.id as string) : undefined; 
+    
     try {
-        if (isEdit) {
-            const id = parseInt(route.params.id as string)
-            await updateRoom(id, form.value)
-        } else {
-            await createRoom(form.value)
-        }
+        await saveRoom(id, form.value)
         router.push({ name: 'rooms.index' })
     } catch (err) {
         error.value =(err as any).response?.data?.message || 'Failed to save room'
-    } finally {
-        loading.value = false
     }
 }
 </script>

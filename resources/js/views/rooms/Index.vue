@@ -1,24 +1,12 @@
 <script setup lang="ts">
-import type { Room } from '../../types'
-import { ref, onMounted } from 'vue'
-import { listRooms, deleteRoom as deleteRoomRequest } from '../../repositories/rooms'
+import { onMounted } from 'vue'
+import { useRoomsStore } from '../../stores/rooms'
 
-const rooms = ref<Room[]>([])
-const loading = ref(true)
-
-async function fetchRooms() {
-    try {
-        const { data } = await listRooms()
-        rooms.value = data.data
-    } finally {
-        loading.value = false
-    }
-}
+const { items, loading, fetchRooms, removeRoom } = useRoomsStore()
 
 async function deleteRoom(id: number) {
     if (!confirm('Are you sure?')) return
-    await deleteRoomRequest(id)
-    rooms.value = rooms.value.filter((r) => r.id !== id)
+    await removeRoom(id)
 }
 
 onMounted(fetchRooms)
@@ -33,9 +21,9 @@ onMounted(fetchRooms)
             </router-link>
         </div>
         <div v-if="loading" class="text-center py-12 ">Loading...</div>
-        <div v-else-if="rooms.length === 0" class="text-center py-12 ">No rooms found.</div>
+        <div v-else-if="items.length === 0" class="text-center py-12 ">No rooms found.</div>
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div v-for="room in rooms" :key="room.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+            <div v-for="room in items" :key="room.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                 <h3 class="font-semibold text-brand-primary text-lg">{{ room.name }}</h3>
                 <p v-if="room.address" class="text-sm   mt-1">{{ room.address }}</p>
                 <p v-if="room.phone" class="text-sm">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>

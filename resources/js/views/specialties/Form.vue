@@ -2,7 +2,9 @@
 import type { Specialty } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { getSpecialty, createSpecialty, updateSpecialty } from '../../repositories/specialty'
+import { useSpecialtiesStore } from '../../stores/specialties'
+
+const { loading, loadSpecialty, saveSpecialty  } = useSpecialtiesStore()
 
 const router = useRouter()
 const route = useRoute()
@@ -12,32 +14,25 @@ const form = ref<Specialty>({
     name: '',
     identification: '',
 })
-const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
     if (isEdit) {
         const id = parseInt(route.params.id as string)
-        const { data } = await getSpecialty(id)
+        const { data } = await loadSpecialty(id)
         form.value = { ...data.data }
     }
 })
 
 async function handleSubmit() {
-    loading.value = true
     error.value = ''
+    const id = route.params.id ? parseInt(route.params.id as string) : undefined; 
+    
     try {
-        if (isEdit) {
-            const id = parseInt(route.params.id as string)
-            await updateSpecialty(id, form.value)
-        } else {
-            await createSpecialty(form.value)
-        }
+        await saveSpecialty(id, form.value)
         router.push({ name: 'specialties.index' })
     } catch (err) {
         error.value = (err as any).response?.data?.message || 'Failed to save specialty'
-    } finally {
-        loading.value = false
     }
 }
 </script>
