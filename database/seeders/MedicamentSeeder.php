@@ -14,7 +14,7 @@ class MedicamentSeeder extends Seeder
     public function run(): void
     {
         $medicaments = json_decode(
-            file_get_contents(__DIR__.'/medicaments.json'),
+            file_get_contents(__DIR__.'/medicines.json'),
             true,
             flags: JSON_THROW_ON_ERROR
         );
