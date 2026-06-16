@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 #[Fillable([
     'first_name',
@@ -49,11 +50,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->is_admin;
     }
 
-    public function getNameAttribute(): string
-    {
-        return ($this->first_name ?? '').' '.($this->last_name1 ?? '').' '.($this->last_name2 ?? '');
-    }
-
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);
@@ -72,5 +68,12 @@ class User extends Authenticatable implements FilamentUser
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name1'] . ' ' . $attributes['last_name2'],
+        );
     }
 }

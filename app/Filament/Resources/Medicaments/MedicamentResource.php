@@ -20,8 +20,6 @@ class MedicamentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Medicament';
-
     public static function form(Schema $schema): Schema
     {
         return MedicamentForm::configure($schema);

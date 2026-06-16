@@ -22,8 +22,6 @@ class PrescriptionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Prescription';
-
     public static function form(Schema $schema): Schema
     {
         return PrescriptionForm::configure($schema);
@@ -37,7 +35,7 @@ class PrescriptionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\MedicamentsRelationManager::class,
         ];
     }
 

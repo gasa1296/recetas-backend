@@ -31,7 +31,8 @@ class PatientForm
                     ->default(null),
                 DatePicker::make('birth_date'),
                 Select::make('user_id')
-                    ->relationship('user', 'id')
+                    ->relationship('user')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->required(),
             ]);
     }

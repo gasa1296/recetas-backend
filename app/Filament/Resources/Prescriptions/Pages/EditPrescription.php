@@ -10,6 +10,7 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditPrescription extends EditRecord
 {
+    use Concerns\HandlesFileUpload;
     protected static string $resource = PrescriptionResource::class;
 
     protected function getHeaderActions(): array

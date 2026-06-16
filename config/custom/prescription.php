@@ -2,8 +2,8 @@
 
 return [
     'status' => [
-        0 => 'pending',
-        1 => 'finished',
-        2 => 'cancelled',
+        '0' => 'pending',
+        '1' => 'finished',
+        '2' => 'cancelled',
     ],
 ];

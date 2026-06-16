@@ -96,7 +96,7 @@ class Prescription extends Model
      * Generic percent attribute helper.
      * Stores values as integer (value * 100) and exposes as float (value / 100).
      */
-    protected function percent(string $name): Attribute
+    protected function percent(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value) => is_null($value) ? null : $value / 100,
@@ -106,32 +106,32 @@ class Prescription extends Model
 
     protected function saturation(): Attribute
     {
-        return $this->percent('saturation');
+        return $this->percent();
     }
 
     protected function ppm(): Attribute
     {
-        return $this->percent('ppm');
+        return $this->percent();
     }
 
     protected function temp(): Attribute
     {
-        return $this->percent('temp');
+        return $this->percent();
     }
 
     protected function weight(): Attribute
     {
-        return $this->percent('weight');
+        return $this->percent();
     }
 
     protected function height(): Attribute
     {
-        return $this->percent('height');
+        return $this->percent();
     }
 
     protected function pressure(): Attribute
     {
-        return $this->percent('pressure');
+        return $this->percent();
     }
     
 

@@ -10,6 +10,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class PatientsTable
 {
@@ -31,8 +32,12 @@ class PatientsTable
                 TextColumn::make('birth_date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('user.id')
-                    ->searchable(),
+                TextColumn::make('user.name')
+                    ->searchable(query: function ($query, string $search) {
+                            $query->whereHas('user', function ($q) use ($search) {
+                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
+                            });
+                        }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

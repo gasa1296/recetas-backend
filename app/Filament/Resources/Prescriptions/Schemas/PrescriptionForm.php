@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Prescriptions\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -41,18 +42,26 @@ class PrescriptionForm
                     ->default(null)
                     ->columnSpanFull(),
                 Select::make('user_id')
-                    ->relationship('user', 'id')
+                    ->relationship('user')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->required(),
                 Select::make('room_id')
                     ->relationship('room', 'name')
                     ->required(),
                 Select::make('patient_id')
-                    ->relationship('patient', 'id')
+                    ->relationship('patient')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->required(),
                 TextInput::make('status')
                     ->required()
                     ->numeric()
                     ->default(0),
+                FileUpload::make('file')
+                    ->label('Upload File')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(10240)
+                    ->storeFiles(false)
+                    ->dehydrated(false),
             ]);
     }
 }
