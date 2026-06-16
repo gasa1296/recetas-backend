@@ -2,8 +2,8 @@
 
 return [
     'status' => [
-        'pendiente' => 0,
-        'completada' => 1,
-        'cancelada' => 2,
+        'pending' => 0,
+        'finished' => 1,
+        'cancelled' => 2,
     ],
 ];

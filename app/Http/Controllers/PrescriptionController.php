@@ -45,7 +45,7 @@ class PrescriptionController extends Controller
             ->user()
             ->prescriptions()
             ->create($request->validated());
-        $medicaments = $request->input('medicament_ids', []);
+        $medicaments = $request->input('medicament_data', []);
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(
@@ -84,10 +84,10 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', 'pending')
+            ->where('status', config('custom.prescription.pending'))
             ->findOrFail($prescription);
         $prescription->update($request->validated());
-        $medicaments = $request->input('medicament_ids', []);
+        $medicaments = $request->input('medicament_data', []);
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(
@@ -106,7 +106,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', 'pending')
+            ->where('status', config('custom.prescription.pending'))
             ->findOrFail($prescription);
         $prescription->delete();
 
@@ -120,12 +120,12 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', 'pending')
+            ->where('status', config('custom.prescription.pending'))
             ->findOrFail($prescription);
         if (! $this->generatePDF($prescription)) {
             return $this->error(__('messages.operation_failed'));
         }
-        $prescription->update(['status' => 'finished']);
+        $prescription->update(['status' => config('custom.prescription.finished')]);
 
         return $this->success(
             __('messages.operation_success'),

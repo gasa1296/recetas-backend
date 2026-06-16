@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProfileRequest extends FormRequest
 {
@@ -31,7 +32,7 @@ class ProfileRequest extends FormRequest
             'last_name2' => ['nullable', 'string'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
-            'gender' => ['required', 'string'],
+            'gender' => ['required', 'string', Rule::in(array_values(config('custom.gender')))],
             'password' => ['nullable', 'string', 'confirmed'],
         ];
     }
