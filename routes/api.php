@@ -10,6 +10,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\GenderController;
 use Illuminate\Support\Facades\Route;
 
 (new class {
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Route;
             });
     }
     private function publicRoutes() {
+        Route::get('genders', GenderController::class)->name('genders.index');
         Route::controller(UniversityController::class)
             ->name('universities.')
             ->group(function () {

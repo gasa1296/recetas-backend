@@ -1,15 +1,17 @@
+import type { Credentials, Profile } from '../types'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import api from '../api/axios'
+import { login as loginRequest, logout as logoutRequest } from '../repositories/auth'
+import { getProfile, updateProfile as updateProfileRequest } from '../repositories/profile'
 
 export const useAuthStore = defineStore('auth', () => {
-    const token = ref(localStorage.getItem('auth_token'))
-    const user = ref(JSON.parse(localStorage.getItem('auth_user') || 'null'))
+    const token = ref<string | null>(localStorage.getItem('auth_token'))
+    const user = ref<Profile | null>(JSON.parse(localStorage.getItem('auth_user') || 'null'))
 
     const isAuthenticated = computed(() => !!token.value)
 
-    async function login(credentials) {
-        const { data } = await api.post('/auth/login', credentials)
+    async function login(credentials: Credentials) {
+        const { data } = await loginRequest(credentials)
         token.value = data.data.token
         user.value = data.data.profile
         localStorage.setItem('auth_token', data.data.token)
@@ -18,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function logout() {
         try {
-            await api.post('/auth/logout')
+            await logoutRequest()
         } finally {
             token.value = null
             user.value = null
@@ -28,13 +30,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function fetchProfile() {
-        const { data } = await api.get('/profile')
+        const { data } = await getProfile()
         user.value = data.data
         localStorage.setItem('auth_user', JSON.stringify(data.data))
     }
 
-    async function updateProfile(profileData) {
-        const { data } = await api.put('/profile', profileData)
+    async function updateProfile(profileData: Profile) {
+        const { data } = await updateProfileRequest(profileData)
         user.value = data.data
         localStorage.setItem('auth_user', JSON.stringify(data.data))
     }

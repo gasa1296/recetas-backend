@@ -1,27 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import api from '../../api/axios'
+import { getPatient, updatePatient, createPatient } from '../../repositories/patient'
+import { listGenders } from '../../repositories/general'
 
 const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref({
+import type { Gender, Patient } from '../../types'
+
+const genders = ref<Gender[]>([])
+const form = ref<Patient>({
+    id: 0,
     first_name: '',
     last_name1: '',
     last_name2: '',
     email: '',
     phone: [],
     gender: '',
-    birth_date: '',
+    birth_date: null,
 })
 const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
+    try {
+        const { data } = await listGenders()
+        genders.value = data.data
+    } catch {}
+
     if (isEdit) {
-        const { data } = await api.get(`/patients/${route.params.id}`)
+        const id = parseInt(route.params.id as string)
+        const { data } = await getPatient(id)
         const patient = { ...data.data }
         patient.phone = Array.isArray(patient.phone) ? patient.phone : (patient.phone ? [patient.phone] : [])
         form.value = patient
@@ -32,8 +43,13 @@ function addPhone() {
     form.value.phone.push('')
 }
 
-function removePhone(index) {
-    form.value.phone.splice(index, 1)
+function removePhone(index: number) {
+    const phone = form.value.phone
+    if (Array.isArray(phone)) {
+        phone.splice(index, 1)
+    } else if (typeof phone === 'string') {
+        form.value.phone = []
+    }
 }
 
 async function handleSubmit() {
@@ -41,13 +57,14 @@ async function handleSubmit() {
     error.value = ''
     try {
         if (isEdit) {
-            await api.put(`/patients/${route.params.id}`, form.value)
+            const id = parseInt(route.params.id as string)
+            await updatePatient(id, form.value)
         } else {
-            await api.post('/patients', form.value)
+            await createPatient(form.value)
         }
         router.push({ name: 'patients.index' })
-    } catch (err) {
-        error.value = err.response?.data?.message || 'Failed to save patient'
+    } catch (err-error) {
+        error.value = (err as any).response?.data?.message || 'Failed to save patient'
     } finally {
         loading.value = false
     }
@@ -94,8 +111,7 @@ async function handleSubmit() {
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gender</label>
                     <select v-model="form.gender" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                         <option value="">Select</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option v-for="gender in genders" :key="gender" :value="gender">{{ gender }}</option>
                     </select>
                 </div>
                 <div>

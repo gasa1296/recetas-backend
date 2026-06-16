@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
@@ -17,7 +17,7 @@ const navigation = [
     { name: 'Prescriptions', href: '/prescriptions', icon: '📋' },
 ]
 
-function isActive(href) {
+function isActive(href: string) {
     if (href === '/') return route.path === '/'
     return route.path.startsWith(href)
 }

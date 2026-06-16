@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
+import type { Room, RoomPayload } from '../../types'
+import type { RoomForm } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import api from '../../api/axios'
+import { getRoom, createRoom, updateRoom } from '../../repositories/rooms'
 
 const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref({
+const form = ref<RoomForm>({
     name: '',
     zip: '',
     street: '',
@@ -26,7 +28,8 @@ const error = ref('')
 
 onMounted(async () => {
     if (isEdit) {
-        const { data } = await api.get(`/rooms/${route.params.id}`)
+        const id = parseInt(route.params.id as string)
+        const { data } = await getRoom(id)
         const room = { ...data.data }
         room.phone = Array.isArray(room.phone) ? room.phone : (room.phone ? [room.phone] : [])
         form.value = room
@@ -37,7 +40,7 @@ function addPhone() {
     form.value.phone.push('')
 }
 
-function removePhone(index) {
+function removePhone(index: number) {
     form.value.phone.splice(index, 1)
 }
 
@@ -46,13 +49,14 @@ async function handleSubmit() {
     error.value = ''
     try {
         if (isEdit) {
-            await api.put(`/rooms/${route.params.id}`, form.value)
+            const id = parseInt(route.params.id as string)
+            await updateRoom(id, form.value)
         } else {
-            await api.post('/rooms', form.value)
+            await createRoom(form.value)
         }
         router.push({ name: 'rooms.index' })
     } catch (err) {
-        error.value = err.response?.data?.message || 'Failed to save room'
+        error.value =(err as any).response?.data?.message || 'Failed to save room'
     } finally {
         loading.value = false
     }

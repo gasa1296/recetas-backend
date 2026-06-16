@@ -1,28 +1,29 @@
-<script setup>
+<script setup lang="ts">
+import type { Prescription } from '../../types'
 import { ref, onMounted } from 'vue'
-import api from '../../api/axios'
+import { listPrescriptions, deletePrescription as deletePrescriptionRequest, finishPrescription as finishPrescriptionRequest } from '../../repositories/prescription'
 
-const prescriptions = ref([])
+const prescriptions = ref<Prescription[]>([])
 const loading = ref(true)
 
 async function fetchPrescriptions() {
     try {
-        const { data } = await api.get('/prescriptions')
+        const { data } = await listPrescriptions()
         prescriptions.value = data.data.data
     } finally {
         loading.value = false
     }
 }
 
-async function deletePrescription(id) {
+async function deletePrescription(id: number) {
     if (!confirm('Are you sure?')) return
-    await api.delete(`/prescriptions/${id}`)
+    await deletePrescriptionRequest(id)
     prescriptions.value = prescriptions.value.filter((p) => p.id !== id)
 }
 
-async function finishPrescription(id) {
+async function finishPrescription(id: number) {
     if (!confirm('Finish this prescription?')) return
-    await api.post(`/prescriptions/${id}/finish`)
+    await finishPrescriptionRequest(id)
     fetchPrescriptions()
 }
 

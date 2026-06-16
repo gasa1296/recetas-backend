@@ -1,11 +1,12 @@
-<script setup>
+<script setup lang="ts">
+import type { Credentials } from '../types'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const auth = useAuthStore()
-const form = ref({ email: '', password: '' })
+const form = ref<Credentials>({ email: '', password: '' })
 const error = ref('')
 const loading = ref(false)
 
@@ -16,7 +17,8 @@ async function handleLogin() {
         await auth.login(form.value)
         router.push({ name: 'dashboard' })
     } catch (err) {
-        error.value = err.response?.data?.message || 'Login failed'
+        const message = (err as any).response?.data?.message || 'Login failed';
+        error.value = message;
     } finally {
         loading.value = false
     }

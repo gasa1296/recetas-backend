@@ -49,7 +49,7 @@ class PrescriptionRequest extends FormRequest
     protected function passedValidation()
     {
         $this->merge([
-            'status' => config('custom.prescription.pendiente'),
+            'status' => config('custom.prescription.pending'),
         ]);
     }
 }

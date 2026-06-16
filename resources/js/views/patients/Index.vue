@@ -1,22 +1,23 @@
-<script setup>
+<script setup lang="ts">
+import type { Patient } from '../../types'
 import { ref, onMounted } from 'vue'
-import api from '../../api/axios'
+import { listPatients, deletePatient as deletePatientRequest } from '../../repositories/patient'
 
-const patients = ref([])
+const patients = ref<Patient[]>([])
 const loading = ref(true)
 
 async function fetchPatients() {
     try {
-        const { data } = await api.get('/patients')
-        patients.value = data.data
+        const { data } = await listPatients()
+        patients.value = data.data.data
     } finally {
         loading.value = false
     }
 }
 
-async function deletePatient(id) {
+async function deletePatient(id: number | string) {
     if (!confirm('Are you sure?')) return
-    await api.delete(`/patients/${id}`)
+    await deletePatientRequest(id)
     patients.value = patients.value.filter((p) => p.id !== id)
 }
 

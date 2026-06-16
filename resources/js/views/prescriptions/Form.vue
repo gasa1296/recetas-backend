@@ -1,13 +1,21 @@
-<script setup>
+<script setup lang="ts">
+import type { Medicament, Patient, PrescriptionPayload, Room, Specialty } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import api from '../../api/axios'
+import { listPatients } from '../../repositories/patient'
+import { listRooms } from '../../repositories/rooms'
+import { listSpecialties } from '../../repositories/specialty'
+import { listMedicaments } from '../../repositories/medicaments'
+import { getPrescription, createPrescription, updatePrescription } from '../../repositories/prescription'
 
 const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref({
+const form = ref<PrescriptionPayload>({
+    patient_id: '',
+    room_id: '',
+    specialty_id: '',
     temp: '',
     weight: '',
     height: '',
@@ -18,25 +26,22 @@ const form = ref({
     diagnostic: '',
     diet: '',
     comments: '',
-    patient_id: '',
-    room_id: '',
-    specialty_id: '',
-    medicaments: [],
+    medicament_data: [],
 })
 
-const patients = ref([])
-const rooms = ref([])
-const specialties = ref([])
-const medicaments = ref([])
+const patients = ref<Patient[]>([])
+const rooms = ref<Room[]>([])
+const specialties = ref<Specialty[]>([])
+const medicaments = ref<Medicament[]>([])
 const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
     const [patRes, roomRes, specRes, medRes] = await Promise.all([
-        api.get('/patients'),
-        api.get('/rooms'),
-        api.get('/specialties'),
-        api.get('/medicaments'),
+        listPatients(),
+        listRooms(),
+        listSpecialties(),
+        listMedicaments(),
     ])
     patients.value = patRes.data.data.data
     rooms.value = roomRes.data.data.data
@@ -44,68 +49,68 @@ onMounted(async () => {
     medicaments.value = medRes.data.data.data
 
     if (route.query.patient_id) {
-        form.value.patient_id = route.query.patient_id
+        form.value.patient_id = String(route.query.patient_id)
     }
 
-    if (isEdit) {
-        const { data } = await api.get(`/prescriptions/${route.params.id}`)
-        form.value = {
-            temp: data.data.temp ?? '',
-            weight: data.data.weight ?? '',
-            height: data.data.height ?? '',
-            pressure: data.data.pressure ?? '',
-            saturation: data.data.saturation ?? '',
-            ppm: data.data.ppm ?? '',
-            allergy: data.data.allergy ?? '',
-            diagnostic: data.data.diagnostic ?? '',
-            diet: data.data.diet ?? '',
-            comments: data.data.comments ?? '',
-            patient_id: data.data.patient_id ?? '',
-            room_id: data.data.room_id ?? '',
-            specialty_id: data.data.specialty_id ?? '',
-            medicaments: data.data.medicaments?.map((m) => ({
-                medicament_id: m.id || m.medicament_id,
-                dosage: m.pivot?.dosage ?? '',
-                frequency: m.pivot?.frequency ?? '',
-                duration: m.pivot?.duration ?? '',
-            })) || [],
-        }
-    }
+            if (isEdit) {
+                const { data } = await getPrescription(route.params.id as string)
+                form.value = {
+                    ...data.data,
+                    temp: data.data.temp ?? '',
+                    weight: data.data.weight ?? '',
+                    height: data.data.height ?? '',
+                    pressure: data.data.pressure ?? '',
+                    saturation: data.data.saturation ?? '',
+                    ppm: data.data.ppm ?? '',
+                    allergy: data.data.allergy ?? '',
+                    diagnostic: data.data.diagnostic ?? '',
+                    diet: data.data.diet ?? '',
+                    comments: data.data.comments ?? '',
+                    patient_id: data.data.patient_id ?? '',
+                    room_id: data.data.room_id ?? '',
+                    specialty_id: data.data.specialty_id ?? '',
+                    medicament_data: (data.data.medicaments || []).map((m) => ({
+                        medicament_id: m.id,
+                        dosage: m.dosage,
+                        frequency: m.frequency,
+                        duration: m.duration,
+                    })),
+                }
+            }
 })
 
 function addMedicament() {
-    form.value.medicaments.push({ medicament_id: '', dosage: '', frequency: '', duration: '' })
+    form.value.medicament_data.push({ medicament_id: '', dosage: '', frequency: '', duration: '' })
 }
 
-function removeMedicament(index) {
-    form.value.medicaments.splice(index, 1)
+function removeMedicament(index: number) {
+    form.value.medicament_data.splice(index, 1)
 }
 
 async function handleSubmit() {
     loading.value = true
     error.value = ''
-    try {
-        const payload = {
-            ...form.value,
-            medicament_data: form.value.medicaments.map((m) => ({
-                id: m.medicament_id,
-                dosage: m.dosage,
-                frequency: m.frequency,
-                duration: m.duration,
-            })),
-        }
-        delete payload.medicaments
-        if (isEdit) {
-            await api.put(`/prescriptions/${route.params.id}`, payload)
-        } else {
-            await api.post('/prescriptions', payload)
-        }
-        router.push({ name: 'prescriptions.index' })
-    } catch (err) {
-        error.value = err.response?.data?.message || 'Failed to save prescription'
-    } finally {
-        loading.value = false
-    }
+            try {
+                const payload = {
+                    ...form.value,
+                    medicament_data: form.value.medicament_data.map((m) => ({
+                        medicament_id: m.medicament_id as string | number,
+                        dosage: m.dosage,
+                        frequency: m.frequency,
+                        duration: m.duration,
+                    })),
+                }
+                if (isEdit) {
+                    await updatePrescription(route.params.id as string, payload)
+                } else {
+                    await createPrescription(payload)
+                }
+                router.push({ name: 'prescriptions.index' })
+            } catch (err) {
+                error.value = (err as any).response?.data?.message || 'Failed to save prescription'
+            } finally {
+                loading.value = false
+            }
 }
 </script>
 
@@ -195,7 +200,7 @@ async function handleSubmit() {
                         + Add medicament
                     </button>
                 </div>
-                <div v-for="(med, i) in form.medicaments" :key="i" class="flex items-end gap-3 border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0">
+                <div v-for="(med, i) in form.medicament_data" :key="i" class="flex items-end gap-3 border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0">
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Medicament</label>
                         <select v-model="med.medicament_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">

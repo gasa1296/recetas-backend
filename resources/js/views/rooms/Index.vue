@@ -1,25 +1,23 @@
-<script setup>
+<script setup lang="ts">
+import type { Room } from '../../types'
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import api from '../../api/axios'
+import { listRooms, deleteRoom as deleteRoomRequest } from '../../repositories/rooms'
 
-const router = useRouter()
-const rooms = ref([])
+const rooms = ref<Room[]>([])
 const loading = ref(true)
 
 async function fetchRooms() {
     try {
-        const { data } = await api.get('/rooms')
+        const { data } = await listRooms()
         rooms.value = data.data
-        console.log(rooms.value)
     } finally {
         loading.value = false
     }
 }
 
-async function deleteRoom(id) {
+async function deleteRoom(id: number) {
     if (!confirm('Are you sure?')) return
-    await api.delete(`/rooms/${id}`)
+    await deleteRoomRequest(id)
     rooms.value = rooms.value.filter((r) => r.id !== id)
 }
 
@@ -40,7 +38,7 @@ onMounted(fetchRooms)
             <div v-for="room in rooms" :key="room.id" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5">
                 <h3 class="font-semibold text-gray-900 dark:text-gray-100 text-lg">{{ room.name }}</h3>
                 <p v-if="room.address" class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ room.address }}</p>
-                <p v-if="room.phone?.length" class="text-sm text-gray-500 dark:text-gray-400">{{ room.phone.join(', ') }}</p>
+                <p v-if="room.phone" class="text-sm text-gray-500 dark:text-gray-800">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>
                 <div class="flex gap-2 mt-4">
                     <router-link :to="{ name: 'rooms.edit', params: { id: room.id } }" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Edit</router-link>
                     <button @click="deleteRoom(room.id)" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>

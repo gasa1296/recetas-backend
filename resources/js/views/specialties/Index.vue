@@ -1,22 +1,23 @@
-<script setup>
+<script setup lang="ts">
+import type { Specialty } from '../../types'
 import { ref, onMounted } from 'vue'
-import api from '../../api/axios'
+import { listSpecialties, deleteSpecialty as deleteSpecialtyRequest } from '../../repositories/specialty'
 
-const specialties = ref([])
+const specialties = ref<Specialty[]>([])
 const loading = ref(true)
 
 async function fetchSpecialties() {
     try {
-        const { data } = await api.get('/specialties')
+        const { data } = await listSpecialties()
         specialties.value = data.data.data
     } finally {
         loading.value = false
     }
 }
 
-async function deleteSpecialty(id) {
+async function deleteSpecialty(id: number) {
     if (!confirm('Are you sure?')) return
-    await api.delete(`/specialties/${id}`)
+    await deleteSpecialtyRequest(id)
     specialties.value = specialties.value.filter((s) => s.id !== id)
 }
 

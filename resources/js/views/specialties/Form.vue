@@ -1,28 +1,31 @@
-<script setup>
+<script setup lang="ts">
+import type { SpecialtyPayload, University } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import api from '../../api/axios'
+import { listUniversities } from '../../repositories/general'
+import { getSpecialty, createSpecialty, updateSpecialty } from '../../repositories/specialty'
 
 const router = useRouter()
 const route = useRoute()
 const isEdit = !!route.params.id
 
-const form = ref({
+const form = ref<SpecialtyPayload>({
     name: '',
     identification: '',
     university: '',
 })
-const universities = ref([])
+const universities = ref<University[]>([])
 const loading = ref(false)
 const error = ref('')
 
 onMounted(async () => {
     try {
-        const { data } = await api.get('/universities')
-        universities.value = data.data
+        const { data } = await listUniversities()
+        universities.value = data.data.data
     } catch {}
     if (isEdit) {
-        const { data } = await api.get(`/specialties/${route.params.id}`)
+        const id = parseInt(route.params.id as string)
+        const { data } = await getSpecialty(id)
         form.value = { ...data.data }
     }
 })
@@ -32,13 +35,14 @@ async function handleSubmit() {
     error.value = ''
     try {
         if (isEdit) {
-            await api.put(`/specialties/${route.params.id}`, form.value)
+            const id = parseInt(route.params.id as string)
+            await updateSpecialty(id, form.value)
         } else {
-            await api.post('/specialties', form.value)
+            await createSpecialty(form.value)
         }
         router.push({ name: 'specialties.index' })
     } catch (err) {
-        error.value = err.response?.data?.message || 'Failed to save specialty'
+        error.value = (err as any).response?.data?.message || 'Failed to save specialty'
     } finally {
         loading.value = false
     }

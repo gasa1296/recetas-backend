@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PatientRequest extends FormRequest
 {
@@ -32,7 +33,7 @@ class PatientRequest extends FormRequest
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
-            'gender' => ['nullable', 'string', 'max:255'],
+            'gender' => ['required', 'string', Rule::in(array_values(config('custom.gender')))],
             'birth_date' => ['nullable', 'date'],
         ];
     }
