@@ -13,13 +13,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 #[Fillable([
     'first_name',
-    'last_name1',
-    'last_name2',
+    'last_name',
+    'identification',
     'email',
     'phone',
     'gender',
     'birth_date',
-    'user_id',
 ])]
 class Patient extends Model
 {
@@ -38,20 +37,15 @@ class Patient extends Model
         ];
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
     }
-    
+
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name1'] . ' ' . $attributes['last_name2'],
+            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name'],
         );
     }
 }

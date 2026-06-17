@@ -15,17 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('zip');
-            $table->string('street');
-            $table->string('colony');
-            $table->string('state');
-            $table->string('delegation');
-            $table->string('n_exterior');
-            $table->string('n_interior')->nullable();
             $table->string('address')->nullable();
             $table->json('phone');
-            $table->boolean('fav')->default(false);
-            $table->boolean('auto_email')->default(false);
-            $table->boolean('auto_whatsapp')->default(false);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();

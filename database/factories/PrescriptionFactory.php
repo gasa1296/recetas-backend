@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Prescription;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Prescription>
@@ -28,6 +29,7 @@ class PrescriptionFactory extends Factory
             'diagnostic' => fake()->paragraph(),
             'diet' => fake()->sentence(),
             'comments' => fake()->paragraph(),
+            'prescription_hash' => hash('sha256', Str::random(32)),
             'status' => 0,
         ];
     }

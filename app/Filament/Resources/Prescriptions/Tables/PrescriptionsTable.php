@@ -36,7 +36,7 @@ class PrescriptionsTable
                 TextColumn::make('user.name')
                     ->searchable(query: function ($query, string $search) {
                             $query->whereHas('user', function ($q) use ($search) {
-                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
+                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
                             });
                         }),
                 TextColumn::make('room.name')
@@ -44,7 +44,7 @@ class PrescriptionsTable
                 TextColumn::make('patient.name')
                     ->searchable(query: function ($query, string $search) {
                             $query->whereHas('patient', function ($q) use ($search) {
-                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
+                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
                             });
                         }),
                 TextColumn::make('status')
@@ -67,13 +67,13 @@ class PrescriptionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                //EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
+                    //DeleteBulkAction::make(),
+                    //ForceDeleteBulkAction::make(),
+                    //RestoreBulkAction::make(),
                 ]),
             ]);
     }

@@ -64,7 +64,7 @@ function selectPatient(patient: Patient) {
 }
 
 function selectSearchMedicament(med: Medicament) {
-    form.value.medicaments?.push({ id: med.id, salt: med.salt, type: med.type, group: med.group, dosage: '', frequency: '', duration: '' })
+    form.value.medicaments?.push({ id: med.id, active_ingredient: med.active_ingredient, type: med.type, group: med.group, dosage: '', frequency: '', duration: '' })
     medicamentSearch.value = ''
     showMedicamentDropdown.value = false
 }
@@ -248,7 +248,7 @@ async function handleSubmit() {
                         class="absolute z-10 mt-1 w-full bg-white  border border-gray-200  rounded-md shadow-lg max-h-60 overflow-y-auto">
                         <div v-for="m in medicamentResults" :key="m.id" @mousedown="selectSearchMedicament(m)"
                             class="px-3 py-2 cursor-pointer hover:bg-indigo-50 text-gray-900 ">
-                            {{ m.salt }}
+                            {{ m.active_ingredient }}
                         </div>
                         <div v-if="medicamentResults.length === 0" class="px-3 py-2 text-gray-400">No medicaments found
                         </div>
@@ -257,7 +257,7 @@ async function handleSubmit() {
                 <div v-for="(med, i) in form.medicaments" :key="i"
                     class="flex items-end gap-3 border-b border-gray-100 pb-4 last:border-0">
                     <div class="flex-1">
-                        <p class="block text-lg font-bold   mb-1">{{ med.salt }}</p>
+                        <p class="block text-lg font-bold   mb-1">{{ med.active_ingredient }}</p>
                     </div>
                     <div class="w-24">
                         <label class="block text-xs font-medium   mb-1">Dosage</label>

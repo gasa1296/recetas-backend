@@ -14,7 +14,7 @@ class MedicamentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('salt')
+                TextColumn::make('active_ingredient')
                     ->searchable(),
                 TextColumn::make('type')
                     ->searchable(),

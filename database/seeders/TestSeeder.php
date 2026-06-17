@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\University;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -13,18 +13,15 @@ class TestSeeder extends Seeder
      */
     public function run(): void
     {
-
+        Patient::factory()
+            ->count(10)
+            ->create();
         User::factory()
-            ->hasSpecialties(3, function (array $attributes, User $user) {
-                return [
-                    'university' => University::inRandomOrder()->first()->name,
-                ];
-            })
-            ->hasPatients(5)
+            ->hasSpecialties(3)
             ->hasRooms(3)
             ->hasPrescriptions(5, function (array $attributes, User $user) {
                 return [
-                    'patient_id' => $user->patients()->inRandomOrder()->first()->id,
+                    'patient_id' => Patient::inRandomOrder()->first()->id,
                     'room_id' => $user->rooms()->inRandomOrder()->first()->id,
                     // 'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
                 ];
@@ -32,16 +29,11 @@ class TestSeeder extends Seeder
                 'email' => 'example@example.com',
             ]);
         User::factory()
-            ->hasSpecialties(3, function (array $attributes, User $user) {
-                return [
-                    'university' => University::inRandomOrder()->first()->name,
-                ];
-            })
-            ->hasPatients(5)
+            ->hasSpecialties(3)
             ->hasRooms(3)
             ->hasPrescriptions(5, function (array $attributes, User $user) {
                 return [
-                    'patient_id' => $user->patients()->inRandomOrder()->first()->id,
+                    'patient_id' => Patient::inRandomOrder()->first()->id,
                     'room_id' => $user->rooms()->inRandomOrder()->first()->id,
                     // 'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
                 ];

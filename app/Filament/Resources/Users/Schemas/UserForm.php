@@ -15,18 +15,15 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('first_name')
-                    ->default(null),
-                TextInput::make('last_name1')
-                    ->default(null),
-                TextInput::make('last_name2')
-                    ->default(null),
+                    ->required(),
+                TextInput::make('last_name')
+                    ->required(),
+                TextInput::make('identification')
+                    ->required(),
                 Textarea::make('phone')
                     ->default(null)
                     ->columnSpanFull(),
-                TextInput::make('gender')
-                    ->default(null),
                 TextInput::make('email')
-                    ->label('Email address')
                     ->email()
                     ->required(),
                 DateTimePicker::make('email_verified_at'),

@@ -19,18 +19,9 @@ class RoomFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'zip' => fake()->numerify('#######'),
-            'street' => fake()->streetName(),
-            'colony' => fake()->word(),
-            'state' => fake()->word(),
-            'delegation' => fake()->word(),
-            'n_exterior' => fake()->word(),
-            'n_interior' => fake()->optional(false)->word(),
-            'address' => fake()->optional(false)->sentence(),
+            'zip' => fake()->postcode(),
+            'address' => fake()->address(),
             'phone' => [fake()->phoneNumber()],
-            'fav' => false,
-            'auto_email' => false,
-            'auto_whatsapp' => false,
         ];
     }
 }

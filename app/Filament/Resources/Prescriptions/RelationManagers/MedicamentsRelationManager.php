@@ -36,6 +36,12 @@ class MedicamentsRelationManager extends RelationManager
                 TextInput::make('duration')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('medicament_quantity')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('medicament_quantity_letters')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -49,68 +55,14 @@ class MedicamentsRelationManager extends RelationManager
                 TextColumn::make('pivot.dosage'),
                 TextColumn::make('pivot.frequency'),
                 TextColumn::make('pivot.duration'),
+                TextColumn::make('pivot.medicament_quantity'),
+                TextColumn::make('pivot.medicament_quantity_letters'),
             ])
             ->filters([
                 //
             ])
-            ->headerActions([
-                CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $pivot = [
-                            'dosage' => $data['dosage'],
-                            'frequency' => $data['frequency'],
-                            'duration' => $data['duration'],
-                        ];
-                        unset($data['dosage'], $data['frequency'], $data['duration']);
-
-                        return [...$data, ...$pivot];
-                    }),
-                AttachAction::make()
-                    ->form(fn (Schema $schema): Schema => $schema->components([
-                        TextInput::make('dosage')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('frequency')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('duration')
-                            ->required()
-                            ->maxLength(255),
-                    ]))
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $pivot = [
-                            'dosage' => $data['dosage'],
-                            'frequency' => $data['frequency'],
-                            'duration' => $data['duration'],
-                        ];
-                        unset($data['dosage'], $data['frequency'], $data['duration']);
-
-                        return $pivot;
-                    }),
-            ])
-            ->recordActions([
-                EditAction::make()
-                    ->mutateRecordDataUsing(function (array $data): array {
-                        $data['dosage'] = $data['pivot']['dosage'] ?? '';
-                        $data['frequency'] = $data['pivot']['frequency'] ?? '';
-                        $data['duration'] = $data['pivot']['duration'] ?? '';
-                        unset($data['pivot']);
-
-                        return $data;
-                    })
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $pivot = [
-                            'dosage' => $data['dosage'],
-                            'frequency' => $data['frequency'],
-                            'duration' => $data['duration'],
-                        ];
-                        unset($data['dosage'], $data['frequency'], $data['duration']);
-
-                        return $pivot;
-                    }),
-                DetachAction::make(),
-                DeleteAction::make(),
-            ])
+            ->headerActions([])
+            ->recordActions([])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DetachBulkAction::make(),

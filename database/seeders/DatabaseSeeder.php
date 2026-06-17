@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         $seeders = [
             AdminUserSeeder::class,
-            UniversitySeeder::class,
             MedicamentSeeder::class,
         ];
         if (config('app.env') === 'local') {

@@ -21,7 +21,7 @@ class MedicamentController extends Controller
         }
         $search = $request->input('search');
         $medicaments = Medicament::whereLike(
-            'salt',
+            'active_ingredient',
             "%$search%",
             false,
         )->paginate(10);

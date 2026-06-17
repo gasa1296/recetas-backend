@@ -28,8 +28,8 @@ class PatientRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name1' => ['nullable', 'string', 'max:255'],
-            'last_name2' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'identification' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],

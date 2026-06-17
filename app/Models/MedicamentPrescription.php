@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'dosage',
     'frequency',
     'duration',
+    'medicament_quantity',
+    'medicament_quantity_letters',
     'medicament_id',
     'prescription_id',
 ])]

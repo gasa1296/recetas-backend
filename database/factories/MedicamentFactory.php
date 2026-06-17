@@ -18,7 +18,7 @@ class MedicamentFactory extends Factory
     public function definition(): array
     {
         return [
-            'salt' => fake()->word(),
+            'active_ingredient' => fake()->word(),
             'type' => fake()->word(),
             'group' => fake()->word(),
         ];

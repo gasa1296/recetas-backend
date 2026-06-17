@@ -18,7 +18,7 @@ class PrescriptionController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         $prescriptions = auth()->user()->prescriptions()->orderBy('created_at', 'desc');
-        
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $prescriptions = $prescriptions->whereLike('description', "%$search%", false);
@@ -32,12 +32,15 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
+        $data = $request->validated();
+        $data['prescription_hash'] = hash('sha256', json_encode($data));
+
         $prescription = auth()
             ->user()
             ->prescriptions()
             ->create($request->validated());
         $medicaments = $request->input('medicament_data', []);
-        
+
         $prescription->medicaments()->sync($medicaments);
 
         return $this->success(

@@ -23,7 +23,7 @@ class MedicamentSeeder extends Seeder
             foreach (array_chunk($medicaments, 500) as $chunk) {
                 Medicament::insert(
                     array_map(fn (array $med) => [
-                        'salt' => $med['salt'],
+                        'active_ingredient' => $med['active_ingredient'],
                         'type' => $med['type'],
                         'group' => $med['group'],
                     ], $chunk)

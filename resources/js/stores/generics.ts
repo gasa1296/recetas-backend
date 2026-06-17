@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { listGenders, listPrescriptionStatuses } from '../repositories/general'
 
-export const useGenericStore = defineStore('rooms', () => {
+export const useGenericStore = defineStore('generics', () => {
   const genders = ref<Object>()
   const prescriptionStatuses = ref<Object>()
   const loading = ref(false)
@@ -24,7 +24,7 @@ export const useGenericStore = defineStore('rooms', () => {
     } finally {
       loading.value = false
     }
-  } 
+  }
 
   return { genders, prescriptionStatuses, loading, fetchGenders, fetchPrescriptionStatuses }
 })

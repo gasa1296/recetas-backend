@@ -11,7 +11,7 @@ class MedicamentForm
     {
         return $schema
             ->components([
-                TextInput::make('salt')
+                TextInput::make('active_ingredient')
                     ->required(),
                 TextInput::make('type')
                     ->required(),

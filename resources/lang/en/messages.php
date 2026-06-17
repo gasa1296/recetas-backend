@@ -4,6 +4,7 @@ return [
     'operation_success' => 'Operation successful',
     'operation_failed' => 'Operation failed',
     'not_found' => 'Record not found',
+    'validation_failed' => 'Validation failed',
 
     'auth' => [
         'invalid_credentials' => 'Credentials are invalid',

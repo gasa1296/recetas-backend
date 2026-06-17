@@ -23,11 +23,16 @@ return new class extends Migration
             $table->text('diagnostic')->nullable();
             $table->text('diet')->nullable();
             $table->text('comments')->nullable();
+
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('room_id')->constrained('rooms')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
+
+            $table->string('prescription_hash')->unique();
+
             $table->integer('status')->default(0);
-            $table->timestamps(6);
+            $table->timestamps();
+            $table->timestamp('expires_at')->nullable();
             $table->softDeletes();
         });
     }

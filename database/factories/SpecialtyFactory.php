@@ -21,7 +21,6 @@ class SpecialtyFactory extends Factory
         return [
             'name' => fake()->words(rand(3, 8), true),
             'identification' => strtoupper(fake()->bothify('???-?????')),
-            'university' => fake()->company(),
         ];
     }
 

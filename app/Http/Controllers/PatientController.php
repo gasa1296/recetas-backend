@@ -7,7 +7,6 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PatientResource;
 use App\Http\Resources\PatientCollection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Models\Patient;
 
 class PatientController extends Controller
@@ -18,10 +17,10 @@ class PatientController extends Controller
     public function index(SearchRequest $request): JsonResponse
     {
         $patients = Patient::orderBy('created_at', 'desc');
-        
+
         if ($request->has('search')) {
             $search = $request->input('search');
-            $patients = $patients->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
+            $patients = $patients->where('identification', 'LIKE', "%{$search}%");
         }
 
         return (new PatientCollection($patients->paginate(10)))->response();
@@ -32,7 +31,7 @@ class PatientController extends Controller
      */
     public function store(PatientRequest $request): JsonResponse
     {
-        $patients = auth()->user()->patients()->create($request->validated());
+        $patients = Patient::create($request->validated());
 
         return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
@@ -42,7 +41,7 @@ class PatientController extends Controller
      */
     public function show(int $patient): JsonResponse
     {
-        $patients = auth()->user()->patients()->findOrFail($patient);
+        $patients = Patient::findOrFail($patient);
 
         return $this->success(__('messages.operation_success'), new PatientResource($patients));
     }
@@ -52,7 +51,7 @@ class PatientController extends Controller
      */
     public function update(PatientRequest $request, int $patient): JsonResponse
     {
-        $patients = auth()->user()->patients()->findOrFail($patient);
+        $patients = Patient::findOrFail($patient);
         $patients->update($request->validated());
 
         return $this->success(__('messages.operation_success'), new PatientResource($patients));
@@ -63,7 +62,7 @@ class PatientController extends Controller
      */
     public function destroy(int $patient): JsonResponse
     {
-        $patients = auth()->user()->patients()->findOrFail($patient);
+        $patients = Patient::findOrFail($patient);
         $patients->delete();
 
         return $this->success(__('messages.operation_success'));

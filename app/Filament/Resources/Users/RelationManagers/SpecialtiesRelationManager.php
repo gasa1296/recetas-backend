@@ -27,6 +27,9 @@ class SpecialtiesRelationManager extends RelationManager
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('identification')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 

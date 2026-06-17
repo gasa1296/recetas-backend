@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 #[Fillable([
     'first_name',
-    'last_name1',
-    'last_name2',
+    'last_name',
+    'identification',
     'phone',
-    'gender',
     'email',
     'password',
+    'signature_hash',
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'signature_hash'])]
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
@@ -73,7 +73,7 @@ class User extends Authenticatable implements FilamentUser
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name1'] . ' ' . $attributes['last_name2'],
+            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name'],
         );
     }
 }

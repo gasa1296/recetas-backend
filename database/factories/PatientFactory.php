@@ -19,11 +19,11 @@ class PatientFactory extends Factory
     {
         return [
             'first_name' => fake()->firstName(),
-            'last_name1' => fake()->lastName(),
-            'last_name2' => fake()->lastName(),
+            'last_name' => fake()->lastName(),
+            'identification' => fake()->unique()->numberBetween(),
             'email' => fake()->safeEmail(),
             'phone' => [fake()->phoneNumber()],
-            'gender' => fake()->randomElement(['Male', 'Female']),
+            'gender' => fake()->randomElement(array_keys(config('custom.gender'))),
             'birth_date' => fake()->date(),
         ];
     }

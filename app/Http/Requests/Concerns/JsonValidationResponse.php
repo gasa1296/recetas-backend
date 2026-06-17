@@ -11,7 +11,7 @@ trait JsonValidationResponse
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
-            'message' => 'Validation failed.',
+            'message' => __('validation_failed'),
             'errors' => $validator->errors(),
         ], 422));
     }

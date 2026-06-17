@@ -64,14 +64,14 @@ export interface Specialty {
 
 export interface Medicament {
   id: number;
-  salt: string;
+  active_ingredient: string;
   type: string;
   group: string;
 }
 
 export interface PrescriptionMedicament {
   id: number;
-  salt?: string;
+  active_ingredient?: string;
   type?: string;
   group?: string;
   dosage: string;

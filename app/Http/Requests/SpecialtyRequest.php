@@ -28,7 +28,6 @@ class SpecialtyRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'identification' => ['required', 'string', 'max:255'],
-            'university' => ['required', 'string', 'max:255'],
         ];
     }
 }

@@ -9,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
-use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,12 +45,6 @@ use Illuminate\Support\Facades\Route;
 
     private function publicRoutes()
     {
-        Route::controller(UniversityController::class)
-            ->name('universities.')
-            ->group(function () {
-                Route::get('/universities', 'index')->name('index');
-                Route::get('/universities/{university}', 'show')->name('show');
-            });
     }
 
     private function medicRoutes()
@@ -86,7 +79,6 @@ use Illuminate\Support\Facades\Route;
                     Route::get('/patients/{patient}', 'show')->name('show');
                     Route::post('/patients', 'store')->name('store');
                     Route::put('/patients/{patient}', 'update')->name('update');
-                    Route::delete('/patients/{patient}', 'destroy')->name('destroy');
                 });
 
             Route::controller(PrescriptionController::class)

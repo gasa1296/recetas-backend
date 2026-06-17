@@ -20,11 +20,9 @@ class UsersTable
             ->columns([
                 TextColumn::make('first_name')
                     ->searchable(),
-                TextColumn::make('last_name1')
+                TextColumn::make('last_name')
                     ->searchable(),
-                TextColumn::make('last_name2')
-                    ->searchable(),
-                TextColumn::make('gender')
+                TextColumn::make('identification')
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
@@ -34,6 +32,8 @@ class UsersTable
                     ->sortable(),
                 IconColumn::make('is_admin')
                     ->boolean(),
+                TextColumn::make('signature_hash')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

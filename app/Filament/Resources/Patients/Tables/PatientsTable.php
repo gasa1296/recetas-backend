@@ -20,9 +20,9 @@ class PatientsTable
             ->columns([
                 TextColumn::make('first_name')
                     ->searchable(),
-                TextColumn::make('last_name1')
+                TextColumn::make('last_name')
                     ->searchable(),
-                TextColumn::make('last_name2')
+                TextColumn::make('identification')
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
@@ -32,12 +32,6 @@ class PatientsTable
                 TextColumn::make('birth_date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->searchable(query: function ($query, string $search) {
-                            $query->whereHas('user', function ($q) use ($search) {
-                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name1, last_name2)"), 'LIKE', "%{$search}%");
-                            });
-                        }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -28,11 +28,9 @@ class ProfileRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string'],
-            'last_name1' => ['nullable', 'string'],
-            'last_name2' => ['nullable', 'string'],
+            'last_name' => ['required', 'string'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
-            'gender' => ['required', 'string', Rule::in(array_keys(config('custom.gender')))],
             'password' => ['nullable', 'string', 'confirmed'],
         ];
     }

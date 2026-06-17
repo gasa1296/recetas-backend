@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\PrescriptionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,7 +31,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
     'room_id',
     'patient_id',
     'status',
+    'prescription_hash',
 ])]
+#[Hidden(['prescription_hash'])]
 class Prescription extends Model
 {
     /** @use HasFactory<PrescriptionFactory> */
@@ -133,6 +136,6 @@ class Prescription extends Model
     {
         return $this->percent();
     }
-    
+
 
 }

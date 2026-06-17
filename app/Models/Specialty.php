@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'name',
     'identification',
-    'university',
     'user_id',
 ])]
 class Specialty extends Model

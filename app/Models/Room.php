@@ -13,17 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'name',
     'zip',
-    'street',
-    'colony',
-    'state',
-    'delegation',
-    'n_exterior',
-    'n_interior',
     'address',
     'phone',
-    'fav',
-    'auto_email',
-    'auto_whatsapp',
     'user_id',
 ])]
 class Room extends Model

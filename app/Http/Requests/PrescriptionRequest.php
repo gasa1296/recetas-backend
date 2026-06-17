@@ -37,10 +37,12 @@ class PrescriptionRequest extends FormRequest
             'diet' => ['nullable', 'string'],
             'comments' => ['nullable', 'string'],
             'medicaments' => ['nullable', 'array'],
-            'medicaments.*.id' => ['nullable', 'exists:medicaments,id'],
-            'medicaments.*.dosage' => ['nullable', 'string'],
-            'medicaments.*.frequency' => ['nullable', 'string'],
-            'medicaments.*.duration' => ['nullable', 'string'],
+            'medicaments.*.id' => ['required_with:medicaments', 'exists:medicaments,id'],
+            'medicaments.*.dosage' => ['required_with:medicaments', 'string'],
+            'medicaments.*.frequency' => ['required_with:medicaments', 'string'],
+            'medicaments.*.duration' => ['required_with:medicaments', 'string'],
+            'medicaments.*.medicament_quantity' => ['required_with:medicaments', 'numeric', 'min:0'],
+            'medicaments.*.medicament_quantity_letters' => ['required_with:medicaments', 'string'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
         ];
@@ -55,6 +57,8 @@ class PrescriptionRequest extends FormRequest
                 "medicament_data.{$id}.dosage" => $medicament['dosage'] ?? null,
                 "medicament_data.{$id}.frequency" => $medicament['frequency'] ?? null,
                 "medicament_data.{$id}.duration" => $medicament['duration'] ?? null,
+                "medicament_data.{$id}.medicament_quantity" => $medicament['medicament_quantity'] ?? null,
+                "medicament_data.{$id}.medicament_quantity_letters" => $medicament['medicament_quantity_letters'] ?? null,
             ]);
         }
         $this->merge([

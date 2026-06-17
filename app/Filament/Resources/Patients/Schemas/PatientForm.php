@@ -16,9 +16,9 @@ class PatientForm
             ->components([
                 TextInput::make('first_name')
                     ->required(),
-                TextInput::make('last_name1')
+                TextInput::make('last_name')
                     ->default(null),
-                TextInput::make('last_name2')
+                TextInput::make('identification')
                     ->default(null),
                 TextInput::make('email')
                     ->label('Email address')
@@ -30,10 +30,6 @@ class PatientForm
                 TextInput::make('gender')
                     ->default(null),
                 DatePicker::make('birth_date'),
-                Select::make('user_id')
-                    ->relationship('user')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->required(),
             ]);
     }
 }

@@ -56,12 +56,6 @@ class PrescriptionForm
                     ->required()
                     ->numeric()
                     ->default(0),
-                FileUpload::make('file')
-                    ->label('Upload File')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->maxSize(10240)
-                    ->storeFiles(false)
-                    ->dehydrated(false),
             ]);
     }
 }
