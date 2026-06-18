@@ -46,7 +46,6 @@ onMounted(fetchPrescriptions)
                     <tr class="border-b border-gray-200 text-left">
                         <th class="px-4 py-3 text-sm font-medium  ">Patient</th>
                         <th class="px-4 py-3 text-sm font-medium  ">Room</th>
-                        <th class="px-4 py-3 text-sm font-medium  ">Specialty</th>
                         <th class="px-4 py-3 text-sm font-medium  ">Status</th>
                         <th class="px-4 py-3 text-sm font-medium  ">Diagnostic</th>
                         <th class="px-4 py-3"></th>
@@ -54,9 +53,8 @@ onMounted(fetchPrescriptions)
                 </thead>
                 <tbody>
                     <tr v-for="p in prescriptions" :key="p.id" class="border-b border-gray-100 last:border-0">
-                        <td class="px-4 py-3 text-gray-900 ">{{ p.patient?.first_name }} {{ p.patient?.last_name1 }}</td>
+                        <td class="px-4 py-3 text-gray-900 ">{{ p.patient?.first_name }} {{ p.patient?.last_name }}</td>
                         <td class="px-4 py-3 text-gray-600 ">{{ p.room?.name }}</td>
-                        <td class="px-4 py-3 text-gray-600 ">{{ p.specialty?.name }}</td>
                         <td class="px-4 py-3">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="p.status === 1 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
                                 {{ p.pretty_status || p.status }}

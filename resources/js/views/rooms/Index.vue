@@ -25,8 +25,9 @@ onMounted(fetchRooms)
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div v-for="room in items" :key="room.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                 <h3 class="font-semibold text-brand-primary text-lg">{{ room.name }}</h3>
+                <p v-if="room.zip" class="text-sm   mt-1">{{ room.zip }}</p>
                 <p v-if="room.address" class="text-sm   mt-1">{{ room.address }}</p>
-                <p v-if="room.phone" class="text-sm">{{ Array.isArray(room.phone) ? room.phone.join(', ') : room.phone }}</p>
+                <p v-if="room.phone" class="text-sm">{{ room.phone.join(', ') }}</p>
                 <div class="flex gap-2 mt-4">
                     <router-link :to="{ name: 'rooms.edit', params: { id: room.id } }" class="text-sm text-brand-primary hover:underline">Edit</router-link>
                     <button @click="deleteRoom(room.id ?? 0)" class="text-sm text-red-600  hover:underline">Delete</button>

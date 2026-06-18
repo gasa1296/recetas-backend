@@ -107,7 +107,8 @@ test('specialties store creates a specialty with valid request structure', funct
 });
 
 test('specialties show requires authentication', function () {
-    $specialty = Specialty::factory()->create();
+    $user = User::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
 
     $response = $this->getJson("/api/specialties/{$specialty->id}");
 
@@ -147,7 +148,8 @@ test('specialties show returns the requested specialty', function () {
 });
 
 test('specialties update requires authentication', function () {
-    $specialty = Specialty::factory()->create();
+    $user = User::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
 
     $response = $this->putJson("/api/specialties/{$specialty->id}", [
         'name' => 'X',
@@ -192,7 +194,8 @@ test('specialties update modifies the specialty with valid request structure', f
 });
 
 test('specialties destroy requires authentication', function () {
-    $specialty = Specialty::factory()->create();
+    $user = User::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
 
     $response = $this->deleteJson("/api/specialties/{$specialty->id}");
 

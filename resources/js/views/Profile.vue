@@ -7,10 +7,9 @@ import type { Profile } from '../types'
 
 const form = ref<Profile>({
     first_name: '',
-    last_name1: '',
-    last_name2: '',
+    last_name: '',
+    identification: '',
     phone: [],
-    gender: '',
     email: '',
 })
 const loading = ref(false)
@@ -67,12 +66,12 @@ async function handleUpdate() {
                     <input v-model="form.first_name" required class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name 1</label>
-                    <input v-model="form.last_name1" required class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input v-model="form.last_name" required class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name 2</label>
-                    <input v-model="form.last_name2" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Identification</label>
+                    <input v-model="form.identification" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
                 </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -6,7 +6,10 @@ use Database\Factories\MedicamentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Attributes\Table;
 
+
+#[Table(timestamps: false)]
 class Medicament extends Model
 {
     /** @use HasFactory<MedicamentFactory> */

@@ -160,7 +160,7 @@ test('prescriptions store rejects patient that does not belong to the user', fun
 
 test('prescriptions store creates a prescription with valid request structure', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
     $medicament = Medicament::factory()->create();
 
@@ -266,7 +266,7 @@ test('prescriptions show returns 404 for prescription not owned by user', functi
 
 test('prescriptions show returns the requested prescription with full relations', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
     $medicament = Medicament::factory()->create();
     $prescription = Prescription::factory()
@@ -355,7 +355,7 @@ test('prescriptions update rejects invalid request structure', function () {
 
 test('prescriptions update only allows editing draft prescriptions', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
@@ -372,7 +372,7 @@ test('prescriptions update only allows editing draft prescriptions', function ()
 
 test('prescriptions update modifies the prescription with valid request structure', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
@@ -453,7 +453,7 @@ test('prescriptions finish requires prescription owned by user', function () {
 
 test('prescriptions finish transitions status from draft to active', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)

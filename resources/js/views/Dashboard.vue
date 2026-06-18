@@ -17,7 +17,7 @@ const cards = [
 <template>
     <div class="max-w-6xl">
         <h1 class="text-2xl font-bold text-brand-primary mb-2">
-            Welcome, {{ auth.user?.first_name }} {{ auth.user?.last_name1 }}
+            Welcome, {{ auth.user?.first_name }} {{ auth.user?.last_name }}
         </h1>
         <p class="text-slate-600 mb-8">Select a module to get started</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

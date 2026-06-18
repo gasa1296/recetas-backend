@@ -117,7 +117,8 @@ test('rooms store creates a room with valid request structure', function () {
 });
 
 test('rooms show requires authentication', function () {
-    $room = Room::factory()->create();
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create();
 
     $response = $this->getJson("/api/rooms/{$room->id}");
 
@@ -159,7 +160,8 @@ test('rooms show returns the requested room', function () {
 });
 
 test('rooms update requires authentication', function () {
-    $room = Room::factory()->create();
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create(['name' => 'Old']);
 
     $response = $this->putJson("/api/rooms/{$room->id}", [
         'name' => 'X',
@@ -208,7 +210,8 @@ test('rooms update modifies the room with valid request structure', function () 
 });
 
 test('rooms destroy requires authentication', function () {
-    $room = Room::factory()->create();
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create();
 
     $response = $this->deleteJson("/api/rooms/{$room->id}");
 

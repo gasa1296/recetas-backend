@@ -52,7 +52,7 @@ async function handleLogout() {
                 </div>
                 <div class="flex items-center">
                     <span class="hidden sm:block text-sm text-slate-600 mr-4">
-                        {{ auth.user?.first_name }} {{ auth.user?.last_name1 }}
+                        {{ auth.user?.first_name }} {{ auth.user?.last_name }}
                     </span>
                     <button
                         @click="handleLogout"

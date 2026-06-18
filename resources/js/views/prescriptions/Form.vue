@@ -59,7 +59,7 @@ async function onMedicamentInput() {
 
 function selectPatient(patient: Patient) {
     form.value.patient_id = patient.id
-    patientSearch.value = `${patient.first_name} ${patient.last_name1}`
+    patientSearch.value = `${patient.first_name} ${patient.last_name}`
     showPatientDropdown.value = false
 }
 
@@ -90,7 +90,7 @@ onMounted(async () => {
         form.value = { ...data.data }
         const ep = patients.value.find((p) => p.id === Number(data.data.patient_id))
         if (ep) {
-            patientSearch.value = `${ep.first_name} ${ep.last_name1}`
+            patientSearch.value = `${ep.first_name} ${ep.last_name}`
         }
     }
 })
@@ -136,13 +136,13 @@ async function handleSubmit() {
                 </h2>
                 <div class="relative">
                     <input v-model="patientSearch" @input="onPatientInput" @focus="showPatientDropdown = true"
-                        @blur="showPatientDropdown = false" placeholder="Search patient by name..."
+                        @blur="showPatientDropdown = false" placeholder="Search patient by identification..."
                         class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
                     <div v-if="showPatientDropdown && patientSearch"
                         class="absolute z-10 mt-1 w-full bg-white  border border-gray-200  rounded-md shadow-lg max-h-60 overflow-y-auto">
                         <div v-for="p in patientResults" :key="p.id" @mousedown="selectPatient(p)"
-                            class="px-3 py-2 cursor-pointer hover:bg-indigo-50 text-gray-900 ">
-                            {{ p.first_name }} {{ p.last_name1 }}
+                            class="px-5 py-4 cursor-pointer hover:bg-indigo-50 text-gray-900">
+                            <strong>{{ p.first_name }} {{ p.last_name }}</strong>: {{ p.identification }}
                         </div>
                         <div v-if="patientResults.length === 0" class="px-3 py-2 text-gray-400">No patients found</div>
                     </div>

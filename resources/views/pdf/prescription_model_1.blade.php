@@ -152,7 +152,7 @@
 
     <div class="header">
         <div class="header-left">
-            <h2>{{ $doctor->first_name }} {{ $doctor->last_name1 }} {{ $doctor->last_name2 }}</h2>
+            <h2>{{ $doctor->first_name }} {{ $doctor->last_name }} {{ $doctor->identification }}</h2>
             <p>{{ $prescription->specialty?->name ?? 'General Medicine' }}</p>
             <p>{{ $prescription->specialty?->identification ?? '' }}</p>
             @if ($room)
@@ -173,7 +173,7 @@
             <div>
                 <div class="field">
                     <span class="field-label">Name:</span>
-                    <span class="field-value">{{ $patient->first_name }} {{ $patient->last_name1 }} {{ $patient->last_name2 }}</span>
+                    <span class="field-value">{{ $patient->first_name }} {{ $patient->last_name }} {{ $patient->identification }}</span>
                 </div>
                 <div class="field">
                     <span class="field-label">Email:</span>
@@ -287,7 +287,7 @@
 
     <div class="signature-area">
         _________________________________<br>
-        {{ $doctor->first_name }} {{ $doctor->last_name1 }} {{ $doctor->last_name2 }}<br>
+        {{ $doctor->first_name }} {{ $doctor->last_name }} {{ $doctor->identification }}<br>
         {{ $prescription->specialty?->name ?? 'General Medicine' }}
     </div>
 

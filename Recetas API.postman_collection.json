@@ -365,7 +365,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name1\": \"Pérez\",\n  \"last_name2\": \"López\",\n  \"phone\": [\"555-1234\", \"555-5678\"],\n  \"gender\": \"male\",\n  \"password\": \"newpassword123\"\n}"
+              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"identification\": \"López\",\n  \"phone\": [\"555-1234\", \"555-5678\"],\n  \"gender\": \"male\",\n  \"password\": \"newpassword123\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/profile",
@@ -623,7 +623,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name1\": \"García\",\n  \"last_name2\": \"Hernández\",\n  \"email\": \"maria@example.com\",\n  \"phone\": [\"555-9999\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
+              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"Hernández\",\n  \"email\": \"maria@example.com\",\n  \"phone\": [\"555-9999\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/patients",
@@ -663,7 +663,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name1\": \"García\",\n  \"last_name2\": \"López\",\n  \"email\": \"maria.nueva@example.com\",\n  \"phone\": [\"555-9999\", \"555-8888\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
+              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"López\",\n  \"email\": \"maria.nueva@example.com\",\n  \"phone\": [\"555-9999\", \"555-8888\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/patients/:patient_id",

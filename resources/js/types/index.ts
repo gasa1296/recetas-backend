@@ -20,8 +20,8 @@ export interface University {
 export interface Patient {
   id?: number;
   first_name: string;
-  last_name1: string;
-  last_name2: string;
+  last_name: string;
+  identification: string;
   email: string;
   phone?: string[];
   gender: string;
@@ -30,11 +30,10 @@ export interface Patient {
 
 export interface Profile {
   first_name: string;
-  last_name1: string;
-  last_name2: string;
+  last_name: string;
+  identification: string;
   email: string;
   phone: string[];
-  gender: string;
   rooms?: Room[];
   specialties?: Specialty[];
 }
@@ -43,17 +42,8 @@ export interface Room {
   id?: number;
   name: string;
   zip: string;
-  street: string;
-  colony: string;
-  state: string;
-  delegation: string;
-  n_exterior: string;
-  n_interior: string;
   address?: string;
   phone: string[];
-  fav: boolean;
-  auto_email: boolean;
-  auto_whatsapp: boolean;
 }
 
 export interface Specialty {
@@ -77,6 +67,8 @@ export interface PrescriptionMedicament {
   dosage: string;
   frequency: string;
   duration: string;
+  medicament_quantity?: number;
+  medicament_quantity_letters?: string;
 }
 
 export interface Prescription {
@@ -98,7 +90,6 @@ export interface Prescription {
   pretty_status?: string;
   room?: Room;
   patient?: Patient;
-  specialty?: Specialty;
   medicaments?: PrescriptionMedicament[];
 }
 

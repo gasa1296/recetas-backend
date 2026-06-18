@@ -14,21 +14,56 @@ uses(RefreshDatabase::class);
 | POST /api/auth/logout       -> auth:sanctum
 */
 
-dataset('invalid_login_payloads', [
-    'empty body' => [],
-    'missing email' => ['password' => 'password123'],
-    'invalid email format' => ['email' => 'not-an-email', 'password' => 'password123'],
-    'missing password' => ['email' => 'user@example.com'],
-    'password too short' => ['email' => 'user@example.com', 'password' => 'short'],
-    'non-string password' => ['email' => 'user@example.com', 'password' => ['array']],
-]);
-
-test('login requires email and password fields', function (array $payload) {
-    $response = $this->postJson('/api/auth/login', $payload);
+test('login fails with empty body', function () {
+    $response = $this->postJson('/api/auth/login', []);
 
     $response->assertStatus(422)
         ->assertJsonValidationErrors(['email', 'password']);
-})->with('invalid_login_payloads');
+});
+
+test('login fails when email is missing', function () {
+    $response = $this->postJson('/api/auth/login', ['password' => 'password123']);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['email']);
+});
+
+test('login fails with invalid email format', function () {
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'not-an-email',
+        'password' => 'password123',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['email']);
+});
+
+test('login fails when password is missing', function () {
+    $response = $this->postJson('/api/auth/login', ['email' => 'user@example.com']);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['password']);
+});
+
+test('login fails when password is too short', function () {
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'user@example.com',
+        'password' => 'short',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['password']);
+});
+
+test('login fails with non-string password', function () {
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'user@example.com',
+        'password' => ['array'],
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['password']);
+});
 
 test('login rejects request authorization when authorize returns false', function () {
     // LoginRequest::authorize() always returns true, but we assert the

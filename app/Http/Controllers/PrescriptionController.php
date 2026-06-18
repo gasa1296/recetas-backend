@@ -38,7 +38,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->create($request->validated());
+            ->create($data);
         $medicaments = $request->input('medicament_data', []);
 
         $prescription->medicaments()->sync($medicaments);

@@ -9,12 +9,12 @@ uses(RefreshDatabase::class);
 |--------------------------------------------------------------------------
 | GenericController
 |--------------------------------------------------------------------------
-| GET  /api/generic/genders            -> auth:sanctum
-| GET  /api/generic/prescription-status -> auth:sanctum
+| GET  /api/genders            -> auth:sanctum
+| GET  /api/prescription-status -> auth:sanctum
 */
 
 test('genders endpoint requires authentication', function () {
-    $response = $this->getJson('/api/generic/genders');
+    $response = $this->getJson('/api/genders');
 
     $response->assertStatus(401);
 });
@@ -23,7 +23,7 @@ test('genders endpoint returns the configured gender list', function () {
     User::factory()->create();
 
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson('/api/generic/genders');
+        ->getJson('/api/genders');
 
     $response->assertSuccessful()
         ->assertJsonStructure(['success', 'message', 'data'])
@@ -32,7 +32,7 @@ test('genders endpoint returns the configured gender list', function () {
 
 test('genders endpoint returns exactly the configured number of entries', function () {
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson('/api/generic/genders');
+        ->getJson('/api/genders');
 
     $expectedCount = count(config('custom.gender'));
 
@@ -41,14 +41,14 @@ test('genders endpoint returns exactly the configured number of entries', functi
 });
 
 test('prescription status endpoint requires authentication', function () {
-    $response = $this->getJson('/api/generic/prescription-status');
+    $response = $this->getJson('/api/prescription-status');
 
     $response->assertStatus(401);
 });
 
 test('prescription status endpoint returns the configured status map', function () {
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson('/api/generic/prescription-status');
+        ->getJson('/api/prescription-status');
 
     $response->assertSuccessful()
         ->assertJsonStructure(['success', 'message', 'data'])
@@ -57,7 +57,7 @@ test('prescription status endpoint returns the configured status map', function 
 
 test('prescription status endpoint returns exactly the configured number of statuses', function () {
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson('/api/generic/prescription-status');
+        ->getJson('/api/prescription-status');
 
     $expectedCount = count(config('custom.prescription.status'));
 

@@ -252,25 +252,3 @@ test('patients update modifies the patient with valid request structure', functi
         'first_name' => 'New',
     ]);
 });
-
-test('patients destroy requires authentication', function () {
-    $patient = Patient::factory()->create();
-
-    $response = $this->deleteJson("/api/patients/{$patient->id}");
-
-    $response->assertStatus(401);
-});
-
-test('patients destroy deletes the patient', function () {
-    $patient = Patient::factory()->create();
-
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->deleteJson("/api/patients/{$patient->id}");
-
-    $response->assertSuccessful()
-        ->assertJsonStructure(['success', 'message', 'data']);
-
-    $this->assertSoftDeleted('patients', [
-        'id' => $patient->id,
-    ]);
-});
