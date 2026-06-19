@@ -25,6 +25,12 @@ export const useGenericStore = defineStore('generics', () => {
       loading.value = false
     }
   }
+  async function getPrescriptionStatuses() {
+    if (!prescriptionStatuses.value) {
+      await fetchPrescriptionStatuses()
+    }
+    return prescriptionStatuses.value
+  }
 
-  return { genders, prescriptionStatuses, loading, fetchGenders, fetchPrescriptionStatuses }
+  return { genders, prescriptionStatuses, loading, fetchGenders, fetchPrescriptionStatuses, getPrescriptionStatuses }
 })

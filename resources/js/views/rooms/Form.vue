@@ -21,8 +21,8 @@ const error = ref('')
 onMounted(async () => {
     if (isEdit) {
         const id = parseInt(route.params.id as string)
-        const { data } = await loadRoom(id)
-        form.value = { ...data.data }
+        const data = await loadRoom(id)
+        form.value = { ...data }
     }
 })
 

@@ -5,7 +5,6 @@ import { Prescription } from '../types/index'
 
 export const usePrescriptionsStore = defineStore('prescriptions', () => {
   const items = ref<Prescription[]>([])
-  const item = ref<Prescription>()
   const loading = ref(false)
 
   async function fetchPrescriptions() {
@@ -19,13 +18,17 @@ export const usePrescriptionsStore = defineStore('prescriptions', () => {
   }
 
   async function loadPrescription(id: number) {
-    loading.value = true
-    try {
-      const { data } = await getPrescription(id)
-      item.value = data.data
-    } finally {
-      loading.value = false
+    let item = items.value.find((p) => p.id === id)
+    if (!item) {
+      loading.value = true
+      try {
+        const { data } = await getPrescription(id)
+        item = data.data
+      } finally {
+        loading.value = false
+      }
     }
+    return item
   }
 
   async function savePrescription(

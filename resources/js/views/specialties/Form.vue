@@ -19,8 +19,8 @@ const error = ref('')
 onMounted(async () => {
     if (isEdit) {
         const id = parseInt(route.params.id as string)
-        const { data } = await loadSpecialty(id)
-        form.value = { ...data.data }
+        const data = await loadSpecialty(id)
+        form.value = { ...data }
     }
 })
 

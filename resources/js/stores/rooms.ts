@@ -24,23 +24,43 @@ export const useRoomsStore = defineStore('rooms', () => {
   }
 
   async function loadRoom(id: number) {
-    return getRoom(id)
+    let item = items.value.find((p) => p.id === id)
+    if (!item) {
+      loading.value = true
+      try {
+        const { data } = await getRoom(id)
+        item = data.data
+      } finally {
+        loading.value = false
+      }
+    }
+    return item
   }
 
   async function saveRoom(
     id: number | undefined,
     payload: Room,
   ) {
-    if (id) {
-      return updateRoom(id, payload)
+    loading.value = true
+    try {
+      if (id) {
+        await updateRoom(id, payload)
+      } else {
+        await createRoom(payload)
+      }
+    } finally {
+      loading.value = false
     }
-
-    return createRoom(payload)
   }
 
   async function removeRoom(id: number) {
-    await deleteRoom(id)
-    items.value = items.value.filter((room) => room.id !== id)
+    loading.value = true
+    try {
+      await deleteRoom(id)
+      items.value = items.value.filter((room) => room.id !== id)
+    } finally {
+      loading.value = false
+    }
   }
 
   return { items, loading, fetchRooms, loadRoom, saveRoom, removeRoom }

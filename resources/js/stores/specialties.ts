@@ -24,23 +24,43 @@ export const useSpecialtiesStore = defineStore('specialties', () => {
   }
 
   async function loadSpecialty(id: number) {
-    return getSpecialty(id)
+    let item = items.value.find((s) => s.id === id)
+    if (!item) {
+      loading.value = true
+      try {
+        const { data } = await getSpecialty(id)
+        item = data.data
+      } finally {
+        loading.value = false
+      }
+    }
+    return item
   }
 
   async function saveSpecialty(
     id: number | undefined,
     payload: Specialty,
   ) {
-    if (id) {
-      return updateSpecialty(id, payload)
+    loading.value = true
+    try {
+      if (id) {
+        await updateSpecialty(id, payload)
+      } else {
+        await createSpecialty(payload)
+      }
+    } finally {
+      loading.value = false
     }
-
-    return createSpecialty(payload)
   }
 
   async function removeSpecialty(id: number) {
-    await deleteSpecialty(id)
-    items.value = items.value.filter((specialty) => specialty.id !== id)
+    loading.value = true
+    try {
+      await deleteSpecialty(id)
+      items.value = items.value.filter((specialty) => specialty.id !== id)
+    } finally {
+      loading.value = false
+    }
   }
 
   return { items, loading, fetchSpecialties, loadSpecialty, saveSpecialty, removeSpecialty }
