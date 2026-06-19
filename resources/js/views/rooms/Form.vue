@@ -12,6 +12,7 @@ const isEdit = !!route.params.id
 
 const form = ref<Room>({
     name: '',
+    identification: '',
     zip: '',
     address: '',
     phone: [],
