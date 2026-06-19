@@ -75,7 +75,7 @@ test('password request returns error when no user matches the email', function (
     ]);
 
     $response->assertStatus(400)
-        ->assertJsonStructure(['success', 'message', 'data' => ['email']]);
+        ->assertJsonStructure(['success', 'message', 'errors' => ['email']]);
 });
 
 test('password reset rejects invalid request structure', function (array $payload, array $errors) {
@@ -111,5 +111,5 @@ test('password reset returns error for invalid token', function () {
     ]);
 
     $response->assertStatus(400)
-        ->assertJsonStructure(['success', 'message', 'data']);
+        ->assertJsonStructure(['success', 'message', 'errors']);
 });

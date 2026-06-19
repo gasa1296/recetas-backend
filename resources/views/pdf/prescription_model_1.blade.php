@@ -183,7 +183,7 @@
             <div>
                 <div class="field">
                     <span class="field-label">Phone:</span>
-                    <span class="field-value">{{ is_array($patient->phone) ? implode(', ', $patient->phone) : ($patient->phone ?? 'N/A') }}</span>
+                    <span class="field-value">{{ $patient->phone[0] ?? 'N/A' }}</span>
                 </div>
                 <div class="field">
                     <span class="field-label">Gender:</span>
@@ -191,7 +191,7 @@
                 </div>
                 <div class="field">
                     <span class="field-label">Birth Date:</span>
-                    <span class="field-value">{{ $patient->birth_date ? $patient->birth_date->format('d/m/Y') : 'N/A' }}</span>
+                    <span class="field-value">{{ $patient->birth_date }}</span>
                 </div>
             </div>
         </div>

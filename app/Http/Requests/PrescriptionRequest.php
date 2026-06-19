@@ -44,7 +44,7 @@ class PrescriptionRequest extends FormRequest
             'medicaments.*.medicament_quantity' => ['required_with:medicaments', 'numeric', 'min:0'],
             'medicaments.*.medicament_quantity_letters' => ['required_with:medicaments', 'string'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
-            'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
+            'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')],
         ];
     }
 

@@ -21,7 +21,7 @@ class PrescriptionController extends Controller
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $prescriptions = $prescriptions->whereLike('description', "%$search%", false);
+            $prescriptions = $prescriptions->whereLike('diagnostic', "%$search%", false);
         }
 
         return (new PrescriptionCollection($prescriptions->paginate(10)))->response();
@@ -79,7 +79,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.status.0'))
+            ->where('status', config('custom.prescription.status_keys.draft'))
             ->findOrFail($prescription);
         $prescription->update($request->validated());
         $medicaments = $request->input('medicament_data', []);
@@ -101,7 +101,7 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.status.0'))
+            ->where('status', config('custom.prescription.status_keys.draft'))
             ->findOrFail($prescription);
         $prescription->delete();
 
@@ -115,18 +115,15 @@ class PrescriptionController extends Controller
         $prescription = auth()
             ->user()
             ->prescriptions()
-            ->where('status', config('custom.prescription.status.0'))
+            ->where('status', config('custom.prescription.status_keys.draft'))
             ->findOrFail($prescription);
         if (! $this->generatePDF($prescription)) {
             return $this->error(__('messages.operation_failed'));
         }
-        $prescription->update(['status' => config('custom.prescription.status.1')]);
+        $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
 
         return $this->success(
             __('messages.operation_success'),
-            new PrescriptionResource(
-                $prescription->load(['medicaments', 'patient', 'room']),
-            ),
         );
     }
 

@@ -76,17 +76,18 @@ class Prescription extends Model
     public function handleUploadFile(string|UploadedFile $file): bool
     {
         if ($oldFile = $this->file) {
-            Storage::disk('private')->delete($oldFile->path);
+            Storage::disk('local')->delete($oldFile->path);
             $oldFile->delete();
         }
-        $path = date('Y').'/'.date('m').'/'.Str::uuid().'.pdf';
-        Storage::disk('private')->put($path, $file);
+        $name = Str::uuid() . '.pdf';
+        $path = date('Y').'/'.date('m').'/' . $name;
+        Storage::disk('local')->put($path, $file);
 
         return $this->file()->create([
             'path' => $path,
             'type' => 'profile',
-            'location' => 'private',
-            'filename' => $file->getClientOriginalName(),
+            'location' => 'local',
+            'filename' => $name,
         ]) ? true : false;
     }
     protected function prettyStatus(): Attribute
