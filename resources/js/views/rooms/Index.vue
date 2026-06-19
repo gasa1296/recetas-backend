@@ -25,6 +25,7 @@ onMounted(fetchRooms)
         <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div v-for="room in items" :key="room.id" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                 <h3 class="font-semibold text-brand-primary text-lg">{{ room.name }}</h3>
+                <p class="text-sm text-gray-500">{{ room.identification }}</p>
                 <p v-if="room.zip" class="text-sm   mt-1">{{ room.zip }}</p>
                 <p v-if="room.address" class="text-sm   mt-1">{{ room.address }}</p>
                 <p v-if="room.phone" class="text-sm">{{ room.phone.join(', ') }}</p>

@@ -19,6 +19,7 @@ class RoomFactory extends Factory
     {
         return [
             'name' => fake()->word(),
+            'identification' => fake()->uuid(),
             'zip' => fake()->postcode(),
             'address' => fake()->address(),
             'phone' => [fake()->phoneNumber()],

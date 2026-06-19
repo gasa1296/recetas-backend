@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'name',
+    'identification',
     'zip',
     'address',
     'phone',

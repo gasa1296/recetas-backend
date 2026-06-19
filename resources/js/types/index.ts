@@ -41,6 +41,7 @@ export interface Profile {
 export interface Room {
   id?: number;
   name: string;
+  identification: string;
   zip: string;
   address?: string;
   phone: string[];

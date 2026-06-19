@@ -27,6 +27,7 @@ class RoomRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
+            'identification' => ['required', 'string'],
             'zip' => ['required', 'string'],
             'address' => ['required', 'string'],
             'phone' => ['required', 'array'],

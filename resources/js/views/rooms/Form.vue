@@ -56,6 +56,10 @@ async function handleSubmit() {
                 <label class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
                 <input v-model="form.name" required class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
             </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Identification *</label>
+                <input v-model="form.identification" required class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Zip</label>

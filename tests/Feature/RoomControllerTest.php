@@ -19,23 +19,23 @@ uses(RefreshDatabase::class);
 
 dataset('invalid_room_payloads', [
     'missing name' => [
-        ['zip' => '00000', 'address' => 'St 1', 'phone' => ['+1']],
+        ['zip' => '00000', 'identification' => 'ID-001', 'address' => 'St 1', 'phone' => ['+1']],
         ['name'],
     ],
     'missing zip' => [
-        ['name' => 'Clinic A', 'address' => 'St 1', 'phone' => ['+1']],
+        ['name' => 'Clinic A', 'identification' => 'ID-001', 'address' => 'St 1', 'phone' => ['+1']],
         ['zip'],
     ],
     'missing address' => [
-        ['name' => 'Clinic A', 'zip' => '00000', 'phone' => ['+1']],
+        ['name' => 'Clinic A', 'identification' => 'ID-001', 'zip' => '00000', 'phone' => ['+1']],
         ['address'],
     ],
     'missing phone' => [
-        ['name' => 'Clinic A', 'zip' => '00000', 'address' => 'St 1'],
+        ['name' => 'Clinic A', 'identification' => 'ID-001', 'zip' => '00000', 'address' => 'St 1'],
         ['phone'],
     ],
     'phone not array' => [
-        ['name' => 'Clinic A', 'zip' => '00000', 'address' => 'St 1', 'phone' => 'string'],
+        ['name' => 'Clinic A', 'identification' => 'ID-001', 'zip' => '00000', 'address' => 'St 1', 'phone' => 'string'],
         ['phone'],
     ],
 ]);
@@ -93,6 +93,7 @@ test('rooms store creates a room with valid request structure', function () {
     $response = $this->actingAs($user, 'sanctum')
         ->postJson('/api/rooms', [
             'name' => 'Clinic A',
+            'identification' => 'ID-001',
             'zip' => '00000',
             'address' => '123 Main St',
             'phone' => ['+123456789'],
@@ -102,9 +103,10 @@ test('rooms store creates a room with valid request structure', function () {
         ->assertJsonStructure([
             'success',
             'message',
-            'data' => ['id', 'name', 'zip', 'address', 'phone'],
+            'data' => ['id', 'name', 'identification', 'zip', 'address', 'phone'],
         ])
         ->assertJsonPath('data.name', 'Clinic A')
+        ->assertJsonPath('data.identification', 'ID-001')
         ->assertJsonPath('data.zip', '00000')
         ->assertJsonPath('data.address', '123 Main St');
 
@@ -151,7 +153,7 @@ test('rooms show returns the requested room', function () {
         ->assertJsonStructure([
             'success',
             'message',
-            'data' => ['id', 'name', 'zip', 'address', 'phone'],
+            'data' => ['id', 'name', 'identification', 'zip', 'address', 'phone'],
         ])
         ->assertJsonPath('data.id', $room->id)
         ->assertJsonPath('data.name', 'Clinic X')
@@ -165,6 +167,7 @@ test('rooms update requires authentication', function () {
 
     $response = $this->putJson("/api/rooms/{$room->id}", [
         'name' => 'X',
+        'identification' => 'ID-001',
         'zip' => '0',
         'address' => 'Y',
         'phone' => ['+1'],
@@ -193,6 +196,7 @@ test('rooms update modifies the room with valid request structure', function () 
     $response = $this->actingAs($user, 'sanctum')
         ->putJson("/api/rooms/{$room->id}", [
             'name' => 'New',
+            'identification' => 'ID-001',
             'zip' => '99999',
             'address' => '789 New St',
             'phone' => ['+999'],
@@ -201,6 +205,7 @@ test('rooms update modifies the room with valid request structure', function () 
     $response->assertSuccessful()
         ->assertJsonPath('data.id', $room->id)
         ->assertJsonPath('data.name', 'New')
+        ->assertJsonPath('data.identification', 'ID-001')
         ->assertJsonPath('data.address', '789 New St');
 
     $this->assertDatabaseHas('rooms', [
