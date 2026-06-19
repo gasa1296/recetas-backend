@@ -2,14 +2,16 @@
 import type { Medicament, Patient, Room, Specialty, Prescription } from '../../types'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { listPatients } from '../../repositories/patient'
+import { listPatients, createPatient, updatePatient } from '../../repositories/patient'
 import { listRooms } from '../../repositories/rooms'
-import { listSpecialties } from '../../repositories/specialty'
 import { listMedicaments } from '../../repositories/medicaments'
 import { getPrescription, createPrescription, updatePrescription } from '../../repositories/prescription'
+import { listGenders } from '../../repositories/general'
+import { usePrescriptionsStore } from '../../stores/prescriptions'
 
 const router = useRouter()
 const route = useRoute()
+const { loadPrescription, savePrescription, activePrescription } = usePrescriptionsStore()
 const isEdit = !!route.params.id
 
 const form = ref<Prescription>({
@@ -26,25 +28,46 @@ const form = ref<Prescription>({
     medicaments: [],
 })
 
-const patients = ref<Patient[]>([])
+const patientForm = ref<Patient>({
+    first_name: '',
+    last_name: '',
+    identification: '',
+    email: '',
+    phone: [],
+    gender: '',
+    birth_date: null,
+})
+
 const rooms = ref<Room[]>([])
 const specialties = ref<Specialty[]>([])
+const genders = ref<any>({})
 const loading = ref(false)
 const error = ref('')
-const patientSearch = ref('')
 const medicamentSearch = ref('')
 const showPatientDropdown = ref(false)
 const showMedicamentDropdown = ref(false)
 const patientResults = ref<Patient[]>([])
 const medicamentResults = ref<Medicament[]>([])
 
-
 async function onPatientInput() {
-    if (!patientSearch.value) {
+    if (patientForm.value.id) {
+        patientForm.value = {
+            identification: patientForm.value.identification,
+            first_name: '',
+            last_name: '',
+            email: '',
+            phone: [],
+            gender: '',
+            birth_date: null,
+        }
+        form.value.patient_id = undefined
+    }
+
+    if (!patientForm.value.identification) {
         patientResults.value = []
         return
     }
-    const { data } = await listPatients({ search: patientSearch.value })
+    const { data } = await listPatients({ search: patientForm.value.identification })
     patientResults.value = data.data
 }
 
@@ -58,8 +81,11 @@ async function onMedicamentInput() {
 }
 
 function selectPatient(patient: Patient) {
+    patientForm.value = {
+        phone: patient.phone ? [...patient.phone] : [],
+        ...patient
+    }
     form.value.patient_id = patient.id
-    patientSearch.value = `${patient.first_name} ${patient.last_name}`
     showPatientDropdown.value = false
 }
 
@@ -69,28 +95,33 @@ function selectSearchMedicament(med: Medicament) {
     showMedicamentDropdown.value = false
 }
 
+function addPatientPhone() {
+    if (!patientForm.value.phone) {
+        patientForm.value.phone = []
+    }
+    patientForm.value.phone.push('')
+}
+
+function removePatientPhone(index: number) {
+    patientForm.value.phone?.splice(index, 1)
+}
+
 onMounted(async () => {
-    const [roomRes, specRes] = await Promise.all([
+    const [specRes, genderRes] = await Promise.all([
         listRooms(),
-        listSpecialties(),
+        listGenders(),
     ])
-    if ('data' in roomRes.data) {
-        rooms.value = roomRes.data.data
-    } else {
-        rooms.value = roomRes.data
-    }
-    if ('data' in specRes.data) {
-        specialties.value = specRes.data.data
-    } else {
-        specialties.value = specRes.data
-    }
+    specialties.value = specRes.data.data
+    genders.value = genderRes.data.data
 
     if (isEdit) {
-        const { data } = await getPrescription(route.params.id as string)
-        form.value = { ...data.data }
-        const ep = patients.value.find((p) => p.id === Number(data.data.patient_id))
-        if (ep) {
-            patientSearch.value = `${ep.first_name} ${ep.last_name}`
+        const data = await loadPrescription(Number(route.params.id))
+        form.value = { ...data }
+        if (data.patient) {
+            patientForm.value = {
+                phone: data.patient.phone ? [...data.patient.phone] : [],
+                ...data.patient
+            }
         }
     }
 })
@@ -103,14 +134,32 @@ async function handleSubmit() {
     loading.value = true
     error.value = ''
     try {
-        if (isEdit) {
-            await updatePrescription(route.params.id as string, form.value)
-        } else {
-            await createPrescription(form.value)
+        if (!form.value.patient_id) {
+            const { data } = await createPatient(patientForm.value)
+            form.value.patient_id = data.data.id
+        } else if (patientForm.value.id) {
+            await updatePatient(patientForm.value.id, patientForm.value)
         }
+        await savePrescription(Number(route.params.id), form.value)
+
         router.push({ name: 'prescriptions.index' })
     } catch (err) {
         error.value = (err as any).response?.data?.message || 'Failed to save prescription'
+    } finally {
+        loading.value = false
+    }
+}
+
+async function handleActivePrescription() {
+    if (!route.params.id) return
+    loading.value = true
+    error.value = ''
+    try {
+        const id = Number(route.params.id)
+        await activePrescription(id)
+        router.push({ name: 'prescriptions.index' })
+    } catch (err) {
+        error.value = (err as any).response?.data?.message || 'Failed to activate prescription'
     } finally {
         loading.value = false
     }
@@ -129,22 +178,70 @@ async function handleSubmit() {
             <div v-if="error" class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{{ error }}
             </div>
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
                 <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
                     <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
                     Patient
                 </h2>
                 <div class="relative">
-                    <input v-model="patientSearch" @input="onPatientInput" @focus="showPatientDropdown = true"
-                        @blur="showPatientDropdown = false" placeholder="Search patient by identification..."
-                        class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
-                    <div v-if="showPatientDropdown && patientSearch"
-                        class="absolute z-10 mt-1 w-full bg-white  border border-gray-200  rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Identification (Search/New) *</label>
+                    <input v-model="patientForm.identification" @input="onPatientInput" @focus="showPatientDropdown = true"
+                        @blur="showPatientDropdown = false" placeholder="Type identification to search or create..."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" required />
+                    <div v-if="showPatientDropdown && patientForm.identification && patientResults.length > 0"
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
                         <div v-for="p in patientResults" :key="p.id" @mousedown="selectPatient(p)"
                             class="px-5 py-4 cursor-pointer hover:bg-indigo-50 text-gray-900">
                             <strong>{{ p.first_name }} {{ p.last_name }}</strong>: {{ p.identification }}
                         </div>
-                        <div v-if="patientResults.length === 0" class="px-3 py-2 text-gray-400">No patients found</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                        <input v-model="patientForm.first_name" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                        <input v-model="patientForm.last_name" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input v-model="patientForm.email" type="email"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender *</label>
+                        <select v-model="patientForm.gender" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900">
+                            <option value="">Select gender</option>
+                            <option v-for="(name, code) in genders" :key="code" :value="code">{{ name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Birth Date</label>
+                        <input v-model="patientForm.birth_date" type="date"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phones</label>
+                        <div class="space-y-2">
+                            <div v-for="(phoneVal, idx) in patientForm.phone" :key="idx" class="flex gap-2">
+                                <input v-if=(patientForm.phone) v-model="patientForm.phone[idx]"
+                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900" placeholder="Phone number" />
+                                <button type="button" @click="removePatientPhone(idx)" class="px-2 text-red-500 hover:text-red-700">✕</button>
+                            </div>
+                            <button type="button" @click="addPatientPhone" class="text-sm text-brand-primary hover:underline">+ Add phone</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -161,14 +258,6 @@ async function handleSubmit() {
                             class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 ">
                             <option value="">Select room</option>
                             <option v-for="r in rooms" :key="r.id" :value="r.id">{{ r.name }}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
-                        <select v-model="form.specialty_id"
-                            class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 ">
-                            <option value="">Select specialty</option>
-                            <option v-for="s in specialties" :key="s.id" :value="s.id">{{ s.name }}</option>
                         </select>
                     </div>
                 </div>
@@ -260,6 +349,11 @@ async function handleSubmit() {
                         <p class="block text-lg font-bold   mb-1">{{ med.active_ingredient }}</p>
                     </div>
                     <div class="w-24">
+                        <label class="block text-xs font-medium   mb-1">Quantity</label>
+                        <input v-model="med.medicament_quantity" type="number"
+                            class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                    </div>
+                    <div class="w-24">
                         <label class="block text-xs font-medium   mb-1">Dosage</label>
                         <input v-model="med.dosage"
                             class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
@@ -298,6 +392,10 @@ async function handleSubmit() {
                 <button type="submit" :disabled="loading"
                     class="px-5 py-3 rounded-xl bg-brand-primary text-white font-semibold shadow-sm hover:bg-slate-800 transition disabled:opacity-50">
                     {{ loading ? 'Saving...' : 'Save' }}
+                </button>
+                <button v-if="isEdit" type="button" :disabled="loading" @click="handleActivePrescription"
+                    class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold shadow-sm hover:bg-green-700 transition disabled:opacity-50">
+                    {{ loading ? 'Activating...' : 'Activate' }}
                 </button>
                 <router-link :to="{ name: 'prescriptions.index' }"
                     class="px-5 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition">

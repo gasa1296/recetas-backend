@@ -13,6 +13,7 @@ class GenericController extends Controller
             config('custom.gender'),
         );
     }
+
     public function prescriptionStatus(Request $request)
     {
         return $this->success(

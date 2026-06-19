@@ -65,6 +65,11 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('../views/prescriptions/Form.vue'),
             },
             {
+                path: 'prescriptions/:id',
+                name: 'prescriptions.show',
+                component: () => import('../views/prescriptions/Show.vue'),
+            },
+            {
                 path: 'prescriptions/:id/edit',
                 name: 'prescriptions.edit',
                 component: () => import('../views/prescriptions/Form.vue'),

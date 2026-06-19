@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientRequest;
 use App\Http\Requests\SearchRequest;
-use App\Http\Resources\PatientResource;
 use App\Http\Resources\PatientCollection;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\PatientResource;
 use App\Models\Patient;
+use Illuminate\Http\JsonResponse;
 
 class PatientController extends Controller
 {

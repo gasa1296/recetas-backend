@@ -160,7 +160,6 @@ test('prescriptions store rejects invalid request structure', function (array $p
         ->assertJsonValidationErrors($errors);
 })->with('invalid_prescription_payloads');
 
-
 test('prescriptions store creates a prescription with valid request structure', function () {
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
@@ -192,7 +191,6 @@ test('prescriptions store creates a prescription with valid request structure', 
                 ],
             ],
         ]);
-    $response->dump();
     $response->assertSuccessful()
         ->assertJsonStructure([
             'success',

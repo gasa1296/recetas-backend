@@ -16,6 +16,9 @@ export const usePrescriptionsStore = defineStore('prescriptions', () => {
       loading.value = false
     }
   }
+  function getPrescriptions() {
+    return items
+  }
 
   async function loadPrescription(id: number) {
     let item = items.value.find((p) => p.id === id)
@@ -66,5 +69,5 @@ export const usePrescriptionsStore = defineStore('prescriptions', () => {
     }
   }
 
-  return { items, loading, fetchPrescriptions, loadPrescription, savePrescription, removePrescription, activePrescription }
+  return { loading, getPrescriptions, fetchPrescriptions, loadPrescription, savePrescription, removePrescription, activePrescription }
 })

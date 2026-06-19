@@ -76,7 +76,6 @@ export interface Prescription {
   id?: number;
   patient_id?: number;
   room_id?: number;
-  specialty_id?: number;
   temp: string | null;
   weight: string | null;
   height: string | null;

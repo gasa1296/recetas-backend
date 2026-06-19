@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchRequest;
+use App\Http\Resources\MedicamentCollection;
 use App\Models\Medicament;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\MedicamentCollection;
 
 class MedicamentController extends Controller
 {

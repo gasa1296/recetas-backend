@@ -10,9 +10,9 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -37,7 +37,7 @@ class RoomsRelationManager extends RelationManager
                     ->maxLength(255),
                 TagsInput::make('phone')
                     ->separator(',')
-                    ->required()
+                    ->required(),
             ]);
     }
 

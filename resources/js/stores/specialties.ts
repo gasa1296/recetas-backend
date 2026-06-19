@@ -23,6 +23,10 @@ export const useSpecialtiesStore = defineStore('specialties', () => {
     }
   }
 
+  function getSpecialties() {
+    return items
+  }
+
   async function loadSpecialty(id: number) {
     let item = items.value.find((s) => s.id === id)
     if (!item) {
@@ -63,5 +67,5 @@ export const useSpecialtiesStore = defineStore('specialties', () => {
     }
   }
 
-  return { items, loading, fetchSpecialties, loadSpecialty, saveSpecialty, removeSpecialty }
+  return { getSpecialties, loading, fetchSpecialties, loadSpecialty, saveSpecialty, removeSpecialty }
 })

@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import type { Prescription } from '../../types'
 import { ref, onMounted } from 'vue'
 import { usePrescriptionsStore } from '../../stores/prescriptions'
 
-const { items, removePrescription, fetchPrescriptions } = usePrescriptionsStore()
-const prescriptions = ref<Prescription[]>([])
-const loading = ref(true)
-
+const { loading, getPrescriptions, removePrescription, fetchPrescriptions } = usePrescriptionsStore()
+const items = getPrescriptions()
 async function deletePrescription(id: number) {
     if (!confirm('Are you sure?')) return
     await removePrescription(id)
-    prescriptions.value = prescriptions.value.filter((p) => p.id !== id)
 }
 onMounted(fetchPrescriptions)
 </script>
@@ -24,7 +20,7 @@ onMounted(fetchPrescriptions)
             </router-link>
         </div>
         <div v-if="loading" class="text-center py-12 ">Loading...</div>
-        <div v-else-if="prescriptions.length === 0" class="text-center py-12 ">No prescriptions found.</div>
+        <div v-else-if="items.length === 0" class="text-center py-12 ">No prescriptions found.</div>
         <div v-else class="overflow-x-auto">
             <table class="w-full bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <thead>
@@ -47,8 +43,9 @@ onMounted(fetchPrescriptions)
                         </td>
                         <td class="px-4 py-3 text-gray-600  max-w-xs truncate">{{ p.diagnostic }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
-                            <router-link v-if="p.status === 0" :to="{ name: 'prescriptions.edit', params: { id: p.id } }" class="text-sm text-brand-primary hover:underline mr-3">Edit</router-link>
-                            <button @click="deletePrescription(p.id ?? 0)" class="text-sm text-red-600  hover:underline">Delete</button>
+                            <router-link :to="{ name: 'prescriptions.show', params: { id: p.id } }" class="text-sm text-brand-primary hover:underline mr-3">Details</router-link>
+                            <router-link v-if="p.status === 0" :to="{ name: 'prescriptions.edit', params: { id: p.id } }" class="text-sm text-slate-600 hover:underline mr-3">Edit</router-link>
+                            <button @click="deletePrescription(p.id ?? 0)" class="text-sm text-red-600 hover:underline">Delete</button>
                         </td>
                     </tr>
                 </tbody>

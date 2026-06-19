@@ -16,6 +16,9 @@ export const usePatientsStore = defineStore('patients', () => {
       loading.value = false
     }
   }
+  function getPatients() {
+    return items.value
+  }
 
   async function loadPatient(id: number) {
     let item = items.value.find((p) => p.id === id)
@@ -57,5 +60,5 @@ export const usePatientsStore = defineStore('patients', () => {
     }
   }
 
-  return { items, loading, fetchPatients, loadPatient, savePatient, removePatient }
+  return { getPatients, loading, fetchPatients, loadPatient, savePatient, removePatient }
 })

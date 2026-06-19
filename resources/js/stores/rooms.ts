@@ -22,6 +22,10 @@ export const useRoomsStore = defineStore('rooms', () => {
       loading.value = false
     }
   }
+  function getRooms()
+  {
+    return items
+  }
 
   async function loadRoom(id: number) {
     let item = items.value.find((p) => p.id === id)
@@ -63,5 +67,5 @@ export const useRoomsStore = defineStore('rooms', () => {
     }
   }
 
-  return { items, loading, fetchRooms, loadRoom, saveRoom, removeRoom }
+  return { items, loading, getRooms, fetchRooms, loadRoom, saveRoom, removeRoom }
 })

@@ -35,18 +35,18 @@ class PrescriptionsTable
                     ->searchable(),
                 TextColumn::make('user.name')
                     ->searchable(query: function ($query, string $search) {
-                            $query->whereHas('user', function ($q) use ($search) {
-                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
-                            });
-                        }),
+                        $query->whereHas('user', function ($q) use ($search) {
+                            $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
+                        });
+                    }),
                 TextColumn::make('room.name')
                     ->searchable(),
                 TextColumn::make('patient.name')
                     ->searchable(query: function ($query, string $search) {
-                            $query->whereHas('patient', function ($q) use ($search) {
-                                $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
-                            });
-                        }),
+                        $query->whereHas('patient', function ($q) use ($search) {
+                            $q->where(DB::raw("CONCAT_WS(' ', first_name, last_name)"), 'LIKE', "%{$search}%");
+                        });
+                    }),
                 TextColumn::make('status')
                     ->numeric()
                     ->sortable(),
@@ -67,13 +67,13 @@ class PrescriptionsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                //EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //DeleteBulkAction::make(),
-                    //ForceDeleteBulkAction::make(),
-                    //RestoreBulkAction::make(),
+                    // DeleteBulkAction::make(),
+                    // ForceDeleteBulkAction::make(),
+                    // RestoreBulkAction::make(),
                 ]),
             ]);
     }

@@ -2,8 +2,8 @@
 import { onMounted } from 'vue'
 import { useSpecialtiesStore } from '../../stores/specialties'
 
-const { items, loading, fetchSpecialties, removeSpecialty } = useSpecialtiesStore()
-
+const { getSpecialties, loading, fetchSpecialties, removeSpecialty } = useSpecialtiesStore()
+const items = getSpecialties()
 async function deleteSpecialty(id: number) {
     if (!confirm('Are you sure?')) return
     await removeSpecialty(id)

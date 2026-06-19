@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\PrescriptionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 #[Fillable([
     'temp',
@@ -38,6 +38,10 @@ class Prescription extends Model
 {
     /** @use HasFactory<PrescriptionFactory> */
     use HasFactory, SoftDeletes;
+
+    protected $attributes = [
+        'status' => '0',
+    ];
 
     public function user(): BelongsTo
     {
@@ -79,8 +83,8 @@ class Prescription extends Model
             Storage::disk('local')->delete($oldFile->path);
             $oldFile->delete();
         }
-        $name = Str::uuid() . '.pdf';
-        $path = date('Y').'/'.date('m').'/' . $name;
+        $name = Str::uuid().'.pdf';
+        $path = date('Y').'/'.date('m').'/'.$name;
         Storage::disk('local')->put($path, $file);
 
         return $this->file()->create([
@@ -90,12 +94,14 @@ class Prescription extends Model
             'filename' => $name,
         ]) ? true : false;
     }
+
     protected function prettyStatus(): Attribute
     {
         return Attribute::make(
-            get: fn () => config('custom.prescription.status.' . $this->status),
+            get: fn () => config('custom.prescription.status.'.$this->status),
         );
     }
+
     /**
      * Generic percent attribute helper.
      * Stores values as integer (value * 100) and exposes as float (value / 100).
@@ -137,6 +143,4 @@ class Prescription extends Model
     {
         return $this->percent();
     }
-
-
 }

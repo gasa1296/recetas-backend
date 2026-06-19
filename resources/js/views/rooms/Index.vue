@@ -2,8 +2,8 @@
 import { onMounted } from 'vue'
 import { useRoomsStore } from '../../stores/rooms'
 
-const { items, loading, fetchRooms, removeRoom } = useRoomsStore()
-
+const { loading, getRooms, fetchRooms, removeRoom } = useRoomsStore()
+const items = getRooms()
 async function deleteRoom(id: number) {
     if (!confirm('Are you sure?')) return
     await removeRoom(id)

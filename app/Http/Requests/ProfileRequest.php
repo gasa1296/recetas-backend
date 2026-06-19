@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProfileRequest extends FormRequest
 {

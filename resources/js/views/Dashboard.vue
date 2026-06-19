@@ -9,7 +9,6 @@ const cards = [
     { name: 'Profile', description: 'Manage your profile information', href: '/profile', icon: '👤', color: 'bg-blue-500' },
     { name: 'Rooms', description: 'Manage consultation rooms', href: '/rooms', icon: '🏥', color: 'bg-green-500' },
     { name: 'Specialties', description: 'Manage your specialties', href: '/specialties', icon: '🔬', color: 'bg-purple-500' },
-    { name: 'Patients', description: 'Manage your patients', href: '/patients', icon: '👥', color: 'bg-amber-500' },
     { name: 'Prescriptions', description: 'Create and manage prescriptions', href: '/prescriptions', icon: '📋', color: 'bg-rose-500' },
 ]
 </script>

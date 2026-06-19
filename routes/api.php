@@ -43,9 +43,7 @@ use Illuminate\Support\Facades\Route;
             });
     }
 
-    private function publicRoutes()
-    {
-    }
+    private function publicRoutes() {}
 
     private function medicRoutes()
     {
