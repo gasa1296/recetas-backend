@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('duration');
             $table->string('medicament_quantity');
             $table->string('medicament_quantity_letters');
+            $table->string('recommended_brand')->nullable();
 
             $table->foreignId('medicament_id')->constrained()->cascadeOnDelete();
             $table->foreignId('prescription_id')->constrained()->cascadeOnDelete();
 
-            $table->timestamps();
             $table->softDeletes();
         });
     }

@@ -32,6 +32,7 @@ class PrescriptionResource extends JsonResource
             'comments' => $this->comments,
             'room' => $this->whenLoaded('room', new RoomResource($this->room)),
             'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
+            'specialty' => $this->whenLoaded('specialty', new SpecialtyResource($this->specialty)),
             'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
                 'id' => $medicament->id,
                 'active_ingredient' => $medicament->active_ingredient,
@@ -42,6 +43,7 @@ class PrescriptionResource extends JsonResource
                 'duration' => $medicament->pivot->duration,
                 'medicament_quantity' => $medicament->pivot->medicament_quantity,
                 'medicament_quantity_letters' => $medicament->pivot->medicament_quantity_letters,
+                'recommended_brand' => $medicament->pivot->recommended_brand,
             ])),
             'status' => $this->status,
             'pretty_status' => $this->pretty_status,

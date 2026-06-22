@@ -21,6 +21,7 @@ class MedicamentFactory extends Factory
             'active_ingredient' => fake()->word(),
             'type' => fake()->word(),
             'group' => fake()->word(),
+            'concentration' => fake()->word(),
         ];
     }
 }

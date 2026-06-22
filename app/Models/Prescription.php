@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
@@ -30,6 +31,7 @@ use Illuminate\Support\Str;
     'user_id',
     'room_id',
     'patient_id',
+    'specialty_id',
     'status',
     'prescription_hash',
 ])]
@@ -66,30 +68,36 @@ class Prescription extends Model
     public function medicaments(): BelongsToMany
     {
         return $this->belongsToMany(Medicament::class, MedicamentPrescription::class)
-            ->withPivot('dosage', 'frequency', 'duration');
+            ->withPivot('dosage', 'frequency', 'duration', 'medicament_quantity', 'medicament_quantity_letters', 'recommended_brand');
     }
 
     /**
      * Used for file uploads, abstracting the actual storage mechanism.
      */
-    public function file(): MorphOne
+    public function files(): MorphMany
     {
-        return $this->morphOne(File::class, 'model');
+        return $this->morphMany(File::class, 'model');
     }
 
-    public function handleUploadFile(string|UploadedFile $file): bool
+    public function signed_file(): MorphOne
     {
-        if ($oldFile = $this->file) {
-            Storage::disk('local')->delete($oldFile->path);
-            $oldFile->delete();
-        }
+        return $this->morphOne(File::class, 'model')->where('type', 'signed');
+    }
+
+    public function unsigned_file(): MorphOne
+    {
+        return $this->morphOne(File::class, 'model')->where('type', 'unsigned');
+    }
+
+    public function handleUploadFile(string|UploadedFile $file, string $type = 'unsigned'): bool
+    {
         $name = Str::uuid().'.pdf';
         $path = date('Y').'/'.date('m').'/'.$name;
         Storage::disk('local')->put($path, $file);
 
-        return $this->file()->create([
+        return $this->files()->create([
             'path' => $path,
-            'type' => 'profile',
+            'type' => $type,
             'location' => 'local',
             'filename' => $name,
         ]) ? true : false;

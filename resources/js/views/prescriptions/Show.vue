@@ -1,23 +1,32 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { getPrescription } from '../../repositories/prescription'
+import { useRouter, useRoute } from 'vue-router'
 import type { Prescription } from '../../types'
+import { usePrescriptionsStore } from '../../stores/prescriptions'
 
-const route = useRoute()
+const { loading, loadPrescription, activePrescription } = usePrescriptionsStore()
 const router = useRouter()
+const route = useRoute()
 const prescription = ref<Prescription | null>(null)
-const loading = ref(true)
 const error = ref('')
 
+async function handleActivePrescription() {
+    if (!prescription.value?.id) return
+    if (!confirm('Are you sure?')) return
+    error.value = ''
+    try {
+        if (!prescription.value?.id) return
+        await activePrescription(prescription.value?.id)
+        router.push({ name: 'prescriptions.show', params: { id: prescription.value?.id } })
+    } catch (err) {
+        error.value = (err as any).response?.data?.message || 'Failed to activate prescription'
+    }
+}
 onMounted(async () => {
     try {
-        const { data } = await getPrescription(route.params.id as string)
-        prescription.value = data.data
+        prescription.value = await loadPrescription(Number(route.params.id))
     } catch (err) {
         error.value = (err as any).response?.data?.message || 'Failed to load prescription details'
-    } finally {
-        loading.value = false
     }
 })
 </script>
@@ -96,10 +105,6 @@ onMounted(async () => {
                                 <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Room</span>
                                 <span class="text-base text-slate-900">{{ prescription.room.name }}</span>
                             </div>
-                            <div v-if="prescription.specialty">
-                                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Specialty</span>
-                                <span class="text-base text-slate-900">{{ prescription.specialty.name }}</span>
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -174,19 +179,19 @@ onMounted(async () => {
                             <p class="text-sm text-slate-500">{{ med.type }} - {{ med.group }}</p>
                         </div>
                         <div class="flex flex-wrap gap-4 text-sm">
-                            <div class="min-w-[100px]">
+                            <div class="min-w-25">
                                 <span class="text-xs font-semibold text-slate-400 block uppercase">Dosage</span>
                                 <span class="text-slate-800 font-medium">{{ med.dosage }}</span>
                             </div>
-                            <div class="min-w-[100px]">
+                            <div class="min-w-25">
                                 <span class="text-xs font-semibold text-slate-400 block uppercase">Frequency</span>
                                 <span class="text-slate-800 font-medium">{{ med.frequency }}</span>
                             </div>
-                            <div class="min-w-[100px]">
+                            <div class="min-w-25">
                                 <span class="text-xs font-semibold text-slate-400 block uppercase">Duration</span>
                                 <span class="text-slate-800 font-medium">{{ med.duration }}</span>
                             </div>
-                            <div class="min-w-[100px]" v-if="med.medicament_quantity">
+                            <div class="min-w-25" v-if="med.medicament_quantity">
                                 <span class="text-xs font-semibold text-slate-400 block uppercase">Quantity</span>
                                 <span class="text-slate-800 font-medium">{{ med.medicament_quantity }}</span>
                             </div>

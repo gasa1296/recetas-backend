@@ -1,40 +1,34 @@
-FROM php:8.5-fpm
+FROM php:8.5-fpm-alpine
 
-# Set working directory
 WORKDIR /var/www
 
-# Arguments defined in docker-compose.yml
 ARG user
 ARG uid
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     git \
     curl \
     nodejs \
     npm \
     openssl \
-    libmcrypt-dev \
     libpng-dev \
-    libonig-dev \
+    oniguruma-dev \
     libxml2-dev \
     libzip-dev \
     zip \
     unzip \
-    libicu-dev
+    icu-dev \
+    linux-headers
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extension
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 
-# Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
+RUN addgroup -g $uid -S $user && \
+    adduser -u $uid -S $user -G $user -h /home/$user -s /bin/sh && \
+    adduser $user www-data && \
+    adduser $user root && \
+    mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 USER $user

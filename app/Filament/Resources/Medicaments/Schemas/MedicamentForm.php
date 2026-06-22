@@ -13,6 +13,8 @@ class MedicamentForm
             ->components([
                 TextInput::make('active_ingredient')
                     ->required(),
+                TextInput::make('concentration')
+                    ->required(),
                 TextInput::make('type')
                     ->required(),
                 TextInput::make('group')

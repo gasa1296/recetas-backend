@@ -22,6 +22,8 @@ services:
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USERNAME}
             DB_PASSWORD: ${DB_PASSWORD}
+            REDIS_HOST: redis
+            REDIS_PASSWORD: ${REDIS_PASSWORD}
         healthcheck:
             test: ["CMD", "php", "-r", "exit(0);"]
             interval: 10s
@@ -50,6 +52,22 @@ services:
             retries: 3
         networks:
             - recetas
+    redis:
+        image: redis:8-alpine
+        container_name: recetas-redis
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "6379:6379"
+        volumes:
+            - recetas_redis:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+        networks:
+            - recetas
     nginx:
         image: nginx:alpine
         container_name: recetas-nginx
@@ -72,4 +90,6 @@ networks:
         driver: bridge
 volumes:
     recetas_dbdata:
+        driver: local
+    recetas_redis:
         driver: local

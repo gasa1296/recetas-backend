@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('active_ingredient');
             $table->string('type');
             $table->string('group');
+            $table->string('concentration');
         });
     }
 

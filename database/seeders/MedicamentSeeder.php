@@ -26,6 +26,7 @@ class MedicamentSeeder extends Seeder
                         'active_ingredient' => $med['active_ingredient'],
                         'type' => $med['type'],
                         'group' => $med['group'],
+                        'concentration' => $med['concentration'],
                     ], $chunk)
                 );
             }

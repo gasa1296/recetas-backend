@@ -4,6 +4,7 @@ use App\Models\Medicament;
 use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\Room;
+use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -23,33 +24,41 @@ uses(RefreshDatabase::class);
 
 dataset('invalid_prescription_payloads', [
     'missing patient_id' => [
-        ['room_id' => 1],
+        ['specialty_id' => 1, 'room_id' => 1],
         ['patient_id'],
     ],
     'missing room_id' => [
-        ['patient_id' => 1],
+        ['specialty_id' => 1, 'patient_id' => 1],
         ['room_id'],
     ],
+    'missing specialty_id' => [
+        ['patient_id' => 1, 'room_id' => 1],
+        ['specialty_id'],
+    ],
     'non-existent room_id' => [
-        ['patient_id' => 1, 'room_id' => 999999],
+        ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 999999],
         ['room_id'],
     ],
     'non-existent patient_id' => [
-        ['patient_id' => 999999, 'room_id' => 1],
+        ['specialty_id' => 1, 'patient_id' => 999999, 'room_id' => 1],
+        ['patient_id'],
+    ],
+    'non-existent specialty_id' => [
+        ['specialty_id' => 999999, 'patient_id' => 1, 'room_id' => 1],
         ['patient_id'],
     ],
     'negative temp' => [
-        ['patient_id' => 1, 'room_id' => 1, 'temp' => -1],
+        ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'temp' => -1],
         ['temp'],
     ],
     'medicament without id' => [
-        ['patient_id' => 1, 'room_id' => 1, 'medicaments' => [
+        ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'medicaments' => [
             ['dosage' => '1', 'frequency' => '8h', 'duration' => '5d', 'medicament_quantity' => 1, 'medicament_quantity_letters' => 'one'],
         ]],
         ['medicaments.0.id'],
     ],
     'medicament without dosage' => [
-        ['patient_id' => 1, 'room_id' => 1, 'medicaments' => [
+        ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'medicaments' => [
             ['id' => 1, 'frequency' => '8h', 'duration' => '5d', 'medicament_quantity' => 1, 'medicament_quantity_letters' => 'one'],
         ]],
         ['medicaments.0.dosage'],
@@ -75,14 +84,19 @@ test('prescriptions index returns only the authenticated user prescriptions', fu
     $other = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
-    $own = Prescription::factory()->count(3)
+    $specialty = Specialty::factory()->for($user)->create();
+    Prescription::factory()->count(3)
         ->for($patient, 'patient')
         ->for($room, 'room')
-        ->for($user)->create();
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create();
     Prescription::factory()->count(2)
         ->for($patient, 'patient')
         ->for($room, 'room')
-        ->for($other)->create();
+        ->for($specialty, 'specialty')
+        ->for($other)
+        ->create();
 
     $response = $this->actingAs($user, 'sanctum')
         ->getJson('/api/prescriptions');
@@ -120,15 +134,18 @@ test('prescriptions index filters by description when search is provided', funct
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['diagnostic' => 'flu']);
     Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['diagnostic' => 'migraine']);
 
     $response = $this->actingAs($user, 'sanctum')
@@ -143,6 +160,7 @@ test('prescriptions store requires authentication', function () {
     $payload = [
         'patient_id' => 1,
         'room_id' => 1,
+        'specialty_id' => 1,
     ];
 
     $response = $this->postJson('/api/prescriptions', $payload);
@@ -164,6 +182,7 @@ test('prescriptions store creates a prescription with valid request structure', 
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $medicament = Medicament::factory()->create();
 
     $response = $this->actingAs($user, 'sanctum')
@@ -180,6 +199,7 @@ test('prescriptions store creates a prescription with valid request structure', 
             'comments' => 'Rest',
             'room_id' => $room->id,
             'patient_id' => $patient->id,
+            'specialty_id' => $specialty->id,
             'medicaments' => [
                 [
                     'id' => $medicament->id,
@@ -200,6 +220,7 @@ test('prescriptions store creates a prescription with valid request structure', 
                 'user_id',
                 'patient_id',
                 'room_id',
+                'specialty_id',
                 'temp',
                 'weight',
                 'height',
@@ -211,6 +232,7 @@ test('prescriptions store creates a prescription with valid request structure', 
                 'diet',
                 'comments',
                 'room' => ['id', 'name', 'zip', 'address', 'phone'],
+                'specialty' => ['id', 'name', 'identification'],
                 'patient' => ['id', 'first_name', 'last_name', 'identification', 'email', 'phone', 'birth_date'],
                 'medicaments' => [
                     '*' => [
@@ -234,6 +256,7 @@ test('prescriptions store creates a prescription with valid request structure', 
         ->assertJsonPath('data.pretty_status', config('custom.prescription.status.0'))
         ->assertJsonPath('data.user_id', $user->id)
         ->assertJsonPath('data.room.id', $room->id)
+        ->assertJsonPath('data.specialty.id', $specialty->id)
         ->assertJsonPath('data.patient.id', $patient->id)
         ->assertJsonPath('data.medicaments.0.id', $medicament->id)
         ->assertJsonPath('data.medicaments.0.dosage', '500mg');
@@ -242,6 +265,7 @@ test('prescriptions store creates a prescription with valid request structure', 
         'user_id' => $user->id,
         'patient_id' => $patient->id,
         'room_id' => $room->id,
+        'specialty_id' => $specialty->id,
         'diagnostic' => 'Common cold',
     ]);
 });
@@ -249,11 +273,13 @@ test('prescriptions store creates a prescription with valid request structure', 
 test('prescriptions show requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->getJson("/api/prescriptions/{$prescription->id}");
@@ -265,11 +291,13 @@ test('prescriptions show returns 404 for prescription not owned by user', functi
     $user = User::factory()->create();
     $stranger = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($stranger, 'sanctum')
@@ -282,11 +310,13 @@ test('prescriptions show returns the requested prescription with full relations'
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $medicament = Medicament::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
     $prescription->medicaments()->attach($medicament->id, [
         'dosage' => '500mg',
@@ -308,6 +338,7 @@ test('prescriptions show returns the requested prescription with full relations'
                 'user_id',
                 'patient_id',
                 'room_id',
+                'specialty_id',
                 'temp',
                 'weight',
                 'height',
@@ -319,6 +350,7 @@ test('prescriptions show returns the requested prescription with full relations'
                 'diet',
                 'comments',
                 'room' => ['id', 'name', 'zip', 'address', 'phone'],
+                'specialty' => ['id', 'name', 'identification'],
                 'patient' => ['id', 'first_name', 'last_name', 'identification', 'email', 'phone', 'birth_date'],
                 'medicaments' => [
                     '*' => [
@@ -340,17 +372,21 @@ test('prescriptions show returns the requested prescription with full relations'
         ->assertJsonPath('data.id', $prescription->id)
         ->assertJsonPath('data.user_id', $user->id)
         ->assertJsonPath('data.patient.id', $patient->id)
+        ->assertJsonPath('data.specialty.id', $specialty->id)
         ->assertJsonPath('data.room.id', $room->id);
+
 });
 
 test('prescriptions update requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->putJson("/api/prescriptions/{$prescription->id}", [
@@ -365,10 +401,12 @@ test('prescriptions update rejects invalid request structure', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
@@ -384,16 +422,19 @@ test('prescriptions update only allows editing draft prescriptions', function ()
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.active')]);
 
     $response = $this->actingAs($user, 'sanctum')
         ->putJson("/api/prescriptions/{$prescription->id}", [
             'patient_id' => $patient->id,
             'room_id' => $room->id,
+            'specialty_id' => $specialty->id,
         ]);
 
     $response->assertNotFound();
@@ -403,16 +444,19 @@ test('prescriptions update modifies the prescription with valid request structur
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
         ->putJson("/api/prescriptions/{$prescription->id}", [
             'patient_id' => $patient->id,
             'room_id' => $room->id,
+            'specialty_id' => $specialty->id,
             'diagnostic' => 'Updated',
         ]);
 
@@ -429,11 +473,13 @@ test('prescriptions update modifies the prescription with valid request structur
 test('prescriptions destroy requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->deleteJson("/api/prescriptions/{$prescription->id}");
@@ -445,10 +491,12 @@ test('prescriptions destroy only allows removing draft prescriptions', function 
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
     $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.active')]);
 
     $response = $this->actingAs($user, 'sanctum')
@@ -460,11 +508,13 @@ test('prescriptions destroy only allows removing draft prescriptions', function 
 test('prescriptions destroy soft deletes a draft prescription', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
@@ -481,11 +531,13 @@ test('prescriptions destroy soft deletes a draft prescription', function () {
 test('prescriptions finish requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->postJson("/api/prescriptions/{$prescription->id}/finish");
@@ -497,11 +549,13 @@ test('prescriptions finish requires prescription owned by user', function () {
     $user = User::factory()->create();
     $stranger = User::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $patient = Patient::factory()->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($stranger, 'sanctum')
@@ -514,10 +568,12 @@ test('prescriptions finish transitions status from draft to active', function ()
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
         ->for($patient, 'patient')
         ->for($room, 'room')
+        ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')

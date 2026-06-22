@@ -56,26 +56,21 @@ export interface Specialty {
 export interface Medicament {
   id: number;
   active_ingredient: string;
+  concentration: string;
   type: string;
   group: string;
 }
 
-export interface PrescriptionMedicament {
-  id: number;
-  active_ingredient?: string;
-  type?: string;
-  group?: string;
+export interface PrescriptionMedicament extends Medicament {
   dosage: string;
   frequency: string;
   duration: string;
   medicament_quantity?: number;
-  medicament_quantity_letters?: string;
+  recommended_brand?: string;
 }
 
 export interface Prescription {
   id?: number;
-  patient_id?: number;
-  room_id?: number;
   temp: string | null;
   weight: string | null;
   height: string | null;
@@ -88,8 +83,12 @@ export interface Prescription {
   comments: string | null;
   status?: number;
   pretty_status?: string;
+  patient_id?: number;
+  specialty_id?: number;
+  room_id?: number;
   room?: Room;
   patient?: Patient;
+  specialty?: Specialty;
   medicaments?: PrescriptionMedicament[];
 }
 

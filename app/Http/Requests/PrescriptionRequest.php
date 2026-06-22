@@ -42,9 +42,11 @@ class PrescriptionRequest extends FormRequest
             'medicaments.*.frequency' => ['required_with:medicaments', 'string'],
             'medicaments.*.duration' => ['required_with:medicaments', 'string'],
             'medicaments.*.medicament_quantity' => ['required_with:medicaments', 'numeric', 'min:0'],
+            'medicaments.*.recommended_brand' => ['nullable', 'string'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
+            'specialty_id' => ['required', 'integer', Rule::exists('specialties', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
-            'status' => ['nullable', 'string'],
+            'status' => ['nullable', 'integer'],
         ];
     }
 
@@ -60,6 +62,7 @@ class PrescriptionRequest extends FormRequest
                 "medicament_data.{$id}.duration" => $medicament['duration'] ?? null,
                 "medicament_data.{$id}.medicament_quantity" => $medicament['medicament_quantity'] ?? null,
                 "medicament_data.{$id}.medicament_quantity_letters" => $formatter->format($medicament['medicament_quantity'] ?? ''),
+                "medicament_data.{$id}.recommended_brand" => $medicament['recommended_brand'] ?? null,
             ]);
         }
         $this->merge([

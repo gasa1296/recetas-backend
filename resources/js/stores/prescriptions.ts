@@ -37,17 +37,21 @@ export const usePrescriptionsStore = defineStore('prescriptions', () => {
   async function savePrescription(
     id: number | undefined,
     payload: Prescription,
-  ) {
+  ): Promise<Prescription> {
+    let item: any = {}
     loading.value = true
     try {
       if (id) {
-        await updatePrescription(id, payload)
+        const { data } = await updatePrescription(id, payload)
+        item = data.data
       } else {
-        await createPrescription(payload)
+        const { data } = await createPrescription(payload)
+        item = data.data
       }
     } finally {
       loading.value = false
     }
+    return item
   }
 
   async function removePrescription(id: number) {

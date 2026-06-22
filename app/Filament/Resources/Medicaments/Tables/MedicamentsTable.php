@@ -16,6 +16,8 @@ class MedicamentsTable
             ->columns([
                 TextColumn::make('active_ingredient')
                     ->searchable(),
+                TextColumn::make('concentration')
+                    ->searchable(),
                 TextColumn::make('type')
                     ->searchable(),
                 TextColumn::make('group')
