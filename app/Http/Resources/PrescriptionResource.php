@@ -30,6 +30,7 @@ class PrescriptionResource extends JsonResource
             'diagnostic' => $this->diagnostic,
             'diet' => $this->diet,
             'comments' => $this->comments,
+            'user' => $this->whenLoaded('user', new MedicResource($this->user)),
             'room' => $this->whenLoaded('room', new RoomResource($this->room)),
             'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
             'specialty' => $this->whenLoaded('specialty', new SpecialtyResource($this->specialty)),

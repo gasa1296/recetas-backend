@@ -64,10 +64,10 @@ export const usePrescriptionsStore = defineStore('prescriptions', () => {
     }
   }
 
-  async function activePrescription(id: number) {
+  async function activePrescription(id: number, signature?: string) {
     loading.value = true
     try {
-      await finishPrescription(id)
+      await finishPrescription(id, signature)
     } finally {
       loading.value = false
     }

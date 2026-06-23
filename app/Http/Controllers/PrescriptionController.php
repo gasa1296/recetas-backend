@@ -11,6 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Throwable;
 
 class PrescriptionController extends Controller
@@ -77,7 +79,7 @@ class PrescriptionController extends Controller
         return $this->success(
             __('messages.operation_success'),
             new PrescriptionResource(
-                $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
+                $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
             ),
         );
     }
@@ -155,6 +157,21 @@ class PrescriptionController extends Controller
                     ->where('status', config('custom.prescription.status_keys.draft'))
                     ->lockForUpdate()
                     ->findOrFail($prescription);
+
+                $signatureData = request('signature');
+                if ($signatureData) {
+                    $decoded = base64_decode($signatureData);
+                    $name = Str::uuid().'.png';
+                    $path = date('Y').'/'.date('m').'/'.$name;
+                    Storage::disk('local')->put($path, $decoded);
+                    $prescription->files()->create([
+                        'path' => $path,
+                        'type' => 'signed',
+                        'location' => 'local',
+                        'filename' => $name,
+                    ]);
+                }
+
                 if (! $this->generatePDF($prescription)) {
                     return $this->error(__('messages.operation_failed'));
                 }

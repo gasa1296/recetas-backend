@@ -20,20 +20,20 @@ class TestSeeder extends Seeder
             ->hasSpecialties(3)
             ->hasRooms(3)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => [
-                    'patient_id' => Patient::inRandomOrder()->first()->id,
-                    'room_id' => $user->rooms()->inRandomOrder()->first()->id,
-                    'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
-                ])->create([
+                'patient_id' => Patient::inRandomOrder()->first()->id,
+                'room_id' => $user->rooms()->inRandomOrder()->first()->id,
+                'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
+            ])->create([
                 'email' => 'example@example.com',
             ]);
         User::factory()
             ->hasSpecialties(3)
             ->hasRooms(3)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => [
-                    'patient_id' => Patient::inRandomOrder()->first()->id,
-                    'room_id' => $user->rooms()->inRandomOrder()->first()->id,
-                    'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
-                ])
+                'patient_id' => Patient::inRandomOrder()->first()->id,
+                'room_id' => $user->rooms()->inRandomOrder()->first()->id,
+                'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
+            ])
             ->count(10)->create();
     }
 }

@@ -39,6 +39,7 @@ export function deletePrescription(
 
 export function finishPrescription(
   id: number | string,
+  signature?: string,
 ): Promise<AxiosResponse<ApiResponse<Prescription>>> {
-  return api.post(`/prescriptions/${id}/finish`)
+  return api.post(`/prescriptions/${id}/finish`, { signature })
 }

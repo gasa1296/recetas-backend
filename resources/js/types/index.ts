@@ -69,6 +69,16 @@ export interface PrescriptionMedicament extends Medicament {
   recommended_brand?: string;
 }
 
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  name: string;
+  identification: string;
+  email: string;
+  phone: string[];
+}
+
 export interface Prescription {
   id?: number;
   temp: string | null;
@@ -89,6 +99,7 @@ export interface Prescription {
   room?: Room;
   patient?: Patient;
   specialty?: Specialty;
+  user?: User;
   medicaments?: PrescriptionMedicament[];
 }
 
