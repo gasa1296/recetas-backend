@@ -559,7 +559,9 @@ test('prescriptions finish requires prescription owned by user', function () {
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($stranger, 'sanctum')
-        ->postJson("/api/prescriptions/{$prescription->id}/finish");
+        ->postJson("/api/prescriptions/{$prescription->id}/finish", [
+            'signature' => base64_encode(hex2bin('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b4944415408d76360000000020001e22121d30000000049454e44ae426082')),
+        ]);
 
     $response->assertNotFound();
 });
@@ -577,7 +579,9 @@ test('prescriptions finish transitions status from draft to active', function ()
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->postJson("/api/prescriptions/{$prescription->id}/finish");
+        ->postJson("/api/prescriptions/{$prescription->id}/finish", [
+            'signature' => base64_encode(hex2bin('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b4944415408d76360000000020001e22121d30000000049454e44ae426082')),
+        ]);
 
     $response->assertSuccessful()
         ->assertJsonStructure([

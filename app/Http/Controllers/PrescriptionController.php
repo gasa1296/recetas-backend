@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FinishPrescriptionRequest;
 use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
-use App\Models\Prescription;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Throwable;
 
 class PrescriptionController extends Controller
@@ -147,10 +145,10 @@ class PrescriptionController extends Controller
         }
     }
 
-    public function finishPrescription(int $prescription): JsonResponse
+    public function finishPrescription(FinishPrescriptionRequest $request, int $prescription): JsonResponse
     {
         try {
-            return DB::transaction(function () use ($prescription) {
+            return DB::transaction(function () use ($request, $prescription) {
                 $prescription = auth()
                     ->user()
                     ->prescriptions()
@@ -158,23 +156,15 @@ class PrescriptionController extends Controller
                     ->lockForUpdate()
                     ->findOrFail($prescription);
 
-                $signatureData = request('signature');
-                if ($signatureData) {
-                    $decoded = base64_decode($signatureData);
-                    $name = Str::uuid().'.png';
-                    $path = date('Y').'/'.date('m').'/'.$name;
-                    Storage::disk('local')->put($path, $decoded);
-                    $prescription->files()->create([
-                        'path' => $path,
-                        'type' => 'signed',
-                        'location' => 'local',
-                        'filename' => $name,
-                    ]);
-                }
+                $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
 
-                if (! $this->generatePDF($prescription)) {
-                    return $this->error(__('messages.operation_failed'));
-                }
+                $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
+                    'prescription' => $prescription,
+                    'signature' => $request->input('signature'),
+                ])->output();
+
+                $prescription->handleUploadFile($pdfContent, 'signed');
+
                 $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
 
                 return $this->success(
@@ -186,15 +176,9 @@ class PrescriptionController extends Controller
                 throw $e;
             }
 
+            logger()->error('finishPrescription failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
             return $this->error(__('messages.operation_failed'));
         }
-    }
-
-    private function generatePDF(Prescription $prescription): bool
-    {
-        $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
-        $pdf = Pdf::loadView('pdf.prescription_model_1', ['prescription' => $prescription]);
-
-        return $prescription->handleUploadFile($pdf->output());
     }
 }
