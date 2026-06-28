@@ -18,7 +18,10 @@ RUN apk add --no-cache \
     zip \
     unzip \
     icu-dev \
-    linux-headers
+    linux-headers \
+    make \
+    ghostscript \
+    fontforge
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl
 

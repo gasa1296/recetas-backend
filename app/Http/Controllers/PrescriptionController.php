@@ -8,10 +8,12 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use Illuminate\Support\Facades\Storage;
+use setasign\Fpdi\TcpdfFpdi;
 
 class PrescriptionController extends Controller
 {
@@ -35,33 +37,25 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
-        try {
-            return DB::transaction(function () use ($request) {
-                $data = $request->validated();
-                $data['prescription_hash'] = hash('sha256', json_encode($data));
+        return DB::transaction(function () use ($request) {
+            $data = $request->validated();
+            $data['prescription_hash'] = hash('sha256', json_encode($data));
 
-                $prescription = auth()
-                    ->user()
-                    ->prescriptions()
-                    ->create($data);
-                $medicaments = $request->input('medicament_data', []);
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->create($data);
+            $medicaments = $request->input('medicament_data', []);
 
-                $prescription->medicaments()->sync($medicaments);
+            $prescription->medicaments()->sync($medicaments);
 
-                return $this->success(
-                    __('messages.operation_success'),
-                    new PrescriptionResource(
-                        $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
-                    ),
-                );
-            });
-        } catch (Throwable $e) {
-            if ($e instanceof ModelNotFoundException) {
-                throw $e;
-            }
-
-            return $this->error(__('messages.operation_failed'));
-        }
+            return $this->success(
+                __('messages.operation_success'),
+                new PrescriptionResource(
+                    $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
+                ),
+            );
+        });
     }
 
     /**
@@ -89,32 +83,24 @@ class PrescriptionController extends Controller
         PrescriptionRequest $request,
         int $prescription,
     ): JsonResponse {
-        try {
-            return DB::transaction(function () use ($request, $prescription) {
-                $prescription = auth()
-                    ->user()
-                    ->prescriptions()
-                    ->where('status', config('custom.prescription.status_keys.draft'))
-                    ->lockForUpdate()
-                    ->findOrFail($prescription);
-                $prescription->update($request->validated());
-                $medicaments = $request->input('medicament_data', []);
-                $prescription->medicaments()->sync($medicaments);
+        return DB::transaction(function () use ($request, $prescription) {
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->where('status', config('custom.prescription.status_keys.draft'))
+                ->lockForUpdate()
+                ->findOrFail($prescription);
+            $prescription->update($request->validated());
+            $medicaments = $request->input('medicament_data', []);
+            $prescription->medicaments()->sync($medicaments);
 
-                return $this->success(
-                    __('messages.operation_success'),
-                    new PrescriptionResource(
-                        $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
-                    ),
-                );
-            });
-        } catch (Throwable $e) {
-            if ($e instanceof ModelNotFoundException) {
-                throw $e;
-            }
-
-            return $this->error(__('messages.operation_failed'));
-        }
+            return $this->success(
+                __('messages.operation_success'),
+                new PrescriptionResource(
+                    $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
+                ),
+            );
+        });
     }
 
     /**
@@ -122,63 +108,111 @@ class PrescriptionController extends Controller
      */
     public function destroy(int $prescription): JsonResponse
     {
-        try {
-            return DB::transaction(function () use ($prescription) {
-                $prescription = auth()
-                    ->user()
-                    ->prescriptions()
-                    ->where('status', config('custom.prescription.status_keys.draft'))
-                    ->lockForUpdate()
-                    ->findOrFail($prescription);
-                $prescription->delete();
+        return DB::transaction(function () use ($prescription) {
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->where('status', config('custom.prescription.status_keys.draft'))
+                ->lockForUpdate()
+                ->findOrFail($prescription);
+            $prescription->delete();
 
-                return $this->success(
-                    __('messages.operation_success'),
-                );
-            });
-        } catch (Throwable $e) {
-            if ($e instanceof ModelNotFoundException) {
-                throw $e;
-            }
-
-            return $this->error(__('messages.operation_failed'));
-        }
+            return $this->success(
+                __('messages.operation_success'),
+            );
+        });
     }
 
     public function finishPrescription(FinishPrescriptionRequest $request, int $prescription): JsonResponse
     {
-        try {
-            return DB::transaction(function () use ($request, $prescription) {
-                $prescription = auth()
-                    ->user()
-                    ->prescriptions()
-                    ->where('status', config('custom.prescription.status_keys.draft'))
-                    ->lockForUpdate()
-                    ->findOrFail($prescription);
+        return DB::transaction(function () use ($request, $prescription) {
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->where('status', config('custom.prescription.status_keys.draft'))
+                ->lockForUpdate()
+                ->findOrFail($prescription);
 
-                $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
+            $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
+            $qrOptions = new QROptions;
+            $qrOptions->outputType = 'png';
+            $qrOptions->scale = 5;
+            $qrCode = (new QRCode($qrOptions))->render(route('public.prescription.show', $prescription->prescription_hash));
 
-                $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
-                    'prescription' => $prescription,
-                    'signature' => $request->input('signature'),
-                ])->output();
+            $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
+                'prescription' => $prescription,
+                'signature' => $request->input('signature'),
+                'qrCode' => $qrCode,
+            ])->output();
 
-                $prescription->handleUploadFile($pdfContent, 'signed');
+            // 2. Initialize FPDI with TCPDF engine
+            $pdf = new TcpdfFpdi;
 
-                $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
+            // 3. Configure the Digital Signature
+            // Path to your .crt or .pfx certificate converted to PEM format
+            $certificate = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.crt');
+            $privateKey = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.key');
 
-                return $this->success(
-                    __('messages.operation_success'),
-                );
-            });
-        } catch (Throwable $e) {
-            if ($e instanceof ModelNotFoundException) {
-                throw $e;
+            $info = [
+                'Name' => config('app.name'),
+                'Location' => $prescription->room->address,
+                'Reason' => $prescription->room->identification,
+            ];
+            $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
+
+            // 4. Import the Dompdf document pages
+            // Save temporary file because FPDI requires a filepath or a stream wrapper
+            $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
+            file_put_contents($tempFile, $pdfContent);
+
+            $pageCount = $pdf->setSourceFile($tempFile);
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $templateId = $pdf->importPage($pageNo);
+                $size = $pdf->getTemplateSize($templateId);
+
+                // Add a page matching the imported layout size/orientation
+                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $pdf->useTemplate($templateId);
             }
 
-            logger()->error('finishPrescription failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            $prescription->handleUploadFile($pdf->Output(), 'signed');
 
-            return $this->error(__('messages.operation_failed'));
+            // Clean up temporary file
+            unlink($tempFile);
+
+            $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
+
+            return $this->success(
+                __('messages.operation_success'),
+            );
+        });
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function getFile(string $prescription)
+    {
+        if (config('app.debug')) {
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->where('status', config('custom.prescription.status_keys.active'))
+                ->findOrFail($prescription);
+        } else {
+            $prescription = auth()
+                ->user()
+                ->prescriptions()
+                ->where('status', config('custom.prescription.status_keys.active'))
+                ->where('prescription_hash', $prescription)
+                ->firstOrFail();
+        }
+
+        if ($prescription->signed_file) {
+            $path = Storage::disk('local')->path($prescription->signed_file->path);
+
+            return response()->file($path);
         }
     }
 }

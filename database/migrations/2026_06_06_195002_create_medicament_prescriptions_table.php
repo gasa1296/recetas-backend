@@ -24,6 +24,9 @@ return new class extends Migration
             $table->foreignId('prescription_id')->constrained()->cascadeOnDelete();
 
             $table->softDeletes();
+            
+            // Add unique composite key
+            $table->unique(['medicament_id', 'prescription_id']);
         });
     }
 

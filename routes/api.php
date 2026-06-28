@@ -6,6 +6,7 @@ use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicPrescriptionController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
@@ -43,7 +44,13 @@ use Illuminate\Support\Facades\Route;
             });
     }
 
-    private function publicRoutes() {}
+    private function publicRoutes()
+    {
+        Route::controller(PublicPrescriptionController::class)->name('public.prescription.')
+            ->group(function () {
+                Route::get('/public/prescriptions/{prescription}', 'show')->name('show');
+            });
+    }
 
     private function medicRoutes()
     {
