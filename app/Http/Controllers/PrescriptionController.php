@@ -11,9 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use setasign\Fpdi\TcpdfFpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PrescriptionController extends Controller
 {
@@ -140,12 +139,12 @@ class PrescriptionController extends Controller
         ])->output();
 
         // 2. Initialize FPDI with TCPDF engine
-        $pdf = new TcpdfFpdi;
+        $pdf = new Fpdi;
 
         // 3. Configure the Digital Signature
         // Path to your .crt or .pfx certificate converted to PEM format
-        $certificate = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.crt');
-        $privateKey = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.key');
+        $certificate = 'file://'.base_path('docker-compose/nginx/certs/recetas.localhost.crt');
+        $privateKey = 'file://'.base_path('docker-compose/nginx/certs/recetas.localhost.key');
 
         $info = [
             'Name' => config('app.name'),
@@ -154,7 +153,6 @@ class PrescriptionController extends Controller
         ];
         $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
 
-        // 4. Import the Dompdf document pages
         // Save temporary file because FPDI requires a filepath or a stream wrapper
         $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
         file_put_contents($tempFile, $pdfContent);
@@ -170,9 +168,8 @@ class PrescriptionController extends Controller
             $pdf->useTemplate($templateId);
         }
 
-        $prescription->handleUploadFile($pdf->Output(), 'signed');
+        $prescription->handleUploadFile($pdf->Output('', 'S'), 'signed');
 
-        // Clean up temporary file
         unlink($tempFile);
 
         $prescription->update(['status' => config('custom.prescription.status_keys.active')]);

@@ -523,3 +523,82 @@ test('prescriptions destroy soft deletes a draft prescription', function () {
         'id' => $prescription->id,
     ]);
 });
+
+test('prescriptions finish requires authentication', function () {
+    $response = $this->postJson('/api/prescriptions/1/finish', [
+        'signature' => base64_encode('test'),
+    ]);
+
+    $response->assertStatus(401);
+});
+
+test('prescriptions finish rejects missing signature', function () {
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.draft')]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', []);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['signature']);
+});
+
+test('prescriptions finish only allows drafting prescriptions', function () {
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.active')]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', [
+            'signature' => base64_encode('test'),
+        ]);
+
+    $response->assertNotFound();
+});
+
+test('prescriptions finish generates signed pdf and activates prescription', function () {
+    $user = User::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.draft')]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', [
+            'signature' => base64_encode('test'),
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonStructure(['success', 'message']);
+
+    $this->assertDatabaseHas('prescriptions', [
+        'id' => $prescription->id,
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+
+    $this->assertDatabaseHas('files', [
+        'model_id' => $prescription->id,
+        'model_type' => Prescription::class,
+        'type' => 'signed',
+    ]);
+});

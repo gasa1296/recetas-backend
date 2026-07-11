@@ -7,33 +7,33 @@
         body { font-family: Arial, sans-serif; font-size: 10pt; color: #1e293b; padding: 24px; line-height: 1.5; }
         table { width: 100%; border-collapse: collapse; }
         td { vertical-align: top; padding: 0; }
-        .hdr { border-bottom: 2px solid #0f2b4a; padding-bottom: 8px; margin-bottom: 16px; }
+        .hdr { border-bottom: 2px solid #0f2b4a; padding-bottom: 4px; margin-bottom: 8px; }
         .hdr h1 { font-size: 16pt; color: #0f2b4a; margin: 0; }
         .hdr-sub { font-size: 9pt; color: #64748b; margin-top: 4px; }
-        .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 8px; }
+        .card { border-radius: 8px; padding: 16px; margin-bottom: 4px; }
         .card-title { font-size: 9pt; font-weight: 700; color: #0f2b4a; margin-bottom: 12px; }
         .lbl { font-size: 7pt; font-weight: 700; color: #0f2b4a; text-transform: uppercase; letter-spacing: 0.08em; display: block; }
         .val { font-size: 10pt; }
         .mono { font-family: 'Courier New', monospace; }
         .fw { font-weight: 700; }
-        .gi { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; text-align: center; }
+        .gi { background: #f8fafc; border-radius: 8px; padding: 3px 5px; text-align: center; }
         .gv { font-size: 9pt; font-weight: 700; color: #0f2b4a; }
         .gl { font-size: 7pt; color: #0f2b4a; text-transform: uppercase; display: block; margin-top: 2px; }
         .tbl-lbl { font-size: 7pt; font-weight: 700; color: #0f2b4a; text-transform: uppercase; display: block; }
         .tbl-val { font-size: 9pt; }
         th { font-size: 8pt; font-weight: 700; color: #0f2b4a; text-transform: uppercase; text-align: left; padding: 6px; border-bottom: 2px solid #0f2b4a; }
-        td.med { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; }
+        td.med { padding: 4px 3px; }
         .notes { white-space: pre-wrap; font-size: 9pt; color: #1e293b; }
-        .sig { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .sig { margin-top: 12px; padding-top: 8px; }
         .sig-line { width: 200px; border-top: 1px solid #1e293b; margin-bottom: 4px; }
         .sig-lbl { font-size: 9pt; color: #64748b; }
         .sig-img { max-width: 200px; max-height: 60px; margin-bottom: 4px; }
-        .meta { font-size: 8pt; color: #94a3b8; margin-top: 16px; }
+        .meta { font-size: 8pt; color: #94a3b8; margin-top: 8px; }
         .hash { font-family: 'Courier New', monospace; font-size: 7pt; color: #94a3b8; margin-top: 4px; }
         .danger { color: #dc2626; }
-        .mb-8 { margin-bottom: 8px; }
+        .mb-8 { margin-bottom: 4px; }
         .qr img { width: 80px; height: 80px; }
-        .p-8 { padding: 8px; }
+        .p-8 { padding: 2px; }
         .w-50 { width: 50%; }
         .vital-cell { width: 16.66%; padding: 4px; }
     </style>

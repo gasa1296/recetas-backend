@@ -13,7 +13,7 @@ class PublicPrescriptionController extends Controller
     public function show(string|int $prescription)
     {
         if (config('app.debug')) {
-            $prescription = Prescription::where('id', $prescription)->firstOrFail();
+            $prescription = Prescription::where('id', $prescription)->orWhere('prescription_hash', $prescription)->firstOrFail();
         } else {
             $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
         }

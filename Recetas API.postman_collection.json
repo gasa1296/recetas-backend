@@ -1159,44 +1159,8 @@
       ]
     },
     {
-      "name": "Specialties",
+      "name": "Specialty",
       "item": [
-        {
-          "name": "List Specialties",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AUTH_TOKEN}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/specialties",
-              "host": [
-                "{{API_URL}}"
-              ],
-              "path": [
-                "specialties"
-              ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "Show Specialty",
           "request": {
@@ -1222,19 +1186,9 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/specialties/:specialty_id",
+              "raw": "{{API_URL}}/specialty",
               "host": [
                 "{{API_URL}}"
-              ],
-              "path": [
-                "specialties",
-                ":specialty_id"
-              ],
-              "variable": [
-                {
-                  "key": "specialty_id",
-                  "value": "1"
-                }
               ]
             }
           },
@@ -1266,15 +1220,15 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Cardiología\",\n  \"identification\": \"CAR-001\",\n  \"university\": \"UNAM\"\n}"
+              "raw": "{\n  \"name\": \"Cardiología\",\n  \"identification\": \"CAR-001\"\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/specialties",
+              "raw": "{{API_URL}}/specialty",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
-                "specialties"
+                "specialty"
               ]
             }
           },
@@ -1309,60 +1263,17 @@
               "raw": "{\n  \"name\": \"Cardiología Intervencionista\",\n  \"identification\": \"CAR-002\",\n  \"university\": \"UNAM\"\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/specialties/:specialty_id",
+              "raw": "{{API_URL}}/specialty/:specialty_id",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
-                "specialties",
+                "specialty",
                 ":specialty_id"
               ],
               "variable": [
                 {
                   "key": "specialty_id",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Specialty",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AUTH_TOKEN}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{API_URL}}/specialties/::specialty_id",
-              "host": [
-                "{{API_URL}}"
-              ],
-              "path": [
-                "specialties",
-                "::specialty_id"
-              ],
-              "variable": [
-                {
-                  "key": ":specialty_id",
                   "value": "1"
                 }
               ]
