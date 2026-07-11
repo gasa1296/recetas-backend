@@ -71,7 +71,7 @@ test('medicaments index filters by active_ingredient when search is provided', f
 test('medicaments show requires authentication', function () {
     $medicament = Medicament::factory()->create();
 
-    $response = $this->getJson("/api/medicaments/{$medicament->id}");
+    $response = $this->getJson('/api/medicaments/'.$medicament->id);
 
     $response->assertStatus(401);
 });
@@ -84,7 +84,7 @@ test('medicaments show returns the requested medicament', function () {
     ]);
 
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson("/api/medicaments/{$medicament->id}");
+        ->getJson('/api/medicaments/'.$medicament->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure([

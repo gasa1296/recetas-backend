@@ -11,6 +11,10 @@ const form = ref<Profile>({
     identification: '',
     phone: [],
     email: '',
+    specialty: {
+        name: '',
+        identification: '',
+    },
 })
 const loading = ref(false)
 const success = ref('')
@@ -18,7 +22,10 @@ const error = ref('')
 
 onMounted(async () => {
     if (auth.user) {
-        form.value = { ...auth.user }
+        form.value = {
+            ...auth.user,
+            specialty: auth.user.specialty || { name: '', identification: '' },
+        }
     }
 })
 
@@ -87,6 +94,19 @@ async function handleUpdate() {
                             <button type="button" @click="removePhone(i)" class="px-2 text-red-500 hover:text-red-700">✕</button>
                         </div>
                         <button type="button" @click="addPhone" class="text-sm text-indigo-600 hover:underline">+ Add phone</button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="form.specialty" class="border-t border-slate-200 pt-4 mt-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Specialty</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Specialty Name</label>
+                        <input v-model="form.specialty.name" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Specialty Identification</label>
+                        <input v-model="form.specialty.identification" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
                     </div>
                 </div>
             </div>

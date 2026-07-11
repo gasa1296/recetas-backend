@@ -122,7 +122,7 @@ test('rooms show requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
 
-    $response = $this->getJson("/api/rooms/{$room->id}");
+    $response = $this->getJson('/api/rooms/'.$room->id);
 
     $response->assertStatus(401);
 });
@@ -133,7 +133,7 @@ test('rooms show returns 404 for room not owned by user', function () {
     $room = Room::factory()->for($owner)->create();
 
     $response = $this->actingAs($stranger, 'sanctum')
-        ->getJson("/api/rooms/{$room->id}");
+        ->getJson('/api/rooms/'.$room->id);
 
     $response->assertNotFound();
 });
@@ -147,7 +147,7 @@ test('rooms show returns the requested room', function () {
     ]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->getJson("/api/rooms/{$room->id}");
+        ->getJson('/api/rooms/'.$room->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure([
@@ -165,7 +165,7 @@ test('rooms update requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create(['name' => 'Old']);
 
-    $response = $this->putJson("/api/rooms/{$room->id}", [
+    $response = $this->putJson('/api/rooms/'.$room->id, [
         'name' => 'X',
         'identification' => 'ID-001',
         'zip' => '0',
@@ -181,7 +181,7 @@ test('rooms update rejects invalid request structure', function () {
     $room = Room::factory()->for($user)->create();
 
     $response = $this->actingAs($user, 'sanctum')
-        ->putJson("/api/rooms/{$room->id}", [
+        ->putJson('/api/rooms/'.$room->id, [
             'name' => null,
         ]);
 
@@ -194,7 +194,7 @@ test('rooms update modifies the room with valid request structure', function () 
     $room = Room::factory()->for($user)->create(['name' => 'Old']);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->putJson("/api/rooms/{$room->id}", [
+        ->putJson('/api/rooms/'.$room->id, [
             'name' => 'New',
             'identification' => 'ID-001',
             'zip' => '99999',
@@ -218,7 +218,7 @@ test('rooms destroy requires authentication', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
 
-    $response = $this->deleteJson("/api/rooms/{$room->id}");
+    $response = $this->deleteJson('/api/rooms/'.$room->id);
 
     $response->assertStatus(401);
 });
@@ -228,7 +228,7 @@ test('rooms destroy soft deletes the room', function () {
     $room = Room::factory()->for($user)->create();
 
     $response = $this->actingAs($user, 'sanctum')
-        ->deleteJson("/api/rooms/{$room->id}");
+        ->deleteJson('/api/rooms/'.$room->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure(['success', 'message', 'data']);

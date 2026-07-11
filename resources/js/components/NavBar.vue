@@ -12,7 +12,6 @@ const navigation = [
     { name: 'Dashboard', href: '/', icon: '📊' },
     { name: 'Profile', href: '/profile', icon: '👤' },
     { name: 'Rooms', href: '/rooms', icon: '🏥' },
-    { name: 'Specialties', href: '/specialties', icon: '🔬' },
     { name: 'Prescriptions', href: '/prescriptions', icon: '📋' },
 ]
 

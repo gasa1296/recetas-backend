@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -60,7 +61,7 @@ test('profile index returns the authenticated user profile', function () {
                 'phone',
                 'email',
                 'rooms',
-                'specialties',
+                'specialty',
             ],
         ])
         ->assertJsonPath('data.first_name', 'John')
@@ -107,7 +108,7 @@ test('profile update modifies the user with valid request structure', function (
                 'phone',
                 'email',
                 'rooms',
-                'specialties',
+                'specialty',
             ],
         ])
         ->assertJsonPath('data.first_name', 'New')
@@ -157,7 +158,7 @@ test('profile destroy soft deletes the authenticated user', function () {
                 'phone',
                 'email',
                 'rooms',
-                'specialties',
+                'specialty',
             ],
         ]);
 
@@ -165,3 +166,98 @@ test('profile destroy soft deletes the authenticated user', function () {
         'id' => $user->id,
     ]);
 });
+
+test('profile update creates specialty when provided', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'specialty' => [
+                'name' => 'Cardiology',
+                'identification' => 'CARD-001',
+            ],
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.specialty.name', 'Cardiology')
+        ->assertJsonPath('data.specialty.identification', 'CARD-001');
+
+    $this->assertDatabaseHas('specialties', [
+        'user_id' => $user->id,
+        'name' => 'Cardiology',
+        'identification' => 'CARD-001',
+    ]);
+});
+
+test('profile update updates existing specialty', function () {
+    $user = User::factory()->create();
+    $specialty = Specialty::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'specialty' => [
+                'name' => 'Updated Specialty',
+                'identification' => 'UPD-001',
+            ],
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.specialty.name', 'Updated Specialty')
+        ->assertJsonPath('data.specialty.identification', 'UPD-001');
+
+    $this->assertDatabaseHas('specialties', [
+        'id' => $specialty->id,
+        'name' => 'Updated Specialty',
+        'identification' => 'UPD-001',
+    ]);
+});
+
+test('profile update without specialty does not affect existing specialty', function () {
+    $user = User::factory()->create();
+    Specialty::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Original',
+    ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', [
+            'first_name' => 'Updated',
+            'last_name' => $user->last_name,
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.specialty.name', 'Original');
+});
+
+dataset('invalid_specialty_payloads', [
+    'specialty name missing' => [
+        [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'specialty' => ['identification' => 'CARD-001'],
+        ],
+        ['specialty.name'],
+    ],
+    'specialty identification missing' => [
+        [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'specialty' => ['name' => 'Cardiology'],
+        ],
+        ['specialty.identification'],
+    ],
+]);
+
+test('profile update rejects invalid specialty payload', function (array $payload, array $errors) {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', $payload);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors($errors);
+})->with('invalid_specialty_payloads');

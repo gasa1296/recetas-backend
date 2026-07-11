@@ -9,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicPrescriptionController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
-use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -105,16 +104,6 @@ use Illuminate\Support\Facades\Route;
                     Route::post('/rooms', 'store')->name('store');
                     Route::put('/rooms/{room}', 'update')->name('update');
                     Route::delete('/rooms/{room}', 'destroy')->name('destroy');
-                });
-
-            Route::controller(SpecialtyController::class)
-                ->name('specialties.')
-                ->group(function () {
-                    Route::get('/specialties', 'index')->name('index');
-                    Route::get('/specialties/{specialty}', 'show')->name('show');
-                    Route::post('/specialties', 'store')->name('store');
-                    Route::put('/specialties/{specialty}', 'update')->name('update');
-                    Route::delete('/specialties/{specialty}', 'destroy')->name('destroy');
                 });
         });
     }

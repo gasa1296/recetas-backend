@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -55,9 +56,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Room::class);
     }
 
-    public function specialties(): HasMany
+    public function specialty(): HasOne
     {
-        return $this->hasMany(Specialty::class);
+        return $this->hasOne(Specialty::class);
     }
 
     public function patients(): HasMany

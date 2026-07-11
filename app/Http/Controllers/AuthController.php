@@ -21,7 +21,7 @@ class AuthController extends Controller
             );
         }
         $user = auth()->user();
-        $user->load(['rooms', 'specialties']);
+        $user->load(['rooms', 'specialty']);
 
         return $this->success(
             __('messages.auth.client_login_success'),

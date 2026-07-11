@@ -117,7 +117,7 @@ test('login succeeds with valid credentials and returns token plus profile', fun
                     'phone',
                     'email',
                     'rooms',
-                    'specialties',
+                    'specialty',
                 ],
             ],
         ])
@@ -136,7 +136,7 @@ test('logout succeeds for authenticated user and deletes current token', functio
     $user = User::factory()->create();
     $token = $user->createToken('login');
 
-    $response = $this->withHeader('Authorization', "Bearer {$token->plainTextToken}")
+    $response = $this->withHeader('Authorization', 'Bearer '.$token->plainTextToken)
         ->postJson('/api/auth/logout');
 
     $response->assertSuccessful()

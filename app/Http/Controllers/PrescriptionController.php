@@ -37,25 +37,23 @@ class PrescriptionController extends Controller
      */
     public function store(PrescriptionRequest $request): JsonResponse
     {
-        return DB::transaction(function () use ($request) {
-            $data = $request->validated();
-            $data['prescription_hash'] = hash('sha256', json_encode($data));
+        $data = $request->validated();
+        $data['prescription_hash'] = hash('sha256', json_encode($data));
 
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->create($data);
-            $medicaments = $request->input('medicament_data', []);
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->create($data);
+        if (! empty($data['medicaments'])) {
+            $prescription->medicaments()->sync($data['medicaments']);
+        }
 
-            $prescription->medicaments()->sync($medicaments);
-
-            return $this->success(
-                __('messages.operation_success'),
-                new PrescriptionResource(
-                    $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
-                ),
-            );
-        });
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
+            ),
+        );
     }
 
     /**
@@ -83,24 +81,24 @@ class PrescriptionController extends Controller
         PrescriptionRequest $request,
         int $prescription,
     ): JsonResponse {
-        return DB::transaction(function () use ($request, $prescription) {
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->where('status', config('custom.prescription.status_keys.draft'))
-                ->lockForUpdate()
-                ->findOrFail($prescription);
-            $prescription->update($request->validated());
-            $medicaments = $request->input('medicament_data', []);
-            $prescription->medicaments()->sync($medicaments);
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', config('custom.prescription.status_keys.draft'))
+            ->findOrFail($prescription);
+        $data = $request->validated();
+        $prescription->update($data);
 
-            return $this->success(
-                __('messages.operation_success'),
-                new PrescriptionResource(
-                    $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
-                ),
-            );
-        });
+        if (! empty($data['medicaments'])) {
+            $prescription->medicaments()->sync($data['medicaments']);
+        }
+
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room', 'specialty']),
+            ),
+        );
     }
 
     /**
@@ -108,85 +106,80 @@ class PrescriptionController extends Controller
      */
     public function destroy(int $prescription): JsonResponse
     {
-        return DB::transaction(function () use ($prescription) {
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->where('status', config('custom.prescription.status_keys.draft'))
-                ->lockForUpdate()
-                ->findOrFail($prescription);
-            $prescription->delete();
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', config('custom.prescription.status_keys.draft'))
+            ->lockForUpdate()
+            ->findOrFail($prescription);
+        $prescription->delete();
 
-            return $this->success(
-                __('messages.operation_success'),
-            );
-        });
+        return $this->success(
+            __('messages.operation_success'),
+        );
     }
 
     public function finishPrescription(FinishPrescriptionRequest $request, int $prescription): JsonResponse
     {
-        return DB::transaction(function () use ($request, $prescription) {
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->where('status', config('custom.prescription.status_keys.draft'))
-                ->lockForUpdate()
-                ->findOrFail($prescription);
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', config('custom.prescription.status_keys.draft'))
+            ->findOrFail($prescription);
 
-            $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
-            $qrOptions = new QROptions;
-            $qrOptions->outputType = 'png';
-            $qrOptions->scale = 5;
-            $qrCode = (new QRCode($qrOptions))->render(route('public.prescription.show', $prescription->prescription_hash));
+        $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
+        $qrOptions = new QROptions;
+        $qrOptions->outputType = 'png';
+        $qrOptions->scale = 5;
+        $qrCode = (new QRCode($qrOptions))->render(route('public.prescription.show', $prescription->prescription_hash));
 
-            $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
-                'prescription' => $prescription,
-                'signature' => $request->input('signature'),
-                'qrCode' => $qrCode,
-            ])->output();
+        $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
+            'prescription' => $prescription,
+            'signature' => $request->input('signature'),
+            'qrCode' => $qrCode,
+        ])->output();
 
-            // 2. Initialize FPDI with TCPDF engine
-            $pdf = new TcpdfFpdi;
+        // 2. Initialize FPDI with TCPDF engine
+        $pdf = new TcpdfFpdi;
 
-            // 3. Configure the Digital Signature
-            // Path to your .crt or .pfx certificate converted to PEM format
-            $certificate = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.crt');
-            $privateKey = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.key');
+        // 3. Configure the Digital Signature
+        // Path to your .crt or .pfx certificate converted to PEM format
+        $certificate = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.crt');
+        $privateKey = 'file://'.app_path('docker-compose/nginx/certs/recetas.localhost.key');
 
-            $info = [
-                'Name' => config('app.name'),
-                'Location' => $prescription->room->address,
-                'Reason' => $prescription->room->identification,
-            ];
-            $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
+        $info = [
+            'Name' => config('app.name'),
+            'Location' => $prescription->room->address,
+            'Reason' => $prescription->room->identification,
+        ];
+        $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
 
-            // 4. Import the Dompdf document pages
-            // Save temporary file because FPDI requires a filepath or a stream wrapper
-            $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
-            file_put_contents($tempFile, $pdfContent);
+        // 4. Import the Dompdf document pages
+        // Save temporary file because FPDI requires a filepath or a stream wrapper
+        $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
+        file_put_contents($tempFile, $pdfContent);
 
-            $pageCount = $pdf->setSourceFile($tempFile);
+        $pageCount = $pdf->setSourceFile($tempFile);
 
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $templateId = $pdf->importPage($pageNo);
-                $size = $pdf->getTemplateSize($templateId);
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $templateId = $pdf->importPage($pageNo);
+            $size = $pdf->getTemplateSize($templateId);
 
-                // Add a page matching the imported layout size/orientation
-                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-                $pdf->useTemplate($templateId);
-            }
+            // Add a page matching the imported layout size/orientation
+            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+            $pdf->useTemplate($templateId);
+        }
 
-            $prescription->handleUploadFile($pdf->Output(), 'signed');
+        $prescription->handleUploadFile($pdf->Output(), 'signed');
 
-            // Clean up temporary file
-            unlink($tempFile);
+        // Clean up temporary file
+        unlink($tempFile);
 
-            $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
+        $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
 
-            return $this->success(
-                __('messages.operation_success'),
-            );
-        });
+        return $this->success(
+            __('messages.operation_success'),
+        );
     }
 
     /**

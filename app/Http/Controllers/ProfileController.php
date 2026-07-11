@@ -11,7 +11,7 @@ class ProfileController extends Controller
     public function index(): JsonResponse
     {
         $user = auth()->user();
-        $user->load(['rooms', 'specialties']);
+        $user->load(['rooms', 'specialty']);
 
         return $this->success(
             __('messages.operation_success'),
@@ -24,9 +24,20 @@ class ProfileController extends Controller
         $inputs = $request->validated();
         $user = auth()->user();
 
+        $specialtyData = $inputs['specialty'] ?? null;
+        unset($inputs['specialty']);
+
         $user->update($inputs);
 
-        $user->load(['rooms', 'specialties']);
+        if ($specialtyData) {
+            if ($user->specialty) {
+                $user->specialty->update($specialtyData);
+            } else {
+                $user->specialty()->create($specialtyData);
+            }
+        }
+
+        $user->load(['rooms', 'specialty']);
 
         return $this->success(
             __('messages.operation_success'),

@@ -17,22 +17,22 @@ class TestSeeder extends Seeder
             ->count(10)
             ->create();
         User::factory()
-            ->hasSpecialties(3)
+            ->hasSpecialty()
             ->hasRooms(3)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => [
                 'patient_id' => Patient::inRandomOrder()->first()->id,
                 'room_id' => $user->rooms()->inRandomOrder()->first()->id,
-                'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
+                'specialty_id' => $user->specialty->id,
             ])->create([
                 'email' => 'example@example.com',
             ]);
         User::factory()
-            ->hasSpecialties(3)
+            ->hasSpecialty()
             ->hasRooms(3)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => [
                 'patient_id' => Patient::inRandomOrder()->first()->id,
                 'room_id' => $user->rooms()->inRandomOrder()->first()->id,
-                'specialty_id' => $user->specialties()->inRandomOrder()->first()->id,
+                'specialty_id' => $user->specialty->id,
             ])
             ->count(10)->create();
     }

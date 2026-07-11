@@ -35,7 +35,7 @@ export interface Profile {
   email: string;
   phone: string[];
   rooms?: Room[];
-  specialties?: Specialty[];
+  specialty?: Specialty | null;
 }
 
 export interface Room {

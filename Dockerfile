@@ -5,11 +5,8 @@ WORKDIR /var/www
 ARG user
 ARG uid
 
-RUN apk add --no-cache \
-    git \
+RUN apk add \
     curl \
-    nodejs \
-    npm \
     openssl \
     libpng-dev \
     oniguruma-dev \
@@ -20,6 +17,8 @@ RUN apk add --no-cache \
     icu-dev \
     linux-headers \
     make \
+    bash \
+    git \
     ghostscript \
     fontforge
 

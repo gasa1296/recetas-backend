@@ -18,6 +18,32 @@ class PrescriptionRequest extends FormRequest
         return auth()->check();
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'specialty_id' => auth()->user()->specialty?->id,
+            'status' => config('custom.prescription.status_keys.draft'),
+        ]);
+        $formatter = new \NumberFormatter(app()->getLocale(), \NumberFormatter::SPELLOUT);
+        $medicaments = $this->input('medicaments', []);
+        $this->offsetUnset('medicaments');
+
+        foreach ($medicaments as $medicament) {
+            if (empty($medicament['id'])) {
+                continue;
+            }
+            $id = $medicament['id'];
+            $this->merge([
+                "medicaments." . $id . ".dosage" => $medicament['dosage'] ?? null,
+                "medicaments." . $id . ".frequency" => $medicament['frequency'] ?? null,
+                "medicaments." . $id . ".duration" => $medicament['duration'] ?? null,
+                "medicaments." . $id . ".medicament_quantity" => $medicament['medicament_quantity'] ?? null,
+                "medicaments." . $id . ".medicament_quantity_letters" => $formatter->format($medicament['medicament_quantity'] ?? ''),
+                "medicaments." . $id . ".recommended_brand" => $medicament['recommended_brand'] ?? null,
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,36 +63,16 @@ class PrescriptionRequest extends FormRequest
             'diet' => ['nullable', 'string'],
             'comments' => ['nullable', 'string'],
             'medicaments' => ['nullable', 'array'],
-            'medicaments.*.id' => ['required_with:medicaments', 'exists:medicaments,id'],
             'medicaments.*.dosage' => ['required_with:medicaments', 'string'],
             'medicaments.*.frequency' => ['required_with:medicaments', 'string'],
             'medicaments.*.duration' => ['required_with:medicaments', 'string'],
             'medicaments.*.medicament_quantity' => ['required_with:medicaments', 'numeric', 'min:0'],
+            'medicaments.*.medicament_quantity_letters' => ['required_with:medicaments', 'string'],
             'medicaments.*.recommended_brand' => ['nullable', 'string'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'specialty_id' => ['required', 'integer', Rule::exists('specialties', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'status' => ['nullable', 'integer'],
         ];
-    }
-
-    protected function passedValidation()
-    {
-        $formatter = new \NumberFormatter(app()->getLocale(), \NumberFormatter::SPELLOUT);
-        $medicaments = $this->input('medicaments', []);
-        foreach ($medicaments as $medicament) {
-            $id = $medicament['id'];
-            $this->merge([
-                "medicament_data.{$id}.dosage" => $medicament['dosage'] ?? null,
-                "medicament_data.{$id}.frequency" => $medicament['frequency'] ?? null,
-                "medicament_data.{$id}.duration" => $medicament['duration'] ?? null,
-                "medicament_data.{$id}.medicament_quantity" => $medicament['medicament_quantity'] ?? null,
-                "medicament_data.{$id}.medicament_quantity_letters" => $formatter->format($medicament['medicament_quantity'] ?? ''),
-                "medicament_data.{$id}.recommended_brand" => $medicament['recommended_brand'] ?? null,
-            ]);
-        }
-        $this->merge([
-            'status' => config('custom.prescription.status_keys.draft'),
-        ]);
     }
 }

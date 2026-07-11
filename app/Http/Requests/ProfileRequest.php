@@ -31,6 +31,9 @@ class ProfileRequest extends FormRequest
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
             'password' => ['nullable', 'string', 'confirmed'],
+            'specialty' => ['nullable', 'array'],
+            'specialty.name' => ['required_with:specialty', 'string', 'max:255'],
+            'specialty.identification' => ['required_with:specialty', 'string', 'max:255'],
         ];
     }
 }

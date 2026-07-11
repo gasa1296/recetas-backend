@@ -164,7 +164,7 @@ test('patients store creates a patient with valid request structure', function (
 test('patients show requires authentication', function () {
     $patient = Patient::factory()->create();
 
-    $response = $this->getJson("/api/patients/{$patient->id}");
+    $response = $this->getJson('/api/patients/'.$patient->id);
 
     $response->assertStatus(401);
 });
@@ -177,7 +177,7 @@ test('patients show returns the requested patient', function () {
     ]);
 
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->getJson("/api/patients/{$patient->id}");
+        ->getJson('/api/patients/'.$patient->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure([
@@ -208,7 +208,7 @@ test('patients show returns 404 for missing patient', function () {
 test('patients update requires authentication', function () {
     $patient = Patient::factory()->create();
 
-    $response = $this->putJson("/api/patients/{$patient->id}", [
+    $response = $this->putJson('/api/patients/'.$patient->id, [
         'first_name' => 'X',
         'last_name' => 'Y',
         'identification' => '1',
@@ -222,7 +222,7 @@ test('patients update rejects invalid request structure', function () {
     $patient = Patient::factory()->create();
 
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->putJson("/api/patients/{$patient->id}", [
+        ->putJson('/api/patients/'.$patient->id, [
             'first_name' => null,
         ]);
 
@@ -236,7 +236,7 @@ test('patients update modifies the patient with valid request structure', functi
     ]);
 
     $response = $this->actingAs(User::factory()->create(), 'sanctum')
-        ->putJson("/api/patients/{$patient->id}", [
+        ->putJson('/api/patients/'.$patient->id, [
             'first_name' => 'New',
             'last_name' => 'Doe',
             'identification' => $patient->identification,

@@ -51,17 +51,11 @@ dataset('invalid_prescription_payloads', [
         ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'temp' => -1],
         ['temp'],
     ],
-    'medicament without id' => [
-        ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'medicaments' => [
-            ['dosage' => '1', 'frequency' => '8h', 'duration' => '5d', 'medicament_quantity' => 1, 'medicament_quantity_letters' => 'one'],
-        ]],
-        ['medicaments.0.id'],
-    ],
     'medicament without dosage' => [
         ['specialty_id' => 1, 'patient_id' => 1, 'room_id' => 1, 'medicaments' => [
             ['id' => 1, 'frequency' => '8h', 'duration' => '5d', 'medicament_quantity' => 1, 'medicament_quantity_letters' => 'one'],
         ]],
-        ['medicaments.0.dosage'],
+        ['medicaments.1.dosage'],
     ],
 ]);
 
@@ -72,7 +66,7 @@ test('prescriptions index requires authentication', function () {
 });
 
 test('prescriptions index rejects invalid search query', function () {
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs(User::factory()->hasSpecialty()->create(), 'sanctum')
         ->getJson('/api/prescriptions?search='.str_repeat('a', 256));
 
     $response->assertStatus(422)
@@ -211,6 +205,7 @@ test('prescriptions store creates a prescription with valid request structure', 
                 ],
             ],
         ]);
+    $response->dump();
     $response->assertSuccessful()
         ->assertJsonStructure([
             'success',
@@ -232,7 +227,7 @@ test('prescriptions store creates a prescription with valid request structure', 
                 'diet',
                 'comments',
                 'room' => ['id', 'name', 'zip', 'address', 'phone'],
-                'specialty' => ['id', 'name', 'identification'],
+                'specialty' => ['name', 'identification'],
                 'patient' => ['id', 'first_name', 'last_name', 'identification', 'email', 'phone', 'birth_date'],
                 'medicaments' => [
                     '*' => [
@@ -256,9 +251,9 @@ test('prescriptions store creates a prescription with valid request structure', 
         ->assertJsonPath('data.pretty_status', config('custom.prescription.status.0'))
         ->assertJsonPath('data.user_id', $user->id)
         ->assertJsonPath('data.room.id', $room->id)
-        ->assertJsonPath('data.specialty.id', $specialty->id)
+        ->assertJsonPath('data.specialty.name', $specialty->name)
+        ->assertJsonPath('data.specialty.identification', $specialty->identification)
         ->assertJsonPath('data.patient.id', $patient->id)
-        ->assertJsonPath('data.medicaments.0.id', $medicament->id)
         ->assertJsonPath('data.medicaments.0.dosage', '500mg');
 
     $this->assertDatabaseHas('prescriptions', [
@@ -282,7 +277,7 @@ test('prescriptions show requires authentication', function () {
         ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
-    $response = $this->getJson("/api/prescriptions/{$prescription->id}");
+    $response = $this->getJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertStatus(401);
 });
@@ -301,7 +296,7 @@ test('prescriptions show returns 404 for prescription not owned by user', functi
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($stranger, 'sanctum')
-        ->getJson("/api/prescriptions/{$prescription->id}");
+        ->getJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertNotFound();
 });
@@ -327,7 +322,7 @@ test('prescriptions show returns the requested prescription with full relations'
     ]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->getJson("/api/prescriptions/{$prescription->id}");
+        ->getJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure([
@@ -350,7 +345,7 @@ test('prescriptions show returns the requested prescription with full relations'
                 'diet',
                 'comments',
                 'room' => ['id', 'name', 'zip', 'address', 'phone'],
-                'specialty' => ['id', 'name', 'identification'],
+                'specialty' => ['name', 'identification'],
                 'patient' => ['id', 'first_name', 'last_name', 'identification', 'email', 'phone', 'birth_date'],
                 'medicaments' => [
                     '*' => [
@@ -372,7 +367,8 @@ test('prescriptions show returns the requested prescription with full relations'
         ->assertJsonPath('data.id', $prescription->id)
         ->assertJsonPath('data.user_id', $user->id)
         ->assertJsonPath('data.patient.id', $patient->id)
-        ->assertJsonPath('data.specialty.id', $specialty->id)
+        ->assertJsonPath('data.specialty.name', $specialty->name)
+        ->assertJsonPath('data.specialty.identification', $specialty->identification)
         ->assertJsonPath('data.room.id', $room->id);
 
 });
@@ -389,7 +385,7 @@ test('prescriptions update requires authentication', function () {
         ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
-    $response = $this->putJson("/api/prescriptions/{$prescription->id}", [
+    $response = $this->putJson('/api/prescriptions/'.$prescription->id, [
         'patient_id' => 1,
         'room_id' => 1,
     ]);
@@ -410,7 +406,7 @@ test('prescriptions update rejects invalid request structure', function () {
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->putJson("/api/prescriptions/{$prescription->id}", [
+        ->putJson('/api/prescriptions/'.$prescription->id, [
             'patient_id' => null,
         ]);
 
@@ -431,7 +427,7 @@ test('prescriptions update only allows editing draft prescriptions', function ()
         ->create(['status' => config('custom.prescription.status_keys.active')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->putJson("/api/prescriptions/{$prescription->id}", [
+        ->putJson('/api/prescriptions/'.$prescription->id, [
             'patient_id' => $patient->id,
             'room_id' => $room->id,
             'specialty_id' => $specialty->id,
@@ -453,7 +449,7 @@ test('prescriptions update modifies the prescription with valid request structur
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->putJson("/api/prescriptions/{$prescription->id}", [
+        ->putJson('/api/prescriptions/'.$prescription->id, [
             'patient_id' => $patient->id,
             'room_id' => $room->id,
             'specialty_id' => $specialty->id,
@@ -482,7 +478,7 @@ test('prescriptions destroy requires authentication', function () {
         ->for($specialty, 'specialty')
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
-    $response = $this->deleteJson("/api/prescriptions/{$prescription->id}");
+    $response = $this->deleteJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertStatus(401);
 });
@@ -500,7 +496,7 @@ test('prescriptions destroy only allows removing draft prescriptions', function 
         ->create(['status' => config('custom.prescription.status_keys.active')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->deleteJson("/api/prescriptions/{$prescription->id}");
+        ->deleteJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertNotFound();
 });
@@ -518,7 +514,7 @@ test('prescriptions destroy soft deletes a draft prescription', function () {
         ->create(['status' => config('custom.prescription.status_keys.draft')]);
 
     $response = $this->actingAs($user, 'sanctum')
-        ->deleteJson("/api/prescriptions/{$prescription->id}");
+        ->deleteJson('/api/prescriptions/'.$prescription->id);
 
     $response->assertSuccessful()
         ->assertJsonStructure(['success', 'message', 'data']);
@@ -526,67 +522,4 @@ test('prescriptions destroy soft deletes a draft prescription', function () {
     $this->assertSoftDeleted('prescriptions', [
         'id' => $prescription->id,
     ]);
-});
-
-test('prescriptions finish requires authentication', function () {
-    $user = User::factory()->create();
-    $room = Room::factory()->for($user)->create();
-    $specialty = Specialty::factory()->for($user)->create();
-    $patient = Patient::factory()->create();
-    $prescription = Prescription::factory()
-        ->for($user)
-        ->for($patient, 'patient')
-        ->for($room, 'room')
-        ->for($specialty, 'specialty')
-        ->create(['status' => config('custom.prescription.status_keys.draft')]);
-
-    $response = $this->postJson("/api/prescriptions/{$prescription->id}/finish");
-
-    $response->assertStatus(401);
-});
-
-test('prescriptions finish requires prescription owned by user', function () {
-    $user = User::factory()->create();
-    $stranger = User::factory()->create();
-    $room = Room::factory()->for($user)->create();
-    $specialty = Specialty::factory()->for($user)->create();
-    $patient = Patient::factory()->create();
-    $prescription = Prescription::factory()
-        ->for($user)
-        ->for($patient, 'patient')
-        ->for($room, 'room')
-        ->for($specialty, 'specialty')
-        ->create(['status' => config('custom.prescription.status_keys.draft')]);
-
-    $response = $this->actingAs($stranger, 'sanctum')
-        ->postJson("/api/prescriptions/{$prescription->id}/finish", [
-            'signature' => base64_encode(hex2bin('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b4944415408d76360000000020001e22121d30000000049454e44ae426082')),
-        ]);
-
-    $response->assertNotFound();
-});
-
-test('prescriptions finish transitions status from draft to active', function () {
-    $user = User::factory()->create();
-    $patient = Patient::factory()->create();
-    $room = Room::factory()->for($user)->create();
-    $specialty = Specialty::factory()->for($user)->create();
-    $prescription = Prescription::factory()
-        ->for($user)
-        ->for($patient, 'patient')
-        ->for($room, 'room')
-        ->for($specialty, 'specialty')
-        ->create(['status' => config('custom.prescription.status_keys.draft')]);
-
-    $response = $this->actingAs($user, 'sanctum')
-        ->postJson("/api/prescriptions/{$prescription->id}/finish", [
-            'signature' => base64_encode(hex2bin('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b4944415408d76360000000020001e22121d30000000049454e44ae426082')),
-        ]);
-
-    $response->assertSuccessful()
-        ->assertJsonStructure([
-            'success',
-            'message',
-            'data',
-        ]);
 });

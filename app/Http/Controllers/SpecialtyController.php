@@ -13,11 +13,11 @@ class SpecialtyController extends Controller
      */
     public function index(): JsonResponse
     {
-        $specialties = auth()->user()->specialties()->paginate(10);
+        $specialty = auth()->user()->specialty;
 
         return $this->success(
             __('messages.operation_success'),
-            SpecialtyResource::collection($specialties),
+            new SpecialtyResource($specialty),
         );
     }
 
@@ -28,21 +28,8 @@ class SpecialtyController extends Controller
     {
         $specialty = auth()
             ->user()
-            ->specialties()
+            ->specialty()
             ->create($request->validated());
-
-        return $this->success(
-            __('messages.operation_success'),
-            new SpecialtyResource($specialty),
-        );
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $specialty): JsonResponse
-    {
-        $specialty = auth()->user()->specialties()->findOrFail($specialty);
 
         return $this->success(
             __('messages.operation_success'),
@@ -53,29 +40,14 @@ class SpecialtyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(
-        SpecialtyRequest $request,
-        int $specialty,
-    ): JsonResponse {
-        $specialty = auth()->user()->specialties()->findOrFail($specialty);
+    public function update(SpecialtyRequest $request): JsonResponse
+    {
+        $specialty = auth()->user()->specialty;
         $specialty->update($request->validated());
 
         return $this->success(
             __('messages.operation_success'),
             new SpecialtyResource($specialty),
-        );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(int $specialty): JsonResponse
-    {
-        $specialty = auth()->user()->specialties()->findOrFail($specialty);
-        $specialty->delete();
-
-        return $this->success(
-            __('messages.operation_success'),
         );
     }
 }
