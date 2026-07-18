@@ -94,6 +94,7 @@ use Illuminate\Support\Facades\Route;
                     Route::put('/prescriptions/{prescription}', 'update')->name('update');
                     Route::delete('/prescriptions/{prescription}', 'destroy')->name('destroy');
                     Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
+                    Route::post('/prescriptions/{prescription}/file', 'getFile')->name('file');
                 });
 
             Route::controller(RoomController::class)

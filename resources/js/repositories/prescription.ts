@@ -43,3 +43,9 @@ export function finishPrescription(
 ): Promise<AxiosResponse<ApiResponse<Prescription>>> {
   return api.post(`/prescriptions/${id}/finish`, { signature })
 }
+
+export function getFilePrescription(
+  id: number | string,
+): Promise<AxiosResponse<Blob>> {
+  return api.get(`/prescriptions/${id}/file`, { responseType: 'blob' })
+}

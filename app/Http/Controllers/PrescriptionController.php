@@ -184,25 +184,21 @@ class PrescriptionController extends Controller
      */
     public function getFile(string $prescription)
     {
-        if (config('app.debug')) {
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->where('status', config('custom.prescription.status_keys.active'))
-                ->findOrFail($prescription);
-        } else {
-            $prescription = auth()
-                ->user()
-                ->prescriptions()
-                ->where('status', config('custom.prescription.status_keys.active'))
-                ->where('prescription_hash', $prescription)
-                ->firstOrFail();
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', config('custom.prescription.status_keys.active'))
+            ->with('signed_file')
+            ->findOrFail($prescription);
+
+        if (empty($prescription->signed_file)) {
+            return $this->error(
+                __('messages.not_found'),
+            );
         }
 
-        if ($prescription->signed_file) {
-            $path = Storage::disk('local')->path($prescription->signed_file->path);
+        $path = Storage::disk('local')->path($prescription->signed_file->path);
 
-            return response()->file($path);
-        }
+        return response()->file($path);
     }
 }

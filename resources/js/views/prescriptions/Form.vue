@@ -84,8 +84,8 @@ async function onMedicamentInput() {
 
 function selectPatient(patient: Patient) {
     patientForm.value = {
+        ...patient,
         phone: patient.phone ? [...patient.phone] : [],
-        ...patient
     }
     form.value.patient_id = patient.id
     showPatientDropdown.value = false
@@ -109,26 +109,21 @@ function removePatientPhone(index: number) {
 }
 
 onMounted(async () => {
-    const [roomsRes, genderRes, specialtiesRes] = await Promise.all([
+    const [roomsRes, genderRes] = await Promise.all([
         listRooms(),
         listGenders(),
-        listSpecialties(),
     ])
     rooms.value = roomsRes.data.data
     genders.value = genderRes.data.data
-    specialties.value = specialtiesRes.data.data
 
-    if (specialties.value.length === 1 && !form.value.specialty_id) {
-        form.value.specialty_id = specialties.value[0].id
-    }
     if (route.params.id) {
         isEdit.value = true
         const data = await loadPrescription(Number(route.params.id))
         form.value = { ...data }
         if (data.patient) {
             patientForm.value = {
+                ...data.patient,
                 phone: data.patient.phone ? [...data.patient.phone] : [],
-                ...data.patient
             }
         }
     }
@@ -256,18 +251,6 @@ async function handleSubmit() {
                             <option value="">Select room</option>
                             <option v-for="r in rooms" :key="r.id" :value="r.id" :selected="r.id === form.room_id">{{ r.name }}</option>
                         </select>
-                    </div>
-                    <div v-if="specialties.length > 1" >
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
-                        <select v-model="form.specialty_id" name="specialty_id"
-                            class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 ">
-                            <option value="">Select specialty</option>
-                            <option v-for="s in specialties" :key="s.id" :value="s.id" :selected="s.id === form.specialty_id">{{ s.name }}</option>
-                        </select>
-                    </div>
-                    <div v-else>
-                        <p>{{ form.specialty?.name }}</p>
-                        <input type="hidden" step="0.1" name="specialty_id" :value="form.specialty_id" />
                     </div>
                 </div>
             </section>
