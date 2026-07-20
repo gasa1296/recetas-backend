@@ -7,6 +7,7 @@ use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
+use App\Notifications\PrescriptionReadyNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
@@ -174,6 +175,9 @@ class PrescriptionController extends Controller
 
         $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
 
+        $prescription->loadMissing('patient');
+        $prescription->patient->notify(new PrescriptionReadyNotification($prescription));
+
         return $this->success(
             __('messages.operation_success'),
         );
@@ -199,6 +203,14 @@ class PrescriptionController extends Controller
 
         $path = Storage::disk('local')->path($prescription->signed_file->path);
 
-        return response()->file($path);
+        if (! file_exists($path)) {
+            return $this->error(
+                __('messages.not_found'),
+            );
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }
