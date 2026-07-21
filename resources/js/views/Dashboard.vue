@@ -6,9 +6,9 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const cards = [
-    { name: 'Profile', description: 'Manage your profile information', href: '/profile', icon: '👤', color: 'bg-blue-500' },
-    { name: 'Rooms', description: 'Manage consultation rooms', href: '/rooms', icon: '🏥', color: 'bg-green-500' },
-    { name: 'Prescriptions', description: 'Create and manage prescriptions', href: '/prescriptions', icon: '📋', color: 'bg-rose-500' },
+    { name: 'Perfil', description: 'Administra tu información de perfil', href: '/profile', icon: '👤', color: 'bg-blue-500' },
+    { name: 'Consultorios', description: 'Administra los consultorios', href: '/rooms', icon: '🏥', color: 'bg-green-500' },
+    { name: 'Recetas', description: 'Crea y administra recetas médicas', href: '/prescriptions', icon: '📋', color: 'bg-rose-500' },
 ]
 </script>
 
@@ -17,7 +17,7 @@ const cards = [
         <h1 class="text-2xl font-bold text-brand-primary mb-2">
             Welcome, {{ auth.user?.first_name }} {{ auth.user?.last_name }}
         </h1>
-        <p class="text-slate-600 mb-8">Select a module to get started</p>
+        <p class="text-slate-600 mb-8">Selecciona un módulo para comenzar</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
                 v-for="card in cards"

@@ -10,9 +10,9 @@ const mobileMenuOpen = ref(false)
 
 const navigation = [
     { name: 'Dashboard', href: '/', icon: '📊' },
-    { name: 'Profile', href: '/profile', icon: '👤' },
-    { name: 'Rooms', href: '/rooms', icon: '🏥' },
-    { name: 'Prescriptions', href: '/prescriptions', icon: '📋' },
+    { name: 'Perfil', href: '/profile', icon: '👤' },
+    { name: 'Consultorios', href: '/rooms', icon: '🏥' },
+    { name: 'Recetas', href: '/prescriptions', icon: '📋' },
 ]
 
 function isActive(href: string) {
@@ -57,7 +57,7 @@ async function handleLogout() {
                         @click="handleLogout"
                         class="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-brand-primary hover:bg-slate-100 transition-colors"
                     >
-                        Logout
+                        Cerrar sesión
                     </button>
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"

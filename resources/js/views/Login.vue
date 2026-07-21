@@ -17,7 +17,7 @@ async function handleLogin() {
         await auth.login(form.value)
         router.push({ name: 'dashboard' })
     } catch (err) {
-        const message = (err as any).response?.data?.message || 'Login failed';
+        const message = (err as any).response?.data?.message || 'Error al iniciar sesión';
         error.value = message;
     } finally {
         loading.value = false
@@ -30,14 +30,14 @@ async function handleLogin() {
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-brand-primary">Recetas</h1>
-                <p class="mt-2 text-slate-600">Sign in to your account</p>
+                <p class="mt-2 text-slate-600">Inicia sesión en tu cuenta</p>
             </div>
             <form @submit.prevent="handleLogin" class="bg-white shadow-sm rounded-2xl px-8 py-8 border border-slate-200">
                 <div v-if="error" class="mb-4 p-3 rounded-md bg-red-50  text-red-700  text-sm">
                     {{ error }}
                 </div>
                 <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Correo electrónico</label>
                     <input
                         id="email"
                         v-model="form.email"
@@ -48,7 +48,7 @@ async function handleLogin() {
                     />
                 </div>
                 <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
                     <input
                         id="password"
                         v-model="form.password"
@@ -62,7 +62,7 @@ async function handleLogin() {
                     :disabled="loading"
                     class="w-full py-2 px-4 bg-brand-primary hover:bg-slate-800 text-white font-medium rounded-md shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {{ loading ? 'Signing in...' : 'Sign in' }}
+                    {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
                 </button>
             </form>
         </div>

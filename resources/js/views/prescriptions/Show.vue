@@ -78,14 +78,14 @@ function clearSignature() {
 
 async function handleActivePrescription() {
   if (!prescription.value?.id) return
-  if (!confirm('Are you sure?')) return
+  if (!confirm('¿Estás seguro?')) return
   error.value = ''
   try {
     saveSignature()
     await activePrescription(prescription.value?.id, signature.value ?? undefined)
     router.push({ name: 'prescriptions.show', params: { id: prescription.value?.id } })
   } catch (err) {
-    error.value = (err as any).response?.data?.message || 'Failed to activate prescription'
+    error.value = (err as any).response?.data?.message || 'Error al activar la receta'
   }
 }
 
@@ -93,7 +93,7 @@ onMounted(async () => {
   try {
     prescription.value = await loadPrescription(Number(route.params.id))
   } catch (err) {
-    error.value = (err as any).response?.data?.message || 'Failed to load prescription details'
+    error.value = (err as any).response?.data?.message || 'Error al cargar los detalles de la receta'
   }
 })
 </script>
@@ -103,24 +103,24 @@ onMounted(async () => {
     <header class="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <p class="text-xs uppercase tracking-[0.24em] text-brand-secondary">Prescription Information</p>
-          <h1 class="mt-2 text-3xl font-semibold text-brand-primary">Prescription Details</h1>
+          <p class="text-xs uppercase tracking-[0.24em] text-brand-secondary">Información de la receta</p>
+          <h1 class="mt-2 text-3xl font-semibold text-brand-primary">Detalles de la receta</h1>
         </div>
         <div class="flex items-center gap-3">
           <span v-if="prescription"
             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
             :class="prescription.status === 1 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
-            {{ prescription.pretty_status || 'Draft' }}
+            {{ prescription.pretty_status || 'Borrador' }}
           </span>
           <router-link :to="{ name: 'prescriptions.index' }"
             class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition">
-            Back to List
+            Volver a la lista
           </router-link>
         </div>
       </div>
     </header>
 
-    <div v-if="loading" class="text-center py-12">Loading...</div>
+    <div v-if="loading" class="text-center py-12">Cargando...</div>
     <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{{ error }}</div>
     <div v-else-if="prescription" class="space-y-2">
       <!-- Patient & Clinical Context -->
@@ -129,31 +129,31 @@ onMounted(async () => {
         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
             <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-            Patient Info
+            Información del paciente
           </h2>
           <div class="space-y-3">
             <div>
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Full Name</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Nombre completo</span>
               <span class="text-base text-brand-primary-hover font-medium">{{ prescription.patient?.first_name }} {{ prescription.patient?.last_name }}</span>
             </div>
             <div>
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Identification</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Identificación</span>
               <span class="text-base text-slate-950 font-mono">{{ prescription.patient?.identification }}</span>
             </div>
             <div v-if="prescription.patient?.email">
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Email</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Correo electrónico</span>
               <span class="text-base text-brand-primary-hover">{{ prescription.patient?.email }}</span>
             </div>
             <div v-if="prescription.patient?.gender">
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Gender</span>
-              <span class="text-base text-brand-primary-hover">{{ prescription.patient?.gender === 'M' ? 'Male' : prescription.patient?.gender === 'F' ? 'Female' : 'Other' }}</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Género</span>
+              <span class="text-base text-brand-primary-hover">              {{ prescription.patient?.gender === 'M' ? 'Masculino' : prescription.patient?.gender === 'F' ? 'Femenino' : 'Otro' }}</span>
             </div>
             <div v-if="prescription.patient?.birth_date">
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Birth Date</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Fecha de nacimiento</span>
               <span class="text-base text-brand-primary-hover">{{ prescription.patient?.birth_date }}</span>
             </div>
             <div v-if="prescription.patient?.phone && prescription.patient.phone.length > 0">
-              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Phone Numbers</span>
+              <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Teléfonos</span>
               <div class="space-y-1">
                 <span v-for="(phone, index) in prescription.patient.phone" :key="index" class="block text-base text-brand-primary-hover">{{ phone }}</span>
               </div>
@@ -166,7 +166,7 @@ onMounted(async () => {
           <div>
             <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
               <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-              Prescriber Info
+              Información del prescriptor
             </h2>
             <div class="space-y-3">
               <div>
@@ -174,11 +174,11 @@ onMounted(async () => {
                 <span class="text-base text-brand-primary-hover font-medium">{{ prescription.user?.name || (prescription.user?.first_name + ' ' + prescription.user?.last_name) }}</span>
               </div>
               <div v-if="prescription.room">
-                <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Room</span>
+                <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Consultorio</span>
                 <span class="text-base text-brand-primary-hover">{{ prescription.room.name }}</span>
               </div>
               <div v-if="prescription.specialty">
-                <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Specialization</span>
+                <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Especialidad</span>
                 <span class="text-base text-brand-primary-hover">{{ prescription.specialty.name }}</span>
               </div>
             </div>
@@ -190,7 +190,7 @@ onMounted(async () => {
       <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
           <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-          Vital Signs
+          Signos vitales
         </h2>
         <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
@@ -198,23 +198,23 @@ onMounted(async () => {
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.temp ? prescription.temp + ' °C' : '-' }}</span>
           </div>
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-xs font-semibold text-brand-primary block">Weight</span>
+            <span class="text-xs font-semibold text-brand-primary block">Peso</span>
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.weight ? prescription.weight + ' kg' : '-' }}</span>
           </div>
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-xs font-semibold text-brand-primary block">Height</span>
+            <span class="text-xs font-semibold text-brand-primary block">Altura</span>
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.height ? prescription.height + ' cm' : '-' }}</span>
           </div>
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-xs font-semibold text-brand-primary block">Blood Pressure</span>
+            <span class="text-xs font-semibold text-brand-primary block">Presión arterial</span>
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.pressure ? prescription.pressure : '-' }}</span>
           </div>
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-xs font-semibold text-brand-primary block">Oxygen Sat.</span>
+            <span class="text-xs font-semibold text-brand-primary block">Saturación de oxígeno</span>
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.saturation ? prescription.saturation + ' %' : '-' }}</span>
           </div>
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-xs font-semibold text-brand-primary block">Pulse (PPM)</span>
+            <span class="text-xs font-semibold text-brand-primary block">Pulso (PPM)</span>
             <span class="text-lg font-semibold text-brand-primary-hover">{{ prescription.ppm ? prescription.ppm : '-' }}</span>
           </div>
         </div>
@@ -224,19 +224,19 @@ onMounted(async () => {
       <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
         <h2 class="flex items-center gap-3 text-lg font-semibold text-brand-primary">
           <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-          Diagnosis & Treatment
+          Diagnóstico y tratamiento
         </h2>
         <div class="space-y-3">
           <div v-if="prescription.allergy">
-            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Allergies</span>
+            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Alergias</span>
             <p class="text-base text-red-600 font-medium">{{ prescription.allergy }}</p>
           </div>
           <div>
-            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Diagnostic</span>
+            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Diagnóstico</span>
             <p class="text-base text-brand-primary-hover whitespace-pre-wrap">{{ prescription.diagnostic || '-' }}</p>
           </div>
           <div v-if="prescription.diet">
-            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Diet</span>
+            <span class="text-xs font-semibold text-brand-primary uppercase tracking-wider block">Dieta</span>
             <p class="text-base text-brand-primary-hover whitespace-pre-wrap">{{ prescription.diet }}</p>
           </div>
         </div>
@@ -246,7 +246,7 @@ onMounted(async () => {
       <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
           <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-          Medication Orders
+          Órdenes de medicamentos
         </h2>
         <div v-if="prescription.medicaments && prescription.medicaments.length > 0" class="divide-y divide-slate-100">
           <div v-for="med in prescription.medicaments" :key="med.id" class="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row justify-between gap-4">
@@ -256,32 +256,32 @@ onMounted(async () => {
             </div>
             <div class="flex flex-wrap gap-4 text-sm">
               <div class="min-w-25">
-                <span class="text-xs font-semibold text-brand-primary block uppercase">Dosage</span>
+                <span class="text-xs font-semibold text-brand-primary block uppercase">Dosificación</span>
                 <span class="text-slate-800 font-medium">{{ med.dosage }}</span>
               </div>
               <div class="min-w-25">
-                <span class="text-xs font-semibold text-brand-primary block uppercase">Frequency</span>
+                <span class="text-xs font-semibold text-brand-primary block uppercase">Frecuencia</span>
                 <span class="text-slate-800 font-medium">{{ med.frequency }}</span>
               </div>
               <div class="min-w-25">
-                <span class="text-xs font-semibold text-brand-primary block uppercase">Duration</span>
+                <span class="text-xs font-semibold text-brand-primary block uppercase">Duración</span>
                 <span class="text-slate-800 font-medium">{{ med.duration }}</span>
               </div>
               <div class="min-w-25" v-if="med.medicament_quantity">
-                <span class="text-xs font-semibold text-brand-primary block uppercase">Quantity</span>
+                <span class="text-xs font-semibold text-brand-primary block uppercase">Cantidad</span>
                 <span class="text-slate-800 font-medium">{{ med.medicament_quantity }}</span>
               </div>
             </div>
           </div>
         </div>
-        <div v-else class="text-brand-primary">No medications ordered.</div>
+        <div v-else class="text-brand-primary">No hay medicamentos prescritos.</div>
       </section>
 
       <!-- Additional Notes -->
       <section v-if="prescription.comments" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
           <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-          Additional Notes
+          Notas adicionales
         </h2>
         <p class="text-base text-brand-primary-hover whitespace-pre-wrap">{{ prescription.comments }}</p>
       </section>
@@ -290,9 +290,9 @@ onMounted(async () => {
       <section v-if="isDraft" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="mb-4 flex items-center gap-3 text-lg font-semibold text-brand-primary">
           <span class="h-6 w-1 rounded-full bg-brand-primary"></span>
-          Digital Signature
+          Firma digital
         </h2>
-        <p class="text-sm text-brand-primary mb-4">Sign below to activate the prescription.</p>
+        <p class="text-sm text-brand-primary mb-4">Firma a continuación para activar la receta.</p>
         <div class="flex flex-col items-start gap-4">
           <canvas
             ref="canvasRef"
@@ -311,12 +311,12 @@ onMounted(async () => {
             <button
               @click="clearSignature"
               class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 font-semibold hover:bg-slate-100 transition text-sm">
-              Clear
+              Limpiar
             </button>
             <button
               @click="handleActivePrescription"
               class="px-5 py-2 rounded-xl bg-brand-primary text-white font-semibold hover:brightness-110 transition text-sm">
-              Activate Prescription
+              Activar receta
             </button>
           </div>
         </div>
