@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Patient;
 use App\Models\User;
+use App\Models\Country;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
