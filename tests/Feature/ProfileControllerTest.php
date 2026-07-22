@@ -216,6 +216,26 @@ test('profile update updates existing specialty', function () {
     ]);
 });
 
+test('profile update allows keeping the same specialty identification', function () {
+    $user = User::factory()->create(['country_code' => 'VE']);
+    $specialty = Specialty::factory()->create([
+        'user_id' => $user->id,
+        'identification' => 'CARD-001',
+    ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'specialty' => [
+                'name' => 'Cardiology',
+                'identification' => 'CARD-001',
+            ],
+        ]);
+
+    $response->assertSuccessful();
+});
+
 test('profile update without specialty does not affect existing specialty', function () {
     $user = User::factory()->create();
     Specialty::factory()->create([

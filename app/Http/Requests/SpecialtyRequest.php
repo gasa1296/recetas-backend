@@ -25,9 +25,15 @@ class SpecialtyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = auth()->user();
+        $conf = config('custom.professional_identification.' . $user->country_code, []);
+        $specialtyIdRules = [];
+        foreach ($conf as $key => $value) {
+            $specialtyIdRules['specialty.identification.' . $key] = $value['rules'] ?? [];
+        }
         return [
             'name' => ['required', 'string', 'max:255'],
             'identification' => ['required', 'string', 'max:255'],
-        ];
+        ] + $specialtyIdRules;
     }
 }
