@@ -34,12 +34,12 @@ class PrescriptionRequest extends FormRequest
             }
             $id = $medicament['id'];
             $this->merge([
-                "medicaments." . $id . ".dosage" => $medicament['dosage'] ?? null,
-                "medicaments." . $id . ".frequency" => $medicament['frequency'] ?? null,
-                "medicaments." . $id . ".duration" => $medicament['duration'] ?? null,
-                "medicaments." . $id . ".medicament_quantity" => $medicament['medicament_quantity'] ?? null,
-                "medicaments." . $id . ".medicament_quantity_letters" => $formatter->format($medicament['medicament_quantity'] ?? ''),
-                "medicaments." . $id . ".recommended_brand" => $medicament['recommended_brand'] ?? null,
+                'medicaments.'.$id.'.dosage' => $medicament['dosage'] ?? null,
+                'medicaments.'.$id.'.frequency' => $medicament['frequency'] ?? null,
+                'medicaments.'.$id.'.duration' => $medicament['duration'] ?? null,
+                'medicaments.'.$id.'.medicament_quantity' => $medicament['medicament_quantity'] ?? null,
+                'medicaments.'.$id.'.medicament_quantity_letters' => $formatter->format($medicament['medicament_quantity'] ?? ''),
+                'medicaments.'.$id.'.recommended_brand' => $medicament['recommended_brand'] ?? null,
             ]);
         }
     }

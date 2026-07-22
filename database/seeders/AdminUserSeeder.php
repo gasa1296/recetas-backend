@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Country;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,7 +25,7 @@ class AdminUserSeeder extends Seeder
             'email_verified_at' => now(),
             'is_admin' => true,
             'signature_hash' => hash('sha256', Str::random(32)),
-            'country_id' => Country::where('code', 've')->first()->id, // Assuming 've' is the code for Venezuela
+            'country_code' => Country::where('iso2', 'VE')->first()->iso2, // Assuming 'VE' is the code for Venezuela
         ]);
     }
 }

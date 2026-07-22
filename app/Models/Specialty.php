@@ -29,6 +29,7 @@ class Specialty extends Model
     {
         return [
             'phone' => 'array',
+            'identification' => 'json',
         ];
     }
 

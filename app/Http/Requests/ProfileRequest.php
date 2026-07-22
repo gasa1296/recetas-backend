@@ -25,15 +25,22 @@ class ProfileRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = auth()->user();
+        $conf = config('custom.professional_identification.' . $user->country_code, []);
+        $specialtyIdRules = [];
+        foreach ($conf as $key => $value) {
+            $specialtyIdRules['specialty.identification.' . $key] = $value['rules'] ?? [];
+        }
         return [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
             'password' => ['nullable', 'string', 'confirmed'],
+            'country_id' => ['required', 'exists:countries,id'],
             'specialty' => ['nullable', 'array'],
             'specialty.name' => ['required_with:specialty', 'string', 'max:255'],
             'specialty.identification' => ['required_with:specialty', 'string', 'max:255'],
-        ];
+        ] + $specialtyIdRules;
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicPrescriptionController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,7 +97,7 @@ use Illuminate\Support\Facades\Route;
                     Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
                     Route::post('/prescriptions/{prescription}/file', 'getFile')->name('file');
                 });
-
+            Route::get('specialty/identification-config', [SpecialtyController::class, 'getSpecialtyIdentificationConfig'])->name('specialty.identification-config');
             Route::controller(RoomController::class)
                 ->name('rooms.')
                 ->group(function () {
