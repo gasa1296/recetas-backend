@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $seeders = [
-            AdminUserSeeder::class,
             MedicamentSeeder::class,
+            AdminUserSeeder::class,
         ];
         if (config('app.env') === 'local') {
             $seeders[] = TestSeeder::class;

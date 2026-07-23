@@ -31,8 +31,8 @@ class SpecialtyRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'identification' => ['required', 'array'],
-            'identification.medic_society' => ['required_with:identification', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
-            'identification.medic_registration' => ['required_with:identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
+            'identification.medic_society' => ['required', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
+            'identification.medic_registration' => ['required', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
         ];
     }
 }
