@@ -47,10 +47,15 @@ export interface Room {
   phone: string[];
 }
 
+export interface SpecialtyIdentification {
+  medic_society: string;
+  medic_registration: string;
+}
+
 export interface Specialty {
   id?: number;
   name: string;
-  identification: string;
+  identification: SpecialtyIdentification;
 }
 
 export interface Medicament {

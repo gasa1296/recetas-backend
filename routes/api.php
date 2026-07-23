@@ -97,7 +97,13 @@ use Illuminate\Support\Facades\Route;
                     Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
                     Route::post('/prescriptions/{prescription}/file', 'getFile')->name('file');
                 });
-            Route::get('specialty/identification-config', [SpecialtyController::class, 'getSpecialtyIdentificationConfig'])->name('specialty.identification-config');
+            Route::controller(SpecialtyController::class)
+                ->name('specialty.')
+                ->group(function () {
+                    Route::get('/specialty', 'index')->name('index');
+                    Route::post('/specialty', 'store')->name('store');
+                    Route::put('/specialty', 'update')->name('update');
+                });
             Route::controller(RoomController::class)
                 ->name('rooms.')
                 ->group(function () {

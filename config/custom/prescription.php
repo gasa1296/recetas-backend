@@ -17,4 +17,10 @@ return [
         'expired' => '4',
         'nulled' => '5',
     ],
+    // colocar dias en orden descendente, para que el primer match sea el que se tome
+    'expiration_days' => [
+        'default' => 30,
+        'Antibiotico' => 7,
+        'Ansiolitico' => 0,
+    ],
 ];

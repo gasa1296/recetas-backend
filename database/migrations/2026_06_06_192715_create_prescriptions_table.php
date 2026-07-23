@@ -33,7 +33,7 @@ return new class extends Migration
 
             $table->integer('status')->default(0);
             $table->timestamps();
-            $table->timestamp('expires_at')->nullable();
+            $table->date('expires_at')->nullable();
             $table->softDeletes();
         });
     }

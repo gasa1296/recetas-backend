@@ -9,6 +9,7 @@ use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
 use App\Notifications\PrescriptionReadyNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use Illuminate\Http\JsonResponse;
@@ -121,11 +122,25 @@ class PrescriptionController extends Controller
 
     public function finishPrescription(FinishPrescriptionRequest $request, int $prescription): JsonResponse
     {
-        $prescription = auth()
-            ->user()
+        $user = auth()->user();
+        $prescription = $user
             ->prescriptions()
             ->where('status', config('custom.prescription.status_keys.draft'))
             ->findOrFail($prescription);
+
+        $expirationDaysConf = config('custom.prescription.expiration_days', []);
+        $expirationDays = $expirationDaysConf['default'] ?? 30;
+        $expiresAt = now()->addDays($expirationDays);
+
+        foreach ($expirationDaysConf as $type => $days) {
+            if ($type === 'default') {
+                continue;
+            }
+            if ($prescription->medicaments->contains('type', $type)) {
+                $expirationDays = $days;
+            }
+        }
+        $expiresAt = now()->addDays($expirationDays);
 
         $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
         $qrOptions = new QROptions;
@@ -135,9 +150,18 @@ class PrescriptionController extends Controller
 
         $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
             'prescription' => $prescription,
-            'signature' => $request->input('signature'),
+            'signature' => $expirationDays != 0 ? $request->input('signature') : null,
             'qrCode' => $qrCode,
         ])->output();
+
+        if ($expirationDays == 0) {
+            $prescription->handleUploadFile($pdfContent);
+            $prescription->update(['status' => config('custom.prescription.status_keys.active'), 'expires_at' => $expiresAt]);
+
+            return $this->success(
+                __('messages.operation_success'),
+            );
+        }
 
         // 2. Initialize FPDI with TCPDF engine
         $pdf = new Fpdi;
@@ -173,7 +197,7 @@ class PrescriptionController extends Controller
 
         unlink($tempFile);
 
-        $prescription->update(['status' => config('custom.prescription.status_keys.active')]);
+        $prescription->update(['status' => config('custom.prescription.status_keys.active'), 'expires_at' => $expiresAt]);
 
         $prescription->loadMissing('patient');
         $prescription->patient->notify(new PrescriptionReadyNotification($prescription));
@@ -192,16 +216,20 @@ class PrescriptionController extends Controller
             ->user()
             ->prescriptions()
             ->where('status', config('custom.prescription.status_keys.active'))
-            ->with('signed_file')
+            ->whereNotNull('expires_at')
+            ->with(['signed_file', 'unsigned_file'])
             ->findOrFail($prescription);
 
-        if (empty($prescription->signed_file)) {
-            return $this->error(
-                __('messages.not_found'),
-            );
+        // If expires_at date equals updated_at date, prefer unsigned file path
+        $useUnsigned = false;
+        $expiresDate = Carbon::parse($prescription->expires_at)->toDateString();
+        $updatedDate = Carbon::parse($prescription->updated_at)->toDateString();
+        if ($expiresDate === $updatedDate) {
+            $useUnsigned = true;
         }
+        $file = $useUnsigned ? $prescription->unsigned_file : $prescription->signed_file;
 
-        $path = Storage::disk('local')->path($prescription->signed_file->path);
+        $path = Storage::disk('local')->path($file->path);
 
         if (! file_exists($path)) {
             return $this->error(

@@ -50,15 +50,4 @@ class SpecialtyController extends Controller
             new SpecialtyResource($specialty),
         );
     }
-
-    public function getSpecialtyIdentificationConfig(): JsonResponse
-    {
-        $user = auth()->user();
-        $conf = config('custom.professional_identification.' . $user->country_code, []);
-
-        return $this->success(
-            __('messages.operation_success'),
-            $conf,
-        );
-    }
 }

@@ -26,14 +26,13 @@ class SpecialtyRequest extends FormRequest
     public function rules(): array
     {
         $user = auth()->user();
-        $conf = config('custom.professional_identification.' . $user->country_code, []);
-        $specialtyIdRules = [];
-        foreach ($conf as $key => $value) {
-            $specialtyIdRules['specialty.identification.' . $key] = $value['rules'] ?? [];
-        }
+        $specialtyId = $user->specialty?->id;
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'identification' => ['required', 'string', 'max:255'],
-        ] + $specialtyIdRules;
+            'identification' => ['required', 'array'],
+            'identification.medic_society' => ['required_with:identification', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
+            'identification.medic_registration' => ['required_with:identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
+        ];
     }
 }

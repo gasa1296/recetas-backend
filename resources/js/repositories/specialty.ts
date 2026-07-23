@@ -2,33 +2,20 @@ import type { AxiosResponse } from 'axios'
 import api from '../services/axios'
 import type { ApiResponse, QueryParams, Specialty } from '../types'
 
-export function listSpecialties(
-  params?: QueryParams,
-): Promise<AxiosResponse<ApiResponse<Specialty[]>>> {
-  return api.get('/specialties', { params })
-}
-
 export function getSpecialty(
-  id: number | string,
+  params?: QueryParams,
 ): Promise<AxiosResponse<ApiResponse<Specialty>>> {
-  return api.get(`/specialties/${id}`)
+  return api.get('/specialty', { params })
 }
 
 export function createSpecialty(
   payload: Specialty,
 ): Promise<AxiosResponse<ApiResponse<Specialty>>> {
-  return api.post('/specialties', payload)
+  return api.post('/specialty', payload)
 }
 
 export function updateSpecialty(
-  id: number | string,
   payload: Specialty,
 ): Promise<AxiosResponse<ApiResponse<Specialty>>> {
-  return api.put(`/specialties/${id}`, payload)
-}
-
-export function deleteSpecialty(
-  id: number | string,
-): Promise<AxiosResponse<ApiResponse<unknown>>> {
-  return api.delete(`/specialties/${id}`)
+  return api.put(`/specialty`, payload)
 }

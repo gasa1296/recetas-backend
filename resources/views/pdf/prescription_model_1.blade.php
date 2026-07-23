@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Prescription #{{ $prescription->id }}</title>
+    <title>Prescripción #{{ $prescription->id }}</title>
     <style>
         body { font-family: Arial, sans-serif; font-size: 10pt; color: #1e293b; padding: 24px; line-height: 1.5; }
         table { width: 100%; border-collapse: collapse; }
@@ -39,18 +39,18 @@
     </style>
 </head>
 <body>
-    @php
+        @php
         $phone = function ($p) { return is_array($p) ? implode(', ', $p) : ($p ?? ''); };
-        $gender = function ($g) { return $g === 'M' ? 'Male' : ($g === 'F' ? 'Female' : ($g ?? 'Other')); };
+        $gender = function ($g) { return $g === 'M' ? 'Masculino' : ($g === 'F' ? 'Femenino' : ($g ?? 'Otro')); };
         $v = function ($val, $suf = '') { return is_null($val) ? '-' : ($val / 100) . $suf; };
-        $vitals = [['temp','Temp',' °C'],['weight','Weight',' kg'],['height','Height',' cm'],['pressure','BP',''],['saturation','O2 Sat.',' %'],['ppm','Pulse','']];
+        $vitals = [['temp','Temperatura',' °C'],['weight','Peso',' kg'],['height','Altura',' cm'],['pressure','Tensión',''],['saturation','Saturación O2',' %'],['ppm','Pulso','']];
         $hv = false; foreach ($vitals as $x) { if (!is_null($prescription->{$x[0]})) { $hv = true; break; } }
     @endphp
 
     {{-- Header with QR --}}
     <table class="hdr"><tr>
         <td style="width:80%;">
-            <h1>Prescription Details</h1>
+            <h1>Detalles de la Prescripción</h1>
             <div class="hdr-sub">{{ $prescription->room->name }} &middot; {{ $prescription->specialty->name }}</div>
         </td>
         <td style="width:20%;text-align:right;" class="qr">
@@ -64,22 +64,22 @@
     <table><tr>
         <td class="w-50 p-8">
             <div class="card">
-                <div class="card-title">Patient Info</div>
-                <div class="mb-8"><span class="lbl">Full Name</span><span class="val fw">{{ $prescription->patient->first_name }} {{ $prescription->patient->last_name }}</span></div>
-                <div class="mb-8"><span class="lbl">Identification</span><span class="mono">{{ $prescription->patient->identification }}</span></div>
-                <div class="mb-8"><span class="lbl">Gender</span><span class="val">{{ $gender($prescription->patient->gender) }}</span></div>
-                <div class="mb-8"><span class="lbl">Birth Date</span><span class="val">{{ $prescription->patient->birth_date }}</span></div>
-                @if($prescription->patient->email)<div class="mb-8"><span class="lbl">Email</span><span class="val">{{ $prescription->patient->email }}</span></div>@endif
-                @if($prescription->patient->phone)<div class="mb-8"><span class="lbl">Phone</span><span class="val">{{ $phone($prescription->patient->phone) }}</span></div>@endif
+                <div class="card-title">Información del Paciente</div>
+                <div class="mb-8"><span class="lbl">Nombre completo</span><span class="val fw">{{ $prescription->patient->first_name }} {{ $prescription->patient->last_name }}</span></div>
+                <div class="mb-8"><span class="lbl">Identificación</span><span class="mono">{{ $prescription->patient->identification }}</span></div>
+                <div class="mb-8"><span class="lbl">Sexo</span><span class="val">{{ $gender($prescription->patient->gender) }}</span></div>
+                <div class="mb-8"><span class="lbl">Fecha de nacimiento</span><span class="val">{{ $prescription->patient->birth_date }}</span></div>
+                @if($prescription->patient->email)<div class="mb-8"><span class="lbl">Correo electrónico</span><span class="val">{{ $prescription->patient->email }}</span></div>@endif
+                @if($prescription->patient->phone)<div class="mb-8"><span class="lbl">Teléfono</span><span class="val">{{ $phone($prescription->patient->phone) }}</span></div>@endif
             </div>
         </td>
         <td class="w-50 p-8">
             <div class="card">
-                <div class="card-title">Prescriber Info</div>
-                <div class="mb-8"><span class="lbl">Doctor</span><span class="val fw">{{ $prescription->user->first_name }} {{ $prescription->user->last_name }}</span></div>
-                @if($prescription->user->identification)<div class="mb-8"><span class="lbl">ID</span><span class="mono">{{ $prescription->user->identification }}</span></div>@endif
-                <div class="mb-8"><span class="lbl">Room</span><span class="val">{{ $prescription->room->name }}</span></div>
-                <div class="mb-8"><span class="lbl">Specialty</span><span class="val">{{ $prescription->specialty->name }}</span></div>
+                <div class="card-title">Información del Prescriptor</div>
+                    <div class="mb-8"><span class="lbl">Médico</span><span class="val fw">{{ $prescription->user->first_name }} {{ $prescription->user->last_name }}</span></div>
+                    @if($prescription->user->identification)<div class="mb-8"><span class="lbl">Identificación</span><span class="mono">{{ $prescription->user->identification }}</span></div>@endif
+                    <div class="mb-8"><span class="lbl">Sala</span><span class="val">{{ $prescription->room->name }}</span></div>
+                    <div class="mb-8"><span class="lbl">Especialidad</span><span class="val">{{ $prescription->specialty->name }}</span></div>
             </div>
         </td>
     </tr></table>
@@ -87,7 +87,7 @@
     {{-- Vital Signs --}}
     @if($hv)
         <div class="card">
-            <div class="card-title">Vital Signs</div>
+            <div class="card-title">Signos Vitales</div>
             <table><tr>
                 @foreach($vitals as $x)
                     @if(!is_null($prescription->{$x[0]}))
@@ -100,25 +100,25 @@
 
     {{-- Diagnosis --}}
     <div class="card">
-        <div class="card-title">Diagnosis &amp; Treatment</div>
-        @if($prescription->allergy)<div class="mb-8"><span class="lbl">Allergies</span><span class="val" style="color:#dc2626;">{{ $prescription->allergy }}</span></div>@endif
-        <div class="mb-8"><span class="lbl">Diagnostic</span><div class="notes">{{ $prescription->diagnostic ?? '-' }}</div></div>
-        @if($prescription->diet)<div class="mb-8"><span class="lbl">Diet</span><div class="notes">{{ $prescription->diet }}</div></div>@endif
+        <div class="card-title">Diagnóstico y Tratamiento</div>
+        @if($prescription->allergy)<div class="mb-8"><span class="lbl">Alergias</span><span class="val" style="color:#dc2626;">{{ $prescription->allergy }}</span></div>@endif
+        <div class="mb-8"><span class="lbl">Diagnóstico</span><div class="notes">{{ $prescription->diagnostic ?? '-' }}</div></div>
+        @if($prescription->diet)<div class="mb-8"><span class="lbl">Dieta</span><div class="notes">{{ $prescription->diet }}</div></div>@endif
     </div>
 
     {{-- Medications --}}
     @if($prescription->medicaments->isNotEmpty())
         <div class="card">
-            <div class="card-title">Medication Orders</div>
+            <div class="card-title">Prescripciones de Medicamentos</div>
             <table>
-                <tr><th>Medication</th><th style="text-align:center;">Dosage</th><th style="text-align:center;">Freq</th><th style="text-align:center;">Duration</th><th style="text-align:center;">Qty</th></tr>
+                <tr><th>Medicamento</th><th style="text-align:center;">Dosis</th><th style="text-align:center;">Frecuencia</th><th style="text-align:center;">Duración</th><th style="text-align:center;">Cantidad</th></tr>
                 @foreach($prescription->medicaments as $med)
                     <tr>
                         <td class="med"><span class="fw">{{ $med->active_ingredient }}</span><br><span style="font-size:8pt;color:#0f2b4a;">{{ $med->type }} - {{ $med->group }}</span></td>
-                        <td class="med" style="text-align:center;">@if($med->pivot->dosage)<span class="tbl-lbl">Dosage</span><span class="tbl-val">{{ $med->pivot->dosage }}</span>@endif</td>
-                        <td class="med" style="text-align:center;">@if($med->pivot->frequency)<span class="tbl-lbl">Freq</span><span class="tbl-val">{{ $med->pivot->frequency }}</span>@endif</td>
-                        <td class="med" style="text-align:center;">@if($med->pivot->duration)<span class="tbl-lbl">Duration</span><span class="tbl-val">{{ $med->pivot->duration }}</span>@endif</td>
-                        <td class="med" style="text-align:center;">@if($med->pivot->medicament_quantity)<span class="tbl-lbl">Qty</span><span class="tbl-val">{{ $med->pivot->medicament_quantity }}</span>@endif</td>
+                        <td class="med" style="text-align:center;">@if($med->pivot->dosage)<span class="tbl-lbl">Dosis</span><span class="tbl-val">{{ $med->pivot->dosage }}</span>@endif</td>
+                        <td class="med" style="text-align:center;">@if($med->pivot->frequency)<span class="tbl-lbl">Frecuencia</span><span class="tbl-val">{{ $med->pivot->frequency }}</span>@endif</td>
+                        <td class="med" style="text-align:center;">@if($med->pivot->duration)<span class="tbl-lbl">Duración</span><span class="tbl-val">{{ $med->pivot->duration }}</span>@endif</td>
+                        <td class="med" style="text-align:center;">@if($med->pivot->medicament_quantity)<span class="tbl-lbl">Cantidad</span><span class="tbl-val">{{ $med->pivot->medicament_quantity }}</span>@endif</td>
                     </tr>
                 @endforeach
             </table>
@@ -128,7 +128,7 @@
     {{-- Comments --}}
     @if($prescription->comments)
         <div class="card">
-            <div class="card-title">Additional Notes</div>
+            <div class="card-title">Notas Adicionales</div>
             <div class="notes">{{ $prescription->comments }}</div>
         </div>
     @endif
@@ -141,13 +141,13 @@
         @else
             <div class="sig-line"></div>
         @endif
-        <div class="sig-lbl">Doctor's Signature</div>
+        <div class="sig-lbl">Firma del Médico</div>
     </div>
 
     {{-- Meta --}}
     <div class="meta">
-        <span>Date: {{ $prescription->created_at }}</span>
-        @if($prescription->expires_at)<span class="danger">Expires: {{ $prescription->expires_at }}</span>@endif
+        <span>Fecha de creación: {{ $prescription->updated_at }}</span>
+        @if($prescription->expires_at)<span class="danger">Fecha de expiración: {{ $prescription->expires_at }}</span>@endif
     </div>
     @if($prescription->prescription_hash)<div class="hash">{{ $prescription->prescription_hash }}</div>@endif
 </body>

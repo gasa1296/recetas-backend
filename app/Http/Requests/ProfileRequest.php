@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProfileRequest extends FormRequest
 {
@@ -26,11 +27,19 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
         $user = auth()->user();
-        $conf = config('custom.professional_identification.' . $user->country_code, []);
+        $conf = config('custom.professional_identification.'.$user->country_code, []);
         $specialtyIdRules = [];
         foreach ($conf as $key => $value) {
-            $specialtyIdRules['specialty.identification.' . $key] = $value['rules'] ?? [];
+            $uniqueKey = array_search('unique', $value['rules'] ?? []);
+            if ($uniqueKey === false) {
+                $specialtyIdRules['specialty.identification.'.$key] = $value['rules'] ?? [];
+
+                continue;
+            }
+            $specialtyId = $user->specialty?->id;
+            $value['rules'][$uniqueKey] = Rule::unique('specialties', 'identification->'.$key)->ignore($specialtyId);
         }
+
         return [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
@@ -41,6 +50,8 @@ class ProfileRequest extends FormRequest
             'specialty' => ['nullable', 'array'],
             'specialty.name' => ['required_with:specialty', 'string', 'max:255'],
             'specialty.identification' => ['required_with:specialty', 'string', 'max:255'],
-        ] + $specialtyIdRules;
+            'identification.medic_society' => ['required_with:identification', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
+            'identification.medic_registration' => ['required_with:identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
+        ];
     }
 }

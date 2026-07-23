@@ -13,7 +13,10 @@ const form = ref<Profile>({
     email: '',
     specialty: {
         name: '',
-        identification: '',
+        identification: {
+            medic_society: '',
+            medic_registration: '',
+        },
     },
 })
 const loading = ref(false)
@@ -24,7 +27,7 @@ onMounted(async () => {
     if (auth.user) {
         form.value = {
             ...auth.user,
-            specialty: auth.user.specialty || { name: '', identification: '' },
+            specialty: auth.user.specialty || { name: '', identification: { medic_society: '', medic_registration: '' } },
         }
     }
 })
@@ -106,7 +109,14 @@ async function handleUpdate() {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Identificación de la especialidad</label>
-                        <input v-model="form.specialty.identification" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                        <div class="space-y-2">
+                            <div>
+                                <input v-model="form.specialty.identification.medic_society" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                            </div>
+                            <div>
+                                <input v-model="form.specialty.identification.medic_registration" class="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900 " />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ return [
     'operation_failed' => 'Operation failed',
     'not_found' => 'Record not found',
     'validation_failed' => 'Validation failed',
+    'prescription_expired' => 'Prescription has expired',
 
     'auth' => [
         'invalid_credentials' => 'Credentials are invalid',
