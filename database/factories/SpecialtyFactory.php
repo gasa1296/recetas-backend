@@ -19,6 +19,18 @@ class SpecialtyFactory extends Factory
     {
         return [
             'name' => fake()->words(rand(3, 8), true),
+            'identification' => $this->makeIdentification(),
+        ];
+    }
+
+    private function makeIdentification(): array
+    {
+
+        return [
+            'identification' => [
+                'medic_registration' => fake()->unique()->numberBetween(100000, 999999),
+                'medic_society' => fake()->unique()->numberBetween(100000, 999999),
+            ],
         ];
     }
 }

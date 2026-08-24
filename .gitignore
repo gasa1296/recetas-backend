@@ -33,7 +33,6 @@ yarn-error.log
 /.zed
 /.agents
 /.opencode
-/.agents
 AGENTS.md
 .github
 boost.json

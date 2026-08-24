@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -601,4 +602,71 @@ test('prescriptions finish generates signed pdf and activates prescription', fun
         'model_type' => Prescription::class,
         'type' => 'signed',
     ]);
+});
+
+test('prescriptions finish uses default certificate when user has no certificate', function () {
+    $user = User::factory()->create([
+        'certificate_path' => null,
+        'certificate_key_path' => null,
+    ]);
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.draft')]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', [
+            'signature' => base64_encode('test'),
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonStructure(['success', 'message']);
+
+    $this->assertDatabaseHas('prescriptions', [
+        'id' => $prescription->id,
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+});
+
+test('user has valid certificate returns true when certificate exists and is not expired', function () {
+    $user = User::factory()->create([
+        'certificate_path' => 'test-cert.pem',
+        'certificate_key_path' => 'test-key.pem',
+        'certificate_expires_at' => now()->addYear(),
+    ]);
+
+    // Mock storage to return true for file existence
+    Storage::fake('local');
+    Storage::disk('local')->put('test-cert.pem', 'test-cert-content');
+    Storage::disk('local')->put('test-key.pem', 'test-key-content');
+
+    expect($user->hasValidCertificate())->toBeTrue();
+});
+
+test('user has valid certificate returns false when certificate is expired', function () {
+    $user = User::factory()->create([
+        'certificate_path' => 'test-cert.pem',
+        'certificate_key_path' => 'test-key.pem',
+        'certificate_expires_at' => now()->subYear(),
+    ]);
+
+    Storage::fake('local');
+    Storage::disk('local')->put('test-cert.pem', 'test-cert-content');
+    Storage::disk('local')->put('test-key.pem', 'test-key-content');
+
+    expect($user->hasValidCertificate())->toBeFalse();
+});
+
+test('user has valid certificate returns false when certificate paths are null', function () {
+    $user = User::factory()->create([
+        'certificate_path' => null,
+        'certificate_key_path' => null,
+    ]);
+
+    expect($user->hasValidCertificate())->toBeFalse();
 });

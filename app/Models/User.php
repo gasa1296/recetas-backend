@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable([
@@ -25,8 +27,11 @@ use Laravel\Sanctum\HasApiTokens;
     'email',
     'password',
     'signature_hash',
+    'certificate_path',
+    'certificate_key_path',
+    'certificate_expires_at',
 ])]
-#[Hidden(['password', 'remember_token', 'signature_hash'])]
+#[Hidden(['password', 'remember_token', 'signature_hash', 'certificate_path', 'certificate_key_path'])]
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
@@ -76,5 +81,35 @@ class User extends Authenticatable implements FilamentUser
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => $attributes['first_name'].' '.$attributes['last_name'],
         );
+    }
+
+    public function hasValidCertificate(): bool
+    {
+        if (is_null($this->certificate_path) || is_null($this->certificate_key_path)) {
+            return false;
+        }
+
+        $certPath = Storage::disk('local')->path($this->certificate_path);
+        $keyPath = Storage::disk('local')->path($this->certificate_key_path);
+
+        if (! file_exists($certPath) || ! file_exists($keyPath)) {
+            return false;
+        }
+
+        if (! is_null($this->certificate_expires_at)) {
+            return Carbon::parse($this->certificate_expires_at)->isFuture();
+        }
+
+        return true;
+    }
+
+    public function getCertificatePath(): string
+    {
+        return Storage::disk('local')->path($this->certificate_path);
+    }
+
+    public function getCertificateKeyPath(): string
+    {
+        return Storage::disk('local')->path($this->certificate_key_path);
     }
 }

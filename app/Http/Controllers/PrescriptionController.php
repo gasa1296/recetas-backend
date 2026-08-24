@@ -8,6 +8,7 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
 use App\Notifications\PrescriptionReadyNotification;
+use App\Services\TimestampService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use chillerlan\QRCode\QRCode;
@@ -167,9 +168,14 @@ class PrescriptionController extends Controller
         $pdf = new Fpdi;
 
         // 3. Configure the Digital Signature
-        // Path to your .crt or .pfx certificate converted to PEM format
-        $certificate = 'file://'.base_path('docker-compose/nginx/certs/recetas.localhost.crt');
-        $privateKey = 'file://'.base_path('docker-compose/nginx/certs/recetas.localhost.key');
+        // Use user's certificate if available, otherwise fall back to default
+        if ($user->hasValidCertificate()) {
+            $certificate = 'file://'.$user->getCertificatePath();
+            $privateKey = 'file://'.$user->getCertificateKeyPath();
+        } else {
+            $certificate = 'file://'.base_path(config('custom.prescription.signature.default_certificate.path'));
+            $privateKey = 'file://'.base_path(config('custom.prescription.signature.default_certificate.key_path'));
+        }
 
         $info = [
             'Name' => config('app.name'),
@@ -178,7 +184,7 @@ class PrescriptionController extends Controller
         ];
         $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
 
-        // Save temporary file because FPDI requires a filepath or a stream wrapper
+        // 4. Save temporary file because FPDI requires a filepath or a stream wrapper
         $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
         file_put_contents($tempFile, $pdfContent);
 
@@ -193,7 +199,25 @@ class PrescriptionController extends Controller
             $pdf->useTemplate($templateId);
         }
 
-        $prescription->handleUploadFile($pdf->Output('', 'S'), 'signed');
+        // 5. Apply TSA timestamp if enabled
+        $tsaConfig = config('custom.prescription.signature.tsa', []);
+        if (! empty($tsaConfig['enabled']) && ! empty($tsaConfig['url'])) {
+            $signedPdf = $pdf->Output('', 'S');
+            $timestampService = new TimestampService(
+                $tsaConfig['url'],
+                $tsaConfig['hash_algorithm'] ?? 'sha256'
+            );
+            $timestampToken = $timestampService->timestamp($signedPdf);
+
+            if ($timestampToken) {
+                // Embed the timestamp token into the PDF
+                $signedPdf = $this->embedTimestampInPdf($signedPdf, $timestampToken);
+            }
+
+            $prescription->handleUploadFile($signedPdf, 'signed');
+        } else {
+            $prescription->handleUploadFile($pdf->Output('', 'S'), 'signed');
+        }
 
         unlink($tempFile);
 
@@ -240,5 +264,60 @@ class PrescriptionController extends Controller
         return response()->file($path, [
             'Content-Type' => 'application/pdf',
         ]);
+    }
+
+    /**
+     * Embed a timestamp token into an existing signed PDF.
+     *
+     * This method adds the timestamp token to the PDF's signature dictionary
+     * as a /SigTst attribute, which is the standard way to embed timestamps
+     * in PDF signatures according to the PAdES (PDF Advanced Electronic Signatures) standard.
+     *
+     * @param  string  $pdfContent  The signed PDF content
+     * @param  string  $timestampToken  The RFC 3161 timestamp token
+     * @return string The PDF with embedded timestamp
+     */
+    private function embedTimestampInPdf(string $pdfContent, string $timestampToken): string
+    {
+        // Find the signature dictionary in the PDF
+        // The signature dictionary contains /Contents which holds the signature value
+        // We need to add /SigTst with the timestamp token
+
+        // Look for the signature object pattern
+        // In PDF, the signature dictionary looks like:
+        // /Type /Sig /Filter /Adobe.PPKLite /SubFilter /adbe.pkcs7.detached /Contents <hex> ...
+
+        // Find the /Contents entry in the signature
+        $pattern = '/\/Contents\s*<([0-9A-Fa-f]+)>/';
+        if (preg_match($pattern, $pdfContent, $matches)) {
+            $hexContents = $matches[1];
+            $byteRange = [];
+
+            // Find the /ByteRange entry
+            $byteRangePattern = '/\/ByteRange\s*\[(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\]/';
+            if (preg_match($byteRangePattern, $pdfContent, $byteRangeMatches)) {
+                $byteRange = [
+                    (int) $byteRangeMatches[1],
+                    (int) $byteRangeMatches[2],
+                    (int) $byteRangeMatches[3],
+                    (int) $byteRangeMatches[4],
+                ];
+            }
+
+            // Calculate where to insert the timestamp
+            // We'll add it after the /Contents entry
+            $insertPos = strpos($pdfContent, $matches[0]) + strlen($matches[0]);
+
+            // Encode the timestamp token as hex
+            $timestampHex = bin2hex($timestampToken);
+
+            // Build the SigTst dictionary
+            $sigTst = ' /SigTst << /Type /SigTst /Version 1 /Objects [ << /ObjRef 1 /UseInstalled 0 >> ] /TimeStampToken <'.$timestampHex.'> >>';
+
+            // Insert the timestamp after the Contents entry
+            $pdfContent = substr_replace($pdfContent, $sigTst, $insertPos, 0);
+        }
+
+        return $pdfContent;
     }
 }

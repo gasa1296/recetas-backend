@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -32,6 +34,27 @@ class UserForm
                     ->required(),
                 Toggle::make('is_admin')
                     ->required(),
+                Section::make('Certificado Digital')
+                    ->description('Configuración del certificado digital para firma electrónica')
+                    ->schema([
+                        FileUpload::make('certificate_path')
+                            ->label('Certificado (.crt, .pem)')
+                            ->acceptedFileTypes(['application/x-x509-ca-cert', 'application/pem-certificate-chain', 'application/octet-stream'])
+                            ->directory('certificates')
+                            ->visibility('private')
+                            ->columnSpanFull(),
+                        FileUpload::make('certificate_key_path')
+                            ->label('Llave Privada (.key, .pem)')
+                            ->acceptedFileTypes(['application/x-pem-key', 'application/octet-stream'])
+                            ->directory('certificates')
+                            ->visibility('private')
+                            ->columnSpanFull(),
+                        DateTimePicker::make('certificate_expires_at')
+                            ->label('Fecha de expiración del certificado')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(),
             ]);
     }
 }

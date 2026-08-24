@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use app\Models\Patient;
 use App\Models\Prescription;
+use app\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -31,6 +33,15 @@ class PrescriptionFactory extends Factory
             'comments' => fake()->paragraph(),
             'prescription_hash' => hash('sha256', Str::random(32)),
             'status' => 0,
+        ];
+    }
+
+    public function makePrescription(User $user): array
+    {
+        return [
+            'patient_id' => Patient::inRandomOrder()->first()->id,
+            'room_id' => $user->rooms()->inRandomOrder()->first()->id,
+            'specialty_id' => $user->specialty->id,
         ];
     }
 }
