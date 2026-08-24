@@ -1159,6 +1159,220 @@
       ]
     },
     {
+      "name": "Prescription Templates",
+      "item": [
+        {
+          "name": "List Prescription Templates",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescription-templates",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescription-templates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Prescription Template",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescription-templates/:prescription_template_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescription-templates",
+                ":prescription_template_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_template_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Prescription Template",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gripa común\",\n  \"medicaments\": [\n    {\n      \"id\": 1,\n      \"dosage\": \"1 tableta\",\n      \"frequency\": \"Cada 8 horas\",\n      \"duration\": \"7 días\",\n      \"medicament_quantity\": 21,\n      \"recommended_brand\": null\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/prescription-templates",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescription-templates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Prescription Template",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gripa común v2\",\n  \"medicaments\": [\n    {\n      \"id\": 1,\n      \"dosage\": \"2 tabletas\",\n      \"frequency\": \"Cada 12 horas\",\n      \"duration\": \"5 días\",\n      \"medicament_quantity\": 10,\n      \"recommended_brand\": \"Marca X\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/prescription-templates/:prescription_template_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescription-templates",
+                ":prescription_template_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_template_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Prescription Template",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescription-templates/:prescription_template_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescription-templates",
+                ":prescription_template_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_template_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Specialty",
       "item": [
         {
