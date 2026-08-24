@@ -76,6 +76,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Prescription::class);
     }
 
+    public function prescriptionTemplates(): HasMany
+    {
+        return $this->hasMany(PrescriptionTemplate::class);
+    }
+
     protected function name(): Attribute
     {
         return Attribute::make(

@@ -5,6 +5,7 @@ use App\Http\Controllers\GenericController;
 use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\PrescriptionTemplateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicPrescriptionController;
 use App\Http\Controllers\ResetController;
@@ -112,6 +113,15 @@ use Illuminate\Support\Facades\Route;
                     Route::post('/rooms', 'store')->name('store');
                     Route::put('/rooms/{room}', 'update')->name('update');
                     Route::delete('/rooms/{room}', 'destroy')->name('destroy');
+                });
+            Route::controller(PrescriptionTemplateController::class)
+                ->name('prescription_templates.')
+                ->group(function () {
+                    Route::get('/prescription-templates', 'index')->name('index');
+                    Route::get('/prescription-templates/{prescription_template}', 'show')->name('show');
+                    Route::post('/prescription-templates', 'store')->name('store');
+                    Route::put('/prescription-templates/{prescription_template}', 'update')->name('update');
+                    Route::delete('/prescription-templates/{prescription_template}', 'destroy')->name('destroy');
                 });
         });
     }
