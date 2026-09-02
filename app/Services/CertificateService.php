@@ -16,7 +16,7 @@ class CertificateService
      */
     public function generateForUser(User $user, ?int $validityDays = null): array
     {
-        $validityDays ??= config('custom.certificate.validity_days', 365);
+        $validityDays ??= config('custom.prescription.certificate.validity_days', 365);
 
         $dn = [
             'countryName' => 'VE',
@@ -124,7 +124,7 @@ class CertificateService
      */
     public function refreshForUser(User $user, ?int $validityDays = null): array
     {
-        $validityDays ??= config('custom.certificate.validity_days', 365);
+        $validityDays ??= config('custom.prescription.certificate.validity_days', 365);
 
         // Delete old certificate files if they exist
         if ($user->certificate_path && Storage::disk('local')->exists($user->certificate_path)) {
