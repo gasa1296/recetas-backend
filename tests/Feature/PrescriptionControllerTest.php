@@ -206,7 +206,6 @@ test('prescriptions store creates a prescription with valid request structure', 
                 ],
             ],
         ]);
-    $response->dump();
     $response->assertSuccessful()
         ->assertJsonStructure([
             'success',

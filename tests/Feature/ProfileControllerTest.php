@@ -176,18 +176,27 @@ test('profile update creates specialty when provided', function () {
             'last_name' => $user->last_name,
             'specialty' => [
                 'name' => 'Cardiology',
-                'identification' => 'CARD-001',
+                'identification' => [
+                    'medic_society' => 'CARD-001',
+                    'medic_registration' => '1234567',
+                ],
             ],
         ]);
 
     $response->assertSuccessful()
         ->assertJsonPath('data.specialty.name', 'Cardiology')
-        ->assertJsonPath('data.specialty.identification', 'CARD-001');
+        ->assertJsonPath('data.specialty.identification', [
+            'medic_society' => 'CARD-001',
+            'medic_registration' => '1234567',
+        ]);
 
     $this->assertDatabaseHas('specialties', [
         'user_id' => $user->id,
         'name' => 'Cardiology',
-        'identification' => 'CARD-001',
+        'identification' => json_encode([
+            'medic_society' => 'CARD-001',
+            'medic_registration' => '1234567',
+        ]),
     ]);
 });
 
@@ -201,23 +210,32 @@ test('profile update updates existing specialty', function () {
             'last_name' => $user->last_name,
             'specialty' => [
                 'name' => 'Updated Specialty',
-                'identification' => 'UPD-001',
+                'identification' => [
+                    'medic_society' => 'UPD-001',
+                    'medic_registration' => '1234567',
+                ],
             ],
         ]);
 
     $response->assertSuccessful()
         ->assertJsonPath('data.specialty.name', 'Updated Specialty')
-        ->assertJsonPath('data.specialty.identification', 'UPD-001');
+        ->assertJsonPath('data.specialty.identification', [
+            'medic_society' => 'UPD-001',
+            'medic_registration' => '1234567',
+        ]);
 
     $this->assertDatabaseHas('specialties', [
         'id' => $specialty->id,
         'name' => 'Updated Specialty',
-        'identification' => 'UPD-001',
+        'identification' => json_encode([
+            'medic_society' => 'UPD-001',
+            'medic_registration' => '1234567',
+        ]),
     ]);
 });
 
 test('profile update allows keeping the same specialty identification', function () {
-    $user = User::factory()->create(['country_code' => 'VE']);
+    $user = User::factory()->create();
     $specialty = Specialty::factory()->create([
         'user_id' => $user->id,
         'identification' => 'CARD-001',
@@ -229,7 +247,10 @@ test('profile update allows keeping the same specialty identification', function
             'last_name' => $user->last_name,
             'specialty' => [
                 'name' => 'Cardiology',
-                'identification' => 'CARD-001',
+                'identification' => [
+                    'medic_society' => 'CARD-001',
+                    'medic_registration' => '1234567',
+                ],
             ],
         ]);
 
