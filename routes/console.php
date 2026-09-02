@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\RefreshExpiringCertificatesJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -8,4 +9,8 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('certificates:refresh')->dailyAt('02:00');
+Schedule::job(new RefreshExpiringCertificatesJob)
+    ->daily()
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->name('refresh-expiring-certificates');

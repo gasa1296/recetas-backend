@@ -3,29 +3,37 @@
 namespace Database\Seeders;
 
 use App\Models\Patient;
+use App\Models\Prescription;
 use App\Models\User;
+use App\Services\CertificateService;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Patient::factory()
             ->count(10)
             ->create();
+
         User::factory()
             ->hasSpecialty()
             ->hasRooms(3)
-            ->hasPrescriptions(5, fn (array $attributes, User $user) => $this->makePrescription($user))->create([
+            ->hasPrescriptions(5, fn (array $attributes, User $user) => Prescription::factory()->makePrescription($user))
+            ->afterCreating(fn (User $user) => $this->generateCertificate($user))
+            ->create([
                 'email' => 'example@example.com',
             ]);
-        User::factory()
-            ->hasSpecialty()
-            ->hasRooms(3)
-            ->hasPrescriptions(5, fn (array $attributes, User $user) => $this->makePrescription($user))
-            ->count(10)->create();
+    }
+
+    protected function generateCertificate(User $user): void
+    {
+        $certificate = app(CertificateService::class)->generateForUser($user);
+
+        $user->update([
+            'certificate_path' => $certificate['certificate_path'],
+            'certificate_key_path' => $certificate['key_path'],
+            'certificate_expires_at' => $certificate['expires_at'],
+        ]);
     }
 }

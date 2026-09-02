@@ -9,12 +9,9 @@ use Illuminate\Support\Str;
 
 class AdminUserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        User::create([
+        $admin = User::create([
             'first_name' => 'Admin',
             'last_name' => 'User',
             'identification' => 'admin',
@@ -22,8 +19,9 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
-            'is_admin' => true,
             'signature_hash' => hash('sha256', Str::random(32)),
         ]);
+
+        $admin->assignRole('admin');
     }
 }

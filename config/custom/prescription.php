@@ -43,6 +43,6 @@ return [
         // Días de validez del certificado
         'validity_days' => (int) env('CERTIFICATE_VALIDITY_DAYS', 365),
         // Días antes de expirar para refrescar automáticamente
-        'refresh_days_before_expiry' => (int) env('CERTIFICATE_REFRESH_DAYS', 5),
+        'refresh_days_before_expiry' => (int) env('CERTIFICATE_REFRESH_DAYS_BEFORE_EXPIRY', 5),
     ],
 ];

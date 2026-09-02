@@ -32,7 +32,6 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'is_admin' => false,
             'signature_hash' => hash('sha256', Str::random(32)),
         ];
     }

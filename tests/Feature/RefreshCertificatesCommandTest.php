@@ -1,55 +1,33 @@
 <?php
 
-use App\Models\User;
+use App\Jobs\RefreshExpiringCertificatesJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Bus;
 
 uses(RefreshDatabase::class);
 
-it('refreshes certificates expiring within configured days', function () {
-    Storage::fake('local');
-
-    $user = User::factory()->create([
-        'certificate_expires_at' => now()->addDays(3),
-    ]);
+it('dispatches the RefreshExpiringCertificatesJob', function () {
+    Bus::fake([RefreshExpiringCertificatesJob::class]);
 
     Artisan::call('certificates:refresh');
 
-    $user->refresh();
-
-    expect($user->certificate_path)->not->toBeNull();
-    expect($user->certificate_key_path)->not->toBeNull();
-    expect($user->certificate_expires_at)->toBeGreaterThan(now());
-    expect(Storage::disk('local')->exists($user->certificate_path))->toBeTrue();
+    Bus::assertDispatched(RefreshExpiringCertificatesJob::class);
 });
 
-it('does not refresh certificates not expiring soon', function () {
-    Storage::fake('local');
+it('returns success status', function () {
+    Bus::fake([RefreshExpiringCertificatesJob::class]);
 
-    $user = User::factory()->create([
-        'certificate_expires_at' => now()->addDays(30)->toDateTimeString(),
-    ]);
+    $exitCode = Artisan::call('certificates:refresh');
 
-    Artisan::call('certificates:refresh');
-
-    $user->refresh();
-
-    $expiresAt = Carbon::parse($user->certificate_expires_at);
-    expect($expiresAt->format('Y-m-d'))->toBe(now()->addDays(30)->format('Y-m-d'));
+    expect($exitCode)->toBe(0);
 });
 
-it('reports number of refreshed certificates', function () {
-    Storage::fake('local');
-
-    User::factory()->count(2)->create([
-        'certificate_expires_at' => now()->addDays(3),
-    ]);
+it('outputs dispatch confirmation', function () {
+    Bus::fake([RefreshExpiringCertificatesJob::class]);
 
     Artisan::call('certificates:refresh');
 
     $output = Artisan::output();
-
-    expect($output)->toContain('Refreshed 2');
+    expect($output)->toContain('Certificate refresh job dispatched.');
 });

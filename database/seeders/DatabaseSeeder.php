@@ -9,12 +9,11 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $seeders = [
+            RoleSeeder::class,
+            PermissionSeeder::class,
             MedicamentSeeder::class,
             AdminUserSeeder::class,
         ];
