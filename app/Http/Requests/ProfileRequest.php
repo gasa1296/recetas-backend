@@ -27,10 +27,11 @@ class ProfileRequest extends FormRequest
     {
         $user = auth()->user();
         $specialtyId = $user->specialty?->id;
+        $isSignatureOnly = $this->has('saved_signature') && ! $this->has('first_name') && ! $this->has('last_name');
 
         return [
-            'first_name' => ['required', 'string'],
-            'last_name' => ['required', 'string'],
+            'first_name' => [$isSignatureOnly ? 'sometimes' : 'required', 'string'],
+            'last_name' => [$isSignatureOnly ? 'sometimes' : 'required', 'string'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
             'password' => ['nullable', 'string', 'confirmed'],
@@ -39,6 +40,7 @@ class ProfileRequest extends FormRequest
             'specialty.identification' => ['required_with:specialty', 'array'],
             'specialty.identification.medic_society' => ['required_with:identification', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
             'specialty.identification.medic_registration' => ['required_with:identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
+            'saved_signature' => ['nullable', 'string'],
         ];
     }
 }

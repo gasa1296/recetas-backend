@@ -62,7 +62,7 @@ it('lists only the appointments belonging to the authenticated doctor', function
 
 it('filters appointments by date range and status', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     // Appointment tomorrow
     Appointment::factory()->create([
@@ -96,7 +96,7 @@ it('filters appointments by date range and status', function () {
 
 it('allows a doctor to create an appointment', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
     $room = Room::factory()->create(['user_id' => $doctor->id]);
     $specialty = Specialty::factory()->create(['user_id' => $doctor->id]);
 
@@ -129,8 +129,8 @@ it('allows a doctor to create an appointment', function () {
 
 it('rejects creation when the doctor has an overlapping active appointment', function () {
     $doctor = User::factory()->create();
-    $patient1 = Patient::factory()->create();
-    $patient2 = Patient::factory()->create();
+    $patient1 = Patient::factory()->for($doctor)->create();
+    $patient2 = Patient::factory()->for($doctor)->create();
 
     // Existing appointment: 10:00 to 11:00
     Appointment::factory()->create([
@@ -159,8 +159,8 @@ it('rejects creation when the room is booked by another appointment', function (
     $doctor1 = User::factory()->create();
     $doctor2 = User::factory()->create();
     $room = Room::factory()->create(['user_id' => $doctor1->id]);
-    $patient1 = Patient::factory()->create();
-    $patient2 = Patient::factory()->create();
+    $patient1 = Patient::factory()->for($doctor1)->create();
+    $patient2 = Patient::factory()->for($doctor2)->create();
 
     // Doctor 1 books the room from 14:00 to 15:00
     Appointment::factory()->create([
@@ -189,8 +189,8 @@ it('rejects creation when the room is booked by another appointment', function (
 
 it('allows overlapping if the previous appointment was cancelled', function () {
     $doctor = User::factory()->create();
-    $patient1 = Patient::factory()->create();
-    $patient2 = Patient::factory()->create();
+    $patient1 = Patient::factory()->for($doctor)->create();
+    $patient2 = Patient::factory()->for($doctor)->create();
 
     // Cancelled appointment at 16:00 to 17:00
     Appointment::factory()->create([
@@ -216,7 +216,7 @@ it('allows overlapping if the previous appointment was cancelled', function () {
 
 it('allows updating and rescheduling an appointment', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $appointment = Appointment::factory()->create([
         'user_id' => $doctor->id,

@@ -365,7 +365,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"identification\": \"López\",\n  \"phone\": [\"555-1234\", \"555-5678\"],\n  \"gender\": \"male\",\n  \"password\": \"newpassword123\"\n}"
+              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"identification\": \"López\",\n  \"phone\": [\"555-1234\", \"555-5678\"],\n  \"gender\": \"male\",\n  \"saved_signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\",\n  \"password\": \"newpassword123\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/profile",
@@ -968,7 +968,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\"\n}"
+              "raw": "{\n  \"signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\",\n  \"save_signature\": false\n}"
             },
             "url": {
               "raw": "{{API_URL}}/prescriptions/:prescription_id/finish",
@@ -1075,10 +1075,15 @@
           "response": []
         },
         {
-          "name": "Public Show Prescription PDF (Descarga Directa PDF)",
+          "name": "Public Show Prescription Web View (Portal Oficial de Validación)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/html"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/public/prescriptions/:prescription_hash",
               "host": [
@@ -1088,6 +1093,37 @@
                 "public",
                 "prescriptions",
                 ":prescription_hash"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_hash",
+                  "value": "hash_o_id_de_la_receta"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Public Show Prescription PDF (Descarga Directa PDF)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/public/prescriptions/:prescription_hash?format=pdf",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "public",
+                "prescriptions",
+                ":prescription_hash"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "pdf"
+                }
               ],
               "variable": [
                 {

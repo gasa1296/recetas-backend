@@ -20,6 +20,7 @@ class ProfileResource extends JsonResource
             'identification' => $this->identification,
             'phone' => $this->phone,
             'email' => $this->email,
+            'saved_signature' => $this->saved_signature,
             'rooms' => $this->whenLoaded('rooms', RoomResource::collection($this->rooms)),
             'specialty' => $this->whenLoaded('specialty', new SpecialtyResource($this->specialty)),
         ];

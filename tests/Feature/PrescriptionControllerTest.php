@@ -6,7 +6,9 @@ use App\Models\Prescription;
 use App\Models\Room;
 use App\Models\Specialty;
 use App\Models\User;
+use App\Notifications\PrescriptionReadyNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
@@ -175,7 +177,7 @@ test('prescriptions store rejects invalid request structure', function (array $p
 
 test('prescriptions store creates a prescription with valid request structure', function () {
     $user = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($user)->create();
     $room = Room::factory()->for($user)->create();
     $specialty = Specialty::factory()->for($user)->create();
     $medicament = Medicament::factory()->create();
@@ -417,7 +419,7 @@ test('prescriptions update rejects invalid request structure', function () {
 test('prescriptions update only allows editing draft prescriptions', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($user)->create();
     $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
@@ -439,7 +441,7 @@ test('prescriptions update only allows editing draft prescriptions', function ()
 test('prescriptions update modifies the prescription with valid request structure', function () {
     $user = User::factory()->create();
     $room = Room::factory()->for($user)->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($user)->create();
     $specialty = Specialty::factory()->for($user)->create();
     $prescription = Prescription::factory()
         ->for($user)
@@ -601,6 +603,20 @@ test('prescriptions finish generates signed pdf and activates prescription', fun
         'model_type' => Prescription::class,
         'type' => 'signed',
     ]);
+
+    $signedFile = $prescription->files()->where('type', 'signed')->first();
+    expect($signedFile)->not->toBeNull();
+    $pdfPath = Storage::disk('local')->path($signedFile->path);
+    expect(file_exists($pdfPath))->toBeTrue();
+
+    exec('which pdfsig', $whichOut, $whichRet);
+    if ($whichRet === 0) {
+        $pdfsigOutput = shell_exec('pdfsig '.escapeshellarg($pdfPath));
+        expect($pdfsigOutput)
+            ->toContain('Signature is Valid')
+            ->not->toContain('Digest Mismatch')
+            ->not->toContain('Syntax Error');
+    }
 });
 
 test('prescriptions finish uses default certificate when user has no certificate', function () {
@@ -630,6 +646,56 @@ test('prescriptions finish uses default certificate when user has no certificate
         'id' => $prescription->id,
         'status' => config('custom.prescription.status_keys.active'),
     ]);
+});
+
+test('prescriptions finish can use saved signature from user profile without providing signature in payload', function () {
+    $user = User::factory()->create([
+        'saved_signature' => base64_encode('saved-signature-data'),
+    ]);
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.draft')]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', []);
+
+    $response->assertSuccessful()
+        ->assertJsonStructure(['success', 'message']);
+
+    $this->assertDatabaseHas('prescriptions', [
+        'id' => $prescription->id,
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+});
+
+test('prescriptions finish can persist new signature to profile when save_signature is true', function () {
+    $user = User::factory()->create(['saved_signature' => null]);
+    $room = Room::factory()->for($user)->create();
+    $patient = Patient::factory()->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $prescription = Prescription::factory()
+        ->for($user)
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->create(['status' => config('custom.prescription.status_keys.draft')]);
+
+    $newSig = base64_encode('newly-drawn-signature');
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/finish', [
+            'signature' => $newSig,
+            'save_signature' => true,
+        ]);
+
+    $response->assertSuccessful();
+    expect($user->fresh()->saved_signature)->toBe($newSig);
 });
 
 test('user has valid certificate returns true when certificate exists and is not expired', function () {
@@ -777,7 +843,7 @@ test('public show returns json verification data when requested with accept json
         ->assertJsonPath('data.medicaments.0.recommended_brand', 'Amoxil');
 });
 
-test('public prescription returns pdf by default when file exists', function () {
+test('public prescription returns pdf when format=pdf query parameter is present', function () {
     Storage::fake('local');
 
     $user = User::factory()->create();
@@ -798,11 +864,78 @@ test('public prescription returns pdf by default when file exists', function () 
 
     $prescription->handleUploadFile('%PDF-1.7 dummy pdf content', 'signed');
 
-    $response = $this->get('/api/public/prescriptions/test-pdf-hash-99999');
+    $response = $this->get('/api/public/prescriptions/test-pdf-hash-99999?format=pdf');
 
     $response->assertSuccessful();
     expect($response->headers->get('Content-Type'))->toContain('application/pdf');
     expect($response->streamedContent())->toBe('%PDF-1.7 dummy pdf content');
+});
+
+test('public prescription returns web verification view for browser / qr scan', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create([
+        'first_name' => 'Gregory',
+        'last_name' => 'House',
+        'identification' => 'DOC-12345',
+    ]);
+    $patient = Patient::factory()->create([
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+    ]);
+    $room = Room::factory()->for($user)->create(['name' => 'Consultorio 101']);
+    $specialty = Specialty::factory()->for($user)->create(['name' => 'Diagnóstico']);
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-web-view-hash-999',
+        ]);
+
+    $prescription->handleUploadFile('%PDF-1.7 dummy pdf content', 'signed');
+
+    $response = $this->get('/api/public/prescriptions/test-web-view-hash-999', [
+        'Accept' => 'text/html',
+    ]);
+
+    $response->assertSuccessful();
+    expect($response->headers->get('Content-Type'))->toContain('text/html');
+    $response->assertSee('Portal Oficial de Verificación')
+        ->assertSee('Gregory House')
+        ->assertSee('John Doe')
+        ->assertSee('test-web-view-hash-999')
+        ->assertSee('Prescripción Médica Válida y Vigente');
+});
+
+test('public prescription works on web route without api prefix', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-web-route-hash',
+        ]);
+
+    $response = $this->get('/public/prescriptions/test-web-route-hash');
+
+    $response->assertSuccessful();
+    expect($response->headers->get('Content-Type'))->toContain('text/html');
+    $response->assertSee('Portal Oficial de Verificación');
 });
 
 test('public prescription returns json when format=json query parameter is present', function () {
@@ -910,3 +1043,73 @@ test('public dispense rejects prescription that is already nulled', function () 
     $response->assertStatus(422);
 });
 
+test('prescriptions resend requires authentication', function () {
+    $response = $this->postJson('/api/prescriptions/1/resend');
+    $response->assertUnauthorized();
+});
+
+test('prescriptions resend rejects prescription not owned by doctor', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $room = Room::factory()->for($doctor1)->create();
+    $specialty = Specialty::factory()->for($doctor1)->create();
+    $patient = Patient::factory()->for($doctor1)->create(['email' => 'patient@example.com']);
+    $prescription = Prescription::factory()->for($doctor1)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create([
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+
+    $this->actingAs($doctor2, 'sanctum')
+        ->postJson("/api/prescriptions/{$prescription->id}/resend")
+        ->assertNotFound();
+});
+
+test('prescriptions resend rejects draft prescriptions', function () {
+    $doctor = User::factory()->create();
+    $room = Room::factory()->for($doctor)->create();
+    $specialty = Specialty::factory()->for($doctor)->create();
+    $patient = Patient::factory()->for($doctor)->create(['email' => 'patient@example.com']);
+    $prescription = Prescription::factory()->for($doctor)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create([
+        'status' => config('custom.prescription.status_keys.draft'),
+    ]);
+
+    $this->actingAs($doctor, 'sanctum')
+        ->postJson("/api/prescriptions/{$prescription->id}/resend")
+        ->assertStatus(422);
+});
+
+test('prescriptions resend rejects patient without email', function () {
+    $doctor = User::factory()->create();
+    $room = Room::factory()->for($doctor)->create();
+    $specialty = Specialty::factory()->for($doctor)->create();
+    $patient = Patient::factory()->for($doctor)->create(['email' => null]);
+    $prescription = Prescription::factory()->for($doctor)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create([
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+
+    $this->actingAs($doctor, 'sanctum')
+        ->postJson("/api/prescriptions/{$prescription->id}/resend")
+        ->assertStatus(422);
+});
+
+test('prescriptions resend sends notification to patient for active prescription', function () {
+    Notification::fake();
+
+    $doctor = User::factory()->create();
+    $room = Room::factory()->for($doctor)->create();
+    $specialty = Specialty::factory()->for($doctor)->create();
+    $patient = Patient::factory()->for($doctor)->create(['email' => 'patient@example.com']);
+    $prescription = Prescription::factory()->for($doctor)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create([
+        'status' => config('custom.prescription.status_keys.active'),
+    ]);
+
+    $response = $this->actingAs($doctor, 'sanctum')
+        ->postJson("/api/prescriptions/{$prescription->id}/resend");
+
+    $response->assertSuccessful()
+        ->assertJsonPath('success', true);
+
+    Notification::assertSentTo(
+        $patient,
+        PrescriptionReadyNotification::class
+    );
+});

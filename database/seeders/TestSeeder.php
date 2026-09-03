@@ -12,13 +12,10 @@ class TestSeeder extends Seeder
 {
     public function run(): void
     {
-        Patient::factory()
-            ->count(10)
-            ->create();
-
         User::factory()
             ->hasSpecialty()
             ->hasRooms(3)
+            ->hasPatients(10)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => Prescription::factory()->makePrescription($user))
             ->afterCreating(fn (User $user) => $this->generateCertificate($user))
             ->create([

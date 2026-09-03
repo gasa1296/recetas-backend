@@ -56,6 +56,7 @@
         <td style="width:20%;text-align:right;" class="qr">
             @if($qrCode)
                 <img src="{{ $qrCode }}" alt="QR">
+                <div style="font-size: 6pt; color: #64748b; text-align: right; margin-top: 2px;">Escanear para verificar validez</div>
             @endif
         </td>
     </tr></table>
@@ -155,6 +156,10 @@
         <span>Fecha de creación: {{ $prescription->updated_at }}</span>
         @if($prescription->expires_at)<span class="danger">Fecha de expiración: {{ $prescription->expires_at }}</span>@endif
     </div>
-    @if($prescription->prescription_hash)<div class="hash">{{ $prescription->prescription_hash }}</div>@endif
+    @if($prescription->prescription_hash)<div class="hash">Hash SHA-256: {{ $prescription->prescription_hash }}</div>@endif
+    <div style="font-size: 6pt; color: #64748b; margin-top: 5px; border-top: 1px solid #cbd5e1; padding-top: 3px; line-height: 1.25;">
+        <strong>Aviso de Firma Digital:</strong> Este récipe médico cuenta con firma electrónica y sellado criptográfico.
+        Para validar la autenticidad, vigencia y estado oficial de dispensación frente a advertencias de visores PDF locales (como emisor no confiable), escanee el código QR o verifique en el portal web oficial.
+    </div>
 </body>
 </html>

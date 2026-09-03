@@ -63,9 +63,10 @@ test('patients index rejects invalid search query', function () {
 });
 
 test('patients index returns paginated collection with correct structure', function () {
-    Patient::factory()->count(12)->create();
+    $user = User::factory()->create();
+    Patient::factory()->for($user)->count(12)->create();
 
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs($user, 'sanctum')
         ->getJson('/api/patients');
 
     $response->assertSuccessful()
@@ -88,10 +89,11 @@ test('patients index returns paginated collection with correct structure', funct
 });
 
 test('patients index filters by identification when search is provided', function () {
-    Patient::factory()->create(['identification' => '11111111']);
-    Patient::factory()->create(['identification' => '22222222']);
+    $user = User::factory()->create();
+    Patient::factory()->for($user)->create(['identification' => '11111111']);
+    Patient::factory()->for($user)->create(['identification' => '22222222']);
 
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs($user, 'sanctum')
         ->getJson('/api/patients?search=1111');
 
     $response->assertSuccessful()
@@ -170,13 +172,14 @@ test('patients show requires authentication', function () {
 });
 
 test('patients show returns the requested patient', function () {
-    $patient = Patient::factory()->create([
+    $user = User::factory()->create();
+    $patient = Patient::factory()->for($user)->create([
         'first_name' => 'Jane',
         'last_name' => 'Smith',
         'identification' => '99999999',
     ]);
 
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs($user, 'sanctum')
         ->getJson('/api/patients/'.$patient->id);
 
     $response->assertSuccessful()
@@ -219,9 +222,10 @@ test('patients update requires authentication', function () {
 });
 
 test('patients update rejects invalid request structure', function () {
-    $patient = Patient::factory()->create();
+    $user = User::factory()->create();
+    $patient = Patient::factory()->for($user)->create();
 
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs($user, 'sanctum')
         ->putJson('/api/patients/'.$patient->id, [
             'first_name' => null,
         ]);
@@ -231,15 +235,16 @@ test('patients update rejects invalid request structure', function () {
 });
 
 test('patients update modifies the patient with valid request structure', function () {
-    $patient = Patient::factory()->create([
+    $user = User::factory()->create();
+    $patient = Patient::factory()->for($user)->create([
         'first_name' => 'Old',
     ]);
 
-    $response = $this->actingAs(User::factory()->create(), 'sanctum')
+    $response = $this->actingAs($user, 'sanctum')
         ->putJson('/api/patients/'.$patient->id, [
             'first_name' => 'New',
             'last_name' => 'Doe',
-            'identification' => $patient->identification,
+            'identification' => (string) $patient->identification,
             'gender' => 'M',
         ]);
 
@@ -251,4 +256,87 @@ test('patients update modifies the patient with valid request structure', functi
         'id' => $patient->id,
         'first_name' => 'New',
     ]);
+});
+
+test('medic cannot view, update, or delete another medic patient', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $patient1 = Patient::factory()->for($doctor1)->create();
+
+    // Doctor 2 cannot view Doctor 1's patient in list
+    $this->actingAs($doctor2, 'sanctum')
+        ->getJson('/api/patients')
+        ->assertSuccessful()
+        ->assertJsonCount(0, 'data');
+
+    // Doctor 2 cannot view Doctor 1's patient in show
+    $this->actingAs($doctor2, 'sanctum')
+        ->getJson('/api/patients/'.$patient1->id)
+        ->assertNotFound();
+
+    // Doctor 2 cannot update Doctor 1's patient
+    $this->actingAs($doctor2, 'sanctum')
+        ->putJson('/api/patients/'.$patient1->id, [
+            'first_name' => 'Hacked',
+            'last_name' => 'Doe',
+            'identification' => '123',
+            'gender' => 'M',
+        ])
+        ->assertNotFound();
+
+    // Doctor 2 cannot delete Doctor 1's patient
+    $this->actingAs($doctor2, 'sanctum')
+        ->deleteJson('/api/patients/'.$patient1->id)
+        ->assertNotFound();
+});
+
+test('multiple medics can register patients with the same identification', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $sharedId = 'V-88888888';
+
+    // Doctor 1 registers patient with sharedId
+    $res1 = $this->actingAs($doctor1, 'sanctum')->postJson('/api/patients', [
+        'first_name' => 'Carlos',
+        'last_name' => 'Perez',
+        'identification' => $sharedId,
+        'gender' => 'M',
+        'birth_date' => '1990-01-01',
+    ]);
+    $res1->assertSuccessful();
+
+    // Doctor 2 registers patient with the same sharedId without error
+    $res2 = $this->actingAs($doctor2, 'sanctum')->postJson('/api/patients', [
+        'first_name' => 'Carlos',
+        'last_name' => 'Perez Gomez',
+        'identification' => $sharedId,
+        'gender' => 'M',
+        'birth_date' => '1990-01-01',
+    ]);
+    $res2->assertSuccessful();
+
+    $this->assertDatabaseCount('patients', 2);
+});
+
+test('same medic cannot register two patients with the same identification', function () {
+    $doctor = User::factory()->create();
+    $duplicateId = 'V-99999999';
+
+    $this->actingAs($doctor, 'sanctum')->postJson('/api/patients', [
+        'first_name' => 'Ana',
+        'last_name' => 'Lopez',
+        'identification' => $duplicateId,
+        'gender' => 'F',
+        'birth_date' => '1995-05-15',
+    ])->assertSuccessful();
+
+    // Re-registering with same doctor fails validation
+    $this->actingAs($doctor, 'sanctum')->postJson('/api/patients', [
+        'first_name' => 'Ana Maria',
+        'last_name' => 'Lopez',
+        'identification' => $duplicateId,
+        'gender' => 'F',
+        'birth_date' => '1995-05-15',
+    ])->assertStatus(422)
+      ->assertJsonValidationErrors(['identification']);
 });

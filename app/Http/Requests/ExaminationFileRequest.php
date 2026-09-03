@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\JsonValidationResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ExaminationFileRequest extends FormRequest
 {
+    use JsonValidationResponse;
     /**
      * Determine if the user is authorized to make this request.
      */

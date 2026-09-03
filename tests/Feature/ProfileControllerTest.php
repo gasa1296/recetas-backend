@@ -302,3 +302,24 @@ test('profile update rejects invalid specialty payload', function (array $payloa
     $response->assertStatus(422)
         ->assertJsonValidationErrors($errors);
 })->with('invalid_specialty_payloads');
+
+test('profile update can save and return signature', function () {
+    $user = User::factory()->create();
+    $fakeSignature = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->putJson('/api/profile', [
+            'first_name' => 'Doctor',
+            'last_name' => 'Test',
+            'saved_signature' => $fakeSignature,
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.saved_signature', $fakeSignature);
+
+    expect($user->fresh()->saved_signature)->toBe($fakeSignature);
+
+    $indexResponse = $this->actingAs($user, 'sanctum')->getJson('/api/profile');
+    $indexResponse->assertSuccessful()
+        ->assertJsonPath('data.saved_signature', $fakeSignature);
+});

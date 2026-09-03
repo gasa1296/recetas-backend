@@ -90,7 +90,7 @@ class PrescriptionRequest extends FormRequest
             'medicaments.*.laboratory_id' => ['nullable', 'integer', 'exists:laboratories,id'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'specialty_id' => ['required', 'integer', Rule::exists('specialties', 'id')->where('user_id', auth()->id())],
-            'patient_id' => ['required', 'integer', 'exists:patients,id'],
+            'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
             'status' => ['nullable', 'integer'],
         ];
     }

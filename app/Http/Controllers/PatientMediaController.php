@@ -21,6 +21,8 @@ class PatientMediaController extends Controller
      */
     public function index(Request $request, Patient $patient): AnonymousResourceCollection
     {
+        $this->authorizePatient($patient);
+
         $query = $patient->media()->with('user');
 
         if ($request->filled('category')) {
@@ -51,6 +53,8 @@ class PatientMediaController extends Controller
      */
     public function store(PatientMediaUploadRequest $request, Patient $patient): JsonResponse
     {
+        $this->authorizePatient($patient);
+
         $uploadedFile = $request->file('file');
         $originalName = $uploadedFile->getClientOriginalName();
         $mimeType = $uploadedFile->getClientMimeType() ?: $uploadedFile->getMimeType();
@@ -184,12 +188,24 @@ class PatientMediaController extends Controller
     }
 
     /**
-     * Validate that the file belongs to the requested patient.
+     * Validate that the file belongs to the requested patient and doctor.
      */
     protected function validateOwnership(Patient $patient, File $file): void
     {
+        $this->authorizePatient($patient);
+
         if ($file->model_type !== Patient::class || (int) $file->model_id !== (int) $patient->id) {
             abort(404, 'El archivo no pertenece al paciente indicado.');
+        }
+    }
+
+    /**
+     * Authorize that the patient belongs to the authenticated medic.
+     */
+    protected function authorizePatient(Patient $patient): void
+    {
+        if ((int) $patient->user_id !== (int) auth()->id()) {
+            abort(404, 'Paciente no encontrado.');
         }
     }
 }

@@ -8,7 +8,6 @@ use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
 use App\Notifications\PrescriptionReadyNotification;
-use App\Services\TimestampService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use chillerlan\QRCode\QRCode;
@@ -25,11 +24,24 @@ class PrescriptionController extends Controller
      */
     public function index(SearchRequest $request): JsonResponse
     {
-        $prescriptions = auth()->user()->prescriptions()->orderBy('created_at', 'desc');
+        $prescriptions = auth()->user()->prescriptions()
+            ->with(['medicaments', 'patient', 'room', 'specialty'])
+            ->orderBy('created_at', 'desc');
+
+        if ($request->has('status') && $request->input('status') !== null && $request->input('status') !== '') {
+            $prescriptions->where('status', $request->integer('status'));
+        }
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $prescriptions = $prescriptions->whereLike('diagnostic', "%$search%", false);
+            $prescriptions = $prescriptions->where(function ($q) use ($search) {
+                $q->whereLike('diagnostic', "%$search%", false)
+                    ->orWhereHas('patient', function ($pq) use ($search) {
+                        $pq->whereLike('first_name', "%$search%", false)
+                            ->orWhereLike('last_name', "%$search%", false)
+                            ->orWhereLike('identification', "%$search%", false);
+                    });
+            });
         }
 
         return (new PrescriptionCollection($prescriptions->paginate(10)))->response();
@@ -150,9 +162,15 @@ class PrescriptionController extends Controller
         $qrOptions->scale = 5;
         $qrCode = (new QRCode($qrOptions))->render(route('public.prescription.show', $prescription->prescription_hash));
 
+        $signature = $request->input('signature') ?: $user->saved_signature;
+
+        if ($request->boolean('save_signature') && $request->filled('signature')) {
+            $user->update(['saved_signature' => $request->input('signature')]);
+        }
+
         $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
             'prescription' => $prescription,
-            'signature' => $expirationDays != 0 ? $request->input('signature') : null,
+            'signature' => $expirationDays != 0 ? $signature : null,
             'qrCode' => $qrCode,
         ])->output();
 
@@ -181,10 +199,12 @@ class PrescriptionController extends Controller
             $privateKey = 'file://'.base_path(config('custom.prescription.signature.default_certificate.key_path'));
         }
 
+        $signerName = trim("{$user->first_name} {$user->last_name}");
         $info = [
-            'Name' => config('app.name'),
+            'Name' => ! empty($signerName) ? $signerName : config('app.name'),
             'Location' => $prescription->room->address,
-            'Reason' => $prescription->room->identification,
+            'Reason' => 'Prescripción Médica #'.$prescription->id.' - '.$prescription->room->name,
+            'ContactInfo' => $user->email,
         ];
         $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
 
@@ -203,25 +223,9 @@ class PrescriptionController extends Controller
             $pdf->useTemplate($templateId);
         }
 
-        // 5. Apply TSA timestamp if enabled
-        $tsaConfig = config('custom.prescription.signature.tsa', []);
-        if (! empty($tsaConfig['enabled']) && ! empty($tsaConfig['url'])) {
-            $signedPdf = $pdf->Output('', 'S');
-            $timestampService = new TimestampService(
-                $tsaConfig['url'],
-                $tsaConfig['hash_algorithm'] ?? 'sha256'
-            );
-            $timestampToken = $timestampService->timestamp($signedPdf);
-
-            if ($timestampToken) {
-                // Embed the timestamp token into the PDF
-                $signedPdf = $this->embedTimestampInPdf($signedPdf, $timestampToken);
-            }
-
-            $prescription->handleUploadFile($signedPdf, 'signed');
-        } else {
-            $prescription->handleUploadFile($pdf->Output('', 'S'), 'signed');
-        }
+        // 5. Generate and store cleanly-signed PDF with valid cryptographic signature
+        $signedPdf = $pdf->Output('', 'S');
+        $prescription->handleUploadFile($signedPdf, 'signed');
 
         unlink($tempFile);
 
@@ -297,57 +301,35 @@ class PrescriptionController extends Controller
     }
 
     /**
-     * Embed a timestamp token into an existing signed PDF.
-     *
-     * This method adds the timestamp token to the PDF's signature dictionary
-     * as a /SigTst attribute, which is the standard way to embed timestamps
-     * in PDF signatures according to the PAdES (PDF Advanced Electronic Signatures) standard.
-     *
-     * @param  string  $pdfContent  The signed PDF content
-     * @param  string  $timestampToken  The RFC 3161 timestamp token
-     * @return string The PDF with embedded timestamp
+     * Resend the prescription ready notification email with signed PDF to the patient.
      */
-    private function embedTimestampInPdf(string $pdfContent, string $timestampToken): string
+    public function resend(int $prescription): JsonResponse
     {
-        // Find the signature dictionary in the PDF
-        // The signature dictionary contains /Contents which holds the signature value
-        // We need to add /SigTst with the timestamp token
+        $user = auth()->user();
+        $prescription = $user->prescriptions()
+            ->with(['patient', 'signed_file'])
+            ->findOrFail($prescription);
 
-        // Look for the signature object pattern
-        // In PDF, the signature dictionary looks like:
-        // /Type /Sig /Filter /Adobe.PPKLite /SubFilter /adbe.pkcs7.detached /Contents <hex> ...
-
-        // Find the /Contents entry in the signature
-        $pattern = '/\/Contents\s*<([0-9A-Fa-f]+)>/';
-        if (preg_match($pattern, $pdfContent, $matches)) {
-            $hexContents = $matches[1];
-            $byteRange = [];
-
-            // Find the /ByteRange entry
-            $byteRangePattern = '/\/ByteRange\s*\[(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\]/';
-            if (preg_match($byteRangePattern, $pdfContent, $byteRangeMatches)) {
-                $byteRange = [
-                    (int) $byteRangeMatches[1],
-                    (int) $byteRangeMatches[2],
-                    (int) $byteRangeMatches[3],
-                    (int) $byteRangeMatches[4],
-                ];
-            }
-
-            // Calculate where to insert the timestamp
-            // We'll add it after the /Contents entry
-            $insertPos = strpos($pdfContent, $matches[0]) + strlen($matches[0]);
-
-            // Encode the timestamp token as hex
-            $timestampHex = bin2hex($timestampToken);
-
-            // Build the SigTst dictionary
-            $sigTst = ' /SigTst << /Type /SigTst /Version 1 /Objects [ << /ObjRef 1 /UseInstalled 0 >> ] /TimeStampToken <'.$timestampHex.'> >>';
-
-            // Insert the timestamp after the Contents entry
-            $pdfContent = substr_replace($pdfContent, $sigTst, $insertPos, 0);
+        if ((int) $prescription->status !== (int) config('custom.prescription.status_keys.active')) {
+            return $this->error(
+                'Solo se pueden reenviar recetas médicas emitidas y activas.',
+                [],
+                422
+            );
         }
 
-        return $pdfContent;
+        if (empty($prescription->patient?->email)) {
+            return $this->error(
+                'El paciente no tiene una dirección de correo electrónico registrada para el reenvío.',
+                [],
+                422
+            );
+        }
+
+        $prescription->patient->notify(new PrescriptionReadyNotification($prescription));
+
+        return $this->success(
+            __('messages.operation_success')
+        );
     }
 }

@@ -82,16 +82,24 @@ class Prescription extends Model
 
     public function signed_file(): MorphOne
     {
-        return $this->morphOne(File::class, 'model')->where('type', 'signed');
+        return $this->morphOne(File::class, 'model')->where('type', 'signed')->latestOfMany();
     }
 
     public function unsigned_file(): MorphOne
     {
-        return $this->morphOne(File::class, 'model')->where('type', 'unsigned');
+        return $this->morphOne(File::class, 'model')->where('type', 'unsigned')->latestOfMany();
     }
 
     public function handleUploadFile(string|UploadedFile $file, string $type = 'unsigned'): bool
     {
+        $existingFiles = $this->files()->where('type', $type)->get();
+        foreach ($existingFiles as $oldFile) {
+            if (Storage::disk('local')->exists($oldFile->path)) {
+                Storage::disk('local')->delete($oldFile->path);
+            }
+            $oldFile->delete();
+        }
+
         $name = Str::uuid().'.pdf';
         $path = date('Y').'/'.date('m').'/'.$name;
         Storage::disk('local')->put($path, $file);

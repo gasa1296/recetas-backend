@@ -15,6 +15,11 @@ class ForceJsonMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Allow public prescription verification to serve HTML web views to browsers
+        if ($request->is('*public/prescriptions*') && ($request->query('format') === 'html' || str_contains($request->header('Accept', ''), 'text/html'))) {
+            return $next($request);
+        }
+
         $request->headers->set('Accept', 'application/json');
         $request->headers->set('Content-Type', 'application/json');
 

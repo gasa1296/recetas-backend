@@ -90,6 +90,7 @@ use Illuminate\Support\Facades\Route;
                     Route::get('/patients/{patient}', 'show')->name('show');
                     Route::post('/patients', 'store')->name('store');
                     Route::put('/patients/{patient}', 'update')->name('update');
+                    Route::delete('/patients/{patient}', 'destroy')->name('destroy');
                 });
 
             Route::controller(PrescriptionController::class)
@@ -102,6 +103,7 @@ use Illuminate\Support\Facades\Route;
                     Route::delete('/prescriptions/{prescription}', 'destroy')->name('destroy');
                     Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
                     Route::post('/prescriptions/{prescription}/null', 'nullPrescription')->name('null');
+                    Route::post('/prescriptions/{prescription}/resend', 'resend')->name('resend');
                     Route::match(['get', 'post'], '/prescriptions/{prescription}/file', 'getFile')->name('file');
                 });
             Route::controller(SpecialtyController::class)

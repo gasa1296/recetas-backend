@@ -22,7 +22,7 @@ it('requires authentication for patient media endpoints', function () {
 
 it('lists media files belonging to a patient', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $file1 = File::factory()->create([
         'model_type' => Patient::class,
@@ -41,7 +41,7 @@ it('lists media files belonging to a patient', function () {
     ]);
 
     // Another patient's file
-    $otherPatient = Patient::factory()->create();
+    $otherPatient = Patient::factory()->for($doctor)->create();
     File::factory()->create([
         'model_type' => Patient::class,
         'model_id' => $otherPatient->id,
@@ -58,7 +58,7 @@ it('lists media files belonging to a patient', function () {
 
 it('filters patient media by category', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     File::factory()->create([
         'model_type' => Patient::class,
@@ -83,7 +83,7 @@ it('filters patient media by category', function () {
 
 it('filters patient media by evolution stage', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     File::factory()->create([
         'model_type' => Patient::class,
@@ -110,7 +110,7 @@ it('filters patient media by evolution stage', function () {
 
 it('allows a doctor to upload an RX image for a patient', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $fakeImage = UploadedFile::fake()->image('torax_rx.png', 1200, 800);
 
@@ -145,7 +145,7 @@ it('allows a doctor to upload an RX image for a patient', function () {
 
 it('allows a doctor to upload a procedure video for a patient', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $fakeVideo = UploadedFile::fake()->create('marcha_paciente.mp4', 5000, 'video/mp4');
 
@@ -167,7 +167,7 @@ it('allows a doctor to upload a procedure video for a patient', function () {
 
 it('validates file types and max size on media upload', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     // Invalid extension .exe
     $invalidFile = UploadedFile::fake()->create('malware.exe', 100, 'application/x-msdownload');
@@ -183,7 +183,7 @@ it('validates file types and max size on media upload', function () {
 
 it('allows viewing and streaming a patient media file', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $path = 'patients/'.$patient->id.'/media/test_photo.jpg';
     Storage::disk('local')->put($path, 'fake-image-binary-content');
@@ -212,7 +212,7 @@ it('allows viewing and streaming a patient media file', function () {
 
 it('allows downloading a patient media file', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $path = 'patients/'.$patient->id.'/media/download_doc.pdf';
     Storage::disk('local')->put($path, 'sample-pdf-content');
@@ -234,7 +234,7 @@ it('allows downloading a patient media file', function () {
 
 it('allows updating media title notes and evolution stage', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $file = File::factory()->create([
         'model_type' => Patient::class,
@@ -263,7 +263,7 @@ it('allows updating media title notes and evolution stage', function () {
 
 it('allows deleting a media file and cleans physical storage', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $path = 'patients/'.$patient->id.'/media/to_delete.jpg';
     Storage::disk('local')->put($path, 'temporary-bytes');
@@ -285,8 +285,8 @@ it('allows deleting a media file and cleans physical storage', function () {
 
 it('returns 404 when requesting a media file of another patient', function () {
     $doctor = User::factory()->create();
-    $patient1 = Patient::factory()->create();
-    $patient2 = Patient::factory()->create();
+    $patient1 = Patient::factory()->for($doctor)->create();
+    $patient2 = Patient::factory()->for($doctor)->create();
 
     $file = File::factory()->create([
         'model_type' => Patient::class,

@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\JsonValidationResponse;
 use App\Models\Examination;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ExaminationRequest extends FormRequest
 {
+    use JsonValidationResponse;
     /**
      * Determine if the user is authorized to make this request.
      */

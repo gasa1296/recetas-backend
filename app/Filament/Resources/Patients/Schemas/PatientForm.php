@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Patients\Schemas;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -13,6 +14,12 @@ class PatientForm
     {
         return $schema
             ->components([
+                Select::make('user_id')
+                    ->relationship('user', 'first_name')
+                    ->label('Médico Responsable')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 TextInput::make('first_name')
                     ->required(),
                 TextInput::make('last_name')

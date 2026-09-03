@@ -50,6 +50,7 @@ class PrescriptionResource extends JsonResource
             'pretty_status' => $this->pretty_status,
             'prescription_hash' => $this->prescription_hash,
             'expires_at' => $this->expires_at,
+            'created_at' => $this->created_at?->toIso8601String(),
         ];
     }
 }

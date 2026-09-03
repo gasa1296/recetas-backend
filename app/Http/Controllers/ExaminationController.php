@@ -22,6 +22,8 @@ class ExaminationController extends Controller
      */
     public function index(Request $request, Patient $patient): AnonymousResourceCollection
     {
+        $this->authorizePatient($patient);
+
         $query = $patient->examinations()->with(['files.user', 'user']);
 
         if ($request->filled('type')) {
@@ -56,6 +58,8 @@ class ExaminationController extends Controller
      */
     public function store(ExaminationRequest $request, Patient $patient): JsonResponse
     {
+        $this->authorizePatient($patient);
+
         $data = $request->validated();
         unset($data['file']);
 
@@ -187,12 +191,24 @@ class ExaminationController extends Controller
     }
 
     /**
-     * Validate that the examination belongs to the specified patient.
+     * Validate that the examination belongs to the specified patient and doctor.
      */
     protected function validateOwnership(Patient $patient, Examination $examination): void
     {
+        $this->authorizePatient($patient);
+
         if ((int) $examination->patient_id !== (int) $patient->id) {
             abort(404, 'El examen no pertenece al paciente indicado.');
+        }
+    }
+
+    /**
+     * Authorize that the patient belongs to the authenticated medic.
+     */
+    protected function authorizePatient(Patient $patient): void
+    {
+        if ((int) $patient->user_id !== (int) auth()->id()) {
+            abort(404, 'Paciente no encontrado.');
         }
     }
 }

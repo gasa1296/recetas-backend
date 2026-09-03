@@ -28,7 +28,7 @@ class AppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => ['required', 'integer', 'exists:patients,id'],
+            'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
             'room_id' => ['nullable', 'integer', 'exists:rooms,id'],
             'specialty_id' => ['nullable', 'integer', 'exists:specialties,id'],
             'starts_at' => ['required', 'date'],

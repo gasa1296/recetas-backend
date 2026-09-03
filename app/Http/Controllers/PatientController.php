@@ -8,6 +8,7 @@ use App\Http\Resources\PatientCollection;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
@@ -16,14 +17,20 @@ class PatientController extends Controller
      */
     public function index(SearchRequest $request): JsonResponse
     {
-        $patients = Patient::orderBy('created_at', 'desc');
+        $patients = $request->user()->patients()->orderBy('created_at', 'desc');
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $patients = $patients->where('identification', 'LIKE', "%{$search}%");
+            $patients = $patients->where(function ($q) use ($search) {
+                $q->where('identification', 'LIKE', "%{$search}%")
+                    ->orWhere('first_name', 'LIKE', "%{$search}%")
+                    ->orWhere('last_name', 'LIKE', "%{$search}%");
+            });
         }
 
-        return (new PatientCollection($patients->paginate(10)))->response();
+        $perPage = $request->integer('per_page', 10);
+
+        return (new PatientCollection($patients->paginate($perPage)))->response();
     }
 
     /**
@@ -31,19 +38,19 @@ class PatientController extends Controller
      */
     public function store(PatientRequest $request): JsonResponse
     {
-        $patients = Patient::create($request->validated());
+        $patient = $request->user()->patients()->create($request->validated());
 
-        return $this->success(__('messages.operation_success'), new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patient));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $patient): JsonResponse
+    public function show(Request $request, int $patient): JsonResponse
     {
-        $patients = Patient::findOrFail($patient);
+        $patient = $request->user()->patients()->findOrFail($patient);
 
-        return $this->success(__('messages.operation_success'), new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patient));
     }
 
     /**
@@ -51,19 +58,19 @@ class PatientController extends Controller
      */
     public function update(PatientRequest $request, int $patient): JsonResponse
     {
-        $patients = Patient::findOrFail($patient);
-        $patients->update($request->validated());
+        $patient = $request->user()->patients()->findOrFail($patient);
+        $patient->update($request->validated());
 
-        return $this->success(__('messages.operation_success'), new PatientResource($patients));
+        return $this->success(__('messages.operation_success'), new PatientResource($patient));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $patient): JsonResponse
+    public function destroy(Request $request, int $patient): JsonResponse
     {
-        $patients = Patient::findOrFail($patient);
-        $patients->delete();
+        $patient = $request->user()->patients()->findOrFail($patient);
+        $patient->delete();
 
         return $this->success(__('messages.operation_success'));
     }

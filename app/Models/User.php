@@ -28,6 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
     'email',
     'password',
     'signature_hash',
+    'saved_signature',
     'certificate_path',
     'certificate_key_path',
     'certificate_expires_at',

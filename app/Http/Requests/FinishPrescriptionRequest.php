@@ -16,8 +16,15 @@ class FinishPrescriptionRequest extends FormRequest
 
     public function rules(): array
     {
+        $hasSavedSignature = ! empty(auth()->user()?->saved_signature);
+
         return [
-            'signature' => ['required', 'string', 'regex:/^[A-Za-z0-9+\/\n\r]*={0,2}$/'],
+            'signature' => [
+                $hasSavedSignature ? 'nullable' : 'required',
+                'string',
+                'regex:/^[A-Za-z0-9+\/\n\r]*={0,2}$/',
+            ],
+            'save_signature' => ['nullable', 'boolean'],
         ];
     }
 }

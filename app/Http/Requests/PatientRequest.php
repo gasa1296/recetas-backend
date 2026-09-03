@@ -26,10 +26,20 @@ class PatientRequest extends FormRequest
      */
     public function rules(): array
     {
+        $patientId = $this->route('patient') ?? $this->route('id');
+        $userId = auth()->id();
+
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'identification' => ['required'],
+            'identification' => [
+                'required',
+                'max:255',
+                Rule::unique('patients', 'identification')
+                    ->where('user_id', $userId)
+                    ->whereNull('deleted_at')
+                    ->ignore($patientId),
+            ],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],

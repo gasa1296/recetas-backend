@@ -23,7 +23,7 @@ it('requires authentication to access examination endpoints', function () {
 
 it('lists examinations belonging to a patient', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam1 = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -40,7 +40,7 @@ it('lists examinations belonging to a patient', function () {
     ]);
 
     // Another patient's exam
-    $otherPatient = Patient::factory()->create();
+    $otherPatient = Patient::factory()->for($doctor)->create();
     Examination::factory()->create([
         'patient_id' => $otherPatient->id,
         'user_id' => $doctor->id,
@@ -56,7 +56,7 @@ it('lists examinations belonging to a patient', function () {
 
 it('filters examinations by type and status', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -84,7 +84,7 @@ it('filters examinations by type and status', function () {
 
 it('filters examinations by date range', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -110,7 +110,7 @@ it('filters examinations by date range', function () {
 
 it('allows a doctor to create an examination with an attached lab PDF', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $fakePdf = UploadedFile::fake()->create('reporte_laboratorio.pdf', 1500, 'application/pdf');
 
@@ -150,7 +150,7 @@ it('allows a doctor to create an examination with an attached lab PDF', function
 
 it('allows a doctor to view detailed examination with attached files', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -176,7 +176,7 @@ it('allows a doctor to view detailed examination with attached files', function 
 
 it('allows a doctor to update examination findings and status', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -206,7 +206,7 @@ it('allows a doctor to update examination findings and status', function () {
 
 it('allows a doctor to add an additional attachment to an examination', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -236,7 +236,7 @@ it('allows a doctor to add an additional attachment to an examination', function
 
 it('allows a doctor to remove an attachment from an examination', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -263,7 +263,7 @@ it('allows a doctor to remove an attachment from an examination', function () {
 
 it('allows soft deleting an examination', function () {
     $doctor = User::factory()->create();
-    $patient = Patient::factory()->create();
+    $patient = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient->id,
@@ -279,8 +279,8 @@ it('allows soft deleting an examination', function () {
 
 it('returns 404 when accessing an examination of another patient', function () {
     $doctor = User::factory()->create();
-    $patient1 = Patient::factory()->create();
-    $patient2 = Patient::factory()->create();
+    $patient1 = Patient::factory()->for($doctor)->create();
+    $patient2 = Patient::factory()->for($doctor)->create();
 
     $exam = Examination::factory()->create([
         'patient_id' => $patient1->id,
