@@ -14,3 +14,10 @@ Schedule::job(new RefreshExpiringCertificatesJob)
     ->withoutOverlapping()
     ->onOneServer()
     ->name('refresh-expiring-certificates');
+
+Schedule::job(new \App\Jobs\SendAppointmentRemindersJob)
+    ->everyThirtyMinutes()
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->name('send-appointment-reminders');
+

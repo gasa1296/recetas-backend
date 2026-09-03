@@ -39,10 +39,16 @@ class CertificateService
             throw new \RuntimeException('Failed to generate private key');
         }
 
-        $csr = openssl_csr_new($dn, $privateKey, [
-            'config' => '/etc/pki/tls/openssl.cnf',
-            'digest_alg' => 'sha256',
-        ]);
+        $opensslConfig = file_exists('/etc/pki/tls/openssl.cnf')
+            ? '/etc/pki/tls/openssl.cnf'
+            : (file_exists('/etc/ssl/openssl.cnf') ? '/etc/ssl/openssl.cnf' : null);
+
+        $csrConfig = ['digest_alg' => 'sha256'];
+        if ($opensslConfig) {
+            $csrConfig['config'] = $opensslConfig;
+        }
+
+        $csr = openssl_csr_new($dn, $privateKey, $csrConfig);
 
         if (! $csr instanceof \OpenSSLCertificateSigningRequest) {
             Log::error('Failed to generate CSR', ['user_id' => $user->id]);
@@ -51,15 +57,19 @@ class CertificateService
         }
 
         // Self-sign the certificate
-        $certificate = openssl_csr_sign($csr, null, $privateKey, $validityDays, [
-            'config' => '/etc/pki/tls/openssl.cnf',
+        $signConfig = [
             'digest_alg' => 'sha256',
             'x509_extensions' => [
                 'basicConstraints' => 'CA:FALSE',
                 'keyUsage' => 'digitalSignature, nonRepudiation',
                 'extendedKeyUsage' => 'emailProtection, clientAuth',
             ],
-        ]);
+        ];
+        if ($opensslConfig) {
+            $signConfig['config'] = $opensslConfig;
+        }
+
+        $certificate = openssl_csr_sign($csr, null, $privateKey, $validityDays, $signConfig);
 
         if (! $certificate instanceof \OpenSSLCertificate) {
             Log::error('Failed to generate certificate', ['user_id' => $user->id]);
@@ -77,9 +87,12 @@ class CertificateService
         }
 
         // Export private key
-        $keyPem = openssl_pkey_export($privateKey, $keyContent, null, [
-            'config' => '/etc/pki/tls/openssl.cnf',
-        ]);
+        $exportConfig = [];
+        if ($opensslConfig) {
+            $exportConfig['config'] = $opensslConfig;
+        }
+
+        $keyPem = openssl_pkey_export($privateKey, $keyContent, null, $exportConfig);
 
         if (! $keyPem) {
             Log::error('Failed to export private key', ['user_id' => $user->id]);

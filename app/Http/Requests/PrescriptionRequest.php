@@ -33,6 +33,21 @@ class PrescriptionRequest extends FormRequest
                 continue;
             }
             $id = $medicament['id'];
+            $brandId = $medicament['brand_id'] ?? null;
+            $laboratoryId = $medicament['laboratory_id'] ?? null;
+            if (! $brandId && ! empty($medicament['recommended_brand'])) {
+                $matchedBrand = \App\Models\Brand::where('name', 'like', '%'.$medicament['recommended_brand'].'%')->first();
+                if ($matchedBrand) {
+                    $brandId = $matchedBrand->id;
+                    $laboratoryId = $matchedBrand->laboratory_id;
+                }
+            } elseif ($brandId && ! $laboratoryId) {
+                $brand = \App\Models\Brand::find($brandId);
+                if ($brand) {
+                    $laboratoryId = $brand->laboratory_id;
+                }
+            }
+
             $this->merge([
                 'medicaments.'.$id.'.dosage' => $medicament['dosage'] ?? null,
                 'medicaments.'.$id.'.frequency' => $medicament['frequency'] ?? null,
@@ -40,6 +55,8 @@ class PrescriptionRequest extends FormRequest
                 'medicaments.'.$id.'.medicament_quantity' => $medicament['medicament_quantity'] ?? null,
                 'medicaments.'.$id.'.medicament_quantity_letters' => $formatter->format($medicament['medicament_quantity'] ?? ''),
                 'medicaments.'.$id.'.recommended_brand' => $medicament['recommended_brand'] ?? null,
+                'medicaments.'.$id.'.brand_id' => $brandId,
+                'medicaments.'.$id.'.laboratory_id' => $laboratoryId,
             ]);
         }
     }
@@ -69,6 +86,8 @@ class PrescriptionRequest extends FormRequest
             'medicaments.*.medicament_quantity' => ['required_with:medicaments', 'numeric', 'min:0'],
             'medicaments.*.medicament_quantity_letters' => ['required_with:medicaments', 'string'],
             'medicaments.*.recommended_brand' => ['nullable', 'string'],
+            'medicaments.*.brand_id' => ['nullable', 'integer', 'exists:brands,id'],
+            'medicaments.*.laboratory_id' => ['nullable', 'integer', 'exists:laboratories,id'],
             'room_id' => ['required', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
             'specialty_id' => ['required', 'integer', Rule::exists('specialties', 'id')->where('user_id', auth()->id())],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],

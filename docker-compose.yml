@@ -8,7 +8,6 @@ services:
             dockerfile: Dockerfile
         image: recetas
         container_name: recetas-app
-        restart: unless-stopped
         tty: true
         working_dir: /var/www/
         volumes:
@@ -16,46 +15,40 @@ services:
             - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
-        environment:
-            DB_CONNECTION: mysql
-            DB_HOST: db
-            DB_DATABASE: ${DB_DATABASE}
-            DB_USERNAME: ${DB_USERNAME}
-            DB_PASSWORD: ${DB_PASSWORD}
-            REDIS_HOST: redis
-            REDIS_PASSWORD: ${REDIS_PASSWORD}
         healthcheck:
             test: ["CMD", "php", "-r", "exit(0);"]
             interval: 10s
             timeout: 5s
             retries: 3
-    db:
-        image: mariadb:lts
-        container_name: recetas-db
-        restart: unless-stopped
-        tty: true
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_ROOT_USER: ${DB_USERNAME}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    queue:
+        image: recetas
+        container_name: recetas-queue
+        depends_on:
+            app:
+                condition: service_healthy
+        working_dir: /var/www/
+        command: php artisan queue:work --sleep=3 --tries=1 --timeout=90
         volumes:
-            - recetas_dbdata:/var/lib/mysql
-            # - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
-        healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-            interval: 10s
-            timeout: 5s
-            retries: 3
+            - ./:/var/www
+            - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - recetas
+    scheduler:
+        image: recetas
+        container_name: recetas-scheduler
+        depends_on:
+            app:
+                condition: service_healthy
+        working_dir: /var/www/
+        command: php artisan schedule:work
+        volumes:
+            - ./:/var/www
+            - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
     redis:
         image: redis:8-alpine
         container_name: recetas-redis
-        restart: unless-stopped
         tty: true
         ports:
             - "6379:6379"
@@ -71,25 +64,20 @@ services:
     nginx:
         image: nginx:alpine
         container_name: recetas-nginx
-        restart: unless-stopped
         depends_on:
             app:
                 condition: service_healthy
         tty: true
         ports:
-            - 80:80
-            - 443:443
+            - 8000:80
         volumes:
-            - ./:/var/www
             - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/
-            - ./docker-compose/nginx/certs/:/etc/nginx/certs:ro
+            - ./:/var/www:ro
         networks:
             - recetas
 networks:
     recetas:
         driver: bridge
 volumes:
-    recetas_dbdata:
-        driver: local
     recetas_redis:
         driver: local

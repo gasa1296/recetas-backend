@@ -48,6 +48,8 @@ class PrescriptionResource extends JsonResource
             ])),
             'status' => $this->status,
             'pretty_status' => $this->pretty_status,
+            'prescription_hash' => $this->prescription_hash,
+            'expires_at' => $this->expires_at,
         ];
     }
 }

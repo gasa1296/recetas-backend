@@ -15,6 +15,7 @@ use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PrescriptionController extends Controller
@@ -40,7 +41,7 @@ class PrescriptionController extends Controller
     public function store(PrescriptionRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $data['prescription_hash'] = hash('sha256', json_encode($data));
+        $data['prescription_hash'] = hash('sha256', json_encode($data).Str::random(16).microtime(true));
 
         $prescription = auth()
             ->user()
@@ -161,6 +162,9 @@ class PrescriptionController extends Controller
 
             return $this->success(
                 __('messages.operation_success'),
+                new PrescriptionResource(
+                    $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
+                ),
             );
         }
 
@@ -228,6 +232,29 @@ class PrescriptionController extends Controller
 
         return $this->success(
             __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
+            ),
+        );
+    }
+
+    public function nullPrescription(int $prescription): JsonResponse
+    {
+        $prescription = auth()
+            ->user()
+            ->prescriptions()
+            ->where('status', config('custom.prescription.status_keys.active'))
+            ->findOrFail($prescription);
+
+        $prescription->update([
+            'status' => config('custom.prescription.status_keys.nulled'),
+        ]);
+
+        return $this->success(
+            __('messages.operation_success'),
+            new PrescriptionResource(
+                $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
+            ),
         );
     }
 
@@ -251,15 +278,18 @@ class PrescriptionController extends Controller
         if ($expiresDate === $updatedDate) {
             $useUnsigned = true;
         }
-        $file = $useUnsigned ? $prescription->unsigned_file : $prescription->signed_file;
+        $file = ($useUnsigned ? $prescription->unsigned_file : $prescription->signed_file)
+            ?? $prescription->signed_file
+            ?? $prescription->unsigned_file;
 
-        $path = Storage::disk('local')->path($file->path);
-
-        if (! file_exists($path)) {
+        if (! $file || ! Storage::disk('local')->exists($file->path)) {
             return $this->error(
                 __('messages.not_found'),
+                404
             );
         }
+
+        $path = Storage::disk('local')->path($file->path);
 
         return response()->file($path, [
             'Content-Type' => 'application/pdf',

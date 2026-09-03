@@ -114,7 +114,13 @@
                 <tr><th>Medicamento</th><th style="text-align:center;">Dosis</th><th style="text-align:center;">Frecuencia</th><th style="text-align:center;">Duración</th><th style="text-align:center;">Cantidad</th></tr>
                 @foreach($prescription->medicaments as $med)
                     <tr>
-                        <td class="med"><span class="fw">{{ $med->active_ingredient }}</span><br><span style="font-size:8pt;color:#0f2b4a;">{{ $med->type }} - {{ $med->group }}</span></td>
+                        <td class="med">
+                            <span class="fw">{{ $med->active_ingredient }}</span><br>
+                            <span style="font-size:8pt;color:#0f2b4a;">{{ $med->type }} - {{ $med->group }}</span>
+                            @if(!empty($med->pivot->recommended_brand))
+                                <br><span style="font-size:7.5pt;color:#047857;font-style:italic;">Sugerencia comercial: {{ $med->pivot->recommended_brand }}</span>
+                            @endif
+                        </td>
                         <td class="med" style="text-align:center;">@if($med->pivot->dosage)<span class="tbl-lbl">Dosis</span><span class="tbl-val">{{ $med->pivot->dosage }}</span>@endif</td>
                         <td class="med" style="text-align:center;">@if($med->pivot->frequency)<span class="tbl-lbl">Frecuencia</span><span class="tbl-val">{{ $med->pivot->frequency }}</span>@endif</td>
                         <td class="med" style="text-align:center;">@if($med->pivot->duration)<span class="tbl-lbl">Duración</span><span class="tbl-val">{{ $med->pivot->duration }}</span>@endif</td>

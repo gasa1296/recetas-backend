@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -40,6 +41,21 @@ class Patient extends Model
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
+    }
+
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function media(): MorphMany
+    {
+        return $this->morphMany(File::class, 'model')->latest('id');
+    }
+
+    public function examinations(): HasMany
+    {
+        return $this->hasMany(Examination::class)->latest('examined_at');
     }
 
     protected function name(): Attribute

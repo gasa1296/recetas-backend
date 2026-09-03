@@ -669,3 +669,244 @@ test('user has valid certificate returns false when certificate paths are null',
 
     expect($user->hasValidCertificate())->toBeFalse();
 });
+
+test('doctor can null their active prescription', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(30),
+        ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/null');
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.nulled'));
+
+    $this->assertDatabaseHas('prescriptions', [
+        'id' => $prescription->id,
+        'status' => config('custom.prescription.status_keys.nulled'),
+    ]);
+});
+
+test('doctor cannot null another doctors prescription', function () {
+    $user = User::factory()->create();
+    $other = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($other)->create();
+    $specialty = Specialty::factory()->for($other)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($other)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(30),
+        ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/null');
+
+    $response->assertStatus(404);
+});
+
+test('doctor cannot null draft prescription', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.draft'),
+        ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/prescriptions/'.$prescription->id.'/null');
+
+    $response->assertStatus(404);
+});
+
+test('public show returns json verification data when requested with accept json', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+    $medicament = Medicament::factory()->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-verification-hash-12345',
+        ]);
+
+    $prescription->medicaments()->attach($medicament->id, [
+        'dosage' => '500mg',
+        'frequency' => '8h',
+        'duration' => '7d',
+        'medicament_quantity' => 21,
+        'medicament_quantity_letters' => 'veintiuno',
+        'recommended_brand' => 'Amoxil',
+    ]);
+
+    $response = $this->getJson('/api/public/prescriptions/test-verification-hash-12345');
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.prescription_hash', 'test-verification-hash-12345')
+        ->assertJsonPath('data.is_valid', true)
+        ->assertJsonPath('data.medicaments.0.recommended_brand', 'Amoxil');
+});
+
+test('public prescription returns pdf by default when file exists', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-pdf-hash-99999',
+        ]);
+
+    $prescription->handleUploadFile('%PDF-1.7 dummy pdf content', 'signed');
+
+    $response = $this->get('/api/public/prescriptions/test-pdf-hash-99999');
+
+    $response->assertSuccessful();
+    expect($response->headers->get('Content-Type'))->toContain('application/pdf');
+    expect($response->streamedContent())->toBe('%PDF-1.7 dummy pdf content');
+});
+
+test('public prescription returns json when format=json query parameter is present', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-json-query-hash-123',
+        ]);
+
+    $prescription->handleUploadFile('%PDF-1.7 dummy pdf content', 'signed');
+
+    $response = $this->getJson('/api/public/prescriptions/test-json-query-hash-123?format=json');
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.prescription_hash', 'test-json-query-hash-123')
+        ->assertJsonPath('data.is_valid', true);
+});
+
+test('public dispense marks active prescription as dispensed', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-dispense-hash-123',
+        ]);
+
+    $response = $this->postJson('/api/public/prescriptions/test-dispense-hash-123/dispense', [
+        'mode' => 'full',
+    ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.fully_dispensed'));
+
+    $this->assertDatabaseHas('prescriptions', [
+        'id' => $prescription->id,
+        'status' => config('custom.prescription.status_keys.fully_dispensed'),
+    ]);
+});
+
+test('public dispense can mark active prescription as partially dispensed', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-dispense-partial-hash',
+        ]);
+
+    $response = $this->postJson('/api/public/prescriptions/test-dispense-partial-hash/dispense', [
+        'mode' => 'partial',
+    ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.partially_dispensed'));
+});
+
+test('public dispense rejects prescription that is already nulled', function () {
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.nulled'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-dispense-nulled-hash',
+        ]);
+
+    $response = $this->postJson('/api/public/prescriptions/test-dispense-nulled-hash/dispense');
+
+    $response->assertStatus(422);
+});
+

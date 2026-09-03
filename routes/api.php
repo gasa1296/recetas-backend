@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\GenericController;
 use App\Http\Controllers\MedicamentController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientMediaController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrescriptionTemplateController;
 use App\Http\Controllers\ProfileController;
@@ -11,6 +14,7 @@ use App\Http\Controllers\PublicPrescriptionController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpecialtyController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +54,7 @@ use Illuminate\Support\Facades\Route;
         Route::controller(PublicPrescriptionController::class)->name('public.prescription.')
             ->group(function () {
                 Route::get('/public/prescriptions/{prescription}', 'show')->name('show');
+                Route::post('/public/prescriptions/{prescription}/dispense', 'dispense')->name('dispense');
             });
     }
 
@@ -96,7 +101,8 @@ use Illuminate\Support\Facades\Route;
                     Route::put('/prescriptions/{prescription}', 'update')->name('update');
                     Route::delete('/prescriptions/{prescription}', 'destroy')->name('destroy');
                     Route::post('/prescriptions/{prescription}/finish', 'finishPrescription')->name('finish');
-                    Route::post('/prescriptions/{prescription}/file', 'getFile')->name('file');
+                    Route::post('/prescriptions/{prescription}/null', 'nullPrescription')->name('null');
+                    Route::match(['get', 'post'], '/prescriptions/{prescription}/file', 'getFile')->name('file');
                 });
             Route::controller(SpecialtyController::class)
                 ->name('specialty.')
@@ -122,6 +128,54 @@ use Illuminate\Support\Facades\Route;
                     Route::post('/prescription-templates', 'store')->name('store');
                     Route::put('/prescription-templates/{prescription_template}', 'update')->name('update');
                     Route::delete('/prescription-templates/{prescription_template}', 'destroy')->name('destroy');
+                });
+            Route::controller(AppointmentController::class)
+                ->name('appointments.')
+                ->group(function () {
+                    Route::get('/appointments', 'index')->name('index');
+                    Route::get('/appointments/{appointment}', 'show')->name('show');
+                    Route::post('/appointments', 'store')->name('store');
+                    Route::put('/appointments/{appointment}', 'update')->name('update');
+                    Route::delete('/appointments/{appointment}', 'destroy')->name('destroy');
+                    Route::post('/appointments/{appointment}/status', 'updateStatus')->name('status');
+                });
+            Route::controller(PatientMediaController::class)
+                ->name('patients.media.')
+                ->group(function () {
+                    Route::get('/patients/{patient}/media', 'index')->name('index');
+                    Route::post('/patients/{patient}/media', 'store')->name('store');
+                    Route::get('/patients/{patient}/media/{file}', 'show')->name('show');
+                    Route::get('/patients/{patient}/media/{file}/stream', 'stream')->name('stream');
+                    Route::get('/patients/{patient}/media/{file}/download', 'download')->name('download');
+                    Route::put('/patients/{patient}/media/{file}', 'update')->name('update');
+                    Route::delete('/patients/{patient}/media/{file}', 'destroy')->name('destroy');
+                });
+            Route::controller(ExaminationController::class)
+                ->name('patients.examinations.')
+                ->group(function () {
+                    Route::get('/patients/{patient}/examinations', 'index')->name('index');
+                    Route::post('/patients/{patient}/examinations', 'store')->name('store');
+                    Route::get('/patients/{patient}/examinations/{examination}', 'show')->name('show');
+                    Route::put('/patients/{patient}/examinations/{examination}', 'update')->name('update');
+                    Route::delete('/patients/{patient}/examinations/{examination}', 'destroy')->name('destroy');
+                    Route::post('/patients/{patient}/examinations/{examination}/files', 'addFile')->name('files.add');
+                    Route::delete('/patients/{patient}/examinations/{examination}/files/{file}', 'removeFile')->name('files.remove');
+                });
+            Route::controller(StatisticController::class)
+                ->prefix('statistics')
+                ->name('statistics.')
+                ->group(function () {
+                    Route::get('/overview', 'overview')->name('overview');
+                    Route::get('/by-medicament', 'byMedicament')->name('by_medicament');
+                    Route::get('/by-brand', 'byBrand')->name('by_brand');
+                    Route::get('/by-laboratory', 'byLaboratory')->name('by_laboratory');
+                    Route::get('/by-patient', 'byPatient')->name('by_patient');
+                    Route::get('/timeline', 'timeline')->name('timeline');
+                });
+            Route::controller(StatisticController::class)
+                ->group(function () {
+                    Route::get('/laboratories', 'laboratories')->name('laboratories.index');
+                    Route::get('/brands', 'brands')->name('brands.index');
                 });
         });
     }

@@ -34,6 +34,7 @@ use Illuminate\Support\Str;
     'specialty_id',
     'status',
     'prescription_hash',
+    'expires_at',
 ])]
 #[Hidden(['prescription_hash'])]
 class Prescription extends Model
@@ -68,7 +69,7 @@ class Prescription extends Model
     public function medicaments(): BelongsToMany
     {
         return $this->belongsToMany(Medicament::class, MedicamentPrescription::class)
-            ->withPivot('dosage', 'frequency', 'duration', 'medicament_quantity', 'medicament_quantity_letters', 'recommended_brand');
+            ->withPivot('dosage', 'frequency', 'duration', 'medicament_quantity', 'medicament_quantity_letters', 'recommended_brand', 'brand_id', 'laboratory_id');
     }
 
     /**

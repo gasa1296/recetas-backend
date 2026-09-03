@@ -941,6 +941,238 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Finish Prescription (Emitir y Firmar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\"\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/prescriptions/:prescription_id/finish",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id",
+                "finish"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Null Prescription (Anular Receta)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescriptions/:prescription_id/null",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id",
+                "null"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Prescription File (PDF)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/pdf"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescriptions/:prescription_id/file",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id",
+                "file"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Public Show Prescription PDF (Descarga Directa PDF)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/public/prescriptions/:prescription_hash",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "public",
+                "prescriptions",
+                ":prescription_hash"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_hash",
+                  "value": "hash_o_id_de_la_receta"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Public Show Prescription JSON (Verificación)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/public/prescriptions/:prescription_hash?format=json",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "public",
+                "prescriptions",
+                ":prescription_hash"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "json"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "prescription_hash",
+                  "value": "hash_o_id_de_la_receta"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Public Dispense Prescription (Dispensación Farmacia)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mode\": \"full\"\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/public/prescriptions/:prescription_hash/dispense",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "public",
+                "prescriptions",
+                ":prescription_hash",
+                "dispense"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_hash",
+                  "value": "hash_o_id_de_la_receta"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1373,6 +1605,1075 @@
       ]
     },
     {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "List Appointments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/appointments?from=&to=&status=&patient_id=&search=&page=1",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "patient_id",
+                  "value": ""
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": 1,\n  \"room_id\": 1,\n  \"specialty_id\": 1,\n  \"starts_at\": \"2026-09-10 09:00:00\",\n  \"ends_at\": \"2026-09-10 09:30:00\",\n  \"reason\": \"Consulta de control general\",\n  \"notes\": \"Revisar signos y evolución\",\n  \"reminder_channel\": \"email\",\n  \"reminder_enabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/appointments",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Appointment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/appointments/:appointment_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments",
+                ":appointment_id"
+              ],
+              "variable": [
+                {
+                  "key": "appointment_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": 1,\n  \"room_id\": 1,\n  \"specialty_id\": 1,\n  \"starts_at\": \"2026-09-10 10:00:00\",\n  \"ends_at\": \"2026-09-10 10:30:00\",\n  \"reason\": \"Reprogramada\",\n  \"notes\": \"Cambio de hora solicitado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/appointments/:appointment_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments",
+                ":appointment_id"
+              ],
+              "variable": [
+                {
+                  "key": "appointment_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_consultation\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/appointments/:appointment_id/status",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments",
+                ":appointment_id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "appointment_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Appointment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/appointments/:appointment_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "appointments",
+                ":appointment_id"
+              ],
+              "variable": [
+                {
+                  "key": "appointment_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient Media",
+      "item": [
+        {
+          "name": "List Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media?category=&evolution_stage=&search=&page=1",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": ""
+                },
+                {
+                  "key": "evolution_stage",
+                  "value": ""
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "category",
+                  "value": "rx",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "RX de Tórax PA",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Evaluación pulmonar de control",
+                  "type": "text"
+                },
+                {
+                  "key": "evolution_stage",
+                  "value": "before_treatment",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media/:media_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media",
+                ":media_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "media_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stream Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media/:media_id/stream",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media",
+                ":media_id",
+                "stream"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "media_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media/:media_id/download",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media",
+                ":media_id",
+                "download"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "media_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"skin_lesion\",\n  \"title\": \"Lesión cutánea día 14\",\n  \"description\": \"Notable mejoría con reducción del eritema\",\n  \"evolution_stage\": \"after_treatment\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media/:media_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media",
+                ":media_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "media_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient Media",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/media/:media_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "media",
+                ":media_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "media_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Examinations",
+      "item": [
+        {
+          "name": "List Patient Examinations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations?type=laboratory&status=completed&search=&page=1",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "laboratory"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Examination",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Perfil 20 Completo",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "laboratory",
+                  "type": "text"
+                },
+                {
+                  "key": "examined_at",
+                  "value": "2026-09-02",
+                  "type": "text"
+                },
+                {
+                  "key": "laboratory_name",
+                  "value": "Laboratorio Clínico Central",
+                  "type": "text"
+                },
+                {
+                  "key": "findings",
+                  "value": "Glicemia basal: 94 mg/dL. Colesterol total: 190 mg/dL.",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "completed",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Examination",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations/:examination_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations",
+                ":examination_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "examination_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Examination",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Perfil 20 Revisado\",\n  \"type\": \"laboratory\",\n  \"status\": \"reviewed\",\n  \"findings\": \"Resultados revisados en consulta médica. Indicadores estables.\"\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations/:examination_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations",
+                ":examination_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "examination_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Examination",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations/:examination_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations",
+                ":examination_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "examination_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Examination File",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "title",
+                  "value": "Anexo reporte bioanalista",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Segunda página escaneada",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations/:examination_id/files",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations",
+                ":examination_id",
+                "files"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "examination_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Examination File",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/patients/:patient_id/examinations/:examination_id/files/:file_id",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "patients",
+                ":patient_id",
+                "examinations",
+                ":examination_id",
+                "files",
+                ":file_id"
+              ],
+              "variable": [
+                {
+                  "key": "patient_id",
+                  "value": "1"
+                },
+                {
+                  "key": "examination_id",
+                  "value": "1"
+                },
+                {
+                  "key": "file_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Specialty",
       "item": [
         {
@@ -1490,6 +2791,361 @@
                   "key": "specialty_id",
                   "value": "1"
                 }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Overview Statistics",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/overview?from=&to=&room_id=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "overview"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "to",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "room_id",
+                  "value": "",
+                  "description": "Room ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistics by Medicament",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/by-medicament?limit=10&from=&to=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "by-medicament"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistics by Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/by-brand?limit=10&from=&to=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "by-brand"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistics by Laboratory",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/by-laboratory?limit=10&from=&to=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "by-laboratory"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistics by Patient",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/by-patient?limit=10&from=&to=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "by-patient"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Prescription Timeline",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/statistics/timeline?from=&to=",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "statistics",
+                "timeline"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Laboratories and Brands",
+      "item": [
+        {
+          "name": "List Laboratories",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/laboratories",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "laboratories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Brands",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/brands",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "brands"
               ]
             }
           },
