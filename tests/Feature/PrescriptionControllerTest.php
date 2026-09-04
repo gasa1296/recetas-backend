@@ -1113,3 +1113,49 @@ test('prescriptions resend sends notification to patient for active prescription
         PrescriptionReadyNotification::class
     );
 });
+
+test('prescription ready notification attaches file from cloud storage disk', function () {
+    Storage::fake('s3');
+
+    $doctor = User::factory()->create();
+    $room = Room::factory()->for($doctor)->create();
+    $specialty = Specialty::factory()->for($doctor)->create();
+    $patient = Patient::factory()->for($doctor)->create(['email' => 'patient@example.com']);
+    $prescription = Prescription::factory()->for($doctor)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create();
+
+    Storage::disk('s3')->put('2026/09/sample.pdf', '%PDF-1.4 test content');
+
+    $prescription->files()->create([
+        'path' => '2026/09/sample.pdf',
+        'type' => 'signed',
+        'location' => 's3',
+        'filename' => 'sample.pdf',
+    ]);
+
+    $prescription->load('signed_file');
+
+    $notification = new PrescriptionReadyNotification($prescription);
+    $mailMessage = $notification->toMail($patient);
+
+    expect($mailMessage->rawAttachments)->toHaveCount(1);
+    expect($mailMessage->rawAttachments[0]['data'])->toBe('%PDF-1.4 test content');
+    expect($mailMessage->rawAttachments[0]['name'])->toBe('sample.pdf');
+});
+
+test('prescription handleUploadFile saves to configured default disk', function () {
+    Storage::fake('s3');
+    config(['filesystems.default' => 's3']);
+
+    $doctor = User::factory()->create();
+    $room = Room::factory()->for($doctor)->create();
+    $specialty = Specialty::factory()->for($doctor)->create();
+    $patient = Patient::factory()->for($doctor)->create();
+    $prescription = Prescription::factory()->for($doctor)->for($patient, 'patient')->for($room, 'room')->for($specialty, 'specialty')->create();
+
+    $prescription->handleUploadFile('%PDF-1.4 fake binary', 'signed');
+
+    $file = $prescription->fresh()->signed_file;
+    expect($file)->not->toBeNull();
+    expect($file->location)->toBe('s3');
+    Storage::disk('s3')->assertExists($file->path);
+});

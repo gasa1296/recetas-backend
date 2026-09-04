@@ -143,6 +143,7 @@ class AppointmentController extends Controller
 
         try {
             $fixed = preg_replace('/(\d{2}:\d{2}:\d{2})\s(\d{2}:\d{2})$/', '$1+$2', $value);
+
             return Carbon::parse($fixed)->utc()->format('Y-m-d H:i:s');
         } catch (\Throwable) {
             return $value;

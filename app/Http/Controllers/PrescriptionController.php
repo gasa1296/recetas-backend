@@ -286,16 +286,23 @@ class PrescriptionController extends Controller
             ?? $prescription->signed_file
             ?? $prescription->unsigned_file;
 
-        if (! $file || ! Storage::disk('local')->exists($file->path)) {
+        if (! $file) {
             return $this->error(
                 __('messages.not_found'),
                 404
             );
         }
 
-        $path = Storage::disk('local')->path($file->path);
+        $disk = $file->location ?: config('filesystems.default', 'local');
 
-        return response()->file($path, [
+        if (! Storage::disk($disk)->exists($file->path)) {
+            return $this->error(
+                __('messages.not_found'),
+                404
+            );
+        }
+
+        return Storage::disk($disk)->response($file->path, "receta_{$prescription->id}.pdf", [
             'Content-Type' => 'application/pdf',
         ]);
     }

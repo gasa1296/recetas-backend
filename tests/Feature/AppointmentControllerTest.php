@@ -1,6 +1,5 @@
 <?php
 
-use App\Console\Commands\SendAppointmentRemindersCommand;
 use App\Jobs\SendAppointmentRemindersJob;
 use App\Models\Appointment;
 use App\Models\Patient;
@@ -311,7 +310,7 @@ it('sends automated reminders to patients with upcoming appointments', function 
     ]);
 
     // Execute job
-    $job = new SendAppointmentRemindersJob();
+    $job = new SendAppointmentRemindersJob;
     $count = $job->handle();
 
     expect($count)->toBe(1);

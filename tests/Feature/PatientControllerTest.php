@@ -338,5 +338,5 @@ test('same medic cannot register two patients with the same identification', fun
         'gender' => 'F',
         'birth_date' => '1995-05-15',
     ])->assertStatus(422)
-      ->assertJsonValidationErrors(['identification']);
+        ->assertJsonValidationErrors(['identification']);
 });

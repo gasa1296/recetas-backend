@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PatientMediaController extends Controller
 {
@@ -62,7 +62,8 @@ class PatientMediaController extends Controller
         $extension = $uploadedFile->getClientOriginalExtension() ?: 'bin';
 
         // Secure private storage path
-        $storedPath = $uploadedFile->store("patients/{$patient->id}/media", 'local');
+        $disk = config('filesystems.default', 'local');
+        $storedPath = $uploadedFile->store("patients/{$patient->id}/media", $disk);
 
         $meta = $request->input('meta', []);
         if ($request->filled('evolution_stage')) {
@@ -78,7 +79,7 @@ class PatientMediaController extends Controller
             'size' => $size,
             'meta' => $meta,
             'user_id' => auth()->id(),
-            'location' => 'local',
+            'location' => $disk,
             'path' => $storedPath,
             'filename' => $originalName,
         ]);
@@ -101,37 +102,36 @@ class PatientMediaController extends Controller
     /**
      * Stream the specified media file securely with caching and range support.
      */
-    public function stream(Patient $patient, File $file): BinaryFileResponse
+    public function stream(Patient $patient, File $file): StreamedResponse
     {
         $this->validateOwnership($patient, $file);
 
-        if (! Storage::disk('local')->exists($file->path)) {
+        $disk = $file->location ?: config('filesystems.default', 'local');
+
+        if (! Storage::disk($disk)->exists($file->path)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
         }
 
-        $path = Storage::disk('local')->path($file->path);
-
-        return response()->file($path, [
+        return Storage::disk($disk)->response($file->path, $file->filename, [
             'Content-Type' => $file->mime_type ?: 'application/octet-stream',
             'Cache-Control' => 'private, max-age=86400',
-            'Accept-Ranges' => 'bytes',
         ]);
     }
 
     /**
      * Download the specified media file as an attachment.
      */
-    public function download(Patient $patient, File $file): BinaryFileResponse
+    public function download(Patient $patient, File $file): StreamedResponse
     {
         $this->validateOwnership($patient, $file);
 
-        if (! Storage::disk('local')->exists($file->path)) {
+        $disk = $file->location ?: config('filesystems.default', 'local');
+
+        if (! Storage::disk($disk)->exists($file->path)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
         }
 
-        $path = Storage::disk('local')->path($file->path);
-
-        return response()->download($path, $file->filename, [
+        return Storage::disk($disk)->download($file->path, $file->filename, [
             'Content-Type' => $file->mime_type ?: 'application/octet-stream',
         ]);
     }
@@ -178,8 +178,10 @@ class PatientMediaController extends Controller
     {
         $this->validateOwnership($patient, $file);
 
-        if (Storage::disk('local')->exists($file->path)) {
-            Storage::disk('local')->delete($file->path);
+        $disk = $file->location ?: config('filesystems.default', 'local');
+
+        if (Storage::disk($disk)->exists($file->path)) {
+            Storage::disk($disk)->delete($file->path);
         }
 
         $file->delete();

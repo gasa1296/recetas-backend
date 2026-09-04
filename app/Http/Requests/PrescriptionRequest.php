@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\JsonValidationResponse;
+use App\Models\Brand;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,13 +37,13 @@ class PrescriptionRequest extends FormRequest
             $brandId = $medicament['brand_id'] ?? null;
             $laboratoryId = $medicament['laboratory_id'] ?? null;
             if (! $brandId && ! empty($medicament['recommended_brand'])) {
-                $matchedBrand = \App\Models\Brand::where('name', 'like', '%'.$medicament['recommended_brand'].'%')->first();
+                $matchedBrand = Brand::where('name', 'like', '%'.$medicament['recommended_brand'].'%')->first();
                 if ($matchedBrand) {
                     $brandId = $matchedBrand->id;
                     $laboratoryId = $matchedBrand->laboratory_id;
                 }
             } elseif ($brandId && ! $laboratoryId) {
-                $brand = \App\Models\Brand::find($brandId);
+                $brand = Brand::find($brandId);
                 if ($brand) {
                     $laboratoryId = $brand->laboratory_id;
                 }

@@ -32,11 +32,14 @@ class PrescriptionReadyNotification extends Notification implements ShouldQueue
             ->action('View Prescription', route('public.prescription.show', $this->prescription->prescription_hash));
 
         if ($this->prescription->signed_file) {
-            $path = Storage::disk('local')->path($this->prescription->signed_file->path);
-            $mail->attach($path, [
-                'as' => $this->prescription->signed_file->filename,
-                'mime' => 'application/pdf',
-            ]);
+            $file = $this->prescription->signed_file;
+            $disk = $file->location ?: config('filesystems.default', 'local');
+
+            if (Storage::disk($disk)->exists($file->path)) {
+                $mail->attachFromStorageDisk($disk, $file->path, $file->filename, [
+                    'mime' => 'application/pdf',
+                ]);
+            }
         }
 
         return $mail;

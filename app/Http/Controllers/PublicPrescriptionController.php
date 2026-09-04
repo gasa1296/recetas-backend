@@ -42,12 +42,16 @@ class PublicPrescriptionController extends Controller
     {
         $file = $prescription->signed_file ?? $prescription->unsigned_file;
         if ($file) {
-            $path = Storage::disk('local')->path($file->path);
-            if (file_exists($path)) {
-                return response()->file($path, [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="receta_'.$prescription->id.'.pdf"',
-                ]);
+            $disk = $file->location ?: config('filesystems.default', 'local');
+            if (Storage::disk($disk)->exists($file->path)) {
+                return Storage::disk($disk)->response(
+                    $file->path,
+                    'receta_'.$prescription->id.'.pdf',
+                    [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="receta_'.$prescription->id.'.pdf"',
+                    ]
+                );
             }
         }
 

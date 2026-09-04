@@ -15,10 +15,15 @@ class File extends Model
     use HasFactory, SoftDeletes;
 
     public const CATEGORY_RX = 'rx';
+
     public const CATEGORY_SKIN_LESION = 'skin_lesion';
+
     public const CATEGORY_CLINICAL_PHOTO = 'clinical_photo';
+
     public const CATEGORY_PROCEDURE_VIDEO = 'procedure_video';
+
     public const CATEGORY_EXAMINATION = 'examination';
+
     public const CATEGORY_GENERAL = 'general';
 
     public const VALID_CATEGORIES = [
@@ -31,7 +36,9 @@ class File extends Model
     ];
 
     public const STAGE_BEFORE_TREATMENT = 'before_treatment';
+
     public const STAGE_EVOLUTION_CONTROL = 'evolution_control';
+
     public const STAGE_AFTER_TREATMENT = 'after_treatment';
 
     public const VALID_STAGES = [

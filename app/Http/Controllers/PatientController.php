@@ -6,7 +6,6 @@ use App\Http\Requests\PatientRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PatientCollection;
 use App\Http\Resources\PatientResource;
-use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
