@@ -21,12 +21,18 @@ return new class extends Migration
             $table->string('recommended_brand')->nullable();
 
             $table->foreignId('medicament_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('prescription_template_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('prescription_template_id');
+            $table->foreign('prescription_template_id', 'med_prescription_templates_template_fk')
+                ->references('id')
+                ->on('prescription_templates')
+                ->cascadeOnDelete();
 
             $table->softDeletes();
 
-            // Add unique composite key
-            $table->unique(['medicament_id', 'prescription_template_id']);
+            $table->unique(
+                ['medicament_id', 'prescription_template_id'],
+                'med_prescription_templates_med_template_unique',
+            );
         });
     }
 

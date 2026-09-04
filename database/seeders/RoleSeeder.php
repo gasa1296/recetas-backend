@@ -51,7 +51,23 @@ class RoleSeeder extends Seeder
             ]);
         }
 
-        Role::firstOrCreate(['name' => 'admin', 'guard_name' => $guard]);
-        Role::firstOrCreate(['name' => 'medic', 'guard_name' => $guard]);
+        $guard = config('auth.defaults.guard', 'web');
+
+        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => $guard]);
+        $medic = Role::firstOrCreate(['name' => 'medic', 'guard_name' => $guard]);
+
+        $admin?->syncPermissions(Permission::all());
+        $medic?->syncPermissions([
+            'patients.view',
+            'patients.create',
+            'patients.update',
+            'prescriptions.view',
+            'prescriptions.create',
+            'prescriptions.update',
+            'medicaments.view',
+            'rooms.view',
+            'rooms.update',
+            'specialties.view',
+        ]);
     }
 }

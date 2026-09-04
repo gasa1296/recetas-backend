@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $seeders = [
             RoleSeeder::class,
-            PermissionSeeder::class,
             MedicamentSeeder::class,
             AdminUserSeeder::class,
         ];
