@@ -43,6 +43,37 @@
           "response": []
         },
         {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Gregory\",\n  \"last_name\": \"House\",\n  \"identification\": \"V-12345678\",\n  \"email\": \"doctor@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": [\"+58 412 1234567\"],\n  \"specialty\": {\n    \"name\": \"Medicina Interna\",\n    \"identification\": {\n      \"medic_society\": \"136550\",\n      \"medic_registration\": \"7580561\"\n    }\n  },\n  \"room\": {\n    \"name\": \"Consultorio 101\",\n    \"identification\": \"J-12345678\",\n    \"zip\": \"1010\",\n    \"address\": \"Av. Principal\",\n    \"phone\": [\"0212-5555555\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{API_URL}}/auth/register",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Logout",
           "request": {
             "auth": {

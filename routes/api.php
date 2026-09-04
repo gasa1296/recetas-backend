@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
             ->name('auth.')
             ->group(function () {
                 Route::post('/auth/login', 'login')->name('login');
+                Route::post('/auth/register', 'register')->name('register');
                 Route::post('/auth/logout', 'logout')->name('logout')->middleware('auth:sanctum');
             });
         Route::controller(ResetController::class)

@@ -83,8 +83,8 @@ it('filters appointments by date range and status', function () {
     ]);
 
     // Filter range matching only tomorrow
-    $from = now()->addHours(12)->toIso8601String();
-    $to = now()->addDays(2)->toIso8601String();
+    $from = now()->addDay()->startOfDay()->toIso8601String();
+    $to = now()->addDay()->endOfDay()->toIso8601String();
 
     $response = $this->actingAs($doctor, 'sanctum')
         ->getJson("/api/appointments?from={$from}&to={$to}")

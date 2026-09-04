@@ -144,3 +144,156 @@ test('logout succeeds for authenticated user and deletes current token', functio
 
     expect($user->tokens()->count())->toBe(0);
 });
+
+/*
+|--------------------------------------------------------------------------
+| POST /api/auth/register
+|--------------------------------------------------------------------------
+*/
+
+test('register fails with empty body', function () {
+    $response = $this->postJson('/api/auth/register', []);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors([
+            'first_name',
+            'last_name',
+            'identification',
+            'email',
+            'password',
+            'specialty',
+        ]);
+});
+
+test('register fails when password is not confirmed or too short', function () {
+    $response = $this->postJson('/api/auth/register', [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'identification' => 'V-12345678',
+        'email' => 'doctor@example.com',
+        'password' => 'short',
+        'password_confirmation' => 'mismatch',
+        'specialty' => [
+            'name' => 'Cardiología',
+            'identification' => [
+                'medic_society' => '12345',
+                'medic_registration' => '1234567',
+            ],
+        ],
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['password']);
+});
+
+test('register fails when specialty identification is invalid', function () {
+    $response = $this->postJson('/api/auth/register', [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'identification' => 'V-12345678',
+        'email' => 'doctor@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+        'specialty' => [
+            'name' => 'Cardiología',
+            'identification' => [
+                'medic_society' => '12345',
+                'medic_registration' => 'invalid', // must be numeric 7 digits
+            ],
+        ],
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['specialty.identification.medic_registration']);
+});
+
+test('register succeeds with complete doctor data and returns token with profile', function () {
+    $this->seed(\Database\Seeders\RoleSeeder::class);
+
+    $payload = [
+        'first_name' => 'Gregory',
+        'last_name' => 'House',
+        'identification' => 'V-99887766',
+        'email' => 'house@princetonplainsboro.com',
+        'password' => 'diagnostico123',
+        'password_confirmation' => 'diagnostico123',
+        'phone' => ['+58 412 1234567', '+58 424 7654321'],
+        'specialty' => [
+            'name' => 'Medicina Interna / Nefrología',
+            'identification' => [
+                'medic_society' => 'CMD-55443',
+                'medic_registration' => '7654321',
+            ],
+        ],
+        'room' => [
+            'name' => 'Consultorio 101 - Clínica Central',
+            'address' => 'Av. Principal, Piso 1',
+            'phone' => '0212-5555555',
+        ],
+    ];
+
+    $response = $this->postJson('/api/auth/register', $payload);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'message',
+            'data' => [
+                'token',
+                'profile' => [
+                    'first_name',
+                    'last_name',
+                    'identification',
+                    'phone',
+                    'email',
+                    'rooms',
+                    'specialty',
+                ],
+            ],
+        ])
+        ->assertJsonPath('data.profile.first_name', 'Gregory')
+        ->assertJsonPath('data.profile.last_name', 'House')
+        ->assertJsonPath('data.profile.email', 'house@princetonplainsboro.com')
+        ->assertJsonPath('data.profile.specialty.name', 'Medicina Interna / Nefrología');
+
+    expect($response->json('data.token'))->toBeString()->not->toBeEmpty();
+
+    $user = User::where('email', 'house@princetonplainsboro.com')->first();
+    expect($user)->not->toBeNull();
+    expect($user->hasRole('medic'))->toBeTrue();
+    expect($user->hasValidCertificate())->toBeTrue();
+    expect($user->specialty)->not->toBeNull();
+    expect($user->rooms)->toHaveCount(1);
+    expect($user->rooms->first()->name)->toBe('Consultorio 101 - Clínica Central');
+});
+
+test('register fails when email or identification is already taken', function () {
+    $this->seed(\Database\Seeders\RoleSeeder::class);
+
+    User::factory()->create([
+        'email' => 'existing@example.com',
+        'identification' => 'V-11111111',
+    ]);
+
+    $payload = [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'identification' => 'V-11111111',
+        'email' => 'existing@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+        'specialty' => [
+            'name' => 'General',
+            'identification' => [
+                'medic_society' => 'MS-999',
+                'medic_registration' => '1234567',
+            ],
+        ],
+    ];
+
+    $response = $this->postJson('/api/auth/register', $payload);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['email', 'identification']);
+});
+

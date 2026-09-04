@@ -10,6 +10,7 @@ return [
     'auth' => [
         'invalid_credentials' => 'Credentials are invalid',
         'client_login_success' => 'Client login successful',
+        'client_register_success' => 'Client register successful',
         'client_logout_success' => 'Client logout successful',
     ],
     'reset' => [
