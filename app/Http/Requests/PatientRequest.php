@@ -44,7 +44,7 @@ class PatientRequest extends FormRequest
             'phone' => ['nullable', 'array'],
             'phone.*' => ['required_with:phone', 'string'],
             'gender' => ['required', 'string', Rule::in(array_keys(config('custom.gender')))],
-            'birth_date' => ['nullable', 'date'],
+            'birth_date' => ['required', 'date'],
         ];
     }
 }

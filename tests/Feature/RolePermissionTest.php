@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleSeeder;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +11,6 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed(RoleSeeder::class);
-    $this->seed(PermissionSeeder::class);
 });
 
 it('creates admin and medic roles', function () {
