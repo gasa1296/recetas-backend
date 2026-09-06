@@ -150,8 +150,10 @@ class ExaminationController extends Controller
             abort(404, 'El archivo no pertenece al examen indicado.');
         }
 
-        if (Storage::disk('local')->exists($file->path)) {
-            Storage::disk('local')->delete($file->path);
+        $disk = $file->location ?: config('filesystems.default', 'local');
+
+        if (Storage::disk($disk)->exists($file->path)) {
+            Storage::disk($disk)->delete($file->path);
         }
 
         $file->delete();
@@ -169,7 +171,9 @@ class ExaminationController extends Controller
         $size = $uploadedFile->getSize();
         $extension = $uploadedFile->getClientOriginalExtension() ?: 'bin';
 
-        $storedPath = $uploadedFile->store("patients/{$patient->id}/examinations/{$examination->id}", 'local');
+        $disk = config('filesystems.default', 'local');
+
+        $storedPath = $uploadedFile->store("patients/{$patient->id}/examinations/{$examination->id}", $disk);
 
         return $examination->files()->create([
             'type' => $extension,
@@ -184,7 +188,7 @@ class ExaminationController extends Controller
                 'examination_type' => $examination->type,
             ],
             'user_id' => auth()->id(),
-            'location' => 'local',
+            'location' => $disk,
             'path' => $storedPath,
             'filename' => $originalName,
         ]);

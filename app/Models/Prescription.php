@@ -92,24 +92,27 @@ class Prescription extends Model
 
     public function handleUploadFile(string|UploadedFile $file, string $type = 'unsigned'): bool
     {
+        $disk = config('filesystems.default', 'local');
+
         $existingFiles = $this->files()->where('type', $type)->get();
         foreach ($existingFiles as $oldFile) {
-            if (Storage::disk('local')->exists($oldFile->path)) {
-                Storage::disk('local')->delete($oldFile->path);
+            $oldDisk = $oldFile->location ?: $disk;
+            if (Storage::disk($oldDisk)->exists($oldFile->path)) {
+                Storage::disk($oldDisk)->delete($oldFile->path);
             }
             $oldFile->delete();
         }
 
         $name = Str::uuid().'.pdf';
         $path = date('Y').'/'.date('m').'/'.$name;
-        Storage::disk('local')->put($path, $file);
+        Storage::disk($disk)->put($path, $file);
 
-        return $this->files()->create([
+        return (bool) $this->files()->create([
             'path' => $path,
             'type' => $type,
-            'location' => 'local',
+            'location' => $disk,
             'filename' => $name,
-        ]) ? true : false;
+        ]);
     }
 
     protected function prettyStatus(): Attribute
