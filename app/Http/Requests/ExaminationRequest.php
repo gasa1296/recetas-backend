@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use App\Models\Examination;
+use App\Models\Patient;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,7 +18,7 @@ class ExaminationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -34,6 +35,9 @@ class ExaminationRequest extends FormRequest
 
     public function rules(): array
     {
+        $patient = $this->route('patient');
+        $patientId = $patient instanceof Patient ? $patient->id : $patient;
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', Rule::in(Examination::VALID_TYPES)],
@@ -41,7 +45,13 @@ class ExaminationRequest extends FormRequest
             'laboratory_name' => ['nullable', 'string', 'max:255'],
             'findings' => ['nullable', 'string', 'max:10000'],
             'status' => ['nullable', 'string', Rule::in(Examination::VALID_STATUSES)],
-            'prescription_id' => ['nullable', 'integer', 'exists:prescriptions,id'],
+            'prescription_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('prescriptions', 'id')
+                    ->where('user_id', auth()->id())
+                    ->when($patientId, fn ($rule) => $rule->where('patient_id', $patientId)),
+            ],
             'file' => [
                 'nullable',
                 'file',

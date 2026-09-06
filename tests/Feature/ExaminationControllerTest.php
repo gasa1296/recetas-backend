@@ -3,6 +3,9 @@
 use App\Models\Examination;
 use App\Models\File;
 use App\Models\Patient;
+use App\Models\Prescription;
+use App\Models\Room;
+use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -290,4 +293,174 @@ it('returns 404 when accessing an examination of another patient', function () {
     $this->actingAs($doctor, 'sanctum')
         ->getJson("/api/patients/{$patient2->id}/examinations/{$exam->id}")
         ->assertNotFound();
+});
+
+it('prevents a doctor from listing examinations of another doctor\'s patient', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $patient = Patient::factory()->for($doctor1)->create();
+
+    Examination::factory()->create([
+        'patient_id' => $patient->id,
+        'user_id' => $doctor1->id,
+    ]);
+
+    $this->actingAs($doctor2, 'sanctum')
+        ->getJson("/api/patients/{$patient->id}/examinations")
+        ->assertNotFound();
+});
+
+it('prevents a doctor from creating an examination for another doctor\'s patient', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $patient = Patient::factory()->for($doctor1)->create();
+
+    $payload = [
+        'name' => 'Perfil Lipídico',
+        'type' => Examination::TYPE_LABORATORY,
+        'status' => Examination::STATUS_COMPLETED,
+    ];
+
+    $this->actingAs($doctor2, 'sanctum')
+        ->postJson("/api/patients/{$patient->id}/examinations", $payload)
+        ->assertNotFound();
+});
+
+it('prevents a doctor from viewing, updating or deleting an examination of another doctor\'s patient', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $patient = Patient::factory()->for($doctor1)->create();
+
+    $exam = Examination::factory()->create([
+        'patient_id' => $patient->id,
+        'user_id' => $doctor1->id,
+        'name' => 'Rayos X de Tórax',
+    ]);
+
+    // Show
+    $this->actingAs($doctor2, 'sanctum')
+        ->getJson("/api/patients/{$patient->id}/examinations/{$exam->id}")
+        ->assertNotFound();
+
+    // Update
+    $this->actingAs($doctor2, 'sanctum')
+        ->putJson("/api/patients/{$patient->id}/examinations/{$exam->id}", [
+            'name' => 'Modificado',
+            'type' => Examination::TYPE_IMAGING,
+        ])
+        ->assertNotFound();
+
+    // Delete
+    $this->actingAs($doctor2, 'sanctum')
+        ->deleteJson("/api/patients/{$patient->id}/examinations/{$exam->id}")
+        ->assertNotFound();
+
+    $this->assertDatabaseHas('examinations', [
+        'id' => $exam->id,
+        'deleted_at' => null,
+    ]);
+});
+
+it('prevents a doctor from adding or removing files from another doctor\'s patient examination', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+    $patient = Patient::factory()->for($doctor1)->create();
+
+    $exam = Examination::factory()->create([
+        'patient_id' => $patient->id,
+        'user_id' => $doctor1->id,
+    ]);
+
+    $file = File::factory()->create([
+        'model_type' => Examination::class,
+        'model_id' => $exam->id,
+        'user_id' => $doctor1->id,
+    ]);
+
+    $fakeImage = UploadedFile::fake()->image('prueba.jpg');
+
+    // Add file
+    $this->actingAs($doctor2, 'sanctum')
+        ->postJson("/api/patients/{$patient->id}/examinations/{$exam->id}/files", [
+            'file' => $fakeImage,
+        ])
+        ->assertNotFound();
+
+    // Remove file
+    $this->actingAs($doctor2, 'sanctum')
+        ->deleteJson("/api/patients/{$patient->id}/examinations/{$exam->id}/files/{$file->id}")
+        ->assertNotFound();
+
+    $this->assertDatabaseHas('files', [
+        'id' => $file->id,
+        'deleted_at' => null,
+    ]);
+});
+
+it('validates that attached prescription belongs to the authenticated doctor and patient', function () {
+    $doctor1 = User::factory()->create();
+    $doctor2 = User::factory()->create();
+
+    $patient1 = Patient::factory()->for($doctor1)->create();
+    $patient2 = Patient::factory()->for($doctor1)->create();
+
+    $room1 = Room::factory()->for($doctor1)->create();
+    $specialty1 = Specialty::factory()->for($doctor1)->create();
+
+    $room2 = Room::factory()->for($doctor2)->create();
+    $specialty2 = Specialty::factory()->for($doctor2)->create();
+
+    // Prescription belonging to doctor2
+    $rxOtherDoctor = Prescription::factory()
+        ->for($patient1, 'patient')
+        ->for($room2, 'room')
+        ->for($specialty2, 'specialty')
+        ->for($doctor2)
+        ->create();
+
+    // Prescription belonging to doctor1 but for patient2
+    $rxOtherPatient = Prescription::factory()
+        ->for($patient2, 'patient')
+        ->for($room1, 'room')
+        ->for($specialty1, 'specialty')
+        ->for($doctor1)
+        ->create();
+
+    // Prescription belonging to doctor1 and patient1
+    $rxValid = Prescription::factory()
+        ->for($patient1, 'patient')
+        ->for($room1, 'room')
+        ->for($specialty1, 'specialty')
+        ->for($doctor1)
+        ->create();
+
+    // 1. Trying to link another doctor's prescription fails validation
+    $this->actingAs($doctor1, 'sanctum')
+        ->postJson("/api/patients/{$patient1->id}/examinations", [
+            'name' => 'Examen con receta ajena',
+            'type' => Examination::TYPE_LABORATORY,
+            'prescription_id' => $rxOtherDoctor->id,
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['prescription_id']);
+
+    // 2. Trying to link another patient's prescription fails validation
+    $this->actingAs($doctor1, 'sanctum')
+        ->postJson("/api/patients/{$patient1->id}/examinations", [
+            'name' => 'Examen con receta de otro paciente',
+            'type' => Examination::TYPE_LABORATORY,
+            'prescription_id' => $rxOtherPatient->id,
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['prescription_id']);
+
+    // 3. Linking the valid prescription succeeds
+    $this->actingAs($doctor1, 'sanctum')
+        ->postJson("/api/patients/{$patient1->id}/examinations", [
+            'name' => 'Examen con receta válida',
+            'type' => Examination::TYPE_LABORATORY,
+            'prescription_id' => $rxValid->id,
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.prescription_id', $rxValid->id);
 });

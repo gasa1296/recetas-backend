@@ -20,11 +20,11 @@ class ExaminationController extends Controller
     /**
      * Display a listing of the examinations for a patient.
      */
-    public function index(Request $request, Patient $patient): AnonymousResourceCollection
+    public function index(Request $request, int $patient): AnonymousResourceCollection
     {
-        $this->authorizePatient($patient);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
 
-        $query = $patient->examinations()->with(['files.user', 'user']);
+        $query = $patientModel->examinations()->with(['files.user', 'user']);
 
         if ($request->filled('type')) {
             $query->type($request->query('type'));
@@ -56,19 +56,19 @@ class ExaminationController extends Controller
     /**
      * Store a newly created examination for a patient.
      */
-    public function store(ExaminationRequest $request, Patient $patient): JsonResponse
+    public function store(ExaminationRequest $request, int $patient): JsonResponse
     {
-        $this->authorizePatient($patient);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
 
         $data = $request->validated();
         unset($data['file']);
 
         $data['user_id'] = auth()->id();
 
-        $examination = $patient->examinations()->create($data);
+        $examination = $patientModel->examinations()->create($data);
 
         if ($request->hasFile('file')) {
-            $this->attachFileToExamination($request->file('file'), $examination, $patient);
+            $this->attachFileToExamination($request->file('file'), $examination, $patientModel);
         }
 
         return (new ExaminationResource($examination->load(['files.user', 'user', 'patient'])))
@@ -79,42 +79,45 @@ class ExaminationController extends Controller
     /**
      * Display the specified examination.
      */
-    public function show(Patient $patient, Examination $examination): ExaminationResource
+    public function show(int $patient, int $examination): ExaminationResource
     {
-        $this->validateOwnership($patient, $examination);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
+        $examinationModel = $patientModel->examinations()->findOrFail($examination);
 
         return new ExaminationResource(
-            $examination->load(['files.user', 'user', 'patient', 'prescription'])
+            $examinationModel->load(['files.user', 'user', 'patient', 'prescription'])
         );
     }
 
     /**
      * Update the specified examination in storage.
      */
-    public function update(ExaminationRequest $request, Patient $patient, Examination $examination): ExaminationResource
+    public function update(ExaminationRequest $request, int $patient, int $examination): ExaminationResource
     {
-        $this->validateOwnership($patient, $examination);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
+        $examinationModel = $patientModel->examinations()->findOrFail($examination);
 
         $data = $request->validated();
         unset($data['file']);
 
-        $examination->update($data);
+        $examinationModel->update($data);
 
         if ($request->hasFile('file')) {
-            $this->attachFileToExamination($request->file('file'), $examination, $patient);
+            $this->attachFileToExamination($request->file('file'), $examinationModel, $patientModel);
         }
 
-        return new ExaminationResource($examination->load(['files.user', 'user', 'patient']));
+        return new ExaminationResource($examinationModel->load(['files.user', 'user', 'patient']));
     }
 
     /**
      * Remove the specified examination from storage.
      */
-    public function destroy(Patient $patient, Examination $examination): Response
+    public function destroy(int $patient, int $examination): Response
     {
-        $this->validateOwnership($patient, $examination);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
+        $examinationModel = $patientModel->examinations()->findOrFail($examination);
 
-        $examination->delete();
+        $examinationModel->delete();
 
         return response()->noContent();
     }
@@ -122,14 +125,15 @@ class ExaminationController extends Controller
     /**
      * Add an additional file attachment to the examination.
      */
-    public function addFile(ExaminationFileRequest $request, Patient $patient, Examination $examination): JsonResponse
+    public function addFile(ExaminationFileRequest $request, int $patient, int $examination): JsonResponse
     {
-        $this->validateOwnership($patient, $examination);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
+        $examinationModel = $patientModel->examinations()->findOrFail($examination);
 
         $file = $this->attachFileToExamination(
             $request->file('file'),
-            $examination,
-            $patient,
+            $examinationModel,
+            $patientModel,
             $request->input('title'),
             $request->input('description')
         );
@@ -142,21 +146,19 @@ class ExaminationController extends Controller
     /**
      * Remove a file attachment from the examination.
      */
-    public function removeFile(Patient $patient, Examination $examination, File $file): Response
+    public function removeFile(int $patient, int $examination, int $file): Response
     {
-        $this->validateOwnership($patient, $examination);
+        $patientModel = auth()->user()->patients()->findOrFail($patient);
+        $examinationModel = $patientModel->examinations()->findOrFail($examination);
+        $fileModel = $examinationModel->files()->findOrFail($file);
 
-        if ($file->model_type !== Examination::class || (int) $file->model_id !== (int) $examination->id) {
-            abort(404, 'El archivo no pertenece al examen indicado.');
+        $disk = $fileModel->location ?: config('filesystems.default', 'local');
+
+        if (Storage::disk($disk)->exists($fileModel->path)) {
+            Storage::disk($disk)->delete($fileModel->path);
         }
 
-        $disk = $file->location ?: config('filesystems.default', 'local');
-
-        if (Storage::disk($disk)->exists($file->path)) {
-            Storage::disk($disk)->delete($file->path);
-        }
-
-        $file->delete();
+        $fileModel->delete();
 
         return response()->noContent();
     }
