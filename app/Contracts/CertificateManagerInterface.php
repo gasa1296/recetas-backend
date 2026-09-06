@@ -29,4 +29,9 @@ interface CertificateManagerInterface
      * Delete a user's certificate files.
      */
     public function deleteForUser(User $user): void;
+
+    /**
+     * Get the symmetric passphrase used to protect a user's private key.
+     */
+    public function getPrivateKeyPassphrase(User $user): string;
 }

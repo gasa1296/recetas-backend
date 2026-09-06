@@ -18,6 +18,8 @@ class AppointmentController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $query = auth()->user()->appointments()
             ->with(['patient', 'room', 'specialty']);
 
@@ -62,6 +64,8 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentRequest $request): JsonResponse
     {
+        $this->authorize('create', Appointment::class);
+
         $data = $request->validated();
 
         $appointment = auth()->user()->appointments()->create($data);
@@ -78,9 +82,11 @@ class AppointmentController extends Controller
      */
     public function show(int $appointment): JsonResponse
     {
-        $appointmentModel = auth()->user()->appointments()
-            ->with(['patient', 'room', 'specialty', 'user'])
-            ->findOrFail($appointment);
+        $appointmentModel = auth()->user()->hasRole('admin')
+            ? Appointment::with(['patient', 'room', 'specialty', 'user'])->findOrFail($appointment)
+            : auth()->user()->appointments()->with(['patient', 'room', 'specialty', 'user'])->findOrFail($appointment);
+
+        $this->authorize('view', $appointmentModel);
 
         return $this->success(
             __('messages.operation_success'),
@@ -93,7 +99,11 @@ class AppointmentController extends Controller
      */
     public function update(AppointmentRequest $request, int $appointment): JsonResponse
     {
-        $appointmentModel = auth()->user()->appointments()->findOrFail($appointment);
+        $appointmentModel = auth()->user()->hasRole('admin')
+            ? Appointment::findOrFail($appointment)
+            : auth()->user()->appointments()->findOrFail($appointment);
+
+        $this->authorize('update', $appointmentModel);
         $appointmentModel->update($request->validated());
 
         return $this->success(
@@ -107,7 +117,11 @@ class AppointmentController extends Controller
      */
     public function destroy(int $appointment): JsonResponse
     {
-        $appointmentModel = auth()->user()->appointments()->findOrFail($appointment);
+        $appointmentModel = auth()->user()->hasRole('admin')
+            ? Appointment::findOrFail($appointment)
+            : auth()->user()->appointments()->findOrFail($appointment);
+
+        $this->authorize('delete', $appointmentModel);
         $appointmentModel->update(['status' => Appointment::STATUS_CANCELLED]);
         $appointmentModel->delete();
 
@@ -123,7 +137,11 @@ class AppointmentController extends Controller
             'status' => ['required', 'string', Rule::in(Appointment::VALID_STATUSES)],
         ]);
 
-        $appointmentModel = auth()->user()->appointments()->findOrFail($appointment);
+        $appointmentModel = auth()->user()->hasRole('admin')
+            ? Appointment::findOrFail($appointment)
+            : auth()->user()->appointments()->findOrFail($appointment);
+
+        $this->authorize('update', $appointmentModel);
         $appointmentModel->update(['status' => $validated['status']]);
 
         return $this->success(

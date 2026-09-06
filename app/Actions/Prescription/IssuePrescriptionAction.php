@@ -59,8 +59,8 @@ class IssuePrescriptionAction
         $signerName = trim("{$doctor->first_name} {$doctor->last_name}");
         $metadata = [
             'Name' => ! empty($signerName) ? $signerName : config('app.name'),
-            'Location' => $prescription->room->address,
-            'Reason' => 'Prescripción Médica #'.$prescription->id.' - '.$prescription->room->name,
+            'Location' => $prescription->room?->address ?? '',
+            'Reason' => 'Prescripción Médica #'.$prescription->id.($prescription->room ? ' - '.$prescription->room->name : ''),
             'ContactInfo' => $doctor->email,
         ];
 

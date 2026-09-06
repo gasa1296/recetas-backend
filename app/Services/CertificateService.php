@@ -30,12 +30,12 @@ class CertificateService implements CertificateManagerInterface
         ];
 
         $candidates = array_filter([
+            config('custom.prescription.certificate.openssl_conf'),
             getenv('OPENSSL_CONF') ?: null,
             '/etc/pki/tls/openssl.cnf',
             '/etc/ssl/openssl.cnf',
             dirname(PHP_BINARY).'/extras/ssl/openssl.cnf',
             dirname(PHP_BINARY).'/openssl.cnf',
-            'C:/Program Files/Git/usr/ssl/openssl.cnf',
         ]);
         $opensslConfig = null;
         foreach ($candidates as $cand) {
@@ -110,7 +110,8 @@ class CertificateService implements CertificateManagerInterface
             $exportConfig['config'] = $opensslConfig;
         }
 
-        $keyPem = openssl_pkey_export($privateKey, $keyContent, null, $exportConfig);
+        $passphrase = $this->getPrivateKeyPassphrase($user);
+        $keyPem = openssl_pkey_export($privateKey, $keyContent, $passphrase, $exportConfig);
 
         if (! $keyPem) {
             Log::error('Failed to export private key', ['user_id' => $user->id]);
@@ -133,6 +134,14 @@ class CertificateService implements CertificateManagerInterface
             'key_path' => $keyPath,
             'expires_at' => $expiresAt->toDateTimeString(),
         ];
+    }
+
+    /**
+     * Get the symmetric passphrase used to protect a user's private key.
+     */
+    public function getPrivateKeyPassphrase(User $user): string
+    {
+        return hash_hmac('sha256', (string) $user->id, (string) config('app.key'));
     }
 
     /**

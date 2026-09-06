@@ -2,12 +2,19 @@
 
 namespace App\Services\Signature;
 
+use App\Contracts\CertificateManagerInterface;
 use App\Contracts\DigitalSignerInterface;
 use App\Models\User;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PdfDigitalSignatureService implements DigitalSignerInterface
 {
+    public function __construct(
+        protected ?CertificateManagerInterface $certificateManager = null,
+    ) {
+        $this->certificateManager ??= app(CertificateManagerInterface::class);
+    }
+
     /**
      * Digitally sign a PDF content using cryptographic X.509 certificate and FPDI/TCPDF.
      *
@@ -19,10 +26,12 @@ class PdfDigitalSignatureService implements DigitalSignerInterface
     public function signPdf(string $pdfContent, User $signer, array $metadata = []): string
     {
         $pdf = new Fpdi;
+        $passphrase = '';
 
         if ($signer->hasValidCertificate()) {
             $certificate = 'file://'.$signer->getCertificatePath();
             $privateKey = 'file://'.$signer->getCertificateKeyPath();
+            $passphrase = $this->certificateManager->getPrivateKeyPassphrase($signer);
         } else {
             $certificate = 'file://'.base_path(config('custom.prescription.signature.default_certificate.path'));
             $privateKey = 'file://'.base_path(config('custom.prescription.signature.default_certificate.key_path'));
@@ -38,7 +47,7 @@ class PdfDigitalSignatureService implements DigitalSignerInterface
             'ContactInfo' => $metadata['ContactInfo'] ?? $signer->email,
         ];
 
-        $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
+        $pdf->setSignature($certificate, $privateKey, $passphrase, '', 2, $info);
 
         $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
         file_put_contents($tempFile, $pdfContent);

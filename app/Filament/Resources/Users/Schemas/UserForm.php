@@ -6,7 +6,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -22,8 +22,10 @@ class UserForm
                     ->required(),
                 TextInput::make('identification')
                     ->required(),
-                Textarea::make('phone')
-                    ->default(null)
+                TagsInput::make('phone')
+                    ->label('Teléfonos')
+                    ->placeholder('Agregar teléfono...')
+                    ->default([])
                     ->columnSpanFull(),
                 TextInput::make('email')
                     ->email()
@@ -31,7 +33,8 @@ class UserForm
                 DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
                     ->password()
-                    ->required(),
+                    ->dehydrated(fn (?string $state): bool => filled($state))
+                    ->required(fn (string $operation): bool => $operation === 'create'),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()

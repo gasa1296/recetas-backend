@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\TimestampService;
+use App\Services\Archive\TimestampService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 

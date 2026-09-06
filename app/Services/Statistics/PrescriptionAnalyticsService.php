@@ -30,11 +30,11 @@ class PrescriptionAnalyticsService
         }
 
         if ($request->filled('from')) {
-            $query->whereDate('prescriptions.created_at', '>=', Carbon::parse($request->input('from')));
+            $query->where('prescriptions.created_at', '>=', Carbon::parse($request->input('from'))->startOfDay());
         }
 
         if ($request->filled('to')) {
-            $query->whereDate('prescriptions.created_at', '<=', Carbon::parse($request->input('to')));
+            $query->where('prescriptions.created_at', '<=', Carbon::parse($request->input('to'))->endOfDay());
         }
 
         return $query;
@@ -50,21 +50,35 @@ class PrescriptionAnalyticsService
         $prescriptionQuery = $this->buildFilteredQuery($request);
         $prescriptionSubquery = (clone $prescriptionQuery)->select('prescriptions.id');
 
-        $totalPrescriptions = (clone $prescriptionQuery)->count();
-        $activePrescriptions = (clone $prescriptionQuery)->where('status', config('custom.prescription.status_keys.active', 1))->count();
-        $dispensedPrescriptions = (clone $prescriptionQuery)->whereIn('status', [
-            config('custom.prescription.status_keys.partially_dispensed', 2),
-            config('custom.prescription.status_keys.fully_dispensed', 3),
-        ])->count();
+        $activeKey = (int) config('custom.prescription.status_keys.active', 1);
+        $partiallyDispensedKey = (int) config('custom.prescription.status_keys.partially_dispensed', 2);
+        $fullyDispensedKey = (int) config('custom.prescription.status_keys.fully_dispensed', 3);
 
-        $totalPatientsAttended = (clone $prescriptionQuery)->distinct('patient_id')->count('patient_id');
+        $prescriptionStats = (clone $prescriptionQuery)
+            ->selectRaw("
+                COUNT(*) as total_prescriptions,
+                COUNT(CASE WHEN status = {$activeKey} THEN 1 END) as active_prescriptions,
+                COUNT(CASE WHEN status IN ({$partiallyDispensedKey}, {$fullyDispensedKey}) THEN 1 END) as dispensed_prescriptions,
+                COUNT(DISTINCT patient_id) as total_patients_attended
+            ")
+            ->first();
 
-        $medicamentPivotQuery = DB::table('medicament_prescriptions')
+        $totalPrescriptions = (int) ($prescriptionStats->total_prescriptions ?? 0);
+        $activePrescriptions = (int) ($prescriptionStats->active_prescriptions ?? 0);
+        $dispensedPrescriptions = (int) ($prescriptionStats->dispensed_prescriptions ?? 0);
+        $totalPatientsAttended = (int) ($prescriptionStats->total_patients_attended ?? 0);
+
+        $medicamentStats = DB::table('medicament_prescriptions')
             ->whereIn('prescription_id', $prescriptionSubquery)
-            ->whereNull('deleted_at');
+            ->whereNull('deleted_at')
+            ->selectRaw('
+                COUNT(*) as total_medicaments_prescribed,
+                COALESCE(SUM(medicament_quantity), 0) as total_units_prescribed
+            ')
+            ->first();
 
-        $totalMedicamentsPrescribed = (clone $medicamentPivotQuery)->count();
-        $totalUnitsPrescribed = (clone $medicamentPivotQuery)->sum('medicament_quantity');
+        $totalMedicamentsPrescribed = (int) ($medicamentStats->total_medicaments_prescribed ?? 0);
+        $totalUnitsPrescribed = (int) ($medicamentStats->total_units_prescribed ?? 0);
 
         $avgMedicaments = $totalPrescriptions > 0
             ? round($totalMedicamentsPrescribed / $totalPrescriptions, 1)

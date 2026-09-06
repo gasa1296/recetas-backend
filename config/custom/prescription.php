@@ -40,6 +40,8 @@ return [
     ],
     // Configuración de certificados X.509
     'certificate' => [
+        // Ruta personalizada del archivo openssl.cnf (opcional)
+        'openssl_conf' => env('OPENSSL_CONF', null),
         // Días de validez del certificado
         'validity_days' => (int) env('CERTIFICATE_VALIDITY_DAYS', 365),
         // Días antes de expirar para refrescar automáticamente

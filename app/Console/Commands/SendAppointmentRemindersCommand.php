@@ -12,7 +12,7 @@ class SendAppointmentRemindersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'appointments:send-reminders';
+    protected $signature = 'appointments:send-reminders {--sync : Process reminders synchronously without queueing}';
 
     /**
      * The console command description.
@@ -27,10 +27,15 @@ class SendAppointmentRemindersCommand extends Command
     public function handle(): int
     {
         $this->info('Checking upcoming appointments for reminders...');
-        $job = new SendAppointmentRemindersJob;
-        $processed = $job->handle();
 
-        $this->info("Successfully sent {$processed} appointment reminder(s).");
+        if ($this->option('sync')) {
+            $job = new SendAppointmentRemindersJob;
+            $processed = $job->handle();
+            $this->info("Successfully sent {$processed} appointment reminder(s).");
+        } else {
+            SendAppointmentRemindersJob::dispatch();
+            $this->info('Appointment reminders job has been dispatched to the queue.');
+        }
 
         return Command::SUCCESS;
     }

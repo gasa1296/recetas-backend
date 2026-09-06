@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Archive;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Archived RFC 3161 Timestamping Service.
+ * Preserved for future integration with certified TSA authorities.
+ */
 class TimestampService
 {
     private string $tsaUrl;
@@ -64,37 +68,21 @@ class TimestampService
 
     /**
      * Create an ASN.1 TIMESTAMP-REQUEST.
-     *
-     * RFC 3161 Section 2.4.1:
-     * TimestampRequest ::= SEQUENCE {
-     *   version          INTEGER v1(1),
-     *   messageImprint   SEQUENCE {
-     *     hashAlgorithm  AlgorithmIdentifier,
-     *     hashedMessage  OCTET STRING
-     *   },
-     *   reqPolicy        TSTPolicyId OPTIONAL,
-     *   nonce            INTEGER OPTIONAL,
-     *   certReq          BOOLEAN DEFAULT FALSE,
-     *   extensions       [0] IMPLICIT Extensions OPTIONAL
-     * }
      */
     private function createTimestampRequest(string $imprint): string
     {
         $hashAlgorithmOid = $this->getHashAlgorithmOid();
 
-        // Build the hashAlgorithm SEQUENCE
         $hashAlgorithm = $this->encodeSequence(
             $this->encodeOid($hashAlgorithmOid),
             $this->encodeNull()
         );
 
-        // Build the messageImprint SEQUENCE
         $messageImprint = $this->encodeSequence(
             $hashAlgorithm,
             $this->encodeOctetString($imprint)
         );
 
-        // Build the TIMESTAMP-REQUEST SEQUENCE
         $request = $this->encodeSequence(
             $this->encodeInteger(1), // version v1
             $messageImprint,
@@ -106,12 +94,6 @@ class TimestampService
 
     /**
      * Parse the ASN.1 TIMESTAMP-RESPONSE and extract the timestamp token.
-     *
-     * RFC 3161 Section 2.4.2:
-     * TimestampResponse ::= SEQUENCE {
-     *   status            PKIStatusInfo,
-     *   timeStampToken    TimeStampToken OPTIONAL
-     * }
      */
     private function parseTimestampResponse(string $response): ?string
     {
@@ -122,17 +104,13 @@ class TimestampService
             return null;
         }
 
-        // The second element is the timeStampToken
         $token = $sequence[1];
 
-        // If token is an array (nested sequence), convert it back to binary
         if (is_array($token)) {
             $token = $this->encodeSequence(...array_filter($token, fn ($item) => $item !== null));
         }
 
-        // Check if it's an ASN.1 EXPLICIT tag [0] (context-specific)
         if (is_string($token) && strlen($token) > 0 && ord($token[0]) === 0xA0) {
-            // Extract the content (skip tag and length)
             $token = substr($token, 2);
         }
 
@@ -149,13 +127,9 @@ class TimestampService
             'sha384' => '2.16.840.1.101.3.4.2.2',
             'sha512' => '2.16.840.1.101.3.4.2.3',
             'sha1' => '1.3.14.3.2.26',
-            default => '2.16.840.1.101.3.4.2.1', // SHA-256
+            default => '2.16.840.1.101.3.4.2.1',
         };
     }
-
-    // ============================================
-    // ASN.1 Encoding Functions
-    // ============================================
 
     private function encodeSequence(string ...$items): string
     {
@@ -178,7 +152,6 @@ class TimestampService
             }
         }
 
-        // Add leading zero if high bit is set
         if (ord($bytes[0]) & 0x80) {
             $bytes = "\x00".$bytes;
         }
@@ -237,10 +210,6 @@ class TimestampService
         return chr(0x80 | strlen($bytes)).$bytes;
     }
 
-    // ============================================
-    // ASN.1 Parsing Functions
-    // ============================================
-
     private function parseSequence(string $data, int &$pos): ?array
     {
         if ($pos >= strlen($data)) {
@@ -265,10 +234,8 @@ class TimestampService
             $itemTag = ord($data[$pos]);
 
             if ($itemTag === 0x30) {
-                // Nested sequence
                 $items[] = $this->parseSequence($data, $pos);
             } elseif ($itemTag === 0xA0) {
-                // Context-specific tag [0]
                 $pos++;
                 $itemLength = $this->parseLength($data, $pos);
                 if ($itemLength !== null) {
@@ -276,7 +243,6 @@ class TimestampService
                     $pos += $itemLength;
                 }
             } else {
-                // Other TLV
                 $pos++;
                 $itemLength = $this->parseLength($data, $pos);
                 if ($itemLength !== null) {

@@ -900,7 +900,7 @@ test('public prescription returns web verification view for browser / qr scan', 
 
     $prescription->handleUploadFile('%PDF-1.7 dummy pdf content', 'signed');
 
-    $response = $this->get('/api/public/prescriptions/test-web-view-hash-999', [
+    $response = $this->get('/public/prescriptions/test-web-view-hash-999', [
         'Accept' => 'text/html',
     ]);
 

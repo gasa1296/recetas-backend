@@ -22,7 +22,8 @@ class PrescriptionExpirationService
                 continue;
             }
             if ($prescription->medicaments->contains('type', $type)) {
-                $expirationDays = $days;
+                $expirationDays = (int) $days;
+                break;
             }
         }
 

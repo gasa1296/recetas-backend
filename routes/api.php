@@ -52,7 +52,7 @@ use Illuminate\Support\Facades\Route;
 
     private function publicRoutes()
     {
-        Route::controller(PublicPrescriptionController::class)->name('public.prescription.')
+        Route::controller(PublicPrescriptionController::class)->name('api.public.prescription.')
             ->group(function () {
                 Route::get('/public/prescriptions/{prescription}', 'show')->name('show')->middleware('throttle:60,1');
                 Route::post('/public/prescriptions/{prescription}/dispense', 'dispense')->name('dispense')->middleware(['auth:sanctum', 'throttle:30,1']);

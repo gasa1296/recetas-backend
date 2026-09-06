@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Media\FileStorageService;
 use Database\Factories\PrescriptionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -14,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 #[Fillable([
     'temp',
@@ -100,39 +99,29 @@ class Prescription extends Model
         return $this->morphMany(File::class, 'model');
     }
 
-    public function signed_file(): MorphOne
+    public function signedFile(): MorphOne
     {
         return $this->morphOne(File::class, 'model')->where('type', 'signed')->latestOfMany();
     }
 
-    public function unsigned_file(): MorphOne
+    public function unsignedFile(): MorphOne
     {
         return $this->morphOne(File::class, 'model')->where('type', 'unsigned')->latestOfMany();
     }
 
+    public function signed_file(): MorphOne
+    {
+        return $this->signedFile();
+    }
+
+    public function unsigned_file(): MorphOne
+    {
+        return $this->unsignedFile();
+    }
+
     public function handleUploadFile(string|UploadedFile $file, string $type = 'unsigned'): bool
     {
-        $disk = config('filesystems.default', 'local');
-
-        $existingFiles = $this->files()->where('type', $type)->get();
-        foreach ($existingFiles as $oldFile) {
-            $oldDisk = $oldFile->location ?: $disk;
-            if (Storage::disk($oldDisk)->exists($oldFile->path)) {
-                Storage::disk($oldDisk)->delete($oldFile->path);
-            }
-            $oldFile->delete();
-        }
-
-        $name = Str::uuid().'.pdf';
-        $path = date('Y').'/'.date('m').'/'.$name;
-        Storage::disk($disk)->put($path, $file);
-
-        return (bool) $this->files()->create([
-            'path' => $path,
-            'type' => $type,
-            'location' => $disk,
-            'filename' => $name,
-        ]);
+        return (bool) app(FileStorageService::class)->storePrescriptionPdf($this, $file, $type);
     }
 
     protected function prettyStatus(): Attribute
@@ -143,10 +132,11 @@ class Prescription extends Model
     }
 
     /**
-     * Generic percent attribute helper.
-     * Stores values as integer (value * 100) and exposes as float (value / 100).
+     * Generic fixed-point scaled decimal attribute helper.
+     * Stores values as integer (value * 100) to preserve two decimal places
+     * in integer columns, and exposes as float (value / 100).
      */
-    protected function percent(): Attribute
+    protected function scaledDecimal(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value) => is_null($value) ? null : $value / 100,
@@ -154,33 +144,41 @@ class Prescription extends Model
         );
     }
 
+    /**
+     * Backward-compatible alias for scaledDecimal.
+     */
+    protected function percent(): Attribute
+    {
+        return $this->scaledDecimal();
+    }
+
     protected function saturation(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 
     protected function ppm(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 
     protected function temp(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 
     protected function weight(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 
     protected function height(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 
     protected function pressure(): Attribute
     {
-        return $this->percent();
+        return $this->scaledDecimal();
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Services\Media;
 
 use App\Models\File;
+use App\Models\Prescription;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileStorageService
@@ -93,5 +95,31 @@ class FileStorageService
             'size' => $uploadedFile->getSize() ?: 0,
             'type' => $uploadedFile->getClientOriginalExtension() ?: 'bin',
         ];
+    }
+
+    /**
+     * Store a generated PDF content for a prescription model, cleaning up any previous file of that type.
+     */
+    public function storePrescriptionPdf(Prescription $prescription, string|UploadedFile $file, string $type = 'unsigned'): File
+    {
+        $disk = $this->getDisk();
+
+        $existingFiles = $prescription->files()->where('type', $type)->get();
+        foreach ($existingFiles as $oldFile) {
+            $this->deleteFile($oldFile);
+        }
+
+        $name = Str::uuid().'.pdf';
+        $path = date('Y').'/'.date('m').'/'.$name;
+        Storage::disk($disk)->put($path, $file);
+
+        return $prescription->files()->create([
+            'path' => $path,
+            'type' => $type,
+            'location' => $disk,
+            'filename' => $name,
+            'mime_type' => 'application/pdf',
+            'user_id' => $prescription->user_id,
+        ]);
     }
 }

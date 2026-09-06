@@ -32,7 +32,7 @@ it('stores certificate files in storage', function () {
     expect(Storage::disk('local')->exists($result['key_path']))->toBeTrue();
 });
 
-it('certificate contains valid PEM content', function () {
+it('certificate contains valid PEM content and encrypted private key', function () {
     Storage::fake('local');
     $user = User::factory()->create();
 
@@ -44,8 +44,15 @@ it('certificate contains valid PEM content', function () {
 
     expect($certContent)->toContain('-----BEGIN CERTIFICATE-----');
     expect($certContent)->toContain('-----END CERTIFICATE-----');
-    expect($keyContent)->toContain('-----BEGIN PRIVATE KEY-----');
-    expect($keyContent)->toContain('-----END PRIVATE KEY-----');
+    expect($keyContent)->toMatch('/-----BEGIN (ENCRYPTED )?PRIVATE KEY-----/');
+
+    // Ensure key can be unlocked with passphrase and fails with empty/wrong passphrase
+    $passphrase = $service->getPrivateKeyPassphrase($user);
+    $validKey = openssl_pkey_get_private($keyContent, $passphrase);
+    expect($validKey)->not()->toBeFalse();
+
+    $invalidKey = @openssl_pkey_get_private($keyContent, 'wrong-passphrase');
+    expect($invalidKey)->toBeFalse();
 });
 
 it('certificate contains user information', function () {

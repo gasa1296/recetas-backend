@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Brand extends Model
 {
@@ -27,5 +28,11 @@ class Brand extends Model
     public function laboratory(): BelongsTo
     {
         return $this->belongsTo(Laboratory::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(fn () => Cache::forget('catalog_brands'));
+        static::deleted(fn () => Cache::forget('catalog_brands'));
     }
 }

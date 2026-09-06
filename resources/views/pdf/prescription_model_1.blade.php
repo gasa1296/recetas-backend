@@ -42,7 +42,7 @@
         @php
         $phone = function ($p) { return is_array($p) ? implode(', ', $p) : ($p ?? ''); };
         $gender = function ($g) { return $g === 'M' ? 'Masculino' : ($g === 'F' ? 'Femenino' : ($g ?? 'Otro')); };
-        $v = function ($val, $suf = '') { return is_null($val) ? '-' : ($val / 100) . $suf; };
+        $v = function ($val, $suf = '') { return is_null($val) ? '-' : $val . $suf; };
         $vitals = [['temp','Temperatura',' °C'],['weight','Peso',' kg'],['height','Altura',' cm'],['pressure','Tensión',''],['saturation','Saturación O2',' %'],['ppm','Pulso','']];
         $hv = false; foreach ($vitals as $x) { if (!is_null($prescription->{$x[0]})) { $hv = true; break; } }
     @endphp

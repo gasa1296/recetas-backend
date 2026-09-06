@@ -90,7 +90,7 @@ class PatientMediaController extends Controller
      */
     public function show(Patient $patient, File $file): PatientMediaResource
     {
-        $this->validateOwnership($patient, $file);
+        $this->validateOwnership($patient, $file, 'view');
 
         return new PatientMediaResource($file->load('user'));
     }
@@ -100,7 +100,7 @@ class PatientMediaController extends Controller
      */
     public function stream(Patient $patient, File $file): StreamedResponse
     {
-        $this->validateOwnership($patient, $file);
+        $this->validateOwnership($patient, $file, 'view');
 
         if (! $this->fileStorage->exists($file)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
@@ -116,7 +116,7 @@ class PatientMediaController extends Controller
      */
     public function download(Patient $patient, File $file): StreamedResponse
     {
-        $this->validateOwnership($patient, $file);
+        $this->validateOwnership($patient, $file, 'view');
 
         if (! $this->fileStorage->exists($file)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
@@ -130,7 +130,7 @@ class PatientMediaController extends Controller
      */
     public function update(PatientMediaUpdateRequest $request, Patient $patient, File $file): PatientMediaResource
     {
-        $this->validateOwnership($patient, $file);
+        $this->validateOwnership($patient, $file, 'update');
 
         $data = $request->validated();
 
@@ -165,7 +165,7 @@ class PatientMediaController extends Controller
      */
     public function destroy(Patient $patient, File $file): Response
     {
-        $this->validateOwnership($patient, $file);
+        $this->validateOwnership($patient, $file, 'delete');
 
         $this->fileStorage->deleteFile($file);
 
@@ -173,23 +173,27 @@ class PatientMediaController extends Controller
     }
 
     /**
-     * Validate that the file belongs to the requested patient and doctor.
+     * Validate that the file belongs to the requested patient and user is authorized via FilePolicy.
      */
-    protected function validateOwnership(Patient $patient, File $file): void
+    protected function validateOwnership(Patient $patient, File $file, string $ability = 'view'): void
     {
         $this->authorizePatient($patient);
 
         if ($file->model_type !== Patient::class || (int) $file->model_id !== (int) $patient->id) {
             abort(404, 'El archivo no pertenece al paciente indicado.');
         }
+
+        if (! auth()->user()->can($ability, $file)) {
+            abort(404, 'El archivo no pertenece al paciente indicado.');
+        }
     }
 
     /**
-     * Authorize that the patient belongs to the authenticated medic.
+     * Authorize that the patient belongs to the authenticated medic using PatientPolicy.
      */
     protected function authorizePatient(Patient $patient): void
     {
-        if ((int) $patient->user_id !== (int) auth()->id()) {
+        if (! auth()->user()->can('view', $patient)) {
             abort(404, 'Paciente no encontrado.');
         }
     }

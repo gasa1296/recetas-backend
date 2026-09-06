@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prescription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PublicPrescriptionController extends Controller
@@ -154,40 +155,44 @@ class PublicPrescriptionController extends Controller
             'mode' => 'nullable|string|in:full,partial',
         ]);
 
-        $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
+        return DB::transaction(function () use ($request, $prescription, $user) {
+            $prescriptionModel = Prescription::where('prescription_hash', $prescription)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        $activeStatus = config('custom.prescription.status_keys.active');
-        $partialStatus = config('custom.prescription.status_keys.partially_dispensed');
-        $fullStatus = config('custom.prescription.status_keys.fully_dispensed');
+            $activeStatus = config('custom.prescription.status_keys.active');
+            $partialStatus = config('custom.prescription.status_keys.partially_dispensed');
+            $fullStatus = config('custom.prescription.status_keys.fully_dispensed');
 
-        if ($prescription->status != $activeStatus && $prescription->status != $partialStatus) {
-            return $this->error(__('messages.operation_failed'), [
-                'status' => ['Prescription cannot be dispensed in its current state.'],
-            ], 422);
-        }
+            if ($prescriptionModel->status != $activeStatus && $prescriptionModel->status != $partialStatus) {
+                return $this->error(__('messages.operation_failed'), [
+                    'status' => ['Prescription cannot be dispensed in its current state.'],
+                ], 422);
+            }
 
-        if ($prescription->expires_at && now()->greaterThan($prescription->expires_at)) {
-            return $this->error(__('messages.prescription_expired'), [], 422);
-        }
+            if ($prescriptionModel->expires_at && now()->greaterThan($prescriptionModel->expires_at)) {
+                return $this->error(__('messages.prescription_expired'), [], 422);
+            }
 
-        $newStatus = $request->input('mode') === 'partial' ? $partialStatus : $fullStatus;
-        $dispensedAt = now();
+            $newStatus = $request->input('mode') === 'partial' ? $partialStatus : $fullStatus;
+            $dispensedAt = now();
 
-        $prescription->update([
-            'status' => $newStatus,
-            'dispensed_by_id' => $user->id,
-            'dispensed_at' => $dispensedAt,
-        ]);
+            $prescriptionModel->update([
+                'status' => $newStatus,
+                'dispensed_by_id' => $user->id,
+                'dispensed_at' => $dispensedAt,
+            ]);
 
-        return $this->success(__('messages.operation_success'), [
-            'status' => $prescription->status,
-            'status_label' => config("custom.prescription.status.{$prescription->status}"),
-            'dispensed_at' => $dispensedAt->toIso8601String(),
-            'dispensed_by_id' => $user->id,
-            'dispensed_by' => [
-                'id' => $user->id,
-                'name' => trim("{$user->first_name} {$user->last_name}"),
-            ],
-        ]);
+            return $this->success(__('messages.operation_success'), [
+                'status' => $prescriptionModel->status,
+                'status_label' => config("custom.prescription.status.{$prescriptionModel->status}"),
+                'dispensed_at' => $dispensedAt->toIso8601String(),
+                'dispensed_by_id' => $user->id,
+                'dispensed_by' => [
+                    'id' => $user->id,
+                    'name' => trim("{$user->first_name} {$user->last_name}"),
+                ],
+            ]);
+        });
     }
 }
