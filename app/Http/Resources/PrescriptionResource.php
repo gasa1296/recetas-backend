@@ -30,11 +30,12 @@ class PrescriptionResource extends JsonResource
             'diagnostic' => $this->diagnostic,
             'diet' => $this->diet,
             'comments' => $this->comments,
-            'user' => $this->whenLoaded('user', new MedicResource($this->user)),
-            'room' => $this->whenLoaded('room', new RoomResource($this->room)),
-            'patient' => $this->whenLoaded('patient', new PatientResource($this->patient)),
-            'specialty' => $this->whenLoaded('specialty', new SpecialtyResource($this->specialty)),
-            'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
+            'user' => $this->whenLoaded('user', fn () => new MedicResource($this->user)),
+            'room' => $this->whenLoaded('room', fn () => new RoomResource($this->room)),
+            'patient' => $this->whenLoaded('patient', fn () => new PatientResource($this->patient)),
+            'specialty' => $this->whenLoaded('specialty', fn () => new SpecialtyResource($this->specialty)),
+            'dispensed_by' => $this->whenLoaded('dispensedBy', fn () => new MedicResource($this->dispensedBy)),
+            'medicaments' => $this->whenLoaded('medicaments', fn () => $this->medicaments->map(fn ($medicament) => [
                 'id' => $medicament->id,
                 'active_ingredient' => $medicament->active_ingredient,
                 'type' => $medicament->type,
@@ -49,6 +50,8 @@ class PrescriptionResource extends JsonResource
             'status' => $this->status,
             'pretty_status' => $this->pretty_status,
             'prescription_hash' => $this->prescription_hash,
+            'dispensed_by_id' => $this->dispensed_by_id,
+            'dispensed_at' => $this->dispensed_at?->toIso8601String(),
             'expires_at' => $this->expires_at,
             'created_at' => $this->created_at?->toIso8601String(),
         ];

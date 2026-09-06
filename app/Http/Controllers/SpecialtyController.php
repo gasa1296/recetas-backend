@@ -42,8 +42,14 @@ class SpecialtyController extends Controller
      */
     public function update(SpecialtyRequest $request): JsonResponse
     {
-        $specialty = auth()->user()->specialty;
-        $specialty->update($request->validated());
+        $user = auth()->user();
+        $specialty = $user->specialty;
+
+        if ($specialty) {
+            $specialty->update($request->validated());
+        } else {
+            $specialty = $user->specialty()->create($request->validated());
+        }
 
         return $this->success(
             __('messages.operation_success'),

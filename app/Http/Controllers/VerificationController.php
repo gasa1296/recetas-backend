@@ -37,15 +37,10 @@ class VerificationController extends Controller
                 400,
             );
         }
-        $user = User::where('email', $email)->firstOrFail();
-        if ($user->hasVerifiedEmail()) {
-            return $this->error(
-                __('messages.verification.already_verified'),
-                400,
-            );
+        $user = User::where('email', $email)->first();
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
         }
-
-        $user->sendEmailVerificationNotification();
 
         return $this->success(__('messages.verification.link_sent'));
     }

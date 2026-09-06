@@ -20,17 +20,6 @@ class PatientMediaUploadRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function prepareForValidation(): void
-    {
-        if (! empty($_POST)) {
-            $this->merge($_POST);
-        }
-    }
 
     public function rules(): array
     {

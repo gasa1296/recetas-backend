@@ -27,6 +27,26 @@ class PrescriptionRequest extends FormRequest
         ]);
         $formatter = new \NumberFormatter(app()->getLocale(), \NumberFormatter::SPELLOUT);
         $medicaments = $this->input('medicaments', []);
+        $directBrandIds = [];
+        $recommendedNames = [];
+        foreach ($medicaments as $m) {
+            if (! empty($m['brand_id']) && empty($m['laboratory_id'])) {
+                $directBrandIds[] = $m['brand_id'];
+            } elseif (empty($m['brand_id']) && ! empty($m['recommended_brand'])) {
+                $recommendedNames[] = $m['recommended_brand'];
+            }
+        }
+
+        $brandsById = ! empty($directBrandIds) ? Brand::whereIn('id', array_unique($directBrandIds))->get()->keyBy('id') : collect();
+        $brandsByName = collect();
+        if (! empty($recommendedNames)) {
+            $brandsByName = Brand::where(function ($q) use ($recommendedNames) {
+                foreach (array_unique($recommendedNames) as $name) {
+                    $q->orWhere('name', 'like', "%{$name}%");
+                }
+            })->get();
+        }
+
         $this->offsetUnset('medicaments');
 
         foreach ($medicaments as $medicament) {
@@ -37,13 +57,14 @@ class PrescriptionRequest extends FormRequest
             $brandId = $medicament['brand_id'] ?? null;
             $laboratoryId = $medicament['laboratory_id'] ?? null;
             if (! $brandId && ! empty($medicament['recommended_brand'])) {
-                $matchedBrand = Brand::where('name', 'like', '%'.$medicament['recommended_brand'].'%')->first();
+                $rec = $medicament['recommended_brand'];
+                $matchedBrand = $brandsByName->first(fn ($b) => stripos($b->name, $rec) !== false);
                 if ($matchedBrand) {
                     $brandId = $matchedBrand->id;
                     $laboratoryId = $matchedBrand->laboratory_id;
                 }
             } elseif ($brandId && ! $laboratoryId) {
-                $brand = Brand::find($brandId);
+                $brand = $brandsById->get($brandId);
                 if ($brand) {
                     $laboratoryId = $brand->laboratory_id;
                 }

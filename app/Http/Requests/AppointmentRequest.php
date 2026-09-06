@@ -29,8 +29,8 @@ class AppointmentRequest extends FormRequest
     {
         return [
             'patient_id' => ['required', 'integer', Rule::exists('patients', 'id')->where('user_id', auth()->id())],
-            'room_id' => ['nullable', 'integer', 'exists:rooms,id'],
-            'specialty_id' => ['nullable', 'integer', 'exists:specialties,id'],
+            'room_id' => ['nullable', 'integer', Rule::exists('rooms', 'id')->where('user_id', auth()->id())],
+            'specialty_id' => ['nullable', 'integer', Rule::exists('specialties', 'id')->where('user_id', auth()->id())],
             'starts_at' => ['required', 'date'],
             'ends_at' => ['required', 'date', 'after:starts_at'],
             'reason' => ['nullable', 'string', 'max:255'],

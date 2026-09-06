@@ -24,7 +24,7 @@ class ExaminationController extends Controller
     {
         $patientModel = auth()->user()->patients()->findOrFail($patient);
 
-        $query = $patientModel->examinations()->with(['files.user', 'user']);
+        $query = $patientModel->examinations()->withCount('files')->with(['files.user', 'user']);
 
         if ($request->filled('type')) {
             $query->type($request->query('type'));

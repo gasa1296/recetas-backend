@@ -35,6 +35,8 @@ use Illuminate\Support\Str;
     'status',
     'prescription_hash',
     'expires_at',
+    'dispensed_by_id',
+    'dispensed_at',
 ])]
 #[Hidden(['prescription_hash'])]
 class Prescription extends Model
@@ -45,6 +47,24 @@ class Prescription extends Model
     protected $attributes = [
         'status' => '0',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'dispensed_at' => 'datetime',
+            'expires_at' => 'date',
+        ];
+    }
+
+    public function dispensedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dispensed_by_id');
+    }
 
     public function user(): BelongsTo
     {

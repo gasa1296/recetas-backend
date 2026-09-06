@@ -17,7 +17,7 @@ class PrescriptionTemplateResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'medicaments' => $this->whenLoaded('medicaments', $this->medicaments->map(fn ($medicament) => [
+            'medicaments' => $this->whenLoaded('medicaments', fn () => $this->medicaments->map(fn ($medicament) => [
                 'id' => $medicament->id,
                 'active_ingredient' => $medicament->active_ingredient,
                 'concentration' => $medicament->concentration,

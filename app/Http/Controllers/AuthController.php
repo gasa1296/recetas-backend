@@ -71,10 +71,11 @@ class AuthController extends Controller
         });
 
         $user->load(['rooms', 'specialty']);
+        $token = $user->createToken('auth')->plainTextToken;
 
         return $this->success(
             __('messages.auth.client_register_success'),
-            new LoginResource($user),
+            new LoginResource($user, $token),
             201,
         );
     }
@@ -91,10 +92,11 @@ class AuthController extends Controller
         }
         $user = auth()->user();
         $user->load(['rooms', 'specialty']);
+        $token = $user->createToken('auth')->plainTextToken;
 
         return $this->success(
             __('messages.auth.client_login_success'),
-            new LoginResource($user),
+            new LoginResource($user, $token),
         );
     }
 

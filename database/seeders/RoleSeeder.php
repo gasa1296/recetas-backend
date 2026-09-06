@@ -55,6 +55,7 @@ class RoleSeeder extends Seeder
 
         $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => $guard]);
         $medic = Role::firstOrCreate(['name' => 'medic', 'guard_name' => $guard]);
+        $farmacia = Role::firstOrCreate(['name' => 'farmacia', 'guard_name' => $guard]);
 
         $admin?->syncPermissions(Permission::all());
         $medic?->syncPermissions([
@@ -68,6 +69,11 @@ class RoleSeeder extends Seeder
             'rooms.view',
             'rooms.update',
             'specialties.view',
+        ]);
+        $farmacia?->syncPermissions([
+            'prescriptions.view',
+            'prescriptions.update',
+            'medicaments.view',
         ]);
     }
 }

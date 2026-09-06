@@ -8,6 +8,7 @@ use App\Models\Prescription;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class StatisticController extends Controller
@@ -45,9 +46,9 @@ class StatisticController extends Controller
     public function overview(Request $request): JsonResponse
     {
         $prescriptionQuery = $this->filterPrescriptions($request);
-        $prescriptionIds = (clone $prescriptionQuery)->pluck('id');
+        $prescriptionSubquery = (clone $prescriptionQuery)->select('prescriptions.id');
 
-        $totalPrescriptions = $prescriptionIds->count();
+        $totalPrescriptions = (clone $prescriptionQuery)->count();
         $activePrescriptions = (clone $prescriptionQuery)->where('status', config('custom.prescription.status_keys.active', 1))->count();
         $dispensedPrescriptions = (clone $prescriptionQuery)->whereIn('status', [
             config('custom.prescription.status_keys.partially_dispensed', 2),
@@ -57,7 +58,7 @@ class StatisticController extends Controller
         $totalPatientsAttended = (clone $prescriptionQuery)->distinct('patient_id')->count('patient_id');
 
         $medicamentPivotQuery = DB::table('medicament_prescriptions')
-            ->whereIn('prescription_id', $prescriptionIds)
+            ->whereIn('prescription_id', $prescriptionSubquery)
             ->whereNull('deleted_at');
 
         $totalMedicamentsPrescribed = (clone $medicamentPivotQuery)->count();
@@ -86,17 +87,17 @@ class StatisticController extends Controller
      */
     public function byMedicament(Request $request): JsonResponse
     {
-        $prescriptionIds = $this->filterPrescriptions($request)->pluck('id');
+        $prescriptionSubquery = $this->filterPrescriptions($request)->select('prescriptions.id');
         $limit = $request->integer('limit', 10);
 
         $totalItems = DB::table('medicament_prescriptions')
-            ->whereIn('prescription_id', $prescriptionIds)
+            ->whereIn('prescription_id', $prescriptionSubquery)
             ->whereNull('deleted_at')
             ->count();
 
         $stats = DB::table('medicament_prescriptions as mp')
             ->join('medicaments as m', 'mp.medicament_id', '=', 'm.id')
-            ->whereIn('mp.prescription_id', $prescriptionIds)
+            ->whereIn('mp.prescription_id', $prescriptionSubquery)
             ->whereNull('mp.deleted_at')
             ->select(
                 'm.id as medicament_id',
@@ -131,11 +132,11 @@ class StatisticController extends Controller
      */
     public function byBrand(Request $request): JsonResponse
     {
-        $prescriptionIds = $this->filterPrescriptions($request)->pluck('id');
+        $prescriptionSubquery = $this->filterPrescriptions($request)->select('prescriptions.id');
         $limit = $request->integer('limit', 10);
 
         $totalBranded = DB::table('medicament_prescriptions')
-            ->whereIn('prescription_id', $prescriptionIds)
+            ->whereIn('prescription_id', $prescriptionSubquery)
             ->whereNull('deleted_at')
             ->where(function ($q) {
                 $q->whereNotNull('recommended_brand')
@@ -147,7 +148,7 @@ class StatisticController extends Controller
         $stats = DB::table('medicament_prescriptions as mp')
             ->leftJoin('brands as b', 'mp.brand_id', '=', 'b.id')
             ->leftJoin('laboratories as l', 'b.laboratory_id', '=', 'l.id')
-            ->whereIn('mp.prescription_id', $prescriptionIds)
+            ->whereIn('mp.prescription_id', $prescriptionSubquery)
             ->whereNull('mp.deleted_at')
             ->where(function ($q) {
                 $q->whereNotNull('mp.recommended_brand')
@@ -183,15 +184,14 @@ class StatisticController extends Controller
      */
     public function byLaboratory(Request $request): JsonResponse
     {
-        $prescriptionIds = $this->filterPrescriptions($request)->pluck('id');
+        $prescriptionSubquery = $this->filterPrescriptions($request)->select('prescriptions.id');
         $limit = $request->integer('limit', 10);
 
-        // Subquery or direct join with laboratory through brand or laboratory_id
         $totalWithLab = DB::table('medicament_prescriptions as mp')
             ->leftJoin('laboratories as l_direct', 'mp.laboratory_id', '=', 'l_direct.id')
             ->leftJoin('brands as b', 'mp.brand_id', '=', 'b.id')
             ->leftJoin('laboratories as l_brand', 'b.laboratory_id', '=', 'l_brand.id')
-            ->whereIn('mp.prescription_id', $prescriptionIds)
+            ->whereIn('mp.prescription_id', $prescriptionSubquery)
             ->whereNull('mp.deleted_at')
             ->where(function ($q) {
                 $q->whereNotNull('l_direct.name')
@@ -203,7 +203,7 @@ class StatisticController extends Controller
             ->leftJoin('laboratories as l_direct', 'mp.laboratory_id', '=', 'l_direct.id')
             ->leftJoin('brands as b', 'mp.brand_id', '=', 'b.id')
             ->leftJoin('laboratories as l_brand', 'b.laboratory_id', '=', 'l_brand.id')
-            ->whereIn('mp.prescription_id', $prescriptionIds)
+            ->whereIn('mp.prescription_id', $prescriptionSubquery)
             ->whereNull('mp.deleted_at')
             ->where(function ($q) {
                 $q->whereNotNull('l_direct.name')
@@ -241,7 +241,7 @@ class StatisticController extends Controller
         $prescriptionQuery = $this->filterPrescriptions($request);
         $limit = $request->integer('limit', 10);
 
-        $stats = (clone $prescriptionQuery)
+        $patientList = (clone $prescriptionQuery)
             ->join('patients as p', 'prescriptions.patient_id', '=', 'p.id')
             ->select(
                 'p.id as patient_id',
@@ -255,20 +255,30 @@ class StatisticController extends Controller
             ->groupBy('p.id', 'p.first_name', 'p.last_name', 'p.identification', 'p.gender')
             ->orderByDesc('prescriptions_count')
             ->limit($limit)
-            ->get()
-            ->map(function ($item) {
-                $item->patient_name = "{$item->first_name} {$item->last_name}";
+            ->get();
 
-                // Count distinct medicaments prescribed to this patient
-                $item->distinct_medicaments = DB::table('medicament_prescriptions as mp')
-                    ->join('prescriptions as pr', 'mp.prescription_id', '=', 'pr.id')
-                    ->where('pr.patient_id', $item->patient_id)
-                    ->whereNull('mp.deleted_at')
-                    ->distinct('mp.medicament_id')
-                    ->count('mp.medicament_id');
+        $patientIds = $patientList->pluck('patient_id')->filter()->all();
 
-                return $item;
-            });
+        // Calculate distinct medicaments in ONE single aggregated query scoped to current doctor
+        $distinctCounts = [];
+        if (! empty($patientIds)) {
+            $distinctCounts = DB::table('medicament_prescriptions as mp')
+                ->join('prescriptions as pr', 'mp.prescription_id', '=', 'pr.id')
+                ->whereIn('pr.patient_id', $patientIds)
+                ->when(auth()->check(), fn ($q) => $q->where('pr.user_id', auth()->id()))
+                ->whereNull('mp.deleted_at')
+                ->select('pr.patient_id', DB::raw('COUNT(DISTINCT mp.medicament_id) as count'))
+                ->groupBy('pr.patient_id')
+                ->pluck('count', 'patient_id')
+                ->all();
+        }
+
+        $stats = $patientList->map(function ($item) use ($distinctCounts) {
+            $item->patient_name = "{$item->first_name} {$item->last_name}";
+            $item->distinct_medicaments = (int) ($distinctCounts[$item->patient_id] ?? 0);
+
+            return $item;
+        });
 
         return response()->json([
             'success' => true,
@@ -310,10 +320,12 @@ class StatisticController extends Controller
      */
     public function laboratories(): JsonResponse
     {
-        $laboratories = Laboratory::with('brands')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $laboratories = Cache::remember('catalog_laboratories', 3600, function () {
+            return Laboratory::with('brands')
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        });
 
         return response()->json([
             'success' => true,
@@ -326,10 +338,12 @@ class StatisticController extends Controller
      */
     public function brands(): JsonResponse
     {
-        $brands = Brand::with('laboratory')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $brands = Cache::remember('catalog_brands', 3600, function () {
+            return Brand::with('laboratory')
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        });
 
         return response()->json([
             'success' => true,

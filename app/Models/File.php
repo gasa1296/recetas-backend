@@ -82,7 +82,7 @@ class File extends Model
         ];
     }
 
-    public function getUrlAttribute()
+    protected function url(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => asset('storage/'.$attributes['path']),

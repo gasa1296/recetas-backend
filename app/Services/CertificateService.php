@@ -28,20 +28,37 @@ class CertificateService
             'emailAddress' => $user->email,
         ];
 
-        $privateKey = openssl_pkey_new([
+        $candidates = array_filter([
+            getenv('OPENSSL_CONF') ?: null,
+            '/etc/pki/tls/openssl.cnf',
+            '/etc/ssl/openssl.cnf',
+            dirname(PHP_BINARY).'/extras/ssl/openssl.cnf',
+            dirname(PHP_BINARY).'/openssl.cnf',
+            'C:/Program Files/Git/usr/ssl/openssl.cnf',
+        ]);
+        $opensslConfig = null;
+        foreach ($candidates as $cand) {
+            if ($cand && file_exists($cand)) {
+                $opensslConfig = $cand;
+                break;
+            }
+        }
+
+        $keyConfig = [
             'private_key_bits' => 2048,
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ]);
+        ];
+        if ($opensslConfig) {
+            $keyConfig['config'] = $opensslConfig;
+        }
+
+        $privateKey = openssl_pkey_new($keyConfig);
 
         if ($privateKey === false) {
             Log::error('Failed to generate private key', ['user_id' => $user->id]);
 
             throw new \RuntimeException('Failed to generate private key');
         }
-
-        $opensslConfig = file_exists('/etc/pki/tls/openssl.cnf')
-            ? '/etc/pki/tls/openssl.cnf'
-            : (file_exists('/etc/ssl/openssl.cnf') ? '/etc/ssl/openssl.cnf' : null);
 
         $csrConfig = ['digest_alg' => 'sha256'];
         if ($opensslConfig) {

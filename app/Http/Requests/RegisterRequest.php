@@ -38,7 +38,7 @@ class RegisterRequest extends FormRequest
             'specialty.identification' => ['required_with:specialty', 'array'],
             'specialty.identification.medic_society' => ['required_with:specialty.identification', 'string', 'max:255', 'unique:specialties,identification->medic_society'],
             'specialty.identification.medic_registration' => ['required_with:specialty.identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration'],
-            'saved_signature' => ['nullable', 'string'],
+            'saved_signature' => ['nullable', 'string', 'max:65535', 'regex:/^[A-Za-z0-9+\/\n\r]*={0,2}$/'],
             'room' => ['nullable', 'array'],
             'room.name' => ['required_with:room', 'string', 'max:255'],
             'room.identification' => ['nullable', 'string', 'max:50'],

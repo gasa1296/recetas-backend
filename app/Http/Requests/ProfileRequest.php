@@ -40,7 +40,7 @@ class ProfileRequest extends FormRequest
             'specialty.identification' => ['required_with:specialty', 'array'],
             'specialty.identification.medic_society' => ['required_with:identification', 'string', 'max:255', 'unique:specialties,identification->medic_society,'.$specialtyId],
             'specialty.identification.medic_registration' => ['required_with:identification', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
-            'saved_signature' => ['nullable', 'string'],
+            'saved_signature' => ['nullable', 'string', 'max:65535', 'regex:/^[A-Za-z0-9+\/\n\r]*={0,2}$/'],
         ];
     }
 

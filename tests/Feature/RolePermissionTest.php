@@ -13,9 +13,10 @@ beforeEach(function () {
     $this->seed(RoleSeeder::class);
 });
 
-it('creates admin and medic roles', function () {
+it('creates admin, medic and farmacia roles', function () {
     expect(Role::findByName('admin'))->toBeInstanceOf(Role::class);
     expect(Role::findByName('medic'))->toBeInstanceOf(Role::class);
+    expect(Role::findByName('farmacia'))->toBeInstanceOf(Role::class);
 });
 
 it('creates CRUD permissions for all resources', function () {
@@ -48,6 +49,21 @@ it('medic has only clinical permissions', function () {
 
     foreach ($expected as $perm) {
         expect($medic->hasPermissionTo($perm))->toBeTrue();
+    }
+});
+
+it('farmacia has only dispensing permissions', function () {
+    $farmacia = Role::findByName('farmacia');
+    expect($farmacia->getAllPermissions()->count())->toBe(3);
+
+    $expected = [
+        'prescriptions.view',
+        'prescriptions.update',
+        'medicaments.view',
+    ];
+
+    foreach ($expected as $perm) {
+        expect($farmacia->hasPermissionTo($perm))->toBeTrue();
     }
 });
 

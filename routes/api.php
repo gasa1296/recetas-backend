@@ -32,21 +32,21 @@ use Illuminate\Support\Facades\Route;
         Route::controller(AuthController::class)
             ->name('auth.')
             ->group(function () {
-                Route::post('/auth/login', 'login')->name('login');
-                Route::post('/auth/register', 'register')->name('register');
+                Route::post('/auth/login', 'login')->name('login')->middleware('throttle:5,1');
+                Route::post('/auth/register', 'register')->name('register')->middleware('throttle:5,1');
                 Route::post('/auth/logout', 'logout')->name('logout')->middleware('auth:sanctum');
             });
         Route::controller(ResetController::class)
             ->name('password.')
             ->group(function () {
-                Route::post('/password/request', 'request')->name('request');
-                Route::post('/password/reset', 'reset')->name('reset');
+                Route::post('/password/request', 'request')->name('request')->middleware('throttle:3,1');
+                Route::post('/password/reset', 'reset')->name('reset')->middleware('throttle:5,1');
             });
         Route::controller(VerificationController::class)
             ->name('emailVerification.')
             ->group(function () {
-                Route::get('/verification/verify', 'verify')->name('verify');
-                Route::post('/verification/resend', 'resend')->name('resend');
+                Route::get('/verification/verify', 'verify')->name('verify')->middleware('throttle:10,1');
+                Route::post('/verification/resend', 'resend')->name('resend')->middleware('throttle:3,1');
             });
     }
 
@@ -54,8 +54,8 @@ use Illuminate\Support\Facades\Route;
     {
         Route::controller(PublicPrescriptionController::class)->name('public.prescription.')
             ->group(function () {
-                Route::get('/public/prescriptions/{prescription}', 'show')->name('show');
-                Route::post('/public/prescriptions/{prescription}/dispense', 'dispense')->name('dispense');
+                Route::get('/public/prescriptions/{prescription}', 'show')->name('show')->middleware('throttle:60,1');
+                Route::post('/public/prescriptions/{prescription}/dispense', 'dispense')->name('dispense')->middleware(['auth:sanctum', 'throttle:30,1']);
             });
     }
 

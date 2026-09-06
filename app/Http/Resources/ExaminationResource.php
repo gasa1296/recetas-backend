@@ -25,7 +25,7 @@ class ExaminationResource extends JsonResource
             'laboratory_name' => $this->laboratory_name,
             'findings' => $this->findings,
             'status' => $this->status,
-            'files_count' => $this->files()->count(),
+            'files_count' => $this->files_count ?? $this->files()->count(),
             'files' => PatientMediaResource::collection($this->whenLoaded('files')),
             'patient' => new PatientResource($this->whenLoaded('patient')),
             'user' => new MedicResource($this->whenLoaded('user')),

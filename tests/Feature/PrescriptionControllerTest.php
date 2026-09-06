@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Specialty;
 use App\Models\User;
 use App\Notifications\PrescriptionReadyNotification;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -966,7 +967,32 @@ test('public prescription returns json when format=json query parameter is prese
         ->assertJsonPath('data.is_valid', true);
 });
 
-test('public dispense marks active prescription as dispensed', function () {
+test('public dispense endpoint requires authentication', function () {
+    $response = $this->postJson('/api/public/prescriptions/test-dispense-hash-123/dispense', [
+        'mode' => 'full',
+    ]);
+
+    $response->assertUnauthorized();
+});
+
+test('public dispense endpoint rejects unauthorized users without farmacia or admin role', function () {
+    $this->seed(RoleSeeder::class);
+    $medic = User::factory()->create();
+    $medic->assignRole('medic');
+
+    $response = $this->actingAs($medic, 'sanctum')
+        ->postJson('/api/public/prescriptions/test-dispense-hash-123/dispense', [
+            'mode' => 'full',
+        ]);
+
+    $response->assertForbidden();
+});
+
+test('public dispense marks active prescription as dispensed when authenticated as farmacia', function () {
+    $this->seed(RoleSeeder::class);
+    $pharmacy = User::factory()->create();
+    $pharmacy->assignRole('farmacia');
+
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
@@ -983,20 +1009,60 @@ test('public dispense marks active prescription as dispensed', function () {
             'prescription_hash' => 'test-dispense-hash-123',
         ]);
 
-    $response = $this->postJson('/api/public/prescriptions/test-dispense-hash-123/dispense', [
-        'mode' => 'full',
-    ]);
+    $response = $this->actingAs($pharmacy, 'sanctum')
+        ->postJson('/api/public/prescriptions/test-dispense-hash-123/dispense', [
+            'mode' => 'full',
+        ]);
 
     $response->assertSuccessful()
-        ->assertJsonPath('data.status', config('custom.prescription.status_keys.fully_dispensed'));
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.fully_dispensed'))
+        ->assertJsonPath('data.dispensed_by_id', $pharmacy->id);
 
     $this->assertDatabaseHas('prescriptions', [
         'id' => $prescription->id,
         'status' => config('custom.prescription.status_keys.fully_dispensed'),
+        'dispensed_by_id' => $pharmacy->id,
     ]);
+
+    $this->assertNotNull($prescription->fresh()->dispensed_at);
+});
+
+test('public dispense allows admin role to dispense', function () {
+    $this->seed(RoleSeeder::class);
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $user = User::factory()->create();
+    $patient = Patient::factory()->create();
+    $room = Room::factory()->for($user)->create();
+    $specialty = Specialty::factory()->for($user)->create();
+
+    $prescription = Prescription::factory()
+        ->for($patient, 'patient')
+        ->for($room, 'room')
+        ->for($specialty, 'specialty')
+        ->for($user)
+        ->create([
+            'status' => config('custom.prescription.status_keys.active'),
+            'expires_at' => now()->addDays(15),
+            'prescription_hash' => 'test-dispense-admin-hash',
+        ]);
+
+    $response = $this->actingAs($admin, 'sanctum')
+        ->postJson('/api/public/prescriptions/test-dispense-admin-hash/dispense', [
+            'mode' => 'full',
+        ]);
+
+    $response->assertSuccessful()
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.fully_dispensed'))
+        ->assertJsonPath('data.dispensed_by_id', $admin->id);
 });
 
 test('public dispense can mark active prescription as partially dispensed', function () {
+    $this->seed(RoleSeeder::class);
+    $pharmacy = User::factory()->create();
+    $pharmacy->assignRole('farmacia');
+
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
@@ -1013,15 +1079,21 @@ test('public dispense can mark active prescription as partially dispensed', func
             'prescription_hash' => 'test-dispense-partial-hash',
         ]);
 
-    $response = $this->postJson('/api/public/prescriptions/test-dispense-partial-hash/dispense', [
-        'mode' => 'partial',
-    ]);
+    $response = $this->actingAs($pharmacy, 'sanctum')
+        ->postJson('/api/public/prescriptions/test-dispense-partial-hash/dispense', [
+            'mode' => 'partial',
+        ]);
 
     $response->assertSuccessful()
-        ->assertJsonPath('data.status', config('custom.prescription.status_keys.partially_dispensed'));
+        ->assertJsonPath('data.status', config('custom.prescription.status_keys.partially_dispensed'))
+        ->assertJsonPath('data.dispensed_by_id', $pharmacy->id);
 });
 
 test('public dispense rejects prescription that is already nulled', function () {
+    $this->seed(RoleSeeder::class);
+    $pharmacy = User::factory()->create();
+    $pharmacy->assignRole('farmacia');
+
     $user = User::factory()->create();
     $patient = Patient::factory()->create();
     $room = Room::factory()->for($user)->create();
@@ -1038,7 +1110,8 @@ test('public dispense rejects prescription that is already nulled', function () 
             'prescription_hash' => 'test-dispense-nulled-hash',
         ]);
 
-    $response = $this->postJson('/api/public/prescriptions/test-dispense-nulled-hash/dispense');
+    $response = $this->actingAs($pharmacy, 'sanctum')
+        ->postJson('/api/public/prescriptions/test-dispense-nulled-hash/dispense');
 
     $response->assertStatus(422);
 });

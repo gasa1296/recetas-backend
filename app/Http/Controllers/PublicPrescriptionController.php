@@ -11,13 +11,9 @@ class PublicPrescriptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string|int $prescription)
+    public function show(Request $request, string $prescription)
     {
-        if (config('app.debug')) {
-            $prescription = Prescription::where('id', $prescription)->orWhere('prescription_hash', $prescription)->firstOrFail();
-        } else {
-            $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
-        }
+        $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
 
         // Return PDF file when explicitly requested via format=pdf or download parameter
         if ($request->query('format') === 'pdf' || $request->has('download')) {
@@ -102,6 +98,12 @@ class PublicPrescriptionController extends Controller
             'status_label' => config("custom.prescription.status.{$prescription->status}"),
             'is_valid' => $isValid,
             'expires_at' => $prescription->expires_at,
+            'dispensed_at' => $prescription->dispensed_at?->toIso8601String(),
+            'dispensed_by_id' => $prescription->dispensed_by_id,
+            'dispensed_by' => $prescription->dispensedBy ? [
+                'id' => $prescription->dispensedBy->id,
+                'name' => trim("{$prescription->dispensedBy->first_name} {$prescription->dispensedBy->last_name}"),
+            ] : null,
             'signature_verification' => [
                 'is_signed' => (bool) $prescription->signed_file,
                 'integrity_status' => 'verified',
@@ -139,18 +141,20 @@ class PublicPrescriptionController extends Controller
 
     /**
      * Mark a prescription as dispensed.
+     * Restricted to authenticated users with 'farmacia' or 'admin' role.
      */
-    public function dispense(Request $request, string|int $prescription)
+    public function dispense(Request $request, string $prescription)
     {
+        $user = auth()->user();
+        if (! $user || (! $user->hasRole('farmacia') && ! $user->hasRole('admin'))) {
+            return $this->error('Solo personal de farmacia autorizado puede dispensar medicamentos.', [], 403);
+        }
+
         $request->validate([
             'mode' => 'nullable|string|in:full,partial',
         ]);
 
-        if (config('app.debug')) {
-            $prescription = Prescription::where('id', $prescription)->orWhere('prescription_hash', $prescription)->firstOrFail();
-        } else {
-            $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
-        }
+        $prescription = Prescription::where('prescription_hash', $prescription)->firstOrFail();
 
         $activeStatus = config('custom.prescription.status_keys.active');
         $partialStatus = config('custom.prescription.status_keys.partially_dispensed');
@@ -167,11 +171,23 @@ class PublicPrescriptionController extends Controller
         }
 
         $newStatus = $request->input('mode') === 'partial' ? $partialStatus : $fullStatus;
-        $prescription->update(['status' => $newStatus]);
+        $dispensedAt = now();
+
+        $prescription->update([
+            'status' => $newStatus,
+            'dispensed_by_id' => $user->id,
+            'dispensed_at' => $dispensedAt,
+        ]);
 
         return $this->success(__('messages.operation_success'), [
             'status' => $prescription->status,
             'status_label' => config("custom.prescription.status.{$prescription->status}"),
+            'dispensed_at' => $dispensedAt->toIso8601String(),
+            'dispensed_by_id' => $user->id,
+            'dispensed_by' => [
+                'id' => $user->id,
+                'name' => trim("{$user->first_name} {$user->last_name}"),
+            ],
         ]);
     }
 }
