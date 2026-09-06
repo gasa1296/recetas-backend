@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "f6f363ac-d591-49e8-895c-f80d96c47a72",
     "name": "Recetas API",
-    "description": "Collection for Recetas API. Variables: {{API_URL}}, {{AUTH_TOKEN}}",
+    "description": "Colección Postman para Recetas API. Incluye endpoints médicos autenticados, dispensación de farmacia segura, verificación criptográfica pública y gestión de multimedia/exámenes clínicos. Variables: {{API_URL}}, {{AUTH_TOKEN}}, {{FARMACIA_AUTH_TOKEN}}, {{LOCALE}}",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "53449058",
     "_collection_link": "https://go.postman.co/collection/53449058-f6f363ac-d591-49e8-895c-f80d96c47a72?source=collection_link"
@@ -42,7 +42,8 @@
                 "auth",
                 "login"
               ]
-            }
+            },
+            "description": "Inicio de sesión médico o farmacia. Genera token Sanctum bearer y retorna roles del usuario (medic, farmacia, admin). Rate limit: 5 req/min."
           },
           "response": []
         },
@@ -77,7 +78,8 @@
                 "auth",
                 "register"
               ]
-            }
+            },
+            "description": "Registro de médico. Soporta saved_signature opcional (cadena Base64 válida de imagen, máx 5MB)."
           },
           "response": []
         },
@@ -282,7 +284,8 @@
                 "verification",
                 "resend"
               ]
-            }
+            },
+            "description": "Reenvía el enlace de verificación de correo. Protegido contra enumeración de usuarios (retorna respuesta genérica aunque el correo no exista) y con rate limit de 5 req/min."
           },
           "response": []
         }
@@ -450,7 +453,8 @@
               "path": [
                 "profile"
               ]
-            }
+            },
+            "description": "Actualiza el perfil del usuario autenticado. Soporta saved_signature (formato Base64 validado con regex y límite de tamaño máx 5MB)."
           },
           "response": []
         },
@@ -1240,7 +1244,8 @@
               "variable": [
                 {
                   "key": "prescription_hash",
-                  "value": "hash_o_id_de_la_receta"
+                  "value": "hash_criptografico_receta",
+                  "description": "Hash criptográfico SHA-256 de la receta. Por seguridad, no se admiten IDs numéricos directos."
                 }
               ]
             }
@@ -1276,7 +1281,8 @@
               "variable": [
                 {
                   "key": "prescription_hash",
-                  "value": "hash_o_id_de_la_receta"
+                  "value": "hash_criptografico_receta",
+                  "description": "Hash criptográfico SHA-256 de la receta. Por seguridad, no se admiten IDs numéricos directos."
                 }
               ]
             }
@@ -1316,7 +1322,8 @@
               "variable": [
                 {
                   "key": "prescription_hash",
-                  "value": "hash_o_id_de_la_receta"
+                  "value": "hash_criptografico_receta",
+                  "description": "Hash criptográfico SHA-256 de la receta. Por seguridad, no se admiten IDs numéricos directos."
                 }
               ]
             }
@@ -1324,7 +1331,7 @@
           "response": []
         },
         {
-          "name": "Public Dispense Prescription (Dispensación Farmacia)",
+          "name": "Dispense Prescription (Farmacia / Admin)",
           "request": {
             "method": "POST",
             "header": [
@@ -1359,7 +1366,19 @@
               "variable": [
                 {
                   "key": "prescription_hash",
-                  "value": "hash_o_id_de_la_receta"
+                  "value": "hash_criptografico_receta",
+                  "description": "Hash criptográfico único de la receta (64 caracteres hexadecimales). El bypass por ID numérico fue deshabilitado por seguridad."
+                }
+              ]
+            },
+            "description": "Dispensar medicamentos de una receta médica activa. Requiere autenticación con rol \"farmacia\" o \"admin\". Registra trazabilidad de auditoría (dispensed_by_id, dispensed_at). Solo admite recetas vigentes mediante su hash criptográfico.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{FARMACIA_AUTH_TOKEN}}",
+                  "type": "string"
                 }
               ]
             }
@@ -1950,7 +1969,8 @@
               "path": [
                 "appointments"
               ]
-            }
+            },
+            "description": "Crea una cita médica. Valida estrictamente que room_id y specialty_id pertenezcan al médico autenticado para evitar referencias cruzadas no autorizadas."
           },
           "response": []
         },
@@ -2053,7 +2073,8 @@
                   "value": "1"
                 }
               ]
-            }
+            },
+            "description": "Actualiza una cita médica. Valida pertenencia de room_id y specialty_id al médico autenticado."
           },
           "response": []
         },
@@ -3104,21 +3125,15 @@
               "raw": "{\n  \"name\": \"Cardiología Intervencionista\",\n  \"identification\": \"CAR-002\",\n  \"university\": \"UNAM\"\n}"
             },
             "url": {
-              "raw": "{{API_URL}}/specialty/:specialty_id",
+              "raw": "{{API_URL}}/specialty",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
-                "specialty",
-                ":specialty_id"
-              ],
-              "variable": [
-                {
-                  "key": "specialty_id",
-                  "value": "1"
-                }
+                "specialty"
               ]
-            }
+            },
+            "description": "Actualiza la especialidad del médico autenticado (asociación 1:1). No requiere specialty_id en la ruta."
           },
           "response": []
         }
@@ -3548,6 +3563,12 @@
     {
       "key": "LOCALE",
       "value": "es"
+    },
+    {
+      "key": "FARMACIA_AUTH_TOKEN",
+      "value": "",
+      "type": "string",
+      "description": "Token Sanctum de un usuario con rol \"farmacia\" o \"admin\" para dispensar medicamentos."
     }
   ]
 }
