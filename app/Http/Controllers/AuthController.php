@@ -52,9 +52,9 @@ class AuthController extends Controller
                 $user->specialty()->create($specialtyData);
             }
 
-            if ($roomData && !empty($roomData['name'])) {
+            if ($roomData && ! empty($roomData['name'])) {
                 $roomPhone = $roomData['phone'] ?? null;
-                if (!is_array($roomPhone)) {
+                if (! is_array($roomPhone)) {
                     $roomPhone = $roomPhone ? [$roomPhone] : ($user->phone ?? ['000-000-0000']);
                 }
 
@@ -78,6 +78,7 @@ class AuthController extends Controller
             201,
         );
     }
+
     public function login(LoginRequest $request): JsonResponse
     {
         $inputs = $request->validated();

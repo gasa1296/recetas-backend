@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\RefreshExpiringCertificatesJob;
+use App\Jobs\SendAppointmentRemindersJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -15,9 +16,8 @@ Schedule::job(new RefreshExpiringCertificatesJob)
     ->onOneServer()
     ->name('refresh-expiring-certificates');
 
-Schedule::job(new \App\Jobs\SendAppointmentRemindersJob)
+Schedule::job(new SendAppointmentRemindersJob)
     ->everyThirtyMinutes()
     ->withoutOverlapping()
     ->onOneServer()
     ->name('send-appointment-reminders');
-

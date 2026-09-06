@@ -246,6 +246,7 @@ test('patients update modifies the patient with valid request structure', functi
             'last_name' => 'Doe',
             'identification' => (string) $patient->identification,
             'gender' => 'M',
+            'birth_date' => '1990-01-01',
         ]);
 
     $response->assertSuccessful()
@@ -281,6 +282,7 @@ test('medic cannot view, update, or delete another medic patient', function () {
             'last_name' => 'Doe',
             'identification' => '123',
             'gender' => 'M',
+            'birth_date' => '1990-01-01',
         ])
         ->assertNotFound();
 
@@ -338,5 +340,5 @@ test('same medic cannot register two patients with the same identification', fun
         'gender' => 'F',
         'birth_date' => '1995-05-15',
     ])->assertStatus(422)
-      ->assertJsonValidationErrors(['identification']);
+        ->assertJsonValidationErrors(['identification']);
 });

@@ -4,12 +4,14 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use App\Models\File;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class PatientMediaUploadRequest extends FormRequest
 {
     use JsonValidationResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,7 +23,7 @@ class PatientMediaUploadRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function prepareForValidation(): void
     {
@@ -61,11 +63,12 @@ class PatientMediaUploadRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'file' => 'archivo médico',
-            'category' => 'categoría médica',
-            'title' => 'título',
-            'description' => 'descripción u observaciones',
-            'evolution_stage' => 'etapa evolutiva de tratamiento',
+            'file' => __('validation.attributes.medical_file'),
+            'category' => __('validation.attributes.medical_category'),
+            'title' => __('validation.attributes.title'),
+            'description' => __('validation.attributes.attachment_description'),
+            'evolution_stage' => __('validation.attributes.evolution_stage'),
+            'meta' => __('validation.attributes.meta'),
         ];
     }
 }

@@ -29,4 +29,16 @@ class SearchRequest extends FormRequest
             'search' => ['nullable', 'string', 'max:255'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'search' => __('validation.attributes.search'),
+        ];
+    }
 }

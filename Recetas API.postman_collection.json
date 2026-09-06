@@ -23,6 +23,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -54,6 +58,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -95,6 +103,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -127,6 +139,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -158,6 +174,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -194,6 +214,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -239,6 +263,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -275,6 +303,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -308,6 +340,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -356,6 +392,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -392,6 +432,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -432,6 +476,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -473,6 +521,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -516,6 +568,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -564,6 +620,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -607,6 +667,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -650,6 +714,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -690,6 +758,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -737,6 +809,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -785,6 +861,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -828,6 +908,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -871,6 +955,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -911,6 +999,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -958,6 +1050,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -995,6 +1091,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1043,6 +1143,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1083,6 +1187,10 @@
               {
                 "key": "Accept",
                 "value": "application/pdf"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1113,6 +1221,10 @@
               {
                 "key": "Accept",
                 "value": "text/html"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1139,7 +1251,12 @@
           "name": "Public Show Prescription PDF (Descarga Directa PDF)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/public/prescriptions/:prescription_hash?format=pdf",
               "host": [
@@ -1174,6 +1291,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1214,6 +1335,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1268,6 +1393,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1304,6 +1433,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1347,6 +1480,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1387,6 +1524,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1434,6 +1575,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1482,6 +1627,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1518,6 +1667,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1561,6 +1714,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1601,6 +1758,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1648,6 +1809,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1696,6 +1861,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1758,6 +1927,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1803,6 +1976,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1846,6 +2023,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1898,6 +2079,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -1951,6 +2136,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -1995,6 +2184,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2053,6 +2246,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2123,6 +2320,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2164,7 +2365,12 @@
               ]
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/patients/:patient_id/media/:media_id/stream",
               "host": [
@@ -2205,7 +2411,12 @@
               ]
             },
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
+              }
+            ],
             "url": {
               "raw": "{{API_URL}}/patients/:patient_id/media/:media_id/download",
               "host": [
@@ -2254,6 +2465,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2308,6 +2523,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2358,6 +2577,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2416,6 +2639,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2496,6 +2723,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2545,6 +2776,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2594,6 +2829,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2639,6 +2878,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2705,6 +2948,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2765,6 +3012,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2798,6 +3049,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2838,6 +3093,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "body": {
@@ -2886,6 +3145,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2936,6 +3199,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -2983,6 +3250,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3030,6 +3301,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3077,6 +3352,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3124,6 +3403,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3172,6 +3455,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3204,6 +3491,10 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
               }
             ],
             "url": {
@@ -3253,6 +3544,10 @@
     {
       "key": "AUTH_TOKEN",
       "value": ""
+    },
+    {
+      "key": "LOCALE",
+      "value": "es"
     }
   ]
 }

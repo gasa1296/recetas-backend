@@ -47,4 +47,23 @@ class PatientRequest extends FormRequest
             'birth_date' => ['required', 'date'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'first_name' => __('validation.attributes.first_name'),
+            'last_name' => __('validation.attributes.last_name'),
+            'identification' => __('validation.attributes.identification'),
+            'email' => __('validation.attributes.email'),
+            'phone' => __('validation.attributes.phone'),
+            'phone.*' => __('validation.attributes.phone.*'),
+            'gender' => __('validation.attributes.gender'),
+            'birth_date' => __('validation.attributes.birth_date'),
+        ];
+    }
 }

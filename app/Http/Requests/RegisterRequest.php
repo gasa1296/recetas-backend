@@ -47,4 +47,34 @@ class RegisterRequest extends FormRequest
             'room.phone' => ['nullable'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'first_name' => __('validation.attributes.first_name'),
+            'last_name' => __('validation.attributes.last_name'),
+            'identification' => __('validation.attributes.identification'),
+            'email' => __('validation.attributes.email'),
+            'password' => __('validation.attributes.password'),
+            'phone' => __('validation.attributes.phone'),
+            'phone.*' => __('validation.attributes.phone.*'),
+            'specialty' => __('validation.attributes.specialty'),
+            'specialty.name' => __('validation.attributes.specialty.name'),
+            'specialty.identification' => __('validation.attributes.specialty.identification'),
+            'specialty.identification.medic_society' => __('validation.attributes.specialty.identification.medic_society'),
+            'specialty.identification.medic_registration' => __('validation.attributes.specialty.identification.medic_registration'),
+            'saved_signature' => __('validation.attributes.saved_signature'),
+            'room' => __('validation.attributes.room'),
+            'room.name' => __('validation.attributes.room.name'),
+            'room.identification' => __('validation.attributes.room.identification'),
+            'room.zip' => __('validation.attributes.room.zip'),
+            'room.address' => __('validation.attributes.room.address'),
+            'room.phone' => __('validation.attributes.room.phone'),
+        ];
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
@@ -208,7 +209,7 @@ test('register fails when specialty identification is invalid', function () {
 });
 
 test('register succeeds with complete doctor data and returns token with profile', function () {
-    $this->seed(\Database\Seeders\RoleSeeder::class);
+    $this->seed(RoleSeeder::class);
 
     $payload = [
         'first_name' => 'Gregory',
@@ -268,7 +269,7 @@ test('register succeeds with complete doctor data and returns token with profile
 });
 
 test('register fails when email or identification is already taken', function () {
-    $this->seed(\Database\Seeders\RoleSeeder::class);
+    $this->seed(RoleSeeder::class);
 
     User::factory()->create([
         'email' => 'existing@example.com',
@@ -296,4 +297,3 @@ test('register fails when email or identification is already taken', function ()
     $response->assertStatus(422)
         ->assertJsonValidationErrors(['email', 'identification']);
 });
-

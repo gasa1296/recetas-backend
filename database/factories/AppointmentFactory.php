@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Appointment;
 use App\Models\Patient;
-use App\Models\Room;
-use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

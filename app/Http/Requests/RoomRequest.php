@@ -34,4 +34,21 @@ class RoomRequest extends FormRequest
             'phone.*' => ['required_with:phone', 'string'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.room_name'),
+            'identification' => __('validation.attributes.identification'),
+            'zip' => __('validation.attributes.zip'),
+            'address' => __('validation.attributes.address'),
+            'phone' => __('validation.attributes.phone'),
+            'phone.*' => __('validation.attributes.phone.*'),
+        ];
+    }
 }

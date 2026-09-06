@@ -43,4 +43,26 @@ class ProfileRequest extends FormRequest
             'saved_signature' => ['nullable', 'string'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'first_name' => __('validation.attributes.first_name'),
+            'last_name' => __('validation.attributes.last_name'),
+            'phone' => __('validation.attributes.phone'),
+            'phone.*' => __('validation.attributes.phone.*'),
+            'password' => __('validation.attributes.password'),
+            'specialty' => __('validation.attributes.specialty'),
+            'specialty.name' => __('validation.attributes.specialty.name'),
+            'specialty.identification' => __('validation.attributes.specialty.identification'),
+            'specialty.identification.medic_society' => __('validation.attributes.specialty.identification.medic_society'),
+            'specialty.identification.medic_registration' => __('validation.attributes.specialty.identification.medic_registration'),
+            'saved_signature' => __('validation.attributes.saved_signature'),
+        ];
+    }
 }

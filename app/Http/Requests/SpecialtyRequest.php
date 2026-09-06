@@ -35,4 +35,19 @@ class SpecialtyRequest extends FormRequest
             'identification.medic_registration' => ['required', 'numeric', 'digits:7', 'unique:specialties,identification->medic_registration,'.$specialtyId],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.specialty_name'),
+            'identification' => __('validation.attributes.specialty.identification'),
+            'identification.medic_society' => __('validation.attributes.specialty.identification.medic_society'),
+            'identification.medic_registration' => __('validation.attributes.specialty.identification.medic_registration'),
+        ];
+    }
 }

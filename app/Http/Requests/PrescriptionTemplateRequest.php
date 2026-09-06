@@ -58,4 +58,23 @@ class PrescriptionTemplateRequest extends FormRequest
             'medicaments.*.recommended_brand' => ['nullable', 'string'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.template_name'),
+            'medicaments' => __('validation.attributes.medicaments'),
+            'medicaments.*.dosage' => __('validation.attributes.medicaments.*.dosage'),
+            'medicaments.*.frequency' => __('validation.attributes.medicaments.*.frequency'),
+            'medicaments.*.duration' => __('validation.attributes.medicaments.*.duration'),
+            'medicaments.*.medicament_quantity' => __('validation.attributes.medicaments.*.medicament_quantity'),
+            'medicaments.*.medicament_quantity_letters' => __('validation.attributes.medicaments.*.medicament_quantity_letters'),
+            'medicaments.*.recommended_brand' => __('validation.attributes.medicaments.*.recommended_brand'),
+        ];
+    }
 }

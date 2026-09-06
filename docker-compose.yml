@@ -15,6 +15,7 @@ services:
             - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
+            - databases
         healthcheck:
             test: ["CMD", "php", "-r", "exit(0);"]
             interval: 10s
@@ -33,6 +34,7 @@ services:
             - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
+            - databases
     scheduler:
         image: recetas
         container_name: recetas-scheduler
@@ -46,6 +48,7 @@ services:
             - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - recetas
+            - databases
     redis:
         image: redis:8-alpine
         container_name: recetas-redis
@@ -78,6 +81,9 @@ services:
 networks:
     recetas:
         driver: bridge
+    databases:
+        driver: bridge
+        external: true
 volumes:
     recetas_redis:
         driver: local

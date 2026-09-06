@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\User;
 use App\Services\CertificateService;

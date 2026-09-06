@@ -30,4 +30,17 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string', 'min:8'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'email' => __('validation.attributes.email'),
+            'password' => __('validation.attributes.password'),
+        ];
+    }
 }

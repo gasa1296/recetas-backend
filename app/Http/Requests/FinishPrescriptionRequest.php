@@ -27,4 +27,17 @@ class FinishPrescriptionRequest extends FormRequest
             'save_signature' => ['nullable', 'boolean'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'signature' => __('validation.attributes.signature'),
+            'save_signature' => __('validation.attributes.save_signature'),
+        ];
+    }
 }

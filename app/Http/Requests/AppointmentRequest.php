@@ -72,7 +72,7 @@ class AppointmentRequest extends FormRequest
                 ->exists();
 
             if ($doctorConflict) {
-                $validator->errors()->add('starts_at', 'El médico ya tiene una cita programada en ese rango de horario.');
+                $validator->errors()->add('starts_at', __('messages.appointment.doctor_conflict'));
             }
 
             // 2. Room schedule conflict check
@@ -83,9 +83,30 @@ class AppointmentRequest extends FormRequest
                     ->exists();
 
                 if ($roomConflict) {
-                    $validator->errors()->add('room_id', 'El consultorio seleccionado ya está reservado en ese horario.');
+                    $validator->errors()->add('room_id', __('messages.appointment.room_conflict'));
                 }
             }
         });
+    }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'patient_id' => __('validation.attributes.patient_id'),
+            'room_id' => __('validation.attributes.room_id'),
+            'specialty_id' => __('validation.attributes.specialty_id'),
+            'starts_at' => __('validation.attributes.starts_at'),
+            'ends_at' => __('validation.attributes.ends_at'),
+            'reason' => __('validation.attributes.reason'),
+            'notes' => __('validation.attributes.notes'),
+            'status' => __('validation.attributes.status'),
+            'reminder_channel' => __('validation.attributes.reminder_channel'),
+            'reminder_enabled' => __('validation.attributes.reminder_enabled'),
+        ];
     }
 }

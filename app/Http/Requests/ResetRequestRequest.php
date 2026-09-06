@@ -20,4 +20,16 @@ class ResetRequestRequest extends FormRequest
             'email' => ['required', 'email'],
         ];
     }
+
+    /**
+     * Custom attribute names for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'email' => __('validation.attributes.email'),
+        ];
+    }
 }

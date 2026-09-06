@@ -4,12 +4,14 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\JsonValidationResponse;
 use App\Models\Examination;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ExaminationRequest extends FormRequest
 {
     use JsonValidationResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,7 +23,7 @@ class ExaminationRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function prepareForValidation(): void
     {
@@ -55,14 +57,14 @@ class ExaminationRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'nombre del examen',
-            'type' => 'tipo de examen',
-            'examined_at' => 'fecha de realización',
-            'laboratory_name' => 'laboratorio o centro de diagnóstico',
-            'findings' => 'hallazgos u observaciones',
-            'status' => 'estado del informe',
-            'prescription_id' => 'récipe médico asociado',
-            'file' => 'archivo adjunto (PDF o imagen)',
+            'name' => __('validation.attributes.examination_name'),
+            'type' => __('validation.attributes.examination_type'),
+            'examined_at' => __('validation.attributes.examined_at'),
+            'laboratory_name' => __('validation.attributes.laboratory_name'),
+            'findings' => __('validation.attributes.findings'),
+            'status' => __('validation.attributes.report_status'),
+            'prescription_id' => __('validation.attributes.prescription_id'),
+            'file' => __('validation.attributes.attached_file'),
         ];
     }
 }

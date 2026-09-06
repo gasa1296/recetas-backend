@@ -25,4 +25,8 @@ return [
         'link_sent' => 'Verification link sent',
         'user_not_verified' => 'User is not verified',
     ],
+    'appointment' => [
+        'doctor_conflict' => 'The doctor already has an appointment scheduled in that time slot.',
+        'room_conflict' => 'The selected room is already booked for that time slot.',
+    ],
 ];

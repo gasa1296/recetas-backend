@@ -37,11 +37,17 @@ class Appointment extends Model
     ];
 
     public const STATUS_SCHEDULED = 'scheduled';
+
     public const STATUS_CONFIRMED = 'confirmed';
+
     public const STATUS_IN_WAITING_ROOM = 'in_waiting_room';
+
     public const STATUS_IN_CONSULTATION = 'in_consultation';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUS_NO_SHOW = 'no_show';
 
     public const VALID_STATUSES = [

@@ -28,9 +28,13 @@ class Examination extends Model
     use HasFactory, SoftDeletes;
 
     public const TYPE_LABORATORY = 'laboratory';
+
     public const TYPE_IMAGING = 'imaging';
+
     public const TYPE_PATHOLOGY = 'pathology';
+
     public const TYPE_CARDIOLOGY = 'cardiology';
+
     public const TYPE_OTHER = 'other';
 
     public const VALID_TYPES = [
@@ -42,7 +46,9 @@ class Examination extends Model
     ];
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_REVIEWED = 'reviewed';
 
     public const VALID_STATUSES = [
