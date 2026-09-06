@@ -9,14 +9,18 @@ use App\Http\Resources\PatientMediaResource;
 use App\Models\Examination;
 use App\Models\File;
 use App\Models\Patient;
+use App\Services\Media\FileStorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 
 class ExaminationController extends Controller
 {
+    public function __construct(
+        protected FileStorageService $fileStorage
+    ) {}
+
     /**
      * Display a listing of the examinations for a patient.
      */
@@ -152,13 +156,7 @@ class ExaminationController extends Controller
         $examinationModel = $patientModel->examinations()->findOrFail($examination);
         $fileModel = $examinationModel->files()->findOrFail($file);
 
-        $disk = $fileModel->location ?: config('filesystems.default', 'local');
-
-        if (Storage::disk($disk)->exists($fileModel->path)) {
-            Storage::disk($disk)->delete($fileModel->path);
-        }
-
-        $fileModel->delete();
+        $this->fileStorage->deleteFile($fileModel);
 
         return response()->noContent();
     }
@@ -168,31 +166,24 @@ class ExaminationController extends Controller
      */
     protected function attachFileToExamination($uploadedFile, Examination $examination, Patient $patient, ?string $title = null, ?string $description = null): File
     {
-        $originalName = $uploadedFile->getClientOriginalName();
-        $mimeType = $uploadedFile->getClientMimeType() ?: $uploadedFile->getMimeType();
-        $size = $uploadedFile->getSize();
-        $extension = $uploadedFile->getClientOriginalExtension() ?: 'bin';
-
-        $disk = config('filesystems.default', 'local');
-
-        $storedPath = $uploadedFile->store("patients/{$patient->id}/examinations/{$examination->id}", $disk);
+        $stored = $this->fileStorage->storeUploadedFile($uploadedFile, "patients/{$patient->id}/examinations/{$examination->id}");
 
         return $examination->files()->create([
-            'type' => $extension,
+            'type' => $stored['type'],
             'category' => File::CATEGORY_EXAMINATION,
-            'title' => $title ?: pathinfo($originalName, PATHINFO_FILENAME),
+            'title' => $title ?: pathinfo($stored['filename'], PATHINFO_FILENAME),
             'description' => $description,
-            'mime_type' => $mimeType,
-            'size' => $size,
+            'mime_type' => $stored['mime_type'],
+            'size' => $stored['size'],
             'meta' => [
                 'examination_id' => $examination->id,
                 'examination_name' => $examination->name,
                 'examination_type' => $examination->type,
             ],
             'user_id' => auth()->id(),
-            'location' => $disk,
-            'path' => $storedPath,
-            'filename' => $originalName,
+            'location' => $stored['location'],
+            'path' => $stored['path'],
+            'filename' => $stored['filename'],
         ]);
     }
 

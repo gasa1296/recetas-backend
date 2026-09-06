@@ -292,19 +292,25 @@
       ]
     },
     {
-      "name": "Universities",
+      "name": "Generic Catalogs",
       "item": [
         {
-          "name": "List Universities",
+          "name": "List Genders",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
               {
                 "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
                 "value": "application/json"
               },
               {
@@ -313,35 +319,35 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/universities",
+              "raw": "{{API_URL}}/genders",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
-                "universities"
-              ],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "medicina",
-                  "disabled": true
-                }
+                "genders"
               ]
-            }
+            },
+            "description": "Obtiene el catálogo de géneros del sistema (M: Masculino, F: Femenino, O: Otro)."
           },
           "response": []
         },
         {
-          "name": "Show University",
+          "name": "List Prescription Statuses",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
               {
                 "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
                 "value": "application/json"
               },
               {
@@ -350,21 +356,15 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/universities/:university_id",
+              "raw": "{{API_URL}}/prescription-status",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
-                "universities",
-                ":university_id"
-              ],
-              "variable": [
-                {
-                  "key": "university_id",
-                  "value": "1"
-                }
+                "prescription-status"
               ]
-            }
+            },
+            "description": "Obtiene el catálogo de estados de recetas médicas (0: borrador, 1: activa, 2: dispensada parcialmente, 3: dispensada totalmente, 4: vencida, 5: anulada)."
           },
           "response": []
         }
@@ -443,7 +443,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"identification\": \"López\",\n  \"phone\": [\"555-1234\", \"555-5678\"],\n  \"gender\": \"male\",\n  \"saved_signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\",\n  \"password\": \"newpassword123\"\n}"
+              "raw": "{\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Pérez\",\n  \"phone\": [\n    \"555-1234\",\n    \"555-5678\"\n  ],\n  \"saved_signature\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/profile",
@@ -726,7 +726,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"Hernández\",\n  \"email\": \"maria@example.com\",\n  \"phone\": [\"555-9999\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
+              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"Hernández\",\n  \"email\": \"maria@example.com\",\n  \"phone\": [\n    \"555-9999\"\n  ],\n  \"gender\": \"F\",\n  \"birth_date\": \"1990-05-15\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/patients",
@@ -770,7 +770,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"López\",\n  \"email\": \"maria.nueva@example.com\",\n  \"phone\": [\"555-9999\", \"555-8888\"],\n  \"gender\": \"female\",\n  \"birth_date\": \"1990-05-15\"\n}"
+              "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"identification\": \"López\",\n  \"email\": \"maria.nueva@example.com\",\n  \"phone\": [\n    \"555-9999\",\n    \"555-8888\"\n  ],\n  \"gender\": \"F\",\n  \"birth_date\": \"1990-05-15\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/patients/:patient_id",
@@ -967,7 +967,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"temp\": 36.5,\n  \"weight\": 70.5,\n  \"height\": 1.75,\n  \"pressure\": 120,\n  \"saturation\": 98,\n  \"ppm\": 72,\n  \"allergy\": \"Penicilina\",\n  \"diagnostic\": \"Infección respiratoria\",\n  \"diet\": \"Líquida\",\n  \"comments\": \"Tomar después de comer\",\n  \"medicament_data\": [\n    {\n      \"id\": 1,\n      \"dosage\": 500,\n      \"frequency\": \"Cada 8 horas\",\n      \"duration\": \"7 días\"\n    }\n  ],\n  \"room_id\": 1,\n  \"patient_id\": 1\n}"
+              "raw": "{\n  \"temp\": 36.5,\n  \"weight\": 70.5,\n  \"height\": 1.75,\n  \"pressure\": 120,\n  \"saturation\": 98,\n  \"ppm\": 72,\n  \"allergy\": \"Penicilina\",\n  \"diagnostic\": \"Infección respiratoria\",\n  \"diet\": \"Líquida\",\n  \"comments\": \"Tomar después de comer\",\n  \"medicaments\": [\n    {\n      \"id\": 1,\n      \"dosage\": \"500 mg\",\n      \"frequency\": \"Cada 8 horas\",\n      \"duration\": \"7 días\",\n      \"medicament_quantity\": 21,\n      \"recommended_brand\": \"Atamel\"\n    }\n  ],\n  \"room_id\": 1,\n  \"patient_id\": 1\n}"
             },
             "url": {
               "raw": "{{API_URL}}/prescriptions",
@@ -1011,7 +1011,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"temp\": 37.0,\n  \"weight\": 71.0,\n  \"height\": 1.75,\n  \"pressure\": 118,\n  \"saturation\": 99,\n  \"ppm\": 70,\n  \"allergy\": \"Penicilina\",\n  \"diagnostic\": \"Infección respiratoria - mejora\",\n  \"diet\": \"Normal\",\n  \"comments\": \"Reducir dosis\",\n  \"medicament_data\": [\n    {\n      \"id\": 1,\n      \"dosage\": 250,\n      \"frequency\": \"Cada 12 horas\",\n      \"duration\": \"5 días\"\n    }\n  ],\n  \"room_id\": 1,\n  \"patient_id\": 1\n}"
+              "raw": "{\n  \"temp\": 37.0,\n  \"weight\": 71.0,\n  \"height\": 1.75,\n  \"pressure\": 118,\n  \"saturation\": 99,\n  \"ppm\": 70,\n  \"allergy\": \"Penicilina\",\n  \"diagnostic\": \"Infección respiratoria - mejora\",\n  \"diet\": \"Normal\",\n  \"comments\": \"Reducir dosis\",\n  \"medicaments\": [\n    {\n      \"id\": 1,\n      \"dosage\": \"250 mg\",\n      \"frequency\": \"Cada 12 horas\",\n      \"duration\": \"5 días\",\n      \"medicament_quantity\": 10,\n      \"recommended_brand\": \"Atamel\"\n    }\n  ],\n  \"room_id\": 1,\n  \"patient_id\": 1\n}"
             },
             "url": {
               "raw": "{{API_URL}}/prescriptions/:prescription_id",
@@ -1061,13 +1061,19 @@
               }
             ],
             "url": {
-              "raw": "{{API_URL}}/prescriptions/1",
+              "raw": "{{API_URL}}/prescriptions/:prescription_id",
               "host": [
                 "{{API_URL}}"
               ],
               "path": [
                 "prescriptions",
-                "1"
+                ":prescription_id"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
               ]
             }
           },
@@ -1174,7 +1180,97 @@
           "response": []
         },
         {
+          "name": "Resend Prescription Notification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescriptions/:prescription_id/resend",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id",
+                "resend"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Reenvía la notificación por correo electrónico con el PDF firmado de la receta médica al paciente. Requiere que la receta esté en estado activo (1) y que el paciente tenga correo registrado."
+          },
+          "response": []
+        },
+        {
           "name": "Get Prescription File (PDF)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AUTH_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/pdf"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "{{LOCALE}}"
+              }
+            ],
+            "url": {
+              "raw": "{{API_URL}}/prescriptions/:prescription_id/file",
+              "host": [
+                "{{API_URL}}"
+              ],
+              "path": [
+                "prescriptions",
+                ":prescription_id",
+                "file"
+              ],
+              "variable": [
+                {
+                  "key": "prescription_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Descarga o visualización directa del PDF firmado/no firmado de la receta. Soporta tanto GET como POST."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Prescription File (PDF - POST)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1213,7 +1309,8 @@
                   "value": "1"
                 }
               ]
-            }
+            },
+            "description": "Alternativa POST para descarga o visualización del PDF firmado/no firmado de la receta."
           },
           "response": []
         },
@@ -1507,7 +1604,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Consultorio 101\",\n  \"zip\": \"12345\",\n  \"street\": \"Av. Principal 123\",\n  \"colony\": \"Centro\",\n  \"state\": \"CDMX\",\n  \"delegation\": \"Cuauhtémoc\",\n  \"n_exterior\": \"123\",\n  \"n_interior\": \"A\",\n  \"address\": \"Av. Principal 123, Centro, CDMX\",\n  \"phone\": [\"555-1111\", \"555-2222\"],\n  \"fav\": true,\n  \"auto_email\": true,\n  \"auto_whatsapp\": false\n}"
+              "raw": "{\n  \"name\": \"Consultorio 101\",\n  \"zip\": \"12345\",\n  \"street\": \"Av. Principal 123\",\n  \"colony\": \"Centro\",\n  \"state\": \"CDMX\",\n  \"delegation\": \"Cuauhtémoc\",\n  \"n_exterior\": \"123\",\n  \"n_interior\": \"A\",\n  \"address\": \"Av. Principal 123, Centro, CDMX\",\n  \"phone\": [\n    \"555-1111\",\n    \"555-2222\"\n  ],\n  \"fav\": true,\n  \"auto_email\": true,\n  \"auto_whatsapp\": false,\n  \"identification\": \"J-12345678\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/rooms",
@@ -1551,7 +1648,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Consultorio 102\",\n  \"zip\": \"12345\",\n  \"street\": \"Av. Principal 456\",\n  \"colony\": \"Centro\",\n  \"state\": \"CDMX\",\n  \"delegation\": \"Cuauhtémoc\",\n  \"n_exterior\": \"456\",\n  \"n_interior\": \"B\",\n  \"address\": \"Av. Principal 456, Centro, CDMX\",\n  \"phone\": [\"555-3333\"],\n  \"fav\": false,\n  \"auto_email\": true,\n  \"auto_whatsapp\": true\n}"
+              "raw": "{\n  \"name\": \"Consultorio 102\",\n  \"zip\": \"12345\",\n  \"street\": \"Av. Principal 456\",\n  \"colony\": \"Centro\",\n  \"state\": \"CDMX\",\n  \"delegation\": \"Cuauhtémoc\",\n  \"n_exterior\": \"456\",\n  \"n_interior\": \"B\",\n  \"address\": \"Av. Principal 456, Centro, CDMX\",\n  \"phone\": [\n    \"555-3333\"\n  ],\n  \"fav\": false,\n  \"auto_email\": true,\n  \"auto_whatsapp\": true,\n  \"identification\": \"J-12345678\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/rooms/:room_id",
@@ -3122,7 +3219,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Cardiología Intervencionista\",\n  \"identification\": \"CAR-002\",\n  \"university\": \"UNAM\"\n}"
+              "raw": "{\n  \"name\": \"Cardiología Intervencionista\",\n  \"identification\": \"CAR-002\"\n}"
             },
             "url": {
               "raw": "{{API_URL}}/specialty",

@@ -13,31 +13,31 @@
   },
   {
     "active_ingredient": "ABACAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "ABACAVIR-LAMIVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg-300 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "ABACAVIR-LAMIVUDINA-ZIDOVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg-150 mg-300 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "ACARBOSE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "ACARBOSE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antidiabetico"
   },
@@ -55,7 +55,7 @@
   },
   {
     "active_ingredient": "ACECLOFENAC",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "AINE"
   },
@@ -217,19 +217,19 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg",
     "group": "Analgesico"
   },
@@ -241,19 +241,19 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN (PARACETAMOL)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-ACIDO ACETILSALICILICO-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg-250 mg-65 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-BICARBONATO DE SODIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-1342 mg",
     "group": "Analgesico"
   },
@@ -271,25 +271,25 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-32 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-50 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-65 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg-65 mg",
     "group": "Analgesico"
   },
@@ -349,13 +349,13 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA-CLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg-20 mg-2 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CAFEINA-CLORPROFENPIRIDAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-30 mg-2 mg",
     "group": "Analgesico"
   },
@@ -517,19 +517,19 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-CLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-30 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-4 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-CLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg-4 mg",
     "group": "Analgesico"
   },
@@ -541,7 +541,7 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-CLORFENIRAMINA-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg-30 mg-500 mg",
     "group": "Analgesico"
   },
@@ -553,7 +553,7 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-CODEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-25 mg",
     "group": "Analgesico"
   },
@@ -565,7 +565,7 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-DEXTROCLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-2 mg",
     "group": "Analgesico"
   },
@@ -589,7 +589,7 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-HIOSCINA N-BUTIL BROMURO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-10 mg",
     "group": "Antiespasmodico"
   },
@@ -601,7 +601,7 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-ORFENADRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "35 mg-450 mg",
     "group": "Analgesico"
   },
@@ -625,13 +625,13 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-30 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg-30 mg",
     "group": "Analgesico"
   },
@@ -655,13 +655,13 @@
   },
   {
     "active_ingredient": "ACETAMINOFEN-TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "325 mg-37.5 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "ACETAMINOFEN-TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-50 mg",
     "group": "Analgesico"
   },
@@ -685,7 +685,7 @@
   },
   {
     "active_ingredient": "ACETAZOLAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Diuretico"
   },
@@ -751,19 +751,19 @@
   },
   {
     "active_ingredient": "ACICLOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "ACICLOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "ACICLOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "800 mg",
     "group": "Antiviral"
   },
@@ -805,31 +805,31 @@
   },
   {
     "active_ingredient": "ACIDO ACETILSALICILICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ACIDO ACETILSALICILICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "324 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ACIDO ACETILSALICILICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ACIDO ACETILSALICILICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "81 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ACIDO ACETILSALICILICO-METOCARBAMOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg-325 mg",
     "group": "Analgesico"
   },
@@ -859,19 +859,19 @@
   },
   {
     "active_ingredient": "ACIDO ALENDRONICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "ACIDO ALENDRONICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "35 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "ACIDO ALENDRONICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "70 mg",
     "group": "Osteoporosis"
   },
@@ -889,7 +889,7 @@
   },
   {
     "active_ingredient": "ACIDO ALENDRONICO (ALENDRONATO)-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "70 mg-2800 UI",
     "group": "Osteoporosis"
   },
@@ -901,7 +901,7 @@
   },
   {
     "active_ingredient": "ACIDO ALENDRONICO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "70 mg",
     "group": "Osteoporosis"
   },
@@ -991,37 +991,37 @@
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 g",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Vitamina"
   },
@@ -1045,13 +1045,13 @@
   },
   {
     "active_ingredient": "ACIDO ASCORBICO-ZINC",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg-10 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO ASCORBICO-ZINC",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-5 mg",
     "group": "Vitamina"
   },
@@ -1123,19 +1123,19 @@
   },
   {
     "active_ingredient": "ACIDO FOLICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO FOLICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO FOLICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Vitamina"
   },
@@ -1171,7 +1171,7 @@
   },
   {
     "active_ingredient": "ACIDO FOLICO-HIERRO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-350 mcg",
     "group": "Vitamina"
   },
@@ -1183,13 +1183,13 @@
   },
   {
     "active_ingredient": "ACIDO FOLICO-HIERRO (COMPLEJO POLIMALTOSATO FERRICO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-1000 mcg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "ACIDO FOLICO-HIERRO (COMPLEJO POLIMALTOSATO FERRICO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-350 mcg",
     "group": "Vitamina"
   },
@@ -1243,19 +1243,19 @@
   },
   {
     "active_ingredient": "ACIDO IBANDRONICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "ACIDO IBANDRONICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "ACIDO IBANDRONICO (IBANDRONATO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Osteoporosis"
   },
@@ -1279,7 +1279,7 @@
   },
   {
     "active_ingredient": "ACIDO MEFENAMICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "AINE"
   },
@@ -1375,19 +1375,19 @@
   },
   {
     "active_ingredient": "ACIDO VALPROICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "ACIDO VALPROICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "260 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "ACIDO VALPROICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiepileptico"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "active_ingredient": "ADEFOVIR DIPIVOXIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antirretroviral"
   },
@@ -1525,13 +1525,13 @@
   },
   {
     "active_ingredient": "ALBENDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiparasitario"
   },
   {
     "active_ingredient": "ALBENDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antiparasitario"
   },
@@ -1585,7 +1585,7 @@
   },
   {
     "active_ingredient": "ALOPURINOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antigotoso"
   },
@@ -1615,25 +1615,25 @@
   },
   {
     "active_ingredient": "ALPRAZOLAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.25 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "ALPRAZOLAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "ALPRAZOLAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "ALPRAZOLAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Ansiolitico"
   },
@@ -1741,7 +1741,7 @@
   },
   {
     "active_ingredient": "AMBROXOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Mucolitico"
   },
@@ -1909,7 +1909,7 @@
   },
   {
     "active_ingredient": "AMBROXOL-LORATADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-30 mg",
     "group": "Mucolitico"
   },
@@ -1963,13 +1963,13 @@
   },
   {
     "active_ingredient": "AMILORIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "AMILORIDA-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-50 mg",
     "group": "Diuretico"
   },
@@ -2047,13 +2047,13 @@
   },
   {
     "active_ingredient": "AMIODARONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiarritmico"
   },
   {
     "active_ingredient": "AMITRIPTILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antidepresivo"
   },
@@ -2077,19 +2077,19 @@
   },
   {
     "active_ingredient": "AMLODIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "active_ingredient": "AMLODIPINA BESILATO-LOSARTAN POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-50 mg",
     "group": "Antihipertensivo"
   },
@@ -2131,31 +2131,31 @@
   },
   {
     "active_ingredient": "AMLODIPINA-ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA-ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA-ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA-ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA-ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-40 mg",
     "group": "Antihipertensivo"
   },
@@ -2197,13 +2197,13 @@
   },
   {
     "active_ingredient": "AMLODIPINA-OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "AMLODIPINA-OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-5 mg",
     "group": "Antihipertensivo"
   },
@@ -2245,7 +2245,7 @@
   },
   {
     "active_ingredient": "AMLODIPINA-VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-5 mg",
     "group": "Antihipertensivo"
   },
@@ -2389,19 +2389,19 @@
   },
   {
     "active_ingredient": "AMOXICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMOXICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMOXICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "875 mg",
     "group": "Antibiotico"
   },
@@ -2533,25 +2533,25 @@
   },
   {
     "active_ingredient": "AMOXICILINA-ACIDO CLAVULANICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMOXICILINA-ACIDO CLAVULANICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-125 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMOXICILINA-ACIDO CLAVULANICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "625 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMOXICILINA-ACIDO CLAVULANICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "875 mg-125 mg",
     "group": "Antibiotico"
   },
@@ -2605,13 +2605,13 @@
   },
   {
     "active_ingredient": "AMPICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "AMPICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -2671,7 +2671,7 @@
   },
   {
     "active_ingredient": "ANASTROZOLE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antineoplastic"
   },
@@ -2755,19 +2755,19 @@
   },
   {
     "active_ingredient": "ARIPIPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "ARIPIPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "ARIPIPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antipsicotico"
   },
@@ -2797,7 +2797,7 @@
   },
   {
     "active_ingredient": "ATAPULGITA-PEPTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-45 mg",
     "group": "Antidiarreico"
   },
@@ -2839,13 +2839,13 @@
   },
   {
     "active_ingredient": "ATENOLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "ATENOLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antihipertensivo"
   },
@@ -2863,13 +2863,13 @@
   },
   {
     "active_ingredient": "ATENOLOL-CLORTALIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "ATENOLOL-CLORTALIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
@@ -2935,25 +2935,25 @@
   },
   {
     "active_ingredient": "ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ATORVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Hipolipemiante"
   },
@@ -3001,7 +3001,7 @@
   },
   {
     "active_ingredient": "AZATIOPRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Inmunosupresor"
   },
@@ -3097,7 +3097,7 @@
   },
   {
     "active_ingredient": "AZITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -3217,7 +3217,7 @@
   },
   {
     "active_ingredient": "BENCIDAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Otro"
   },
@@ -3283,13 +3283,13 @@
   },
   {
     "active_ingredient": "BETAHISTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg",
     "group": "Otolaringologia"
   },
   {
     "active_ingredient": "BETAHISTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Otolaringologia"
   },
@@ -3301,13 +3301,13 @@
   },
   {
     "active_ingredient": "BETAHISTINA DICLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg",
     "group": "Otolaringologia"
   },
   {
     "active_ingredient": "BETAHISTINA DICLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "24 mg",
     "group": "Otolaringologia"
   },
@@ -3373,7 +3373,7 @@
   },
   {
     "active_ingredient": "BETAMETASONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Corticoesteroide"
   },
@@ -3529,13 +3529,13 @@
   },
   {
     "active_ingredient": "BICALUTAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antineoplastic"
   },
   {
     "active_ingredient": "BICALUTAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antineoplastic"
   },
@@ -3589,13 +3589,13 @@
   },
   {
     "active_ingredient": "BIPERIDENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antiparkinsoniano"
   },
   {
     "active_ingredient": "BIPERIDENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antiparkinsoniano"
   },
@@ -3613,7 +3613,7 @@
   },
   {
     "active_ingredient": "BISMUTO SALICILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "262 mg",
     "group": "Gastroprotector"
   },
@@ -3643,25 +3643,25 @@
   },
   {
     "active_ingredient": "BISOPROLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -3685,25 +3685,25 @@
   },
   {
     "active_ingredient": "BISOPROLOL (BISOPROLOL FUMARATO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL (BISOPROLOL FUMARATO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL (BISOPROLOL FUMARATO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL (BISOPROLOL FUMARATO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -3739,25 +3739,25 @@
   },
   {
     "active_ingredient": "BISOPROLOL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-6.25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-6.25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BISOPROLOL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-6.25 mg",
     "group": "Antihipertensivo"
   },
@@ -3793,13 +3793,13 @@
   },
   {
     "active_ingredient": "BOSENTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "BOSENTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "62.5 mg",
     "group": "Antihipertensivo"
   },
@@ -3859,13 +3859,13 @@
   },
   {
     "active_ingredient": "BROMAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "3 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "BROMAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6 mg",
     "group": "Ansiolitico"
   },
@@ -3925,7 +3925,7 @@
   },
   {
     "active_ingredient": "BROMOCRIPTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antiparkinsoniano"
   },
@@ -4201,7 +4201,7 @@
   },
   {
     "active_ingredient": "BUFLOMEDIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Vasodilatador"
   },
@@ -4255,13 +4255,13 @@
   },
   {
     "active_ingredient": "BUSPIRONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "BUSPIRONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Ansiolitico"
   },
@@ -4273,13 +4273,13 @@
   },
   {
     "active_ingredient": "CABERGOLINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Hormona"
   },
   {
     "active_ingredient": "CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Mineral"
   },
@@ -4291,7 +4291,7 @@
   },
   {
     "active_ingredient": "CALCIO-VITAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Mineral"
   },
@@ -4303,7 +4303,7 @@
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "315 mg",
     "group": "Mineral"
   },
@@ -4369,43 +4369,43 @@
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.500 mg-200 UI",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "315 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "316 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg-400 UI",
     "group": "Mineral"
   },
@@ -4417,7 +4417,7 @@
   },
   {
     "active_ingredient": "CALCIOM-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "315 mg",
     "group": "Mineral"
   },
@@ -4477,19 +4477,19 @@
   },
   {
     "active_ingredient": "CANDESARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "32 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antihipertensivo"
   },
@@ -4507,13 +4507,13 @@
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antihipertensivo"
   },
@@ -4531,25 +4531,25 @@
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg-12.50 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "32 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CANDESARTAN CILEXETILO-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antihipertensivo"
   },
@@ -4561,7 +4561,7 @@
   },
   {
     "active_ingredient": "CAPECITABINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antineoplastic"
   },
@@ -4591,13 +4591,13 @@
   },
   {
     "active_ingredient": "CAPTOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CAPTOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antihipertensivo"
   },
@@ -4657,7 +4657,7 @@
   },
   {
     "active_ingredient": "CARBAMAZEPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Neuralgia"
   },
@@ -4669,13 +4669,13 @@
   },
   {
     "active_ingredient": "CARBIDOPA-LEVODOPA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiparkinsoniano"
   },
   {
     "active_ingredient": "CARBIDOPA-LEVODOPA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg-250 mg",
     "group": "Antiparkinsoniano"
   },
@@ -4693,7 +4693,7 @@
   },
   {
     "active_ingredient": "CARBON ACTIVADO-SUCCINILSULFATIAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg-100 mg",
     "group": "Gastroprotector"
   },
@@ -4711,37 +4711,37 @@
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1500 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "420 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "625 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "750 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO-ACIDO ASCORBICO (VITAMINA C)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "937 mg-500 mg",
     "group": "Mineral"
   },
@@ -4765,13 +4765,13 @@
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-200 UI",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CARBONATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Mineral"
   },
@@ -4843,7 +4843,7 @@
   },
   {
     "active_ingredient": "CARISOPRODOL-DIPIRONA-SALICILAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-150 mg-150 mg",
     "group": "Analgesico"
   },
@@ -4873,43 +4873,43 @@
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mG",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "3.125 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6.25 MG",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6.25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "CARVEDILOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6.5 mg",
     "group": "Antihipertensivo"
   },
@@ -5023,7 +5023,7 @@
   },
   {
     "active_ingredient": "CEFALEXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -5095,7 +5095,7 @@
   },
   {
     "active_ingredient": "CEFIXIME",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Otro"
   },
@@ -5251,13 +5251,13 @@
   },
   {
     "active_ingredient": "CEFUROXIMA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Otro"
   },
   {
     "active_ingredient": "CEFUROXIMA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Otro"
   },
@@ -5287,7 +5287,7 @@
   },
   {
     "active_ingredient": "CETILPIRIDINIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Otro"
   },
@@ -5299,13 +5299,13 @@
   },
   {
     "active_ingredient": "CETILPIRIDINIO-LIDOCAINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg-1.5 mg",
     "group": "Anestesico local"
   },
   {
     "active_ingredient": "CETILPIRIDINIO-OXIBUPROCAINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.2 mg-1 mg",
     "group": "Anestesico local"
   },
@@ -5377,7 +5377,7 @@
   },
   {
     "active_ingredient": "CETIRIZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihistaminico"
   },
@@ -5431,7 +5431,7 @@
   },
   {
     "active_ingredient": "CIANOCOBALAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mcg",
     "group": "Vitamina"
   },
@@ -5557,13 +5557,13 @@
   },
   {
     "active_ingredient": "CILOSTAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "CILOSTAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Vasodilatador"
   },
@@ -5593,13 +5593,13 @@
   },
   {
     "active_ingredient": "CIMETIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiulceroso"
   },
   {
     "active_ingredient": "CIMETIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antiulceroso"
   },
@@ -5629,13 +5629,13 @@
   },
   {
     "active_ingredient": "CINNARIZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "CIPROFIBRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Hipolipemiante"
   },
@@ -5713,25 +5713,25 @@
   },
   {
     "active_ingredient": "CIPROFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "CIPROFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "CIPROFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "CIPROFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "750 mg",
     "group": "Antibiotico"
   },
@@ -5797,7 +5797,7 @@
   },
   {
     "active_ingredient": "CIPROTERONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Anticonceptivo"
   },
@@ -5815,7 +5815,7 @@
   },
   {
     "active_ingredient": "CIPROTERONA-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg-0.035 mg",
     "group": "Anticonceptivo"
   },
@@ -5869,13 +5869,13 @@
   },
   {
     "active_ingredient": "CITALOPRAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "CITALOPRAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antidepresivo"
   },
@@ -5935,7 +5935,7 @@
   },
   {
     "active_ingredient": "CITICOLINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Neurologico"
   },
@@ -5947,13 +5947,13 @@
   },
   {
     "active_ingredient": "CITRATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1190 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CITRATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "950 mg",
     "group": "Mineral"
   },
@@ -5965,7 +5965,7 @@
   },
   {
     "active_ingredient": "CITRATO DE CALCIO-VITAMINA D2",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1500 g-200 UI-315 mg",
     "group": "Mineral"
   },
@@ -5977,25 +5977,25 @@
   },
   {
     "active_ingredient": "CITRATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.500 mg",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CITRATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1500 mg-200 UI",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CITRATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "315 mg-300 UI",
     "group": "Mineral"
   },
   {
     "active_ingredient": "CITRATO DE CALCIO-VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "950 mg",
     "group": "Mineral"
   },
@@ -6049,13 +6049,13 @@
   },
   {
     "active_ingredient": "CLARITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "CLARITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -6127,7 +6127,7 @@
   },
   {
     "active_ingredient": "CLENBUTEROL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mcg",
     "group": "Broncodilatador"
   },
@@ -6307,7 +6307,7 @@
   },
   {
     "active_ingredient": "CLOMIFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Hormona"
   },
@@ -6337,19 +6337,19 @@
   },
   {
     "active_ingredient": "CLONAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "CLONAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "CLONAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Ansiolitico"
   },
@@ -6373,7 +6373,7 @@
   },
   {
     "active_ingredient": "CLONIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.150 mg",
     "group": "Antihipertensivo"
   },
@@ -6391,13 +6391,13 @@
   },
   {
     "active_ingredient": "CLONIXINATO DE LISINA-CICLOBENZAPRINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg-5 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "CLONIXINATO DE LISINA-ERGOTAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg-1 mg",
     "group": "Antimigrana"
   },
@@ -6421,13 +6421,13 @@
   },
   {
     "active_ingredient": "CLOPIDOGREL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antitrombotico"
   },
   {
     "active_ingredient": "CLOPIDOGREL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "75 mg",
     "group": "Antitrombotico"
   },
@@ -6487,7 +6487,7 @@
   },
   {
     "active_ingredient": "CLORFENIRAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antihistaminico"
   },
@@ -6565,31 +6565,31 @@
   },
   {
     "active_ingredient": "CLORMADINONA ACETATO-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg-0.02 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "CLORMADINONA ACETATO-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg-0.03 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "CLORPROMAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "CLORPROMAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "CLORPROPAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antidiabetico"
   },
@@ -6601,13 +6601,13 @@
   },
   {
     "active_ingredient": "CLORTALIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "CLORTALIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Diuretico"
   },
@@ -6625,7 +6625,7 @@
   },
   {
     "active_ingredient": "CLORURO DE DEQUALINO-LIDOCAINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.25 mg-5 mg",
     "group": "Anestesico local"
   },
@@ -6811,7 +6811,7 @@
   },
   {
     "active_ingredient": "CLORURO DE TROSPIUM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Otro"
   },
@@ -6955,25 +6955,25 @@
   },
   {
     "active_ingredient": "CLOTRIMAZOL",
-    "type": "Tableta vaginal",
+    "type": "Tabletasa vaginal",
     "concentration": "100 MG",
     "group": "Antifungico"
   },
   {
     "active_ingredient": "CLOTRIMAZOL",
-    "type": "Tableta vaginal",
+    "type": "Tabletasa vaginal",
     "concentration": "100 mg",
     "group": "Antifungico"
   },
   {
     "active_ingredient": "CLOTRIMAZOL",
-    "type": "Tableta vaginal",
+    "type": "Tabletasa vaginal",
     "concentration": "200 mg",
     "group": "Antifungico"
   },
   {
     "active_ingredient": "CLOTRIMAZOL",
-    "type": "Tableta vaginal",
+    "type": "Tabletasa vaginal",
     "concentration": "500 mg",
     "group": "Antifungico"
   },
@@ -7051,7 +7051,7 @@
   },
   {
     "active_ingredient": "COMPLEJO DE HIERRO MALTOSATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "350 mg",
     "group": "Mineral"
   },
@@ -7123,43 +7123,43 @@
   },
   {
     "active_ingredient": "DARUNAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "DARUNOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "DARUNOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "75 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "DASATINIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antineoplastic"
   },
   {
     "active_ingredient": "DASATINIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antineoplastic"
   },
   {
     "active_ingredient": "DASATINIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antineoplastic"
   },
   {
     "active_ingredient": "DASATINIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "70 mg",
     "group": "Antineoplastic"
   },
@@ -7219,13 +7219,13 @@
   },
   {
     "active_ingredient": "DEFLAZACORT",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "DEFLAZACORT",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6 mg",
     "group": "Corticoesteroide"
   },
@@ -7243,7 +7243,7 @@
   },
   {
     "active_ingredient": "DEQUALINIO-LIDOCAINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.25 mg-5 mg",
     "group": "Antiseptico"
   },
@@ -7285,7 +7285,7 @@
   },
   {
     "active_ingredient": "DESLORATADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihistaminico"
   },
@@ -7297,25 +7297,25 @@
   },
   {
     "active_ingredient": "DESLORATADINA-MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-5 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "DESLORATADINA-MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-10 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "DESLORATADINA-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-120 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "DESLORATADINA-SULFATO DE PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-120 mg",
     "group": "Antihistaminico"
   },
@@ -7363,19 +7363,19 @@
   },
   {
     "active_ingredient": "DESOGESTREL-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.02 mg-0.15 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "DESOGESTREL-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.03 mg-0.15 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "DESOGESTREL-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.15 mg-0.02 mg",
     "group": "Anticonceptivo"
   },
@@ -7429,19 +7429,19 @@
   },
   {
     "active_ingredient": "DEXAMETASONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "DEXAMETASONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.75 mg",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "DEXAMETASONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Corticoesteroide"
   },
@@ -7459,7 +7459,7 @@
   },
   {
     "active_ingredient": "DEXAMETASONA-BUCLIZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.375 mg-25 mg",
     "group": "Corticoesteroide"
   },
@@ -7699,13 +7699,13 @@
   },
   {
     "active_ingredient": "DIAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "DIAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Ansiolitico"
   },
@@ -7897,13 +7897,13 @@
   },
   {
     "active_ingredient": "DICLOFENAC POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "DICLOFENAC POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "AINE"
   },
@@ -8029,25 +8029,25 @@
   },
   {
     "active_ingredient": "DICLOFENAC SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "DICLOFENAC SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "DICLOFENAC SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "DICLOFENAC SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "75 mg",
     "group": "AINE"
   },
@@ -8083,13 +8083,13 @@
   },
   {
     "active_ingredient": "DIDANOSINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "DIDROGESTERONA-ESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg-10 mg",
     "group": "Hormona"
   },
@@ -8107,7 +8107,7 @@
   },
   {
     "active_ingredient": "DIFENHIDRAMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antihistaminico"
   },
@@ -8137,7 +8137,7 @@
   },
   {
     "active_ingredient": "DIFENILHIDANTOINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiepileptico"
   },
@@ -8161,7 +8161,7 @@
   },
   {
     "active_ingredient": "DIGOXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.25 mg",
     "group": "Cardiovascular"
   },
@@ -8173,7 +8173,7 @@
   },
   {
     "active_ingredient": "DIIODOHIDROXIQUINOLIN A",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "650 mg",
     "group": "Otro"
   },
@@ -8203,13 +8203,13 @@
   },
   {
     "active_ingredient": "DILTIAZEM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "DIMENHIDRINATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antihistaminico"
   },
@@ -8227,19 +8227,19 @@
   },
   {
     "active_ingredient": "DIMETILPOLISILOXANO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg",
     "group": "Carminativo"
   },
   {
     "active_ingredient": "DIMETILPOLISILOXANO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Carminativo"
   },
   {
     "active_ingredient": "DINITRATO DE ISOSORBIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Cardiovascular"
   },
@@ -8257,7 +8257,7 @@
   },
   {
     "active_ingredient": "DIOSMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Vasodilatador"
   },
@@ -8287,13 +8287,13 @@
   },
   {
     "active_ingredient": "DIOSMINA-HESPERIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "450 mg-50 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "DIPIRIDAMOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antitrombotico"
   },
@@ -8353,19 +8353,19 @@
   },
   {
     "active_ingredient": "DIPIRONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "DIPIRONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "324 mg",
     "group": "Analgesico"
   },
   {
     "active_ingredient": "DIPIRONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Analgesico"
   },
@@ -8425,25 +8425,25 @@
   },
   {
     "active_ingredient": "DIPIRONA-HIOSCINA N-BUTIL BROMURO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-250 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "DISULFIRAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antidoto"
   },
   {
     "active_ingredient": "DIVALPROATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "DIVALPROATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiepileptico"
   },
@@ -8539,7 +8539,7 @@
   },
   {
     "active_ingredient": "DOLASETRON MESILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiemetico"
   },
@@ -8569,7 +8569,7 @@
   },
   {
     "active_ingredient": "DOMPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antiemetico"
   },
@@ -8587,13 +8587,13 @@
   },
   {
     "active_ingredient": "DONEPECILO CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Neurologico"
   },
   {
     "active_ingredient": "DONEPECILO CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Neurologico"
   },
@@ -8653,13 +8653,13 @@
   },
   {
     "active_ingredient": "DOXAZOSINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Urologico"
   },
   {
     "active_ingredient": "DOXAZOSINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Urologico"
   },
@@ -8677,13 +8677,13 @@
   },
   {
     "active_ingredient": "DOXICICLINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "DOXICICLINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antibiotico"
   },
@@ -8845,13 +8845,13 @@
   },
   {
     "active_ingredient": "EBASTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "EBASTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihistaminico"
   },
@@ -8881,19 +8881,19 @@
   },
   {
     "active_ingredient": "EFAVIRENZ",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "EFAVIRENZ",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "EFAVIRENZ-LAMIVUDINA-ZIDOVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-300 mg-600 mg",
     "group": "Antirretroviral"
   },
@@ -8929,19 +8929,19 @@
   },
   {
     "active_ingredient": "ENALAPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "ENALAPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "ENALAPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -8953,13 +8953,13 @@
   },
   {
     "active_ingredient": "ENALAPRIL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "ENALAPRIL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-5 mg",
     "group": "Antihipertensivo"
   },
@@ -8977,13 +8977,13 @@
   },
   {
     "active_ingredient": "ENTECAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "ENTECAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antiviral"
   },
@@ -9019,25 +9019,25 @@
   },
   {
     "active_ingredient": "EPLERENONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Cardiovascular"
   },
   {
     "active_ingredient": "EPLERENONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Cardiovascular"
   },
   {
     "active_ingredient": "EPROSARTAN MESILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "EPROSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
@@ -9085,13 +9085,13 @@
   },
   {
     "active_ingredient": "ERITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "ERITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -9145,19 +9145,19 @@
   },
   {
     "active_ingredient": "ESCITALOPRAM OXALATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "ESCITALOPRAM OXALATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "ESCITALOPRAM OXALATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antidepresivo"
   },
@@ -9217,19 +9217,19 @@
   },
   {
     "active_ingredient": "ESOMEPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "ESOMEPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "ESOMEPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Inhibidor bomba protones"
   },
@@ -9247,19 +9247,19 @@
   },
   {
     "active_ingredient": "ESPIRONOLACTONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "ESPIRONOLACTONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "ESPIRONOLACTONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Diuretico"
   },
@@ -9283,19 +9283,19 @@
   },
   {
     "active_ingredient": "ESTAVUDINA-LAMIVUDINA-NEVIRAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-30 mg-200 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "ESTAVUDINA-LAMIVUDINA-NEVIRAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg-150 mg-200 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "ESTAVUDINA-LAMIVUDINA-NEVIRAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-70 mg-10 mg",
     "group": "Antirretroviral"
   },
@@ -9415,7 +9415,7 @@
   },
   {
     "active_ingredient": "ESTROGENOS CONJUGADOS",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.625 mg",
     "group": "Hormona"
   },
@@ -9439,13 +9439,13 @@
   },
   {
     "active_ingredient": "ETAMSILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antihemorragico"
   },
   {
     "active_ingredient": "ETHAMBUTOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antituberculoso"
   },
@@ -9487,7 +9487,7 @@
   },
   {
     "active_ingredient": "ETINILESTRADIOL-GESTODENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "75 mcg-20 mcg",
     "group": "Anticonceptivo"
   },
@@ -9517,7 +9517,7 @@
   },
   {
     "active_ingredient": "ETINILESTRADIOL-NOREGESTREL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mcg-50 mcg",
     "group": "Anticonceptivo"
   },
@@ -9565,19 +9565,19 @@
   },
   {
     "active_ingredient": "ETORICOXIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ETORICOXIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "90 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "ETRAVIRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antirretroviral"
   },
@@ -9637,7 +9637,7 @@
   },
   {
     "active_ingredient": "EZETIMIBA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
@@ -9661,37 +9661,37 @@
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-40 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-80 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "EZETIMIBA-SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-10 mg",
     "group": "Hipolipemiante"
   },
@@ -9727,13 +9727,13 @@
   },
   {
     "active_ingredient": "FAMOTIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antiulceroso"
   },
   {
     "active_ingredient": "FAMOTIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antiulceroso"
   },
@@ -9811,13 +9811,13 @@
   },
   {
     "active_ingredient": "FENOBARBITAL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "FENOBARBITAL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Antiepileptico"
   },
@@ -9895,19 +9895,19 @@
   },
   {
     "active_ingredient": "FEXOFENADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "120 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "FEXOFENADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "180 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "FEXOFENADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antihistaminico"
   },
@@ -9925,13 +9925,13 @@
   },
   {
     "active_ingredient": "FEXOFENADINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "120 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "FEXOFENADINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "180 mg",
     "group": "Antihistaminico"
   },
@@ -9967,7 +9967,7 @@
   },
   {
     "active_ingredient": "FEXOFENADINA-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg-60 mg",
     "group": "Antigripal"
   },
@@ -9985,13 +9985,13 @@
   },
   {
     "active_ingredient": "FINASTERIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Urologico"
   },
   {
     "active_ingredient": "FINASTERIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Urologico"
   },
@@ -10021,7 +10021,7 @@
   },
   {
     "active_ingredient": "FLAVOXATE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Otro"
   },
@@ -10087,7 +10087,7 @@
   },
   {
     "active_ingredient": "FLUCONAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antifungico"
   },
@@ -10141,7 +10141,7 @@
   },
   {
     "active_ingredient": "FLUNARIZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Otro"
   },
@@ -10219,7 +10219,7 @@
   },
   {
     "active_ingredient": "FLUOXETINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antidepresivo"
   },
@@ -10231,7 +10231,7 @@
   },
   {
     "active_ingredient": "FLUTAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antineoplastic"
   },
@@ -10327,7 +10327,7 @@
   },
   {
     "active_ingredient": "FLUVOXAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antidepresivo"
   },
@@ -10351,7 +10351,7 @@
   },
   {
     "active_ingredient": "FOLINATO DE CALCIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Mineral"
   },
@@ -10405,7 +10405,7 @@
   },
   {
     "active_ingredient": "FOSAMPRENAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "700 mg",
     "group": "Antirretroviral"
   },
@@ -10429,13 +10429,13 @@
   },
   {
     "active_ingredient": "FOSINOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "FOSINOPRIL-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-12.50 mg",
     "group": "Antihipertensivo"
   },
@@ -10471,7 +10471,7 @@
   },
   {
     "active_ingredient": "FURAZOLIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiprotozoario"
   },
@@ -10495,13 +10495,13 @@
   },
   {
     "active_ingredient": "FUROSEMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "FUROSEMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Diuretico"
   },
@@ -10543,25 +10543,25 @@
   },
   {
     "active_ingredient": "GABAPENTIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Neuropatia"
   },
   {
     "active_ingredient": "GABAPENTIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Neuropatia"
   },
   {
     "active_ingredient": "GABAPENTIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Neuropatia"
   },
   {
     "active_ingredient": "GABAPENTIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "800 mg",
     "group": "Neuropatia"
   },
@@ -10699,13 +10699,13 @@
   },
   {
     "active_ingredient": "GEMFIBROZIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "GEMFIBROZIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "900 mg",
     "group": "Hipolipemiante"
   },
@@ -10795,7 +10795,7 @@
   },
   {
     "active_ingredient": "GESTODENO-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mcg-15 mcg",
     "group": "Anticonceptivo"
   },
@@ -10813,7 +10813,7 @@
   },
   {
     "active_ingredient": "GLIBENCLAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antidiabetico"
   },
@@ -10849,31 +10849,31 @@
   },
   {
     "active_ingredient": "GLIBENCLAMIDA-METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg-5 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIBENCLAMIDA-METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg-1.25 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIBENCLAMIDA-METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg-2.5 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIBENCLAMIDA-METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-2.5 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIBENCLAMIDA-METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg-5 mg",
     "group": "Antidiabetico"
   },
@@ -10951,13 +10951,13 @@
   },
   {
     "active_ingredient": "GLICLAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLICLAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Antidiabetico"
   },
@@ -10975,19 +10975,19 @@
   },
   {
     "active_ingredient": "GLIMEPIRIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIMEPIRIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "GLIMEPIRIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antidiabetico"
   },
@@ -11107,13 +11107,13 @@
   },
   {
     "active_ingredient": "GRANISETRON",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antiemetico"
   },
   {
     "active_ingredient": "GRISEOFULVINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antifungico"
   },
@@ -11149,7 +11149,7 @@
   },
   {
     "active_ingredient": "GUAIFENESINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Expectorante"
   },
@@ -11209,19 +11209,19 @@
   },
   {
     "active_ingredient": "HALOPERIDOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "HALOPERIDOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "HALOPERIDOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antipsicotico"
   },
@@ -11251,19 +11251,19 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LISINOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Diuretico"
   },
@@ -11281,19 +11281,19 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LOSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LOSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LOSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg-12.50 mg",
     "group": "Antihipertensivo"
   },
@@ -11311,13 +11311,13 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LOSARTAN (LOSARTAN POTASICO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-25 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-LOSARTAN (LOSARTAN POTASICO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg-12.5 mg",
     "group": "Diuretico"
   },
@@ -11347,19 +11347,19 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-25 mg",
     "group": "Diuretico"
   },
@@ -11377,7 +11377,7 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-QUINAPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg-12.5 mg",
     "group": "Diuretico"
   },
@@ -11389,25 +11389,25 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-25 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-12.5 mg",
     "group": "Diuretico"
   },
@@ -11425,19 +11425,19 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-TELMISARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-TELMISARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg-12.50 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-TELMISARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg-12.5 mg",
     "group": "Diuretico"
   },
@@ -11473,19 +11473,19 @@
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-12.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-25 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "HIDROCLOROTIAZIDA-VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg-12.5 mg",
     "group": "Diuretico"
   },
@@ -11563,13 +11563,13 @@
   },
   {
     "active_ingredient": "HIDROXICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Ansiolitico"
   },
   {
     "active_ingredient": "HIDROXICLOROQUINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antipaludico"
   },
@@ -11599,7 +11599,7 @@
   },
   {
     "active_ingredient": "HIDROXIDO DE ALUMINIO-HIDROXIDO DE MAGNESIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg-400 mg",
     "group": "Mineral"
   },
@@ -11755,7 +11755,7 @@
   },
   {
     "active_ingredient": "HIERRO (COMPLEJO POLIMALTOSATO FERRICO)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Mineral"
   },
@@ -11809,13 +11809,13 @@
   },
   {
     "active_ingredient": "HIOSCINA N-BUTIL BROMURO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "HIOSCINA N-BUTIL BROMURO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antiespasmodico"
   },
@@ -11833,13 +11833,13 @@
   },
   {
     "active_ingredient": "HIOSCINA N-BUTIL BROMURO-IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg-10 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "HIOSCINA N-BUTIL BROMURO-IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg-20 mg",
     "group": "Antiespasmodico"
   },
@@ -11971,25 +11971,25 @@
   },
   {
     "active_ingredient": "IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "800 mg",
     "group": "AINE"
   },
@@ -12013,13 +12013,13 @@
   },
   {
     "active_ingredient": "IBUPROFENO-CAFEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg-30 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO-CODEINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg-20 mg",
     "group": "AINE"
   },
@@ -12049,19 +12049,19 @@
   },
   {
     "active_ingredient": "IBUPROFENO-TIOCOLCHICOSIDO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg-4 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO-TIOCOLCHICOSIDO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg-4 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "IBUPROFENO-TIOCOLCHICÓSIDO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg-8 mg",
     "group": "AINE"
   },
@@ -12121,13 +12121,13 @@
   },
   {
     "active_ingredient": "IMATINIB MESILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antineoplastic"
   },
   {
     "active_ingredient": "IMATINIB MESILATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antineoplastic"
   },
@@ -12205,13 +12205,13 @@
   },
   {
     "active_ingredient": "INDAPAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.5 mg",
     "group": "Diuretico"
   },
   {
     "active_ingredient": "INDAPAMIDA-PERINDOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg-1.25 mg",
     "group": "Diuretico"
   },
@@ -12337,13 +12337,13 @@
   },
   {
     "active_ingredient": "IRBESARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "IRBESARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antihipertensivo"
   },
@@ -12367,13 +12367,13 @@
   },
   {
     "active_ingredient": "IRBESARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "IRBESARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
@@ -12457,7 +12457,7 @@
   },
   {
     "active_ingredient": "ISONIAZIDA-RIFAMPICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-300 mg",
     "group": "Antituberculoso"
   },
@@ -12475,25 +12475,25 @@
   },
   {
     "active_ingredient": "ISOSORBIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Cardiovascular"
   },
   {
     "active_ingredient": "ISOSORBIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Cardiovascular"
   },
   {
     "active_ingredient": "ISOSORBIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Cardiovascular"
   },
   {
     "active_ingredient": "ISOSORBIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Cardiovascular"
   },
@@ -12583,7 +12583,7 @@
   },
   {
     "active_ingredient": "IVERMECTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6 mg",
     "group": "Antiparasitario"
   },
@@ -12667,13 +12667,13 @@
   },
   {
     "active_ingredient": "KETOCONAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antifungico"
   },
   {
     "active_ingredient": "KETOCONAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antifungico"
   },
@@ -12769,13 +12769,13 @@
   },
   {
     "active_ingredient": "KETOPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "KETOPROFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "AINE"
   },
@@ -12847,13 +12847,13 @@
   },
   {
     "active_ingredient": "KETOROLAC TROMETAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "KETOROLAC TROMETAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "AINE"
   },
@@ -12883,7 +12883,7 @@
   },
   {
     "active_ingredient": "KETOTIFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antihistaminico"
   },
@@ -12955,13 +12955,13 @@
   },
   {
     "active_ingredient": "LAMIVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "LAMIVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antirretroviral"
   },
@@ -12973,13 +12973,13 @@
   },
   {
     "active_ingredient": "LAMIVUDINA-ZIDOVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-300 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "LAMIVUDINA-ZIDOVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg-300 mg-600 mg",
     "group": "Antirretroviral"
   },
@@ -13003,25 +13003,25 @@
   },
   {
     "active_ingredient": "LAMOTRIGINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "LAMOTRIGINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "LAMOTRIGINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "LAMOTRIGINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antiepileptico"
   },
@@ -13063,7 +13063,7 @@
   },
   {
     "active_ingredient": "LAPATINIB",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antineoplastic"
   },
@@ -13111,13 +13111,13 @@
   },
   {
     "active_ingredient": "LEFLUNOMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Inmunosupresor"
   },
   {
     "active_ingredient": "LEFLUNOMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Inmunosupresor"
   },
@@ -13159,7 +13159,7 @@
   },
   {
     "active_ingredient": "LERCANIDIPINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
@@ -13171,7 +13171,7 @@
   },
   {
     "active_ingredient": "LETROZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antineoplastic"
   },
@@ -13225,7 +13225,7 @@
   },
   {
     "active_ingredient": "LEVAMISOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Inmunomodulador"
   },
@@ -13261,13 +13261,13 @@
   },
   {
     "active_ingredient": "LEVETIRACETAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "LEVETIRACETAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiepileptico"
   },
@@ -13339,7 +13339,7 @@
   },
   {
     "active_ingredient": "LEVOCETIRIZINA DICLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihistaminico"
   },
@@ -13405,19 +13405,19 @@
   },
   {
     "active_ingredient": "LEVOFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "LEVOFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "LEVOFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "750 mg",
     "group": "Antibiotico"
   },
@@ -13435,13 +13435,13 @@
   },
   {
     "active_ingredient": "LEVOMEPROMAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "LEVOMEPROMAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antipsicotico"
   },
@@ -13477,13 +13477,13 @@
   },
   {
     "active_ingredient": "LEVONORGESTREL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.75 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "LEVONORGESTREL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1.5 mg",
     "group": "Anticonceptivo"
   },
@@ -13513,7 +13513,7 @@
   },
   {
     "active_ingredient": "LEVONORGESTREL-ETINILESTRADIOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mcg-20 mcg",
     "group": "Anticonceptivo"
   },
@@ -13537,7 +13537,7 @@
   },
   {
     "active_ingredient": "LEVOSULPIRIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Otro"
   },
@@ -13555,37 +13555,37 @@
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.025 mg",
     "group": "Hormona tiroides"
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.05 mg",
     "group": "Hormona tiroides"
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.125 mg",
     "group": "Hormona tiroides"
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.150 mg",
     "group": "Hormona tiroides"
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.175 mg",
     "group": "Hormona tiroides"
   },
   {
     "active_ingredient": "LEVOTIROXINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.200 mg",
     "group": "Hormona tiroides"
   },
@@ -13711,7 +13711,7 @@
   },
   {
     "active_ingredient": "LINEZOLID",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Antibiotico"
   },
@@ -13735,19 +13735,19 @@
   },
   {
     "active_ingredient": "LISINOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LISINOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LISINOPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -13759,7 +13759,7 @@
   },
   {
     "active_ingredient": "LOMEFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antibiotico"
   },
@@ -13771,7 +13771,7 @@
   },
   {
     "active_ingredient": "LOPERAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antidiarreico"
   },
@@ -13783,13 +13783,13 @@
   },
   {
     "active_ingredient": "LOPINAVIR-RITONAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-25 mg",
     "group": "Antirretroviral"
   },
   {
     "active_ingredient": "LOPINAVIR-RITONAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg-50 mg",
     "group": "Antirretroviral"
   },
@@ -13831,13 +13831,13 @@
   },
   {
     "active_ingredient": "LORATADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "LORATADINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antihistaminico"
   },
@@ -13855,7 +13855,7 @@
   },
   {
     "active_ingredient": "LORATADINA-BETAMETASONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-0.25 mg",
     "group": "Antihistaminico"
   },
@@ -13891,13 +13891,13 @@
   },
   {
     "active_ingredient": "LORATADINA-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-240 mg",
     "group": "Antihistaminico"
   },
   {
     "active_ingredient": "LORATADINA-PSEUDOEFEDRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg-60 mg",
     "group": "Antihistaminico"
   },
@@ -13915,7 +13915,7 @@
   },
   {
     "active_ingredient": "LORAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Ansiolitico"
   },
@@ -13933,7 +13933,7 @@
   },
   {
     "active_ingredient": "LORNOXICAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "AINE"
   },
@@ -13963,19 +13963,19 @@
   },
   {
     "active_ingredient": "LOSARTAN POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LOSARTAN POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "45 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LOSARTAN POTASICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antihipertensivo"
   },
@@ -13993,19 +13993,19 @@
   },
   {
     "active_ingredient": "LOSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LOSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg-25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "LOSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
@@ -14029,13 +14029,13 @@
   },
   {
     "active_ingredient": "LOVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "LOXOPROFEN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "AINE"
   },
@@ -14053,7 +14053,7 @@
   },
   {
     "active_ingredient": "MAGALDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "480 mg",
     "group": "Antiácido"
   },
@@ -14065,7 +14065,7 @@
   },
   {
     "active_ingredient": "MAGALDRATO-DIMETICONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "800 mg-100 mg",
     "group": "Antiácido"
   },
@@ -14113,7 +14113,7 @@
   },
   {
     "active_ingredient": "MEBENDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiparasitario"
   },
@@ -14131,7 +14131,7 @@
   },
   {
     "active_ingredient": "MECLIZINA-PIRIDOXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg-50 mg",
     "group": "Antihistaminico"
   },
@@ -14143,19 +14143,19 @@
   },
   {
     "active_ingredient": "MEDROXIPROGESTERON A",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "MEDROXIPROGESTERON A",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Anticonceptivo"
   },
   {
     "active_ingredient": "MEDROXIPROGESTERON A",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Anticonceptivo"
   },
@@ -14167,7 +14167,7 @@
   },
   {
     "active_ingredient": "MEGESTROL ACETATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Hormona"
   },
@@ -14221,13 +14221,13 @@
   },
   {
     "active_ingredient": "MELOXICAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "MELOXICAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "7.5 mg",
     "group": "AINE"
   },
@@ -14263,7 +14263,7 @@
   },
   {
     "active_ingredient": "MEMANTINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Neurologico"
   },
@@ -14359,7 +14359,7 @@
   },
   {
     "active_ingredient": "MESALAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Gastrointestinal"
   },
@@ -14383,7 +14383,7 @@
   },
   {
     "active_ingredient": "MESTEROLONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Hormona"
   },
@@ -14395,13 +14395,13 @@
   },
   {
     "active_ingredient": "METENAMINA MANDELATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Otro"
   },
   {
     "active_ingredient": "METENAMINA MANDELATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Otro"
   },
@@ -14449,31 +14449,31 @@
   },
   {
     "active_ingredient": "METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "750 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "METFORMINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "850 mg",
     "group": "Antidiabetico"
   },
@@ -14527,7 +14527,7 @@
   },
   {
     "active_ingredient": "METILDOPA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antihipertensivo"
   },
@@ -14569,13 +14569,13 @@
   },
   {
     "active_ingredient": "METILFENIDATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "18 mg",
     "group": "Psicoestimulante"
   },
   {
     "active_ingredient": "METILFENIDATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "36 mg",
     "group": "Psicoestimulante"
   },
@@ -14623,7 +14623,7 @@
   },
   {
     "active_ingredient": "METILPREDNISOLONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "16 mg",
     "group": "Corticoesteroide"
   },
@@ -14671,7 +14671,7 @@
   },
   {
     "active_ingredient": "METOCLOPRAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antiemetico"
   },
@@ -14755,7 +14755,7 @@
   },
   {
     "active_ingredient": "METOTREXATE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Otro"
   },
@@ -14857,19 +14857,19 @@
   },
   {
     "active_ingredient": "METRONIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiprotozoario"
   },
   {
     "active_ingredient": "METRONIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiprotozoario"
   },
   {
     "active_ingredient": "METRONIDAZOL",
-    "type": "Tableta vaginal",
+    "type": "Tabletasa vaginal",
     "concentration": "500 mg",
     "group": "Antiprotozoario"
   },
@@ -14935,7 +14935,7 @@
   },
   {
     "active_ingredient": "MICOFENOLATO DE MOFETILO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Inmunosupresor"
   },
@@ -15061,13 +15061,13 @@
   },
   {
     "active_ingredient": "MIRTAZAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "MIRTAZAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antidepresivo"
   },
@@ -15097,13 +15097,13 @@
   },
   {
     "active_ingredient": "MOEXIPRILO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "MOEXIPRILO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "7.5 mg",
     "group": "Antihipertensivo"
   },
@@ -15199,25 +15199,25 @@
   },
   {
     "active_ingredient": "MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antiasmatico"
   },
   {
     "active_ingredient": "MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antiasmatico"
   },
   {
     "active_ingredient": "MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 MG",
     "group": "Antiasmatico"
   },
   {
     "active_ingredient": "MONTELUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antiasmatico"
   },
@@ -15259,7 +15259,7 @@
   },
   {
     "active_ingredient": "MOXIFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antibiotico"
   },
@@ -15373,7 +15373,7 @@
   },
   {
     "active_ingredient": "NALTREXONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antidoto"
   },
@@ -15397,25 +15397,25 @@
   },
   {
     "active_ingredient": "NAPROXENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "NAPROXENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "275 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "NAPROXENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "AINE"
   },
   {
     "active_ingredient": "NAPROXENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "550 mg",
     "group": "AINE"
   },
@@ -15445,7 +15445,7 @@
   },
   {
     "active_ingredient": "NEBIVOLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
@@ -15457,7 +15457,7 @@
   },
   {
     "active_ingredient": "NELFINAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antirretroviral"
   },
@@ -15493,7 +15493,7 @@
   },
   {
     "active_ingredient": "NEVIRAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antirretroviral"
   },
@@ -15511,13 +15511,13 @@
   },
   {
     "active_ingredient": "NICOTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Tabaquismo"
   },
   {
     "active_ingredient": "NICOTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Tabaquismo"
   },
@@ -15559,25 +15559,25 @@
   },
   {
     "active_ingredient": "NIFEDIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "NIFEDIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "NIFEDIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "NIFEDIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "Antihipertensivo"
   },
@@ -15607,7 +15607,7 @@
   },
   {
     "active_ingredient": "NIMESULIDE",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Otro"
   },
@@ -15643,7 +15643,7 @@
   },
   {
     "active_ingredient": "NIMODIPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antihipertensivo"
   },
@@ -15679,31 +15679,31 @@
   },
   {
     "active_ingredient": "NITAZOXANIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "NITAZOXANIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "NITAZOXANIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "NITAZOXANIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "NITRAZEPAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Ansiolitico"
   },
@@ -15805,7 +15805,7 @@
   },
   {
     "active_ingredient": "NORFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antibiotico"
   },
@@ -15853,7 +15853,7 @@
   },
   {
     "active_ingredient": "OFLOXACINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antibiotico"
   },
@@ -15877,13 +15877,13 @@
   },
   {
     "active_ingredient": "OLANZAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "OLANZAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antipsicotico"
   },
@@ -15901,13 +15901,13 @@
   },
   {
     "active_ingredient": "OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "OLMESARTAN MEDOXOMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antihipertensivo"
   },
@@ -15997,19 +15997,19 @@
   },
   {
     "active_ingredient": "ONDANSETRON",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antiemetico"
   },
   {
     "active_ingredient": "ONDANSETRON",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antiemetico"
   },
   {
     "active_ingredient": "ORFENADRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Relajante muscular"
   },
@@ -16159,13 +16159,13 @@
   },
   {
     "active_ingredient": "OXCARBAZEPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "OXCARBAZEPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Antiepileptico"
   },
@@ -16189,25 +16189,25 @@
   },
   {
     "active_ingredient": "OXIBUTININA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Urologico"
   },
   {
     "active_ingredient": "OXICODONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "OXICODONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "OXICODONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Analgesico opioide"
   },
@@ -16465,13 +16465,13 @@
   },
   {
     "active_ingredient": "PALIPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "3 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "PALIPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6 mg",
     "group": "Antipsicotico"
   },
@@ -16531,19 +16531,19 @@
   },
   {
     "active_ingredient": "PAMOATO DE PIRANTEL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiparasitario"
   },
   {
     "active_ingredient": "PAMOATO DE PIRANTEL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg",
     "group": "Antiparasitario"
   },
   {
     "active_ingredient": "PAMOATO DE PIRANTEL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiparasitario"
   },
@@ -16555,7 +16555,7 @@
   },
   {
     "active_ingredient": "PANCREATINA-SIMETICONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg-100 mg",
     "group": "Digestivo"
   },
@@ -16591,25 +16591,25 @@
   },
   {
     "active_ingredient": "PANTOPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "PANTOPRAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "PANTOPRAZOL MAGNESICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "PANTOPRAZOL MAGNESICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Inhibidor bomba protones"
   },
@@ -16681,19 +16681,19 @@
   },
   {
     "active_ingredient": "PAROXETINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "PAROXETINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "PAROXETINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antidepresivo"
   },
@@ -16801,7 +16801,7 @@
   },
   {
     "active_ingredient": "PENTOXIFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Vasodilatador"
   },
@@ -16843,13 +16843,13 @@
   },
   {
     "active_ingredient": "PERINDOPRIL DE ERBUMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "PERINDOPRIL DE ERBUMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antihipertensivo"
   },
@@ -16861,13 +16861,13 @@
   },
   {
     "active_ingredient": "PERINDOPRIL ERBUMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "PERINDOPRIL TERBUTILAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Antihipertensivo"
   },
@@ -16957,7 +16957,7 @@
   },
   {
     "active_ingredient": "PICOSULFATO DE SODIO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Laxante"
   },
@@ -16975,19 +16975,19 @@
   },
   {
     "active_ingredient": "PIMOZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "PINAVERIUM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "PINAVERIUM BROMURO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiespasmodico"
   },
@@ -17005,13 +17005,13 @@
   },
   {
     "active_ingredient": "PIOGLITAZONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "PIOGLITAZONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "30 mg",
     "group": "Antidiabetico"
   },
@@ -17107,19 +17107,19 @@
   },
   {
     "active_ingredient": "PIRACETAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Neurologico"
   },
   {
     "active_ingredient": "PIRACETAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "800 mg",
     "group": "Neurologico"
   },
   {
     "active_ingredient": "PIRAZINAMIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antituberculoso"
   },
@@ -17131,7 +17131,7 @@
   },
   {
     "active_ingredient": "PIRIDOSTIGMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "Otro"
   },
@@ -17173,7 +17173,7 @@
   },
   {
     "active_ingredient": "PIRIDOXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vitamina"
   },
@@ -17191,7 +17191,7 @@
   },
   {
     "active_ingredient": "PIRITINOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Neurologico"
   },
@@ -17245,7 +17245,7 @@
   },
   {
     "active_ingredient": "PIROXICAM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "AINE"
   },
@@ -17293,7 +17293,7 @@
   },
   {
     "active_ingredient": "POLICOSANOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
@@ -17377,13 +17377,13 @@
   },
   {
     "active_ingredient": "PRAMIPEXOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.250 mg",
     "group": "Antiparkinsoniano"
   },
   {
     "active_ingredient": "PRAMIPEXOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antiparkinsoniano"
   },
@@ -17395,7 +17395,7 @@
   },
   {
     "active_ingredient": "PRAMIVERINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Otro"
   },
@@ -17419,7 +17419,7 @@
   },
   {
     "active_ingredient": "PRAVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
@@ -17431,19 +17431,19 @@
   },
   {
     "active_ingredient": "PRAVASTATINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "PRAVASTATINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "PRAVASTATINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Hipolipemiante"
   },
@@ -17509,25 +17509,25 @@
   },
   {
     "active_ingredient": "PREDNISONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "PREDNISONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 MG",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "PREDNISONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Corticoesteroide"
   },
   {
     "active_ingredient": "PREDNISONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Corticoesteroide"
   },
@@ -17611,7 +17611,7 @@
   },
   {
     "active_ingredient": "PROPAFENONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antiarritmico"
   },
@@ -17635,7 +17635,7 @@
   },
   {
     "active_ingredient": "PROPIVERINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "15 mg",
     "group": "Otro"
   },
@@ -17671,13 +17671,13 @@
   },
   {
     "active_ingredient": "PROPRANOLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "PROPRANOLOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antihipertensivo"
   },
@@ -17725,25 +17725,25 @@
   },
   {
     "active_ingredient": "QUETIAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "QUETIAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "QUETIAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "QUETIAPINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antipsicotico"
   },
@@ -17773,13 +17773,13 @@
   },
   {
     "active_ingredient": "RABEPRAZOL SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Inhibidor bomba protones"
   },
   {
     "active_ingredient": "RABEPRAZOL SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Inhibidor bomba protones"
   },
@@ -17809,13 +17809,13 @@
   },
   {
     "active_ingredient": "RALOXIFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "60 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "RALTEGRAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antirretroviral"
   },
@@ -17857,31 +17857,31 @@
   },
   {
     "active_ingredient": "RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10.0 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "RAMIPRIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5.0 MG",
     "group": "Antihipertensivo"
   },
@@ -17941,13 +17941,13 @@
   },
   {
     "active_ingredient": "RANITIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Antiulceroso"
   },
   {
     "active_ingredient": "RANITIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antiulceroso"
   },
@@ -17983,19 +17983,19 @@
   },
   {
     "active_ingredient": "REPAGLINIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "REPAGLINIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antidiabetico"
   },
   {
     "active_ingredient": "REPAGLINIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antidiabetico"
   },
@@ -18013,7 +18013,7 @@
   },
   {
     "active_ingredient": "RIBAVIRINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiviral"
   },
@@ -18079,13 +18079,13 @@
   },
   {
     "active_ingredient": "RISEDRONATO SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "35 mg",
     "group": "Osteoporosis"
   },
   {
     "active_ingredient": "RISEDRONATO SODICO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Osteoporosis"
   },
@@ -18133,31 +18133,31 @@
   },
   {
     "active_ingredient": "RISPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.5 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "RISPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "RISPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "RISPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "3 mg",
     "group": "Antipsicotico"
   },
   {
     "active_ingredient": "RISPERIDONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antipsicotico"
   },
@@ -18175,7 +18175,7 @@
   },
   {
     "active_ingredient": "RITONAVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antirretroviral"
   },
@@ -18265,13 +18265,13 @@
   },
   {
     "active_ingredient": "RIZATRIPTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antimigrana"
   },
   {
     "active_ingredient": "RIZATRIPTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Antimigrana"
   },
@@ -18283,7 +18283,7 @@
   },
   {
     "active_ingredient": "ROSIGLITAZONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Antidiabetico"
   },
@@ -18313,25 +18313,25 @@
   },
   {
     "active_ingredient": "ROSUVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ROSUVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ROSUVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "ROSUVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Hipolipemiante"
   },
@@ -18487,19 +18487,19 @@
   },
   {
     "active_ingredient": "SECNIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Antiprotozoario"
   },
   {
     "active_ingredient": "SECNIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antiprotozoario"
   },
   {
     "active_ingredient": "SECNIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiprotozoario"
   },
@@ -18547,13 +18547,13 @@
   },
   {
     "active_ingredient": "SERTRALINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "SERTRALINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antidepresivo"
   },
@@ -18619,25 +18619,25 @@
   },
   {
     "active_ingredient": "SILDENAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "SILDENAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "SILDENAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "SILDENAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Vasodilatador"
   },
@@ -18691,25 +18691,25 @@
   },
   {
     "active_ingredient": "SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Hipolipemiante"
   },
   {
     "active_ingredient": "SIMVASTATINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Hipolipemiante"
   },
@@ -18787,7 +18787,7 @@
   },
   {
     "active_ingredient": "SUCRALFATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Gastroprotector"
   },
@@ -18799,7 +18799,7 @@
   },
   {
     "active_ingredient": "SULBUTIAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Vitamina"
   },
@@ -18877,25 +18877,25 @@
   },
   {
     "active_ingredient": "SULFAMETOXAZOL-TRIMETROPRIM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-800 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "SULFAMETOXAZOL-TRIMETROPRIM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg-80 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "SULFAMETOXAZOL-TRIMETROPRIM",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg-400 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "SULFASALAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antibiotico"
   },
@@ -18955,7 +18955,7 @@
   },
   {
     "active_ingredient": "SULFATO FERROSO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Mineral"
   },
@@ -19015,19 +19015,19 @@
   },
   {
     "active_ingredient": "SULTAMICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "SULTAMICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "375 mg",
     "group": "Antibiotico"
   },
   {
     "active_ingredient": "SULTAMICILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "750 mg",
     "group": "Antibiotico"
   },
@@ -19069,13 +19069,13 @@
   },
   {
     "active_ingredient": "TADALAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Vasodilatador"
   },
   {
     "active_ingredient": "TADALAFIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Vasodilatador"
   },
@@ -19093,13 +19093,13 @@
   },
   {
     "active_ingredient": "TAMOXIFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Otro"
   },
   {
     "active_ingredient": "TAMOXIFENO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Otro"
   },
@@ -19117,13 +19117,13 @@
   },
   {
     "active_ingredient": "TAMSULOSINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "0.4 mg",
     "group": "Urologico"
   },
   {
     "active_ingredient": "TECLOZAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiviral"
   },
@@ -19153,13 +19153,13 @@
   },
   {
     "active_ingredient": "TELBIVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "600 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "TELITROMICINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antibiotico"
   },
@@ -19177,13 +19177,13 @@
   },
   {
     "active_ingredient": "TELMISARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "TELMISARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Antihipertensivo"
   },
@@ -19219,31 +19219,31 @@
   },
   {
     "active_ingredient": "TEOFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Broncodilatador"
   },
   {
     "active_ingredient": "TEOFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg",
     "group": "Broncodilatador"
   },
   {
     "active_ingredient": "TEOFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Broncodilatador"
   },
   {
     "active_ingredient": "TEOFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Broncodilatador"
   },
   {
     "active_ingredient": "TEOFILINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Broncodilatador"
   },
@@ -19261,13 +19261,13 @@
   },
   {
     "active_ingredient": "TERAZOSIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Urologico"
   },
   {
     "active_ingredient": "TERAZOSIN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Urologico"
   },
@@ -19291,7 +19291,7 @@
   },
   {
     "active_ingredient": "TERBINAFINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antifungico"
   },
@@ -19345,13 +19345,13 @@
   },
   {
     "active_ingredient": "TERBINAFINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "125 mg",
     "group": "Antifungico"
   },
   {
     "active_ingredient": "TERBINAFINA CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "250 mg",
     "group": "Antifungico"
   },
@@ -19387,7 +19387,7 @@
   },
   {
     "active_ingredient": "TETRABENAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antipsicotico"
   },
@@ -19399,7 +19399,7 @@
   },
   {
     "active_ingredient": "TIAMAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Hormona tiroides"
   },
@@ -19411,13 +19411,13 @@
   },
   {
     "active_ingredient": "TIAMINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Vitamina"
   },
   {
     "active_ingredient": "TIAMINA-RIBOFLAMINA-NICOTINAMIDA-PIRIDOXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg-10 mg-50 mg-20 mg",
     "group": "Vitamina"
   },
@@ -19429,7 +19429,7 @@
   },
   {
     "active_ingredient": "TIBOLONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Hormona"
   },
@@ -19489,13 +19489,13 @@
   },
   {
     "active_ingredient": "TINIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 g",
     "group": "Antiprotozoario"
   },
   {
     "active_ingredient": "TINIDAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiprotozoario"
   },
@@ -19519,13 +19519,13 @@
   },
   {
     "active_ingredient": "TIOCOLCHICOSIDO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "4 mg",
     "group": "Relajante muscular"
   },
   {
     "active_ingredient": "TIOCOLCHICOSIDO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "8 mg",
     "group": "Relajante muscular"
   },
@@ -19609,7 +19609,7 @@
   },
   {
     "active_ingredient": "TIZANIDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Relajante muscular"
   },
@@ -19705,7 +19705,7 @@
   },
   {
     "active_ingredient": "TOLTERODINE L-TARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2 mg",
     "group": "Urologico"
   },
@@ -19741,31 +19741,31 @@
   },
   {
     "active_ingredient": "TOPIRAMATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "TOPIRAMATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "25 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "TOPIRAMATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "TOPIRAMATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "400 mg",
     "group": "Antiepileptico"
   },
   {
     "active_ingredient": "TOPIRAMATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antiepileptico"
   },
@@ -19801,49 +19801,49 @@
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO-PARACETAMOL (ACETAMINOFEN)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "325 mg-37.5 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO-PARACETAMOL (ACETAMINOFEN)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "37.5 mg-325 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRAMADOL CLORHIDRATO-PARACETAMOL (ACETAMINOFEN)",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "37.50 mg-325 mg",
     "group": "Analgesico opioide"
   },
   {
     "active_ingredient": "TRANDOLAPRIL-VERAPAMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "180 mg-2 mg",
     "group": "Antihipertensivo"
   },
@@ -19867,13 +19867,13 @@
   },
   {
     "active_ingredient": "TRAZODONE CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "100 mg",
     "group": "Antidepresivo"
   },
   {
     "active_ingredient": "TRAZODONE CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antidepresivo"
   },
@@ -19951,7 +19951,7 @@
   },
   {
     "active_ingredient": "TRIFLUOPERAZINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Antipsicotico"
   },
@@ -19975,7 +19975,7 @@
   },
   {
     "active_ingredient": "TRIMEBUTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiespasmodico"
   },
@@ -19999,19 +19999,19 @@
   },
   {
     "active_ingredient": "TRIMEBUTINA MALEATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "TRIMEBUTINA MALEATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antiespasmodico"
   },
   {
     "active_ingredient": "TRIMETROPRIM-SULFAMETOXAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-800 mg",
     "group": "Antibiotico"
   },
@@ -20059,13 +20059,13 @@
   },
   {
     "active_ingredient": "VALACICLOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "500 mg",
     "group": "Antiviral"
   },
   {
     "active_ingredient": "VALGANCICLOVIR",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "450 mg",
     "group": "Antiviral"
   },
@@ -20125,25 +20125,25 @@
   },
   {
     "active_ingredient": "VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "320 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Antihipertensivo"
   },
@@ -20179,25 +20179,25 @@
   },
   {
     "active_ingredient": "VALSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "160 mg-25 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "320 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VALSARTAN-HIDROCLOROTIAZIDA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg-12.5 mg",
     "group": "Antihipertensivo"
   },
@@ -20251,7 +20251,7 @@
   },
   {
     "active_ingredient": "VENLAFAXINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "150 MG",
     "group": "Antidepresivo"
   },
@@ -20275,13 +20275,13 @@
   },
   {
     "active_ingredient": "VERAPAMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "40 mg",
     "group": "Antihipertensivo"
   },
   {
     "active_ingredient": "VERAPAMIL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Antihipertensivo"
   },
@@ -20293,7 +20293,7 @@
   },
   {
     "active_ingredient": "VERAPAMILO CLORHIDRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "80 mg",
     "group": "Antihipertensivo"
   },
@@ -20311,7 +20311,7 @@
   },
   {
     "active_ingredient": "VILDAGLIPTINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "50 mg",
     "group": "Antidiabetico"
   },
@@ -20413,7 +20413,7 @@
   },
   {
     "active_ingredient": "VITAMINA D3",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1000 UI",
     "group": "Vitamina"
   },
@@ -20491,7 +20491,7 @@
   },
   {
     "active_ingredient": "VORICONAZOL",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "200 mg",
     "group": "Antifungico"
   },
@@ -20515,13 +20515,13 @@
   },
   {
     "active_ingredient": "WARFARINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "1 mg",
     "group": "Anticoagulante"
   },
   {
     "active_ingredient": "WARFARINA SODICA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Anticoagulante"
   },
@@ -20533,7 +20533,7 @@
   },
   {
     "active_ingredient": "ZAFIRLUKAST",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "20 mg",
     "group": "Antiasmatico"
   },
@@ -20563,7 +20563,7 @@
   },
   {
     "active_ingredient": "ZIDOVUDINA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "300 mg",
     "group": "Antirretroviral"
   },
@@ -20593,7 +20593,7 @@
   },
   {
     "active_ingredient": "ZOLMITRIPTAN",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "2.5 mg",
     "group": "Antimigrana"
   },
@@ -20611,31 +20611,31 @@
   },
   {
     "active_ingredient": "ZOLPIDEM HEMITARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipnotico"
   },
   {
     "active_ingredient": "ZOLPIDEM HEMITARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "12.5 mg",
     "group": "Hipnotico"
   },
   {
     "active_ingredient": "ZOLPIDEM HEMITARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "5 mg",
     "group": "Hipnotico"
   },
   {
     "active_ingredient": "ZOLPIDEM HEMITARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "6.25 mg",
     "group": "Hipnotico"
   },
   {
     "active_ingredient": "ZOLPIDEM TARTRATO",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "10 mg",
     "group": "Hipnotico"
   },
@@ -20647,7 +20647,7 @@
   },
   {
     "active_ingredient": "ZOPICLONA",
-    "type": "Tablet",
+    "type": "Tabletas",
     "concentration": "7.5 mg",
     "group": "Hipnotico"
   }

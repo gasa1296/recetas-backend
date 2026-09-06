@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
+use App\Contracts\CertificateManagerInterface;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class CertificateService
+class CertificateService implements CertificateManagerInterface
 {
     /**
      * Generate a self-signed X.509 certificate for a user.

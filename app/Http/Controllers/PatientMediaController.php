@@ -7,15 +7,19 @@ use App\Http\Requests\PatientMediaUploadRequest;
 use App\Http\Resources\PatientMediaResource;
 use App\Models\File;
 use App\Models\Patient;
+use App\Services\Media\FileStorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PatientMediaController extends Controller
 {
+    public function __construct(
+        protected FileStorageService $fileStorage
+    ) {}
+
     /**
      * Display a listing of the media files for a patient.
      */
@@ -55,15 +59,7 @@ class PatientMediaController extends Controller
     {
         $this->authorizePatient($patient);
 
-        $uploadedFile = $request->file('file');
-        $originalName = $uploadedFile->getClientOriginalName();
-        $mimeType = $uploadedFile->getClientMimeType() ?: $uploadedFile->getMimeType();
-        $size = $uploadedFile->getSize();
-        $extension = $uploadedFile->getClientOriginalExtension() ?: 'bin';
-
-        // Secure private storage path
-        $disk = config('filesystems.default', 'local');
-        $storedPath = $uploadedFile->store("patients/{$patient->id}/media", $disk);
+        $stored = $this->fileStorage->storeUploadedFile($request->file('file'), "patients/{$patient->id}/media");
 
         $meta = $request->input('meta', []);
         if ($request->filled('evolution_stage')) {
@@ -71,17 +67,17 @@ class PatientMediaController extends Controller
         }
 
         $file = $patient->media()->create([
-            'type' => $extension,
+            'type' => $stored['type'],
             'category' => $request->input('category'),
-            'title' => $request->input('title') ?: pathinfo($originalName, PATHINFO_FILENAME),
+            'title' => $request->input('title') ?: pathinfo($stored['filename'], PATHINFO_FILENAME),
             'description' => $request->input('description'),
-            'mime_type' => $mimeType,
-            'size' => $size,
+            'mime_type' => $stored['mime_type'],
+            'size' => $stored['size'],
             'meta' => $meta,
             'user_id' => auth()->id(),
-            'location' => $disk,
-            'path' => $storedPath,
-            'filename' => $originalName,
+            'location' => $stored['location'],
+            'path' => $stored['path'],
+            'filename' => $stored['filename'],
         ]);
 
         return (new PatientMediaResource($file->load('user')))
@@ -106,14 +102,11 @@ class PatientMediaController extends Controller
     {
         $this->validateOwnership($patient, $file);
 
-        $disk = $file->location ?: config('filesystems.default', 'local');
-
-        if (! Storage::disk($disk)->exists($file->path)) {
+        if (! $this->fileStorage->exists($file)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
         }
 
-        return Storage::disk($disk)->response($file->path, $file->filename, [
-            'Content-Type' => $file->mime_type ?: 'application/octet-stream',
+        return $this->fileStorage->response($file, $file->filename, [
             'Cache-Control' => 'private, max-age=86400',
         ]);
     }
@@ -125,15 +118,11 @@ class PatientMediaController extends Controller
     {
         $this->validateOwnership($patient, $file);
 
-        $disk = $file->location ?: config('filesystems.default', 'local');
-
-        if (! Storage::disk($disk)->exists($file->path)) {
+        if (! $this->fileStorage->exists($file)) {
             abort(404, 'El archivo físico no se encuentra disponible.');
         }
 
-        return Storage::disk($disk)->download($file->path, $file->filename, [
-            'Content-Type' => $file->mime_type ?: 'application/octet-stream',
-        ]);
+        return $this->fileStorage->download($file);
     }
 
     /**
@@ -178,13 +167,7 @@ class PatientMediaController extends Controller
     {
         $this->validateOwnership($patient, $file);
 
-        $disk = $file->location ?: config('filesystems.default', 'local');
-
-        if (Storage::disk($disk)->exists($file->path)) {
-            Storage::disk($disk)->delete($file->path);
-        }
-
-        $file->delete();
+        $this->fileStorage->deleteFile($file);
 
         return response()->noContent();
     }

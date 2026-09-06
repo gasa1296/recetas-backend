@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Prescription\IssuePrescriptionAction;
 use App\Http\Requests\FinishPrescriptionRequest;
 use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\PrescriptionCollection;
 use App\Http\Resources\PrescriptionResource;
 use App\Notifications\PrescriptionReadyNotification;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\Media\FileStorageService;
 use Carbon\Carbon;
-use chillerlan\QRCode\QRCode;
-use chillerlan\QRCode\QROptions;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PrescriptionController extends Controller
 {
@@ -134,110 +131,28 @@ class PrescriptionController extends Controller
         );
     }
 
-    public function finishPrescription(FinishPrescriptionRequest $request, int $prescription): JsonResponse
-    {
+    public function finishPrescription(
+        FinishPrescriptionRequest $request,
+        int $prescription,
+        IssuePrescriptionAction $issuePrescription
+    ): JsonResponse {
         $user = auth()->user();
-        $prescription = $user
+        $prescriptionModel = $user
             ->prescriptions()
             ->where('status', config('custom.prescription.status_keys.draft'))
             ->findOrFail($prescription);
 
-        $expirationDaysConf = config('custom.prescription.expiration_days', []);
-        $expirationDays = $expirationDaysConf['default'] ?? 30;
-        $expiresAt = now()->addDays($expirationDays);
-
-        foreach ($expirationDaysConf as $type => $days) {
-            if ($type === 'default') {
-                continue;
-            }
-            if ($prescription->medicaments->contains('type', $type)) {
-                $expirationDays = $days;
-            }
-        }
-        $expiresAt = now()->addDays($expirationDays);
-
-        $prescription->loadMissing(['user', 'patient', 'room', 'specialty', 'medicaments']);
-        $qrOptions = new QROptions;
-        $qrOptions->outputType = 'png';
-        $qrOptions->scale = 5;
-        $qrCode = (new QRCode($qrOptions))->render(route('public.prescription.show', $prescription->prescription_hash));
-
-        $signature = $request->input('signature') ?: $user->saved_signature;
-
-        if ($request->boolean('save_signature') && $request->filled('signature')) {
-            $user->update(['saved_signature' => $request->input('signature')]);
-        }
-
-        $pdfContent = Pdf::loadView('pdf.prescription_model_1', [
-            'prescription' => $prescription,
-            'signature' => $expirationDays != 0 ? $signature : null,
-            'qrCode' => $qrCode,
-        ])->output();
-
-        if ($expirationDays == 0) {
-            $prescription->handleUploadFile($pdfContent);
-            $prescription->update(['status' => config('custom.prescription.status_keys.active'), 'expires_at' => $expiresAt]);
-
-            return $this->success(
-                __('messages.operation_success'),
-                new PrescriptionResource(
-                    $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
-                ),
-            );
-        }
-
-        // 2. Initialize FPDI with TCPDF engine
-        $pdf = new Fpdi;
-
-        // 3. Configure the Digital Signature
-        // Use user's certificate if available, otherwise fall back to default
-        if ($user->hasValidCertificate()) {
-            $certificate = 'file://'.$user->getCertificatePath();
-            $privateKey = 'file://'.$user->getCertificateKeyPath();
-        } else {
-            $certificate = 'file://'.base_path(config('custom.prescription.signature.default_certificate.path'));
-            $privateKey = 'file://'.base_path(config('custom.prescription.signature.default_certificate.key_path'));
-        }
-
-        $signerName = trim("{$user->first_name} {$user->last_name}");
-        $info = [
-            'Name' => ! empty($signerName) ? $signerName : config('app.name'),
-            'Location' => $prescription->room->address,
-            'Reason' => 'Prescripción Médica #'.$prescription->id.' - '.$prescription->room->name,
-            'ContactInfo' => $user->email,
-        ];
-        $pdf->setSignature($certificate, $privateKey, '', '', 2, $info);
-
-        // 4. Save temporary file because FPDI requires a filepath or a stream wrapper
-        $tempFile = tempnam(sys_get_temp_dir(), 'pdf');
-        file_put_contents($tempFile, $pdfContent);
-
-        $pageCount = $pdf->setSourceFile($tempFile);
-
-        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-            $templateId = $pdf->importPage($pageNo);
-            $size = $pdf->getTemplateSize($templateId);
-
-            // Add a page matching the imported layout size/orientation
-            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-            $pdf->useTemplate($templateId);
-        }
-
-        // 5. Generate and store cleanly-signed PDF with valid cryptographic signature
-        $signedPdf = $pdf->Output('', 'S');
-        $prescription->handleUploadFile($signedPdf, 'signed');
-
-        unlink($tempFile);
-
-        $prescription->update(['status' => config('custom.prescription.status_keys.active'), 'expires_at' => $expiresAt]);
-
-        $prescription->loadMissing('patient');
-        $prescription->patient->notify(new PrescriptionReadyNotification($prescription));
+        $issued = $issuePrescription->execute(
+            $prescriptionModel,
+            $user,
+            $request->input('signature'),
+            $request->boolean('save_signature') && $request->filled('signature')
+        );
 
         return $this->success(
             __('messages.operation_success'),
             new PrescriptionResource(
-                $prescription->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
+                $issued->load(['medicaments', 'patient', 'room', 'specialty', 'user']),
             ),
         );
     }
@@ -265,7 +180,7 @@ class PrescriptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getFile(string $prescription)
+    public function getFile(string $prescription, FileStorageService $fileStorage)
     {
         $prescription = auth()
             ->user()
@@ -286,23 +201,14 @@ class PrescriptionController extends Controller
             ?? $prescription->signed_file
             ?? $prescription->unsigned_file;
 
-        if (! $file) {
+        if (! $file || ! $fileStorage->exists($file)) {
             return $this->error(
                 __('messages.not_found'),
                 404
             );
         }
 
-        $disk = $file->location ?: config('filesystems.default', 'local');
-
-        if (! Storage::disk($disk)->exists($file->path)) {
-            return $this->error(
-                __('messages.not_found'),
-                404
-            );
-        }
-
-        return Storage::disk($disk)->response($file->path, "receta_{$prescription->id}.pdf", [
+        return $fileStorage->response($file, "receta_{$prescription->id}.pdf", [
             'Content-Type' => 'application/pdf',
         ]);
     }
