@@ -16,7 +16,10 @@ class TestSeeder extends Seeder
             ->hasRooms(3)
             ->hasPatients(10)
             ->hasPrescriptions(5, fn (array $attributes, User $user) => Prescription::factory()->makePrescription($user))
-            ->afterCreating(fn (User $user) => $this->generateCertificate($user))
+            ->afterCreating(function (User $user) {
+                $user->assignRole('medic');
+                $this->generateCertificate($user);
+            })
             ->create([
                 'email' => 'example@example.com',
             ]);
